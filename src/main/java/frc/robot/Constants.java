@@ -12,6 +12,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.*;
+import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.drive.ctre.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 
@@ -97,8 +98,7 @@ public class Constants {
             DrivetrainConstants.DRIVETRAIN_MASS,
             ROBOT_MOI,
             MODULE_CONFIG,
-            DrivetrainConstants.DRIVETRAIN_TRACKWIDTH,
-            DrivetrainConstants.DRIVETRAIN_WHEELBASE);
+            DrivetrainSubsystem.getInstance().getModuleLocations());
 
     public static final PPHolonomicDriveController PATH_FOLLOWING_CONTROLLER =
         new PPHolonomicDriveController(
