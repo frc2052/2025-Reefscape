@@ -19,7 +19,7 @@ import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 public class Constants {
 
   public static class DriverConstants {
-    public static final boolean FORCE_GAMEPAD = false;
+    public static final boolean FORCE_GAMEPAD = true;
     public static final double JOYSTICK_DEADBAND = 0.005;
     public static final double GAMEPAD_DEADBAND = 0.025; // add deadband here if there is drift
   }

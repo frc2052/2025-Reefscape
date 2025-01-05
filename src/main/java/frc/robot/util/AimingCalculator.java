@@ -4,8 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
-import org.littletonrobotics.junction.Logger;
+// import org.littletonrobotics.junction.Logger;
 
 public class AimingCalculator {
   public static final double ToFFactor = 0.2;
@@ -33,10 +32,9 @@ public class AimingCalculator {
     }
 
     yaw += Math.PI;
-    // yaw = MathUtil.inputModulus(yaw, 0, 360);
 
-    Logger.recordOutput("AIMING DIST", distanceToTarget);
-    Logger.recordOutput("AIMING ANGLE", Units.radiansToDegrees(yaw));
+    // Logger.recordOutput("AIMING DIST", distanceToTarget);
+    // Logger.recordOutput("AIMING ANGLE", Units.radiansToDegrees(yaw));
 
     return new double[] {distanceToTarget, yaw};
   }

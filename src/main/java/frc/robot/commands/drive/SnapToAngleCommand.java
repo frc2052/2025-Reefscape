@@ -12,7 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.DrivetrainConstants;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import org.littletonrobotics.junction.Logger;
+// import org.littletonrobotics.junction.Logger;
 
 public class SnapToAngleCommand extends DefaultDriveCommand {
   private SwerveRequest.FieldCentricFacingAngle drive =
@@ -34,7 +34,7 @@ public class SnapToAngleCommand extends DefaultDriveCommand {
     drive.HeadingController.setPID(3.5, 0, 0);
     drive.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
     drive.HeadingController.setTolerance(DrivetrainConstants.HEADING_TOLERANCE.in(Radians));
-    Logger.recordOutput("Snap Direction ", desiredDirection.getDegrees());
+    // Logger.recordOutput("Snap Direction ", desiredDirection.getDegrees());
   }
 
   @Override
