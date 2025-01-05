@@ -3,11 +3,11 @@ package frc.robot.util.io;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+// import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class Dashboard {
-  private final LoggedDashboardChooser<DriveMode> driveModeChooser =
-      new LoggedDashboardChooser<>("Drive Mode");
+  // private final LoggedDashboardChooser<DriveMode> driveModeChooser =
+  //     new LoggedDashboardChooser<>("Drive Mode");
 
   private static Dashboard INSTANCE;
 
@@ -20,9 +20,9 @@ public class Dashboard {
   }
 
   private Dashboard() {
-    driveModeChooser.addDefaultOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
-    driveModeChooser.addOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
-    driveModeChooser.addOption(DriveMode.ROBOT_CENTRIC.name(), DriveMode.ROBOT_CENTRIC);
+    // driveModeChooser.addDefaultOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
+    // driveModeChooser.addOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
+    // driveModeChooser.addOption(DriveMode.ROBOT_CENTRIC.name(), DriveMode.ROBOT_CENTRIC);
   }
 
   public <V> void putData(String key, V value) {
@@ -42,7 +42,8 @@ public class Dashboard {
   }
 
   public boolean isFieldCentric() {
-    return driveModeChooser.get() == DriveMode.FIELD_CENTRIC;
+    // return driveModeChooser.get() == DriveMode.FIELD_CENTRIC;
+    return true;
   }
 
   // Enums for Dashboard elements:

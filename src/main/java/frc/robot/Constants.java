@@ -12,13 +12,14 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.*;
+import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.drive.ctre.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 
 public class Constants {
 
   public static class DriverConstants {
-    public static final boolean FORCE_GAMEPAD = false;
+    public static final boolean FORCE_GAMEPAD = true;
     public static final double JOYSTICK_DEADBAND = 0.005;
     public static final double GAMEPAD_DEADBAND = 0.025; // add deadband here if there is drift
   }
@@ -97,8 +98,7 @@ public class Constants {
             DrivetrainConstants.DRIVETRAIN_MASS,
             ROBOT_MOI,
             MODULE_CONFIG,
-            DrivetrainConstants.DRIVETRAIN_TRACKWIDTH,
-            DrivetrainConstants.DRIVETRAIN_WHEELBASE);
+            DrivetrainSubsystem.getInstance().getModuleLocations());
 
     public static final PPHolonomicDriveController PATH_FOLLOWING_CONTROLLER =
         new PPHolonomicDriveController(

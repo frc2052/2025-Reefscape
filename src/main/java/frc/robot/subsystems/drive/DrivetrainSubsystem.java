@@ -2,7 +2,6 @@ package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -11,13 +10,11 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.Constants.PathPlannerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants.TunerSwerveDrivetrain;
 // import frc.robot.subsystems.vision.VisionUpdate;
-import java.util.Optional;
 
 public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsystem {
   private static final double kSimLoopPeriod = 0.005; // 5 ms
@@ -48,36 +45,36 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
         DrivetrainConstants.ODOMETRY_STDDEV,
         VisionConstants.VISION_STDDEV,
         DrivetrainConstants.TUNER_DRIVETRAIN_CONSTANTS.getModuleConstants());
-    configurePathPlanner();
+    // configurePathPlanner();
 
     if (Robot.isSimulation()) {
       startSimThread();
     }
   }
 
-  private void configurePathPlanner() {
-    double driveBaseRadius = 0;
+  // private void configurePathPlanner() {
+  //   double driveBaseRadius = 0;
 
-    for (var moduleLocation : getModuleLocations()) {
-      driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
-    }
+  //   for (var moduleLocation : getModuleLocations()) {
+  //     driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
+  //   }
 
-    AutoBuilder.configure(
-        () -> this.getState().Pose, // Supplier of current robot pose
-        this::resetPose, // Consumer for seeding pose against auto
-        this::getCurrentRobotChassisSpeeds,
-        (speeds, feedforwards) ->
-            this.setControl(
-                AutoRequest.withSpeeds(speeds)
-                    .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesX())
-                    .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesY())),
-        PathPlannerConstants.PATH_FOLLOWING_CONTROLLER,
-        PathPlannerConstants.ROBOT_CONFIG,
-        () ->
-            DriverStation.getAlliance().isPresent()
-                && DriverStation.getAlliance().equals(Optional.of(Alliance.Red)),
-        this); // Subsystem for requirements
-  }
+  //   AutoBuilder.configure(
+  //       () -> this.getState().Pose, // Supplier of current robot pose
+  //       this::resetPose, // Consumer for seeding pose against auto
+  //       this::getCurrentRobotChassisSpeeds,
+  //       (speeds, feedforwards) ->
+  //           this.setControl(
+  //               AutoRequest.withSpeeds(speeds)
+  //                   .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesX())
+  //                   .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesY())),
+  //       PathPlannerConstants.PATH_FOLLOWING_CONTROLLER,
+  //       PathPlannerConstants.ROBOT_CONFIG,
+  //       () ->
+  //           DriverStation.getAlliance().isPresent()
+  //               && DriverStation.getAlliance().equals(Optional.of(Alliance.Red)),
+  //       this); // Subsystem for requirements
+  // }
 
   // public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
   //     return run(() -> this.setControl(requestSupplier.get()));
