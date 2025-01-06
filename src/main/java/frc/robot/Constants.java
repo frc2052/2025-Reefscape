@@ -59,6 +59,15 @@ public class Constants {
     public static final double HEADING_STDDEV = 99;
     public static final Matrix<N3, N1> VISION_STDDEV =
         VecBuilder.fill(XY_STDDEV, XY_STDDEV, HEADING_STDDEV);
+    
+    public static final double MAX_POSE_AMBIGUITY = 0.15;
+    public static final Distance FIELD_BORDER_MARGIN = Meters.of(0.5);
+    public static final Distance MAX_VISION_CORRECTION = Meters.of(2);
+  }
+    
+  public static class FieldConstants {
+      public static final Distance FIELD_LENGTH = Centimeters.of(805);
+      public static final Distance FIELD_WIDTH = Centimeters.of(1755);
   }
 
   public static final class DashboardConstants {
