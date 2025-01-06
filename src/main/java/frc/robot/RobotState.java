@@ -7,7 +7,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 // import frc.robot.subsystems.drive.DrivetrainSubsystem;
 // import frc.robot.subsystems.vision.VisionUpdate;
-// import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.Logger;
 
 public class RobotState {
   private SwerveDriveState drivetrainState = new SwerveDriveState();
@@ -64,8 +64,8 @@ public class RobotState {
   }
 
   public void output() {
-    // Logger.recordOutput("Swerve Module States", drivetrainState.ModuleStates);
-    // Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
-    // Logger.recordOutput("Current Pose", drivetrainState.Pose);
+    Logger.recordOutput("Swerve Module States", drivetrainState.ModuleStates);
+    Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
+    Logger.recordOutput("Current Pose", drivetrainState.Pose);
   }
 }
