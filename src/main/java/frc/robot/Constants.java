@@ -6,8 +6,14 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.team2052.lib.vision.TagTracker.TagTrackerConstants;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -15,6 +21,7 @@ import edu.wpi.first.units.measure.*;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.drive.ctre.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Constants {
 
@@ -59,15 +66,72 @@ public class Constants {
     public static final double HEADING_STDDEV = 99;
     public static final Matrix<N3, N1> VISION_STDDEV =
         VecBuilder.fill(XY_STDDEV, XY_STDDEV, HEADING_STDDEV);
-    
+
     public static final double MAX_POSE_AMBIGUITY = 0.15;
     public static final Distance FIELD_BORDER_MARGIN = Meters.of(0.5);
-    public static final Distance MAX_VISION_CORRECTION = Meters.of(2);
+    public static final Distance MAX_VISION_CORRECTION = Meters.of(1);
+
+    public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =
+        AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField); // TODO: change to 2025 field
+
+    /*
+     * Camera Order:
+     * 0 1
+     */
+    /* Front Left Camera */
+    public static final class Camera0Constants {
+      public static final String CAMERA_NAME = "KrawlerCam_FL_000";
+
+      public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
+
+      public static final Distance X_OFFSET = Inches.of(0.0);
+      public static final Distance Y_OFFSET = Inches.of(0.0);
+      public static final Distance Z_OFFSET = Inches.of(0.0);
+
+      public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
+      public static final Angle THETA_Y_OFFSET = Degrees.of(-45); // pitch
+      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
+
+      public static final Transform3d ROBOT_TO_CAMERA_METERS =
+          new Transform3d(
+              new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
+              new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
+
+      public static TagTrackerConstants TagTrackerConstants() {
+        return new TagTrackerConstants(
+            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, VisionConstants.APRIL_TAG_FIELD_LAYOUT, STRATEGY);
+      }
+    }
+
+    /* Front Right Camera */
+    public static final class Camera1Constants {
+      public static final String CAMERA_NAME = "KrawlerCam_FR_001";
+
+      public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
+
+      public static final Distance X_OFFSET = Inches.of(0.0);
+      public static final Distance Y_OFFSET = Inches.of(0.0);
+      public static final Distance Z_OFFSET = Inches.of(0.0);
+
+      public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
+      public static final Angle THETA_Y_OFFSET = Degrees.of(-45); // pitch
+      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
+
+      public static final Transform3d ROBOT_TO_CAMERA_METERS =
+          new Transform3d(
+              new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
+              new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
+
+      public static TagTrackerConstants TagTrackerConstants() {
+        return new TagTrackerConstants(
+            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, VisionConstants.APRIL_TAG_FIELD_LAYOUT, STRATEGY);
+      }
+    }
   }
-    
+
   public static class FieldConstants {
-      public static final Distance FIELD_LENGTH = Centimeters.of(805);
-      public static final Distance FIELD_WIDTH = Centimeters.of(1755);
+    public static final Distance FIELD_LENGTH = Centimeters.of(805);
+    public static final Distance FIELD_WIDTH = Centimeters.of(1755);
   }
 
   public static final class DashboardConstants {

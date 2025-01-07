@@ -3,6 +3,7 @@ package com.team2052.lib.helpers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class MathHelpers {
   public static final Pose2d POSE_2D_ZERO = new Pose2d();
@@ -27,5 +28,9 @@ public class MathHelpers {
     }
     double scaledValue = (value + (value < 0 ? deadband : -deadband)) / (1 - deadband);
     return (Math.abs(value) > Math.abs(deadband)) ? scaledValue : 0;
+  }
+
+  public static double norm(ChassisSpeeds speeds) {
+    return Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
   }
 }

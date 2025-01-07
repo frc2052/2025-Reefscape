@@ -2,6 +2,9 @@ package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.team2052.lib.helpers.MathHelpers;
+import com.team2052.lib.vision.VisionPoseAcceptor;
+import com.team2052.lib.vision.VisionUpdate;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -14,7 +17,6 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants.TunerSwerveDrivetrain;
-// import frc.robot.subsystems.vision.VisionUpdate;
 
 public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsystem {
   private static final double kSimLoopPeriod = 0.005; // 5 ms
@@ -88,17 +90,17 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
     return getKinematics().toChassisSpeeds(getState().ModuleStates);
   }
 
-  // public void addVisionMeasurement(VisionUpdate visionUpdate) {
-  //   if (visionUpdate.getVisionMeasurementStdDevs() == null) {
-  //     this.addVisionMeasurement(
-  //         visionUpdate.estimatedPose.toPose2d(), visionUpdate.timestampSeconds);
-  //   } else {
-  //     this.addVisionMeasurement(
-  //         visionUpdate.estimatedPose.toPose2d(),
-  //         visionUpdate.timestampSeconds,
-  //         visionUpdate.getVisionMeasurementStdDevs());
-  //   }
-  // }
+  public void addVisionMeasurement(VisionUpdate visionUpdate) {
+    if (visionUpdate.getVisionMeasurementStdDevs() == null) {
+      this.addVisionMeasurement(
+          visionUpdate.estimatedPose.toPose2d(), visionUpdate.timestampSeconds);
+    } else {
+      this.addVisionMeasurement(
+          visionUpdate.estimatedPose.toPose2d(),
+          visionUpdate.timestampSeconds,
+          visionUpdate.getVisionMeasurementStdDevs());
+    }
+  }
 
   @Override
   public void periodic() {
