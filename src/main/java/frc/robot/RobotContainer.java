@@ -5,23 +5,26 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.auto.AutoFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.controlboard.ControlBoard;
+import frc.robot.subsystems.drive.AdvantageScopeSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.util.Telemetry;
 import frc.robot.util.io.Dashboard;
 
 public class RobotContainer {
   private final ControlBoard controlBoard = ControlBoard.getInstance();
-
   public final Dashboard dashboard = Dashboard.getInstance();
 
   public final RobotState robotState = RobotState.getInstance();
   public final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
+  public final AdvantageScopeSubsystem advantageScope = AdvantageScopeSubsystem.getInstance();
+  public final AutoFactory autoFactory = AutoFactory.getInstance();
 
   private final Telemetry logger =
       new Telemetry(DrivetrainConstants.DRIVE_MAX_SPEED.in(MetersPerSecond));
@@ -43,7 +46,17 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
+  public void forceRecompile() {
+    autoFactory.recompile();
+  }
+  public void precompileAuto() {
+    if (autoFactory.recompileNeeded()) {
+      autoFactory.recompile();
+    }
+  }
+
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return new PathPlannerAuto("Example Auto");
+    // return autoFactory.getCompiledAuto();
   }
 }
