@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.AutoFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
+import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.drive.AdvantageScopeSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
@@ -44,6 +45,53 @@ public class RobotContainer {
 
   private void configureBindings() {
     drivetrain.registerTelemetry(logger::telemeterize);
+    configurePOVBindings();
+  }
+
+  private void configurePOVBindings() {
+    ControlBoard controlBoard = ControlBoard.getInstance();
+
+    controlBoard.povUp().whileTrue(new SnapToLocationAngleCommand(
+      SnapToLocationAngleCommand.SnapLocations.ReefGH,
+      controlBoard::getThrottle, controlBoard::getStrafe, controlBoard::getRotation, dashboard::isFieldCentric
+    ));
+
+    controlBoard.povUpRight().whileTrue(new SnapToLocationAngleCommand(
+      SnapToLocationAngleCommand.SnapLocations.ReefEF,
+      controlBoard::getThrottle, controlBoard::getStrafe, controlBoard::getRotation, dashboard::isFieldCentric
+    ));
+
+    controlBoard.povRight().whileTrue(new SnapToLocationAngleCommand(
+      SnapToLocationAngleCommand.SnapLocations.RightCoralStation,
+      controlBoard::getThrottle, controlBoard::getStrafe, controlBoard::getRotation, dashboard::isFieldCentric
+    ));
+
+    controlBoard.povDownRight().whileTrue(new SnapToLocationAngleCommand(
+      SnapToLocationAngleCommand.SnapLocations.ReefCD,
+      controlBoard::getThrottle, controlBoard::getStrafe, controlBoard::getRotation, dashboard::isFieldCentric
+    ));
+
+    controlBoard.povDown().whileTrue(new SnapToLocationAngleCommand(
+      SnapToLocationAngleCommand.SnapLocations.ReefAB,
+      controlBoard::getThrottle, controlBoard::getStrafe, controlBoard::getRotation, dashboard::isFieldCentric
+    ));
+
+    controlBoard.povDownLeft().whileTrue(new SnapToLocationAngleCommand(
+      SnapToLocationAngleCommand.SnapLocations.ReefKL,
+      controlBoard::getThrottle,controlBoard::getStrafe,controlBoard::getRotation,dashboard::isFieldCentric
+    ));
+
+    controlBoard.povLeft().whileTrue(new SnapToLocationAngleCommand(
+      SnapToLocationAngleCommand.SnapLocations.LeftCoralStation,
+      controlBoard::getThrottle,controlBoard::getStrafe,controlBoard::getRotation,dashboard::isFieldCentric
+    ));
+
+    controlBoard.povUpLeft().whileTrue(new SnapToLocationAngleCommand(
+      SnapToLocationAngleCommand.SnapLocations.ReefIJ,
+      controlBoard::getThrottle,controlBoard::getStrafe,controlBoard::getRotation,dashboard::isFieldCentric
+    ));
+
+    System.out.println("POV Bindings Configured");
   }
 
   public void forceRecompile() {
