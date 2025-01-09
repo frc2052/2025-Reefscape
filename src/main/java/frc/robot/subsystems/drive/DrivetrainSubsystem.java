@@ -2,8 +2,6 @@ package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.team2052.lib.helpers.MathHelpers;
-import com.team2052.lib.vision.VisionPoseAcceptor;
 import com.team2052.lib.vision.VisionUpdate;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;

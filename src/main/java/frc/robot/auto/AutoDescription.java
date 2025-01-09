@@ -3,9 +3,10 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.auto;
+
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AutoDescription {
-    String description() default "No description";
+  String description() default "No description";
 }

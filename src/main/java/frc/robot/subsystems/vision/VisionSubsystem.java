@@ -4,25 +4,22 @@
 
 package frc.robot.subsystems.vision;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import org.littletonrobotics.junction.Logger;
-import org.photonvision.targeting.PhotonPipelineResult;
-
 import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.vision.TagTracker;
 import com.team2052.lib.vision.VisionPoseAcceptor;
 import com.team2052.lib.vision.VisionUpdate;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants.Camera0Constants;
 import frc.robot.Constants.VisionConstants.Camera1Constants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import org.littletonrobotics.junction.Logger;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 public class VisionSubsystem extends SubsystemBase {
   private DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -65,8 +62,8 @@ public class VisionSubsystem extends SubsystemBase {
         MathHelpers.norm(drivetrain.getCurrentRobotChassisSpeeds()),
         robotState.getFieldToRobot(),
         DriverStation.isAutonomous())) {
-          DrivetrainSubsystem.getInstance().addVisionMeasurement(update);
-        }
+      DrivetrainSubsystem.getInstance().addVisionMeasurement(update);
+    }
   }
 
   @Override
