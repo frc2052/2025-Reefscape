@@ -105,4 +105,15 @@ public class Constants {
             new PIDConstants(TRANSLATION_KP, TRANSLATION_KI, TRANSLATION_KD),
             new PIDConstants(ROTATION_KP, ROTATION_KI, ROTATION_KD));
   }
+
+  public static final class FieldAndRobotConstants {
+    public static final double LEFT_CORAL_STATION_ANGLE_RADIANS = Math.toRadians(0);
+    public static final double RIGHT_CORAL_STATION_ANGLE_RADIANS = Math.toRadians(0);
+    public static final double REEF_AB = Math.toRadians(0);
+    public static final double REEF_CD = Math.toRadians(0);
+    public static final double REEF_EF = Math.toRadians(0);
+    public static final double REEF_GH = Math.toRadians(0);
+    public static final double REEF_IJ = Math.toRadians(0);
+    public static final double REEF_KL = Math.toRadians(0);
+  }
 }
