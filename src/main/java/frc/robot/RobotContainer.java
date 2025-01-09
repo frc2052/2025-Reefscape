@@ -5,8 +5,8 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.AutoFactory;
@@ -49,6 +49,7 @@ public class RobotContainer {
   public void forceRecompile() {
     autoFactory.recompile();
   }
+
   public void precompileAuto() {
     if (autoFactory.recompileNeeded()) {
       autoFactory.recompile();
