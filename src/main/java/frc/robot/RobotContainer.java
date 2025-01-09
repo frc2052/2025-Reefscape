@@ -41,6 +41,13 @@ public class RobotContainer {
 
   private void configureBindings() {
     drivetrain.registerTelemetry(logger::telemeterize);
+    configurePOVBindings();
+  }
+
+  private void configurePOVBindings() {
+    ControlBoard controlBoard = ControlBoard.getInstance();
+
+    //controlBoard.povUp().whileTrue()
   }
 
   public Command getAutonomousCommand() {
