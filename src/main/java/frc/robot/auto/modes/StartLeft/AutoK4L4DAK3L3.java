@@ -1,15 +1,15 @@
-package frc.robot.auto.modes;
+package frc.robot.auto.modes.StartLeft;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import frc.robot.auto.common.AutoBase;
 
-public class AutoSLK4L4DAK3L3 extends AutoBase {
+public class AutoK4L4DAK3L3 extends AutoBase {
+  // Start Right Equivalent: AutoSLK4L4DAK3L3
 
-  private final static PathPlannerPath startingPath = Paths.SL_K4;
-  
-    public AutoSLK4L4DAK3L3() {
-      super(startingPath.getStartingHolonomicPose());
+  private static final PathPlannerPath startingPath = Paths.SL_K4;
+
+  public AutoK4L4DAK3L3() {
+    super(startingPath.getStartingHolonomicPose());
   }
 
   @Override
