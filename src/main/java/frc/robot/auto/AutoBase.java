@@ -70,5 +70,16 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // ex:
     // public final static PathPlannerPath AB_BARGECS = getPathFromFile("AB - Barge Coral Station");
 
+    public final static PathPlannerPath J2_LL = getPathFromFile("J2 LL");
+    public final static PathPlannerPath K3_LL = getPathFromFile("K3 LL");
+    public final static PathPlannerPath K4_LL = getPathFromFile("K4 LL");
+    public final static PathPlannerPath L4_LL = getPathFromFile("L4 LL");
+    public final static PathPlannerPath LL_K3 = getPathFromFile("LL K3");
+    public final static PathPlannerPath LL_K4 = getPathFromFile("LL K4");
+    public final static PathPlannerPath LL_L3 = getPathFromFile("LL L3");
+    public final static PathPlannerPath LL_L4 = getPathFromFile("LL L4");
+    public final static PathPlannerPath SL_J2= getPathFromFile("LL J2");
+    public final static PathPlannerPath SL_K4 = getPathFromFile("LL K4");
+
   }
 }
