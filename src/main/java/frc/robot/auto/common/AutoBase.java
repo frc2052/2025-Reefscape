@@ -7,6 +7,8 @@ package frc.robot.auto.common;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
+import com.pathplanner.lib.util.PathPlannerLogging;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -65,6 +67,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // SR = Start Right
     // LL = Left (Barge Side) Coral Station
     // RL = Right (Processor Side) Coral Station
+    // DA = Descore (Remove) Algae From Reef
     // Letter + Number = Reef Scoring Position
 
     // ex:
@@ -80,6 +83,10 @@ public abstract class AutoBase extends SequentialCommandGroup {
     public final static PathPlannerPath LL_L4 = getPathFromFile("LL L4");
     public final static PathPlannerPath SL_J2= getPathFromFile("LL J2");
     public final static PathPlannerPath SL_K4 = getPathFromFile("LL K4");
-
+    public final static PathPlannerPath SR_E2 = getPathFromFile("SR E2");
+    public final static PathPlannerPath E2_RL = getPathFromFile("E2 RL");
+    public final static PathPlannerPath RL_D4 = getPathFromFile("RL D4");
+    public final static PathPlannerPath D4_RL = getPathFromFile("D4 RL");
+    public final static PathPlannerPath RL_C4 = getPathFromFile("RL C4");
   }
 }

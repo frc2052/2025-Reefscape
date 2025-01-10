@@ -4,11 +4,12 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import frc.robot.auto.common.AutoBase;
 
-public class AutoJ2K4L4 extends AutoBase {
+public class AutoSLJ2K4L4 extends AutoBase {
+  //Start Right Equivalent: AutoSRE2D4C4
 
   private final static PathPlannerPath startingPath = Paths.SL_J2;
   
-    public AutoJ2K4L4() {
+    public AutoSLJ2K4L4() {
       super(startingPath.getStartingHolonomicPose());
   }
 
