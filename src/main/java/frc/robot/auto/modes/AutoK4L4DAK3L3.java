@@ -1,7 +1,8 @@
 package frc.robot.auto.modes;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-import frc.robot.auto.AutoBase;
+
+import frc.robot.auto.common.AutoBase;
 
 public class AutoK4L4DAK3L3 extends AutoBase {
 

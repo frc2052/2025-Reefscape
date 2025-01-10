@@ -9,7 +9,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.auto.AutoFactory;
+import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.drive.AdvantageScopeSubsystem;

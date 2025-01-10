@@ -3,8 +3,8 @@ package frc.robot.util.io;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import frc.robot.auto.AutoFactory.Auto;
+import frc.robot.auto.common.AutoFactory.Auto;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class Dashboard {
