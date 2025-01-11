@@ -54,14 +54,14 @@ public class Constants {
 
     public static final Mass DRIVETRAIN_MASS = Pounds.of(100); // TODO: weigh the robot
 
-    public static final Matrix<N3, N1> ODOMETRY_STDDEV = VecBuilder.fill(0.1, 0.1, 0.1);
+    public static final Matrix<N3, N1> ODOMETRY_STDDEV = VecBuilder.fill(0.1, 0.1, 0.05);
 
     public static final Angle HEADING_TOLERANCE = Degrees.of(3);
   }
 
   public static class VisionConstants {
-    public static final double XY_STDDEV = 0.7;
-    public static final double HEADING_STDDEV = 99;
+    public static final double XY_STDDEV = 0.1;
+    public static final double HEADING_STDDEV = .1;
     public static final Matrix<N3, N1> VISION_STDDEV =
         VecBuilder.fill(XY_STDDEV, XY_STDDEV, HEADING_STDDEV);
 
@@ -70,7 +70,7 @@ public class Constants {
     public static final Distance MAX_VISION_CORRECTION = Meters.of(1);
 
     public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =
-        AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField); // TODO: change to 2025 field
+        AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
     /*
      * Camera Order:
@@ -78,16 +78,16 @@ public class Constants {
      */
     /* Front Left Camera */
     public static final class Camera0Constants {
-      public static final String CAMERA_NAME = "KrawlerCam_FL_000";
+      public static final String CAMERA_NAME = "KrawlerCam_000";
 
-      public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
+      public static final PoseStrategy STRATEGY = PoseStrategy.AVERAGE_BEST_TARGETS;
 
       public static final Distance X_OFFSET = Inches.of(0.0);
       public static final Distance Y_OFFSET = Inches.of(0.0);
       public static final Distance Z_OFFSET = Inches.of(0.0);
 
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
-      public static final Angle THETA_Y_OFFSET = Degrees.of(-45); // pitch
+      public static final Angle THETA_Y_OFFSET = Degrees.of(-15); // pitch
       public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
 
       public static final Transform3d ROBOT_TO_CAMERA_METERS =

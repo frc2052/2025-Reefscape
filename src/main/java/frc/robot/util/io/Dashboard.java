@@ -1,12 +1,9 @@
 package frc.robot.util.io;
 
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auto.common.AutoFactory.Auto;
-import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class Dashboard {

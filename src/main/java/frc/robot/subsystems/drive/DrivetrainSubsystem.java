@@ -100,16 +100,15 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
     return getKinematics().toChassisSpeeds(getState().ModuleStates);
   }
 
-  public void addVisionMeasurement(VisionUpdate visionUpdate) {
-    if (visionUpdate.getVisionMeasurementStdDevs() == null) {
-      this.addVisionMeasurement(
-          visionUpdate.estimatedPose.toPose2d(), visionUpdate.timestampSeconds);
-    } else {
-      this.addVisionMeasurement(
-          visionUpdate.estimatedPose.toPose2d(),
-          visionUpdate.timestampSeconds,
-          visionUpdate.getVisionMeasurementStdDevs());
-    }
+  public void addVisionUpdate(VisionUpdate visionUpdate) {
+    // if (visionUpdate.getVisionMeasurementStdDevs() == null) {
+    this.addVisionMeasurement(visionUpdate.estimatedPose.toPose2d(), visionUpdate.timestampSeconds);
+    // } else {
+    //   this.addVisionMeasurement(
+    //       visionUpdate.estimatedPose.toPose2d(),
+    //       visionUpdate.timestampSeconds,
+    //       visionUpdate.getVisionMeasurementStdDevs());
+    // }
   }
 
   @Override
