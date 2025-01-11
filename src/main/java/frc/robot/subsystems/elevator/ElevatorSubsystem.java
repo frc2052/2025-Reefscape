@@ -4,20 +4,20 @@
 
 package frc.robot.subsystems.elevator;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -35,10 +35,10 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static TalonFX rightMotor;
 
   private boolean isManual;
-  
-    /** Creates a new ElevatorSubsystem. */
+
+  /** Creates a new ElevatorSubsystem. */
   public ElevatorSubsystem() {
-    currentPosition = ElevatorPosition.RESTING;
+    currentPosition = ElevatorPosition.STOW;
 
     limitSwitch = new DigitalInput(Constants.ElevatorConstants.IDs.LIMIT_SWITCH);
     encoder = new AnalogEncoder(Constants.ElevatorConstants.IDs.ENCODER);
@@ -46,18 +46,25 @@ public class ElevatorSubsystem extends SubsystemBase {
     leftMotor = new TalonFX(Constants.ElevatorConstants.IDs.LEFT_MOTOR);
     rightMotor = new TalonFX(Constants.ElevatorConstants.IDs.RIGHT_MOTOR);
 
-    InvertedValue leftInverted = Constants.ElevatorConstants.LEFT_MOTOR_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+    InvertedValue leftInverted =
+        Constants.ElevatorConstants.LEFT_MOTOR_INVERTED
+            ? InvertedValue.Clockwise_Positive
+            : InvertedValue.CounterClockwise_Positive;
     TalonFXConfiguration leftMotorConfig = new TalonFXConfiguration();
     leftMotorConfig.withMotorOutput(new MotorOutputConfigs().withInverted(leftInverted));
 
-    InvertedValue rightInverted = Constants.ElevatorConstants.RIGHT_MOTOR_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+    InvertedValue rightInverted =
+        Constants.ElevatorConstants.RIGHT_MOTOR_INVERTED
+            ? InvertedValue.Clockwise_Positive
+            : InvertedValue.CounterClockwise_Positive;
     TalonFXConfiguration rightMotorConfig = new TalonFXConfiguration();
     rightMotorConfig.withMotorOutput(new MotorOutputConfigs().withInverted(rightInverted));
 
-    contoller = new PIDController(
-      Constants.ElevatorConstants.MotorPIDConstants.KP, 
-      Constants.ElevatorConstants.MotorPIDConstants.KI,
-      Constants.ElevatorConstants.MotorPIDConstants.KD);
+    contoller =
+        new PIDController(
+            Constants.ElevatorConstants.MotorPIDConstants.KP,
+            Constants.ElevatorConstants.MotorPIDConstants.KI,
+            Constants.ElevatorConstants.MotorPIDConstants.KD);
     contoller.setTolerance(Constants.ElevatorConstants.MotorPIDConstants.ERROR);
 
     leftMotor.getConfigurator().apply(leftMotorConfig);
@@ -118,25 +125,36 @@ public class ElevatorSubsystem extends SubsystemBase {
     return isManual;
   }
 
-  public void manualUp() {
+  public Command manualUp() {
     if (!isManual) {
-      return;
+      return new Command() {};
     }
-    leftMotor.set(Constants.ElevatorConstants.MANUL_MOTOR_SPEED);
-    rightMotor.set(Constants.ElevatorConstants.MANUL_MOTOR_SPEED);
+
+    return Commands.runOnce(
+        () -> {
+          leftMotor.set(Constants.ElevatorConstants.MANUL_MOTOR_SPEED);
+          rightMotor.set(Constants.ElevatorConstants.MANUL_MOTOR_SPEED);
+        });
   }
 
-  public void manualDown() {
+  public Command manualDown() {
     if (!isManual) {
-      return;
+      return new Command() {};
     }
-    leftMotor.set(-Constants.ElevatorConstants.MANUL_MOTOR_SPEED);
-    rightMotor.set(-Constants.ElevatorConstants.MANUL_MOTOR_SPEED);
+
+    return Commands.runOnce(
+        () -> {
+          leftMotor.set(-Constants.ElevatorConstants.MANUL_MOTOR_SPEED);
+          rightMotor.set(-Constants.ElevatorConstants.MANUL_MOTOR_SPEED);
+        });
   }
 
-  public void stopElevator() {
-    leftMotor.stopMotor();
-    rightMotor.stopMotor();
+  public Command stopElevator() {
+    return Commands.runOnce(
+        () -> {
+          leftMotor.stopMotor();
+          rightMotor.stopMotor();
+        });
   }
 
   public boolean atPosition() {
@@ -149,12 +167,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (isManual) {return;}
+    if (isManual) {
+      return;
+    }
     setPosition(heightToAngle(currentPosition.getHeight()));
   }
 
   public enum ElevatorPosition {
-    RESTING(Inches.of(0)),
+    STOW(Inches.of(0)),
     HANDOFF(Inches.of(0)),
     L1(Inches.of(18)),
     L2(Inches.of(32)),

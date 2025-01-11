@@ -5,32 +5,23 @@
 package frc.robot.commands.elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem.ElevatorPosition;
 
 /** Add your docs here. */
 public class ElevatorCommandFactory {
+  private static final ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
 
-    public static Command setElevatorPosition(ElevatorPosition position) {
-        return new InstantCommand(() -> ElevatorSubsystem.getInstance().setElevatorPosition(position));
-    }
+  public static Command setElevatorPosition(ElevatorPosition position) {
+    return Commands.runOnce(() -> elevator.setElevatorPosition(position), elevator);
+  }
 
-    public static Command manualUp() {
-        return new Command() {
-            @Override
-            public void execute() {
-                ElevatorSubsystem.getInstance().manualUp();
-            }
-        };
-    }
+  public static Command manualUp() {
+    return Commands.runEnd(() -> elevator.manualUp(), () -> elevator.stopElevator(), elevator);
+  }
 
-    public static Command manualDown() {
-        return new Command() {
-            @Override
-            public void execute() {
-                ElevatorSubsystem.getInstance().manualDown();
-            }
-        };
-    }
+  public static Command manualDown() {
+    return Commands.runEnd(() -> elevator.manualDown(), () -> elevator.stopElevator(), elevator);
+  }
 }

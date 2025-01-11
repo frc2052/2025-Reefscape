@@ -4,24 +4,26 @@
 
 package frc.robot.commands.drive;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Constants;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SnapToLocationAngleCommand extends SnapToAngleCommand {
   /** Creates a new SnapToLocationAngleCommand. */
   public SnapToLocationAngleCommand(
-    SnapLocations snapLocations,
-    DoubleSupplier xSupplier,
-    DoubleSupplier ySupplier,
-    DoubleSupplier rotationSupplier,
-    BooleanSupplier fieldCentricSupplier
-  ) {
-    super(new Rotation2d(getLocationAngleRadians(snapLocations)), xSupplier, ySupplier, rotationSupplier, fieldCentricSupplier);
+      SnapLocations snapLocations,
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier,
+      DoubleSupplier rotationSupplier,
+      BooleanSupplier fieldCentricSupplier) {
+    super(
+        new Rotation2d(getLocationAngleRadians(snapLocations)),
+        xSupplier,
+        ySupplier,
+        rotationSupplier,
+        fieldCentricSupplier);
   }
 
   private static double getLocationAngleRadians(SnapLocations snapLocations) {
