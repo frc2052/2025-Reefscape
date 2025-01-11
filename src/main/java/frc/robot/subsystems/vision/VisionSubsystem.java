@@ -8,6 +8,8 @@ import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.vision.TagTracker;
 import com.team2052.lib.vision.VisionPoseAcceptor;
 import com.team2052.lib.vision.VisionUpdate;
+
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants.Camera0Constants;
@@ -28,6 +30,8 @@ public class VisionSubsystem extends SubsystemBase {
 
   private List<TagTracker> tagTrackers = new ArrayList<TagTracker>();
 
+  private TagTracker reefTagTracker = new TagTracker(Camera0Constants.TagTrackerConstants(), robotState);
+
   private static VisionSubsystem INSTANCE;
 
   public static VisionSubsystem getInstance() {
@@ -39,9 +43,10 @@ public class VisionSubsystem extends SubsystemBase {
   }
   /** Creates a new VisionSubsystem. */
   private VisionSubsystem() {
-    Collections.addAll(
-        tagTrackers, new TagTracker(Camera0Constants.TagTrackerConstants(), robotState));
-    // new TagTracker(Camera1Constants.TagTrackerConstants(), robotState));
+  }
+
+  public Translation2d getReefCamResult() {
+    return reefTagTracker.getClosestTagTransform();
   }
 
   private void update() {
@@ -63,8 +68,6 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   private void updateEstimator(VisionUpdate update) {
-
-    Logger.recordOutput("Vision Translation", update.estimatedPose.toPose2d().getTranslation());
     if (VisionPoseAcceptor.shouldAccept(
         update,
         MathHelpers.norm(drivetrain.getCurrentRobotChassisSpeeds()),
