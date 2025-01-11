@@ -2,6 +2,10 @@ package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team2052.lib.vision.VisionUpdate;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -25,7 +29,7 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
   /* Keep track if we've ever applied the driver perspective before or not */
   private boolean hasAppliedOperatorPerspective = false;
 
-  private final SwerveRequest.ApplyRobotSpeeds AutoRequest = new SwerveRequest.ApplyRobotSpeeds();
+  private final SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds();
 
   private RobotState robotState = RobotState.getInstance();
 
@@ -47,45 +51,42 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
         VisionConstants.VISION_STDDEV,
         DrivetrainConstants.TUNER_DRIVETRAIN_CONSTANTS.getModuleConstants());
     // configurePathPlanner();
+    configureAutoBuilder();
 
     if (Robot.isSimulation()) {
       startSimThread();
     }
   }
 
-  // private void configurePathPlanner() {
-  //   double driveBaseRadius = 0;
-
-  //   for (var moduleLocation : getModuleLocations()) {
-  //     driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
-  //   }
-
-  //   MomentOfInertia ROBOT_MOI =
-  //       KilogramSquareMeters.of(
-  //           (1 / 12)
-  //               * DrivetrainConstants.DRIVETRAIN_MASS.in(Kilograms)
-  //               * (Math.pow(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH.in(Meters), 2)
-  //                   + Math.pow(DrivetrainConstants.DRIVETRAIN_WHEELBASE.in(Meters), 2)));
-  //   AutoBuilder.configure(
-  //       () -> this.getState().Pose, // Supplier of current robot pose
-  //       this::resetPose, // Consumer for seeding pose against auto
-  //       this::getCurrentRobotChassisSpeeds,
-  //       (speeds, feedforwards) ->
-  //           this.setControl(
-  //               AutoRequest.withSpeeds(speeds)
-  //                   .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesX())
-  //                   .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesY())),
-  //       PathPlannerConstants.PATH_FOLLOWING_CONTROLLER,
-  //       new RobotConfig(
-  //           DrivetrainConstants.DRIVETRAIN_MASS,
-  //           ROBOT_MOI,
-  //           PathPlannerConstants.MODULE_CONFIG,
-  //           DrivetrainSubsystem.getInstance().getModuleLocations()),
-  //       () ->
-  //           DriverStation.getAlliance().isPresent()
-  //               && DriverStation.getAlliance().equals(Optional.of(Alliance.Red)),
-  //       this); // Subsystem for requirements
-  // }
+  private void configureAutoBuilder() {
+    try {
+      var config = RobotConfig.fromGUISettings();
+      AutoBuilder.configure(
+          () -> getState().Pose, // Supplier of current robot pose
+          this::resetPose, // Consumer for seeding pose against auto
+          () -> getState().Speeds, // Supplier of current robot speeds
+          // Consumer of ChassisSpeeds and feedforwards to drive the robot
+          (speeds, feedforwards) ->
+              setControl(
+                  autoRequest
+                      .withSpeeds(speeds)
+                      .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+                      .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())),
+          new PPHolonomicDriveController(
+              // PID constants for translation
+              new PIDConstants(10, 0, 0),
+              // PID constants for rotation
+              new PIDConstants(7, 0, 0)),
+          config,
+          // Assume the path needs to be flipped for Red vs Blue, this is normally the case
+          () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+          this // Subsystem for requirements
+          );
+    } catch (Exception ex) {
+      DriverStation.reportError(
+          "Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
+    }
+  }
 
   // public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
   //     return run(() -> this.setControl(requestSupplier.get()));
