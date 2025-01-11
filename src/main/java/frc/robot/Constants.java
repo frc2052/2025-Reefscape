@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.*;
 
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team2052.lib.vision.TagTracker.TagTrackerConstants;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -18,7 +17,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.*;
-import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.drive.ctre.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -150,12 +148,6 @@ public class Constants {
     public static final double ROTATION_KD = 0;
 
     // Rough estimation (1/12) * mass * (length^2 + width^2)
-    public static final MomentOfInertia ROBOT_MOI =
-        KilogramSquareMeters.of(
-            (1 / 12)
-                * DrivetrainConstants.DRIVETRAIN_MASS.in(Kilograms)
-                * (Math.pow(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH.in(Meters), 2)
-                    + Math.pow(DrivetrainConstants.DRIVETRAIN_WHEELBASE.in(Meters), 2)));
 
     public static final ModuleConfig MODULE_CONFIG =
         new ModuleConfig(
@@ -165,13 +157,6 @@ public class Constants {
             DCMotor.getKrakenX60Foc(1),
             DrivetrainConstants.DRIVE_CURRENT_LIMIT_AMPS,
             1);
-
-    public static final RobotConfig ROBOT_CONFIG =
-        new RobotConfig(
-            DrivetrainConstants.DRIVETRAIN_MASS,
-            ROBOT_MOI,
-            MODULE_CONFIG,
-            DrivetrainSubsystem.getInstance().getModuleLocations());
 
     public static final PPHolonomicDriveController PATH_FOLLOWING_CONTROLLER =
         new PPHolonomicDriveController(

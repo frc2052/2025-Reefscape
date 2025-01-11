@@ -5,6 +5,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.team2052.lib.vision.VisionUpdate;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -59,6 +60,12 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
   //     driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
   //   }
 
+  //   MomentOfInertia ROBOT_MOI =
+  //       KilogramSquareMeters.of(
+  //           (1 / 12)
+  //               * DrivetrainConstants.DRIVETRAIN_MASS.in(Kilograms)
+  //               * (Math.pow(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH.in(Meters), 2)
+  //                   + Math.pow(DrivetrainConstants.DRIVETRAIN_WHEELBASE.in(Meters), 2)));
   //   AutoBuilder.configure(
   //       () -> this.getState().Pose, // Supplier of current robot pose
   //       this::resetPose, // Consumer for seeding pose against auto
@@ -69,7 +76,11 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
   //                   .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesX())
   //                   .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesY())),
   //       PathPlannerConstants.PATH_FOLLOWING_CONTROLLER,
-  //       PathPlannerConstants.ROBOT_CONFIG,
+  //       new RobotConfig(
+  //           DrivetrainConstants.DRIVETRAIN_MASS,
+  //           ROBOT_MOI,
+  //           PathPlannerConstants.MODULE_CONFIG,
+  //           DrivetrainSubsystem.getInstance().getModuleLocations()),
   //       () ->
   //           DriverStation.getAlliance().isPresent()
   //               && DriverStation.getAlliance().equals(Optional.of(Alliance.Red)),
