@@ -26,7 +26,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 public class Constants {
 
   public static class DriverConstants {
-    public static final boolean FORCE_GAMEPAD = true;
+    public static final boolean FORCE_GAMEPAD = false;
     public static final double JOYSTICK_DEADBAND = 0.005;
     public static final double GAMEPAD_DEADBAND = 0.025; // add deadband here if there is drift
   }
@@ -185,10 +185,10 @@ public class Constants {
     public static final double LEFT_CORAL_STATION_ANGLE_RADIANS = Math.toRadians(126);
     public static final double RIGHT_CORAL_STATION_ANGLE_RADIANS = Math.toRadians(-126);
     public static final double REEF_AB = Math.toRadians(0);
-    public static final double REEF_CD = Math.toRadians(300);
-    public static final double REEF_EF = Math.toRadians(240);
+    public static final double REEF_CD = Math.toRadians(60);
+    public static final double REEF_EF = Math.toRadians(120);
     public static final double REEF_GH = Math.toRadians(180);
-    public static final double REEF_IJ = Math.toRadians(120);
-    public static final double REEF_KL = Math.toRadians(60);
+    public static final double REEF_IJ = Math.toRadians(240);
+    public static final double REEF_KL = Math.toRadians(300);
   }
 }
