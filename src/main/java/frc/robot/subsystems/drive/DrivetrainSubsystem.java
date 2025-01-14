@@ -6,7 +6,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.team2052.lib.vision.VisionUpdate;
+import com.team2052.lib.vision.MultiTagPoseEstimate;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.*;
@@ -100,7 +100,7 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
     return getKinematics().toChassisSpeeds(getState().ModuleStates);
   }
 
-  public void addVisionUpdate(VisionUpdate visionUpdate) {
+  public void addVisionUpdate(MultiTagPoseEstimate visionUpdate) {
     // if (visionUpdate.getVisionMeasurementStdDevs() == null) {
     this.addVisionMeasurement(
         visionUpdate.estimatedPose.toPose2d(),

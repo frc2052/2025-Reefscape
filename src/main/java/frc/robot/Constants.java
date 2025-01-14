@@ -6,6 +6,8 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team2052.lib.vision.TagTracker.TagTrackerConstants;
+
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -80,7 +82,7 @@ public class Constants {
     public static final class Camera0Constants {
       public static final String CAMERA_NAME = "KrawlerCam_000";
 
-      public static final PoseStrategy STRATEGY = PoseStrategy.AVERAGE_BEST_TARGETS;
+      public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
       public static final Distance X_OFFSET = Inches.of(0.0);
       public static final Distance Y_OFFSET = Inches.of(0.0);
@@ -169,7 +171,7 @@ public class Constants {
     // assumes 0 degrees has the intake facing the driverstation wall
     public static final double LEFT_CORAL_STATION_ANGLE_RADIANS = Math.toRadians(126);
     public static final double RIGHT_CORAL_STATION_ANGLE_RADIANS = Math.toRadians(-126);
-    public static final double REEF_AB = Math.toRadians(0);
+    public static final double REEF_AB = Math.toRadians(0); // id 18
     public static final double REEF_CD = Math.toRadians(60);
     public static final double REEF_EF = Math.toRadians(120);
     public static final double REEF_GH = Math.toRadians(180);

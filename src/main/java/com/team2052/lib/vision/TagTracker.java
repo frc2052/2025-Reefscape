@@ -1,10 +1,8 @@
 package com.team2052.lib.vision;
 
+import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.RobotState;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
@@ -12,8 +10,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
-
-import com.team2052.lib.helpers.MathHelpers;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class TagTracker {
   private PhotonPoseEstimator poseEstimator;
@@ -34,26 +31,31 @@ public class TagTracker {
     return photonCamera.getName();
   }
 
-  public Translation2d getClosestTagTransform() {
-    Translation2d bestTranslation = new Translation2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
-    for(PhotonPipelineResult r : photonCamera.getAllUnreadResults()) {
-      if(r.getBestTarget().bestCameraToTarget.getTranslation().toTranslation2d().getNorm() < bestTranslation.getNorm()) {
-        bestTranslation = r.getBestTarget().bestCameraToTarget.getTranslation().toTranslation2d();
+  public Optional<PhotonTrackedTarget> getClosestTagToCamera() {
+    PhotonTrackedTarget closestTarget = null;
+    for (PhotonPipelineResult r : photonCamera.getAllUnreadResults()) {
+      PhotonTrackedTarget target = r.getBestTarget();
+      if (closestTarget == null) {
+        closestTarget = r.getBestTarget();
+      } else if (target.getBestCameraToTarget()
+          == MathHelpers.getSmallestTransform(
+              target.getBestCameraToTarget(), closestTarget.getBestCameraToTarget())) {
+        closestTarget = r.getBestTarget();
       }
     }
 
-    return bestTranslation;
+    return Optional.ofNullable(closestTarget);
   }
 
-  public Optional<VisionUpdate> resultToVisionUpdate(PhotonPipelineResult result) {
+  public Optional<MultiTagPoseEstimate> resultToMultiTag(PhotonPipelineResult result) {
     Optional<EstimatedRobotPose> estimatedRobotPose = poseEstimator.update(result);
     if (estimatedRobotPose.isPresent()) {
       return Optional.of(
-          new VisionUpdate(
+          new MultiTagPoseEstimate(
               this.photonCamera.getName(), estimatedRobotPose.get(), robotState.getFieldToRobot()));
-    } else {
-      return Optional.empty();
     }
+
+    return Optional.empty();
   }
 
   public static class TagTrackerConstants {

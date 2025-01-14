@@ -13,7 +13,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-public class VisionUpdate {
+public class MultiTagPoseEstimate {
   public final String cameraName;
   public final Pose3d estimatedPose;
   public final PoseStrategy strategyUsed;
@@ -23,7 +23,7 @@ public class VisionUpdate {
   public double avgTagArea = 0.0;
   public final double poseDifference;
 
-  public VisionUpdate(
+  public MultiTagPoseEstimate(
       String cameraName, EstimatedRobotPose estimatedRobotPose, Pose2d currentRobotPose) {
     this.cameraName = cameraName;
     this.estimatedPose = estimatedRobotPose.estimatedPose;

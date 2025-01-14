@@ -5,11 +5,9 @@
 package frc.robot.subsystems.vision;
 
 import com.team2052.lib.helpers.MathHelpers;
+import com.team2052.lib.vision.MultiTagPoseEstimate;
 import com.team2052.lib.vision.TagTracker;
 import com.team2052.lib.vision.VisionPoseAcceptor;
-import com.team2052.lib.vision.VisionUpdate;
-
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants.Camera0Constants;
@@ -21,16 +19,18 @@ import java.util.List;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class VisionSubsystem extends SubsystemBase {
   private DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
   private RobotState robotState = RobotState.getInstance();
-  List<VisionUpdate> synchronizedVisionUpdates =
-      Collections.synchronizedList(new ArrayList<VisionUpdate>());
+  List<MultiTagPoseEstimate> synchronizedVisionUpdates =
+      Collections.synchronizedList(new ArrayList<MultiTagPoseEstimate>());
 
   private List<TagTracker> tagTrackers = new ArrayList<TagTracker>();
 
-  private TagTracker reefTagTracker = new TagTracker(Camera0Constants.TagTrackerConstants(), robotState);
+  private TagTracker reefTagTracker =
+      new TagTracker(Camera0Constants.TagTrackerConstants(), robotState);
 
   private static VisionSubsystem INSTANCE;
 
@@ -41,12 +41,11 @@ public class VisionSubsystem extends SubsystemBase {
 
     return INSTANCE;
   }
-  /** Creates a new VisionSubsystem. */
-  private VisionSubsystem() {
-  }
 
-  public Translation2d getReefCamResult() {
-    return reefTagTracker.getClosestTagTransform();
+  private VisionSubsystem() {}
+
+  public Optional<PhotonTrackedTarget> getReefCamClosestTarget() {
+    return reefTagTracker.getClosestTagToCamera();
   }
 
   private void update() {
@@ -56,7 +55,8 @@ public class VisionSubsystem extends SubsystemBase {
   private void pullCameraData(TagTracker tagTracker) {
     List<PhotonPipelineResult> latestResults = tagTracker.photonCamera.getAllUnreadResults();
     for (int i = 0; i < latestResults.size(); i++) {
-      Optional<VisionUpdate> visionUpdate = tagTracker.resultToVisionUpdate(latestResults.get(i));
+      Optional<MultiTagPoseEstimate> visionUpdate =
+          tagTracker.resultToMultiTag(latestResults.get(i));
 
       if (visionUpdate.isPresent()) {
         synchronizedVisionUpdates.add(visionUpdate.get());
@@ -67,7 +67,7 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  private void updateEstimator(VisionUpdate update) {
+  private void updateEstimator(MultiTagPoseEstimate update) {
     if (VisionPoseAcceptor.shouldAccept(
         update,
         MathHelpers.norm(drivetrain.getCurrentRobotChassisSpeeds()),

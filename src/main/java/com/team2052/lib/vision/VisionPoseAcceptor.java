@@ -10,7 +10,7 @@ import frc.robot.Constants.VisionConstants;
 public class VisionPoseAcceptor {
 
   public static boolean shouldAccept(
-      VisionUpdate visionUpdate, double robotVelocity, Pose2d robotPose, boolean isInAuto) {
+      MultiTagPoseEstimate visionUpdate, double robotVelocity, Pose2d robotPose, boolean isInAuto) {
 
     if (visionUpdate == null) {
       return false;

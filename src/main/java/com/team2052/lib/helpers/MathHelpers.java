@@ -2,6 +2,7 @@ package com.team2052.lib.helpers;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
@@ -32,5 +33,13 @@ public class MathHelpers {
 
   public static double norm(ChassisSpeeds speeds) {
     return Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+  }
+
+  public static Transform3d getSmallestTransform(Transform3d t1, Transform3d t2) {
+    if (t1.getTranslation().getNorm() < t2.getTranslation().getNorm()) {
+      return t1;
+    }
+
+    return t2;
   }
 }

@@ -34,13 +34,13 @@ public class DefaultDriveCommand extends Command {
       RotationsPerSecond.of(0.75)
           .in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-  private final SwerveRequest.FieldCentric fieldCentricDrive =
+  protected final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
           .withDeadband(maxSpeed * 0.05)
           .withRotationalDeadband(maxAngularRate * 0.05) // Add a 5% deadband
           .withDriveRequestType(DriveRequestType.Velocity);
 
-  private final SwerveRequest.RobotCentric robotCentricDrive =
+  protected final SwerveRequest.RobotCentric robotCentricDrive =
       new SwerveRequest.RobotCentric()
           .withDeadband(maxSpeed * 0.05)
           .withRotationalDeadband(maxAngularRate * 0.05) // Add a 5% deadband

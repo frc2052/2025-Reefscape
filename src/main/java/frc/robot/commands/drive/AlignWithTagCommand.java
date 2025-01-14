@@ -4,53 +4,86 @@
 
 package frc.robot.commands.drive;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
+import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.drive.DrivetrainSubsystem;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocations;
 import frc.robot.subsystems.vision.VisionSubsystem;
-import frc.robot.util.io.Dashboard;
+import java.util.function.DoubleSupplier;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
+import com.ctre.phoenix6.swerve.SwerveModule;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 
 public class AlignWithTagCommand extends DefaultDriveCommand {
   private final VisionSubsystem vision = VisionSubsystem.getInstance();
   private final PIDController yController;
   private boolean lockedOnTag = false;
-  public AlignWithTagCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier) { // add enum supplier for scoring position, left middle or right
+  private PhotonTrackedTarget target;
+
+  private SwerveRequest.FieldCentricFacingAngle drive =
+      new SwerveRequest.FieldCentricFacingAngle()
+          .withDeadband(super.maxSpeed * 0.05)
+          .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+
+  public AlignWithTagCommand(
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier,
+      DoubleSupplier rotationSupplier) { // add enum supplier for scoring position, left middle or right
     super(xSupplier, ySupplier, rotationSupplier, () -> false);
     yController = new PIDController(1.75, 0, 0);
     yController.setTolerance(0.5);
   }
 
   @Override
-  protected double getY() {
+  public SwerveRequest getSwerveRequest() {
     if(!lockedOnTag) {
+      return super.getSwerveRequest();
+    } else {
+      return drive.withTargetDirection(getDirection());
+    }
+  }
+
+  @Override
+  public double getY() {
+    if (!lockedOnTag) {
       return super.getY();
     } else {
-      //put stuff here
+      // put stuff here
       return 0;
     }
   }
 
-  @Override
-  protected double getRotation() {
-    if(!lockedOnTag) {
+  public double getDirection() {
+    if (!lockedOnTag) {
       return super.getRotation();
     } else {
-      //put stuff here for facing side of reef that tag is on
+      switch(target.fiducialId) {
+        case 18:
+           SnapLocations.ReefAB
+      }
+
       return 0;
     }
   }
 
   @Override
-  protected boolean getFieldCentric() {
-    if(!lockedOnTag) {
+  public boolean getFieldCentric() {
+    if (!lockedOnTag) {
       return super.getFieldCentric();
     } else {
       return false;
     }
+  }
+
+  @Override
+  public void execute() {
+    lockedOnTag = vision.getReefCamClosestTarget().isPresent();
+    if (lockedOnTag) {
+      target = vision.getReefCamClosestTarget().get();
+    }
+    super.execute();
   }
 
   // Returns true when the command should end.
