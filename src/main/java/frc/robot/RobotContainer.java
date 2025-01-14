@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.drive.AlignWithTagCommand;
+import frc.robot.commands.drive.AlignWithTagCommand.AlignLocation;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.controlboard.ControlBoard;
@@ -55,6 +56,7 @@ public class RobotContainer {
         .reefAlignment()
         .whileTrue(
             new AlignWithTagCommand(
+                AlignLocation.MIDDLE,
                 controlBoard::getThrottle,
                 // Sideways velocity supplier.
                 controlBoard::getStrafe,
@@ -69,7 +71,7 @@ public class RobotContainer {
         .povUp()
         .whileTrue(
             new SnapToLocationAngleCommand(
-                SnapToLocationAngleCommand.SnapLocations.ReefGH,
+                SnapToLocationAngleCommand.SnapLocation.ReefGH,
                 controlBoard::getThrottle,
                 controlBoard::getStrafe,
                 controlBoard::getRotation,
@@ -79,7 +81,7 @@ public class RobotContainer {
         .povUpRight()
         .whileTrue(
             new SnapToLocationAngleCommand(
-                SnapToLocationAngleCommand.SnapLocations.ReefEF,
+                SnapToLocationAngleCommand.SnapLocation.ReefEF,
                 controlBoard::getThrottle,
                 controlBoard::getStrafe,
                 controlBoard::getRotation,
@@ -89,7 +91,7 @@ public class RobotContainer {
         .povRight()
         .whileTrue(
             new SnapToLocationAngleCommand(
-                SnapToLocationAngleCommand.SnapLocations.RightCoralStation,
+                SnapToLocationAngleCommand.SnapLocation.RightCoralStation,
                 controlBoard::getThrottle,
                 controlBoard::getStrafe,
                 controlBoard::getRotation,
@@ -99,7 +101,7 @@ public class RobotContainer {
         .povDownRight()
         .whileTrue(
             new SnapToLocationAngleCommand(
-                SnapToLocationAngleCommand.SnapLocations.ReefCD,
+                SnapToLocationAngleCommand.SnapLocation.ReefCD,
                 controlBoard::getThrottle,
                 controlBoard::getStrafe,
                 controlBoard::getRotation,
@@ -109,7 +111,7 @@ public class RobotContainer {
         .povDown()
         .whileTrue(
             new SnapToLocationAngleCommand(
-                SnapToLocationAngleCommand.SnapLocations.ReefAB,
+                SnapToLocationAngleCommand.SnapLocation.ReefAB,
                 controlBoard::getThrottle,
                 controlBoard::getStrafe,
                 controlBoard::getRotation,
@@ -119,7 +121,7 @@ public class RobotContainer {
         .povDownLeft()
         .whileTrue(
             new SnapToLocationAngleCommand(
-                SnapToLocationAngleCommand.SnapLocations.ReefKL,
+                SnapToLocationAngleCommand.SnapLocation.ReefKL,
                 controlBoard::getThrottle,
                 controlBoard::getStrafe,
                 controlBoard::getRotation,
@@ -129,7 +131,7 @@ public class RobotContainer {
         .povLeft()
         .whileTrue(
             new SnapToLocationAngleCommand(
-                SnapToLocationAngleCommand.SnapLocations.LeftCoralStation,
+                SnapToLocationAngleCommand.SnapLocation.LeftCoralStation,
                 controlBoard::getThrottle,
                 controlBoard::getStrafe,
                 controlBoard::getRotation,
@@ -139,7 +141,7 @@ public class RobotContainer {
         .povUpLeft()
         .whileTrue(
             new SnapToLocationAngleCommand(
-                SnapToLocationAngleCommand.SnapLocations.ReefIJ,
+                SnapToLocationAngleCommand.SnapLocation.ReefIJ,
                 controlBoard::getThrottle,
                 controlBoard::getStrafe,
                 controlBoard::getRotation,

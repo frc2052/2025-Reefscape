@@ -8,9 +8,13 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.controller.PIDController;
+import com.team2052.lib.planners.AutoAlignPlanner;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocations;
+import frc.robot.RobotState;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
@@ -18,83 +22,39 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class AlignWithTagCommand extends DefaultDriveCommand {
   private final VisionSubsystem vision = VisionSubsystem.getInstance();
+  private final RobotState robotState = RobotState.getInstance();
   private PhotonTrackedTarget target;
-  private PIDController yController;
+  private AlignLocation scoringLocation;
+  private AutoAlignPlanner planner;
   private Timer targetTimer = new Timer();
 
-  private SwerveRequest.RobotCentric drive =
-      new SwerveRequest.RobotCentric()
-          .withDeadband(super.maxSpeed * 0.05)
+  private SwerveRequest.ApplyFieldSpeeds drive =
+      new SwerveRequest.ApplyFieldSpeeds()
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
   public AlignWithTagCommand(
+      AlignLocation scoringLocation,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier
           rotationSupplier) { // add enum supplier for scoring position, left middle or right
     super(xSupplier, ySupplier, rotationSupplier, () -> false);
-    yController = new PIDController(1.5, 0, 0.1);
-    yController.setSetpoint(0);
+
+    this.scoringLocation = scoringLocation;
+    planner = new AutoAlignPlanner();
   }
 
   @Override
   public SwerveRequest getSwerveRequest() {
     if (target != null) {
-      return drive.withVelocityX(super.getX()).withVelocityY(getYController() * super.maxSpeed);
+      return drive.withSpeeds(
+          planner.calculate(
+              target.getBestCameraToTarget(),
+              scoringLocation.goalTransform,
+              robotState.getFieldToRobot()));
     } else {
       return super.getSwerveRequest();
     }
-  }
-
-  public double getYController() {
-    System.out.println("num " + yController.calculate(target.getBestCameraToTarget().getY()));
-    return yController.calculate(target.getBestCameraToTarget().getY());
-  }
-
-  public SnapLocations getDirection() {
-    SnapLocations location;
-    switch (target.fiducialId) {
-      case 18:
-        location = SnapLocations.ReefAB;
-        break;
-      case 17:
-        location = SnapLocations.ReefCD;
-        break;
-      case 22:
-        location = SnapLocations.ReefEF;
-        break;
-      case 21:
-        location = SnapLocations.ReefGH;
-        break;
-      case 20:
-        location = SnapLocations.ReefIJ;
-        break;
-      case 19:
-        location = SnapLocations.ReefKL;
-        break;
-      case 10:
-        location = SnapLocations.ReefGH;
-        break;
-      case 11:
-        location = SnapLocations.ReefIJ;
-        break;
-      case 6:
-        location = SnapLocations.ReefKL;
-        break;
-      case 7:
-        location = SnapLocations.ReefAB;
-        break;
-      case 8:
-        location = SnapLocations.ReefCD;
-        break;
-      case 9:
-        location = SnapLocations.ReefEF;
-        break;
-      default:
-        location = SnapLocations.FORWARD;
-    }
-
-    return location;
   }
 
   @Override
@@ -107,12 +67,74 @@ public class AlignWithTagCommand extends DefaultDriveCommand {
       System.out.println("no target");
       target = null;
     }
+    target = new PhotonTrackedTarget();
     super.execute();
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return yController.atSetpoint();
+    return planner.getAutoAlignComplete();
+  }
+
+  // public SnapLocation getDirection() {
+  //   SnapLocation location;
+  //   switch (target.fiducialId) {
+  //     case 18:
+  //       location = SnapLocation.ReefAB;
+  //       break;
+  //     case 17:
+  //       location = SnapLocation.ReefCD;
+  //       break;
+  //     case 22:
+  //       location = SnapLocation.ReefEF;
+  //       break;
+  //     case 21:
+  //       location = SnapLocation.ReefGH;
+  //       break;
+  //     case 20:
+  //       location = SnapLocation.ReefIJ;
+  //       break;
+  //     case 19:
+  //       location = SnapLocation.ReefKL;
+  //       break;
+  //     case 10:
+  //       location = SnapLocation.ReefGH;
+  //       break;
+  //     case 11:
+  //       location = SnapLocation.ReefIJ;
+  //       break;
+  //     case 6:
+  //       location = SnapLocation.ReefKL;
+  //       break;
+  //     case 7:
+  //       location = SnapLocation.ReefAB;
+  //       break;
+  //     case 8:
+  //       location = SnapLocation.ReefCD;
+  //       break;
+  //     case 9:
+  //       location = SnapLocation.ReefEF;
+  //       break;
+  //     default:
+  //       location = SnapLocation.FORWARD;
+  //   }
+
+  //   return location;
+  // }
+
+  public enum AlignLocation {
+    LEFT(new Transform2d(0.5, 0.5, new Rotation2d())),
+    MIDDLE(new Transform2d(0.5, 0.0, new Rotation2d())),
+    RIGHT(new Transform2d(0.5, -0.5, new Rotation2d()));
+
+    private Transform2d goalTransform;
+
+    private AlignLocation(Transform2d gt) {
+      this.goalTransform = gt;
+    }
+
+    public Transform2d getTransform3d() {
+      return goalTransform;
+    }
   }
 }
