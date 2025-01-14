@@ -96,7 +96,7 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
-  public Trigger aimToGoal() {
+  public Trigger reefAlignment() {
     return new JoystickButton(rotateStick, 3);
   }
 

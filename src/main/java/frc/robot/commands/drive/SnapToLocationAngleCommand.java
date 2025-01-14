@@ -5,12 +5,15 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
+import frc.robot.RobotState;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SnapToLocationAngleCommand extends SnapToAngleCommand {
+  SnapLocations goalSnap;
   /** Creates a new SnapToLocationAngleCommand. */
   public SnapToLocationAngleCommand(
       SnapLocations snapLocations,
@@ -24,11 +27,15 @@ public class SnapToLocationAngleCommand extends SnapToAngleCommand {
         ySupplier,
         rotationSupplier,
         fieldCentricSupplier);
+
+    goalSnap = snapLocations;
   }
 
-  private static double getLocationAngleRadians(SnapLocations snapLocations) {
+  public static double getLocationAngleRadians(SnapLocations snapLocations) {
     double angleRadians = 0;
     switch (snapLocations) {
+      case FORWARD:
+        angleRadians = 0;
       case LeftCoralStation:
         angleRadians = Constants.FieldAndRobotConstants.LEFT_CORAL_STATION_ANGLE_RADIANS;
         break;
@@ -54,15 +61,23 @@ public class SnapToLocationAngleCommand extends SnapToAngleCommand {
         angleRadians = Constants.FieldAndRobotConstants.REEF_KL;
         break;
     }
+
     return angleRadians;
   }
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    double currentRotation = RobotState.getInstance().getFieldToRobot().getRotation().getDegrees();
+    if (currentRotation + 5 > Units.radiansToDegrees(getLocationAngleRadians(goalSnap))
+        && currentRotation - 5 < Units.radiansToDegrees(getLocationAngleRadians(goalSnap))) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public enum SnapLocations {
+    FORWARD,
     LeftCoralStation,
     RightCoralStation,
     ReefAB,

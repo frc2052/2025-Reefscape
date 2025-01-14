@@ -6,8 +6,6 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team2052.lib.vision.TagTracker.TagTrackerConstants;
-
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -169,13 +167,13 @@ public class Constants {
   public static final class FieldAndRobotConstants {
 
     // assumes 0 degrees has the intake facing the driverstation wall
-    public static final double LEFT_CORAL_STATION_ANGLE_RADIANS = Math.toRadians(126);
-    public static final double RIGHT_CORAL_STATION_ANGLE_RADIANS = Math.toRadians(-126);
-    public static final double REEF_AB = Math.toRadians(0); // id 18
-    public static final double REEF_CD = Math.toRadians(60);
-    public static final double REEF_EF = Math.toRadians(120);
-    public static final double REEF_GH = Math.toRadians(180);
-    public static final double REEF_IJ = Math.toRadians(240);
-    public static final double REEF_KL = Math.toRadians(300);
+    public static final double LEFT_CORAL_STATION_ANGLE_RADIANS = Math.toRadians(306);
+    public static final double RIGHT_CORAL_STATION_ANGLE_RADIANS = Math.toRadians(-306);
+    public static final double REEF_AB = Math.toRadians(180); // id 18
+    public static final double REEF_CD = Math.toRadians(240);
+    public static final double REEF_EF = Math.toRadians(300);
+    public static final double REEF_GH = Math.toRadians(0);
+    public static final double REEF_IJ = Math.toRadians(90);
+    public static final double REEF_KL = Math.toRadians(120);
   }
 }

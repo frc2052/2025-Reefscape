@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
+import frc.robot.commands.drive.AlignWithTagCommand;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.controlboard.ControlBoard;
@@ -50,6 +51,15 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
     controlBoard.resetGyro().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
     configurePOVBindings();
+    controlBoard
+        .reefAlignment()
+        .whileTrue(
+            new AlignWithTagCommand(
+                controlBoard::getThrottle,
+                // Sideways velocity supplier.
+                controlBoard::getStrafe,
+                // Rotation velocity supplier.
+                controlBoard::getRotation));
   }
 
   private void configurePOVBindings() {

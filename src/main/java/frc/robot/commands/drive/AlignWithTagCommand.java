@@ -6,82 +6,106 @@ package frc.robot.commands.drive;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.swerve.SwerveModule;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.controller.PIDController;
-import frc.robot.Constants.VisionConstants;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocations;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-import com.ctre.phoenix6.swerve.SwerveModule;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-
 public class AlignWithTagCommand extends DefaultDriveCommand {
   private final VisionSubsystem vision = VisionSubsystem.getInstance();
-  private final PIDController yController;
-  private boolean lockedOnTag = false;
   private PhotonTrackedTarget target;
+  private PIDController yController;
+  private Timer targetTimer = new Timer();
 
-  private SwerveRequest.FieldCentricFacingAngle drive =
-      new SwerveRequest.FieldCentricFacingAngle()
+  private SwerveRequest.RobotCentric drive =
+      new SwerveRequest.RobotCentric()
           .withDeadband(super.maxSpeed * 0.05)
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
   public AlignWithTagCommand(
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
-      DoubleSupplier rotationSupplier) { // add enum supplier for scoring position, left middle or right
+      DoubleSupplier
+          rotationSupplier) { // add enum supplier for scoring position, left middle or right
     super(xSupplier, ySupplier, rotationSupplier, () -> false);
-    yController = new PIDController(1.75, 0, 0);
-    yController.setTolerance(0.5);
+    yController = new PIDController(1.5, 0, 0.1);
+    yController.setSetpoint(0);
   }
 
   @Override
   public SwerveRequest getSwerveRequest() {
-    if(!lockedOnTag) {
+    if (target != null) {
+      return drive.withVelocityX(super.getX()).withVelocityY(getYController() * super.maxSpeed);
+    } else {
       return super.getSwerveRequest();
-    } else {
-      return drive.withTargetDirection(getDirection());
     }
   }
 
-  @Override
-  public double getY() {
-    if (!lockedOnTag) {
-      return super.getY();
-    } else {
-      // put stuff here
-      return 0;
-    }
+  public double getYController() {
+    System.out.println("num " + yController.calculate(target.getBestCameraToTarget().getY()));
+    return yController.calculate(target.getBestCameraToTarget().getY());
   }
 
-  public double getDirection() {
-    if (!lockedOnTag) {
-      return super.getRotation();
-    } else {
-      switch(target.fiducialId) {
-        case 18:
-           SnapLocations.ReefAB
-      }
-
-      return 0;
+  public SnapLocations getDirection() {
+    SnapLocations location;
+    switch (target.fiducialId) {
+      case 18:
+        location = SnapLocations.ReefAB;
+        break;
+      case 17:
+        location = SnapLocations.ReefCD;
+        break;
+      case 22:
+        location = SnapLocations.ReefEF;
+        break;
+      case 21:
+        location = SnapLocations.ReefGH;
+        break;
+      case 20:
+        location = SnapLocations.ReefIJ;
+        break;
+      case 19:
+        location = SnapLocations.ReefKL;
+        break;
+      case 10:
+        location = SnapLocations.ReefGH;
+        break;
+      case 11:
+        location = SnapLocations.ReefIJ;
+        break;
+      case 6:
+        location = SnapLocations.ReefKL;
+        break;
+      case 7:
+        location = SnapLocations.ReefAB;
+        break;
+      case 8:
+        location = SnapLocations.ReefCD;
+        break;
+      case 9:
+        location = SnapLocations.ReefEF;
+        break;
+      default:
+        location = SnapLocations.FORWARD;
     }
-  }
 
-  @Override
-  public boolean getFieldCentric() {
-    if (!lockedOnTag) {
-      return super.getFieldCentric();
-    } else {
-      return false;
-    }
+    return location;
   }
 
   @Override
   public void execute() {
-    lockedOnTag = vision.getReefCamClosestTarget().isPresent();
-    if (lockedOnTag) {
-      target = vision.getReefCamClosestTarget().get();
+    Optional<PhotonTrackedTarget> tar = vision.getReefCamClosestTarget();
+    if (tar.isPresent() && tar.get().getBestCameraToTarget() != null) {
+      targetTimer.restart();
+      target = tar.get();
+    } else if (targetTimer.hasElapsed(0.2)) {
+      System.out.println("no target");
+      target = null;
     }
     super.execute();
   }
@@ -89,6 +113,6 @@ public class AlignWithTagCommand extends DefaultDriveCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return yController.atSetpoint();
   }
 }

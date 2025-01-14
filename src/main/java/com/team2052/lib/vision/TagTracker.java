@@ -34,13 +34,15 @@ public class TagTracker {
   public Optional<PhotonTrackedTarget> getClosestTagToCamera() {
     PhotonTrackedTarget closestTarget = null;
     for (PhotonPipelineResult r : photonCamera.getAllUnreadResults()) {
-      PhotonTrackedTarget target = r.getBestTarget();
-      if (closestTarget == null) {
-        closestTarget = r.getBestTarget();
-      } else if (target.getBestCameraToTarget()
-          == MathHelpers.getSmallestTransform(
-              target.getBestCameraToTarget(), closestTarget.getBestCameraToTarget())) {
-        closestTarget = r.getBestTarget();
+      if (r.hasTargets()) {
+        PhotonTrackedTarget target = r.getBestTarget();
+        if (closestTarget == null) {
+          closestTarget = r.getBestTarget();
+        } else if (target.getBestCameraToTarget()
+            == MathHelpers.getSmallestTransform(
+                target.getBestCameraToTarget(), closestTarget.getBestCameraToTarget())) {
+          closestTarget = r.getBestTarget();
+        }
       }
     }
 

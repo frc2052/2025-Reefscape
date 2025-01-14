@@ -93,7 +93,7 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
-  public Trigger aimToGoal() {
+  public Trigger reefAlignment() {
     return controller.button(1);
   }
 
