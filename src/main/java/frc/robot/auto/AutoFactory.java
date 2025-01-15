@@ -13,7 +13,8 @@ import frc.robot.util.io.Dashboard;
 // select, compile, recompile autos before start of a match
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
-    private final Supplier<Double> waitSecondsSupplier = () -> Dashboard.getInstance().getWaitSeconds();
+    private final Supplier<Double> waitSecondsEntrySupplier = () -> Dashboard.getInstance().getWaitEntry();
+
     private Auto currentAuto;
     private AutoBase compiledAuto;
 
@@ -43,7 +44,7 @@ public class AutoFactory {
     private AutoFactory(){};
 
     public boolean recompileNeeded() {
-        return autoSupplier.get() != currentAuto || waitSecondsSupplier.get() != savedWaitSeconds;
+        return autoSupplier.get() != currentAuto || waitSecondsEntrySupplier.get() != savedWaitSeconds;
     }
 
     public void recompile() {
@@ -62,7 +63,7 @@ public class AutoFactory {
 
         // update wait seconds
         waitSecondsSavedKey.set(false);
-        selectedWaitSeconds = waitSecondsSupplier.get().doubleValue();
+        selectedWaitSeconds = waitSecondsEntrySupplier.get().doubleValue();
         savedWaitSeconds = selectedWaitSeconds;
         waitSecondsDisplay.set("Chosen Wait Seconds: " + savedWaitSeconds);
         waitSecondsSavedKey.set(true);

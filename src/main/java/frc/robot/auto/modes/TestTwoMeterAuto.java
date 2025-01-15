@@ -7,6 +7,7 @@ package frc.robot.auto.modes;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import frc.robot.auto.AutoBase;
+import frc.robot.auto.AutoBase.Paths;
 
 /** Add your docs here. */
 public class TestTwoMeterAuto extends AutoBase{
@@ -18,6 +19,6 @@ public class TestTwoMeterAuto extends AutoBase{
     @Override
     public void init() {
         waitTime();
-        // addCommands(followPathCommand(Paths.test2MeterPath));
+        addCommands(followPathCommand(Paths.test2MeterPath));
     }
 }

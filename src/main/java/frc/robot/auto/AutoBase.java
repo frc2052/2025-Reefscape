@@ -83,17 +83,15 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
   }
 
-  public static final class Paths{ // to avoid rewriting in every path
-
+  public static final class Paths { // to avoid rewriting in every path
     // SL = Start Left 
     // SR = Start Right
     // LL = Left (Barge Side) Coral Station
     // RL = Right (Processor Side) Coral Station
     // Letter + Number = Reef Scoring Position
 
-
     // ex:
     // public final static PathPlannerPath AB_BARGECS = getPathFromFile("AB - Barge Coral Station");
-    // PathPlannerPath test2MeterPath = PathPlannerPath.fromChoreoTrajectory("Test Path");
+    public static final PathPlannerPath test2MeterPath = getPathFromFile("Test Path");
   }
 }
