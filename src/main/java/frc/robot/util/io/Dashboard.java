@@ -1,5 +1,6 @@
 package frc.robot.util.io;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import edu.wpi.first.util.sendable.Sendable;
@@ -14,6 +15,9 @@ public class Dashboard {
 
   private final LoggedDashboardChooser<Auto> autoChooser = 
     new LoggedDashboardChooser<Auto>("Auto Mode");
+
+  private final LoggedDashboardChooser<Double> waitChooser = 
+    new LoggedDashboardChooser<Double>("Wait Seconds");
 
   private static Dashboard INSTANCE;
 
@@ -35,6 +39,11 @@ public class Dashboard {
     for (Auto auto : Auto.values()) {
       autoChooser.addOption(auto.name(), auto);
     }
+
+    waitChooser.addDefaultOption("0", 0.0);
+    waitChooser.addDefaultOption("1.0", 1.0);
+    waitChooser.addDefaultOption("2", 2.0);
+    waitChooser.addDefaultOption("3", 3.0);
   }
 
   public <V> void putData(String key, V value) {
@@ -60,6 +69,10 @@ public class Dashboard {
 
   public Auto getAuto(){
     return autoChooser.get();
+  }
+
+  public double getWaitSeconds(){
+    return waitChooser.get().doubleValue();
   }
 
   // Enums for Dashboard elements:

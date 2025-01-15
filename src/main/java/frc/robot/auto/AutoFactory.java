@@ -8,18 +8,29 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 import edu.wpi.first.epilogue.Logged;
 import frc.robot.Constants.DashboardConstants;
+import frc.robot.auto.modes.TestTwoMeterAuto;
 import frc.robot.util.io.Dashboard;
 // select, compile, recompile autos before start of a match
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
+    private final Supplier<Double> waitSecondsSupplier = () -> Dashboard.getInstance().getWaitSeconds();
     private Auto currentAuto;
     private AutoBase compiledAuto;
+
+    private double selectedWaitSeconds;
+    private double savedWaitSeconds;
 
     private static LoggedNetworkBoolean autoCompiled =
         new LoggedNetworkBoolean(DashboardConstants.AUTO_COMPILED_KEY, false);
 
     private static LoggedNetworkString autoDescription = 
         new LoggedNetworkString(DashboardConstants.AUTO_DESCRIPTION_KEY, "No Description");
+
+    private static LoggedNetworkBoolean waitSecondsSavedKey = 
+        new LoggedNetworkBoolean(DashboardConstants.WAIT_SECONDS_SAVED_KEY, false);
+
+    private static LoggedNetworkString waitSecondsDisplay = 
+        new LoggedNetworkString(DashboardConstants.WAIT_SECONDS_DISPLAY_KEY, "DEFAULT - 0.0");
 
     private static AutoFactory INSTANCE;
     public static AutoFactory getInstance(){
@@ -32,7 +43,7 @@ public class AutoFactory {
     private AutoFactory(){};
 
     public boolean recompileNeeded() {
-        return autoSupplier.get() != currentAuto;
+        return autoSupplier.get() != currentAuto || waitSecondsSupplier.get() != savedWaitSeconds;
     }
 
     public void recompile() {
@@ -48,14 +59,26 @@ public class AutoFactory {
             compiledAuto.init();
         }
         autoCompiled.set(true);
+
+        // update wait seconds
+        waitSecondsSavedKey.set(false);
+        selectedWaitSeconds = waitSecondsSupplier.get().doubleValue();
+        savedWaitSeconds = selectedWaitSeconds;
+        waitSecondsDisplay.set("Chosen Wait Seconds: " + savedWaitSeconds);
+        waitSecondsSavedKey.set(true);
     }
 
     public AutoBase getCompiledAuto(){
         return compiledAuto;
     }
+
+    public double getSavedWaitSeconds(){
+        return savedWaitSeconds;
+    }
     
     public static enum Auto {
-        NO_AUTO(null);
+        NO_AUTO(null),
+        TEST_2_METER_AUTO(TestTwoMeterAuto.class);
     
         private final Class<? extends AutoBase> autoClass;
     

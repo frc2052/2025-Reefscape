@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 
@@ -26,6 +27,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
   private final RobotState robotState = RobotState.getInstance();
   private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
   private Pose2d startPose;
+  private final AutoFactory autoFactory = AutoFactory.getInstance();
   
   protected AutoBase(Optional<Pose2d> pathStartPose) {
     if (pathStartPose.isEmpty()) {
@@ -44,6 +46,10 @@ public abstract class AutoBase extends SequentialCommandGroup {
   }
 
   public abstract void init(); // defined in each Auto class
+
+  public void waitTime(){
+    addCommands(new WaitCommand(autoFactory.getSavedWaitSeconds()));
+  }
 
   private void setStartPose(Pose2d pathStartPose){
     addCommands(new InstantCommand(() -> drivetrain.resetPose(pathStartPose)));
@@ -64,6 +70,19 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
   }
 
+  // test
+  public static Optional<Pose2d> getStartPoseFromAutoFile(String autoName) {
+    try {
+      List<PathPlannerPath> pathList = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
+      return (pathList.get(0).getStartingHolonomicPose());
+    } catch (Exception e) {
+      DriverStation.reportError(
+          "Couldn't get starting pose from auto file: " + autoName + e.getMessage(),
+          e.getStackTrace());
+      return null;
+    }
+  }
+
   public static final class Paths{ // to avoid rewriting in every path
 
     // SL = Start Left 
@@ -75,6 +94,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     // ex:
     // public final static PathPlannerPath AB_BARGECS = getPathFromFile("AB - Barge Coral Station");
-
+    // PathPlannerPath test2MeterPath = PathPlannerPath.fromChoreoTrajectory("Test Path");
   }
 }
