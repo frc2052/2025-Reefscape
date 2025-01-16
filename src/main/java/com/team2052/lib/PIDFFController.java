@@ -30,11 +30,13 @@ public class PIDFFController {
   }
 
   public double calculate(double measurement) {
-    return feedforward.calculate(pidController.calculate(measurement));
+    return pidController.calculate(measurement)
+        + feedforward.calculate(pidController.calculate(measurement));
   }
 
   public double calculate(double measurement, double setpoint) {
-    return feedforward.calculate(pidController.calculate(measurement, setpoint));
+    return pidController.calculate(measurement)
+        + feedforward.calculate(pidController.calculate(measurement, setpoint));
   }
 
   public boolean atSetpoint() {

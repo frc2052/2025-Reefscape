@@ -10,9 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.team2052.lib.planners.AutoAlignPlanner;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotState;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -47,6 +45,10 @@ public class AlignWithTagCommand extends DefaultDriveCommand {
   @Override
   public SwerveRequest getSwerveRequest() {
     if (target != null) {
+      // System.out.println(
+      //     "Camera Transform Rotation"
+      //         + target.getBestCameraToTarget().getRotation().toRotation2d().getDegrees());
+      // return super.getSwerveRequest();
       return drive.withSpeeds(
           planner.calculate(
               target.getBestCameraToTarget(),
@@ -67,7 +69,6 @@ public class AlignWithTagCommand extends DefaultDriveCommand {
       System.out.println("no target");
       target = null;
     }
-    target = new PhotonTrackedTarget();
     super.execute();
   }
 
@@ -123,9 +124,9 @@ public class AlignWithTagCommand extends DefaultDriveCommand {
   // }
 
   public enum AlignLocation {
-    LEFT(new Transform2d(0.5, 0.5, new Rotation2d())),
-    MIDDLE(new Transform2d(0.5, 0.0, new Rotation2d())),
-    RIGHT(new Transform2d(0.5, -0.5, new Rotation2d()));
+    LEFT(new Transform2d(0.2, 0.5, new Rotation2d())),
+    MIDDLE(new Transform2d(0.2, 0.01, Rotation2d.fromDegrees(177))),
+    RIGHT(new Transform2d(0.2, -0.5, new Rotation2d()));
 
     private Transform2d goalTransform;
 
@@ -133,7 +134,7 @@ public class AlignWithTagCommand extends DefaultDriveCommand {
       this.goalTransform = gt;
     }
 
-    public Transform2d getTransform3d() {
+    public Transform2d getTransform2d() {
       return goalTransform;
     }
   }
