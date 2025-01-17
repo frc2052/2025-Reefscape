@@ -4,70 +4,99 @@
 
 package frc.robot.commands.drive;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radians;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
+import frc.robot.RobotState;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SnapToLocationAngleCommand extends SnapToAngleCommand {
-  /** Creates a new SnapToLocationAngleCommand. */
+  SnapLocation goalSnap;
+
   public SnapToLocationAngleCommand(
-    SnapLocations snapLocations,
-    DoubleSupplier xSupplier,
-    DoubleSupplier ySupplier,
-    DoubleSupplier rotationSupplier,
-    BooleanSupplier fieldCentricSupplier
-  ) {
-    super(new Rotation2d(getLocationAngleRadians(snapLocations)), xSupplier, ySupplier, rotationSupplier, fieldCentricSupplier);
+      SnapLocation snapLocations,
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier,
+      DoubleSupplier rotationSupplier,
+      BooleanSupplier fieldCentricSupplier) {
+    super(
+        new Rotation2d(getLocationAngleRadians(snapLocations)),
+        xSupplier,
+        ySupplier,
+        rotationSupplier,
+        fieldCentricSupplier);
+
+    goalSnap = snapLocations;
   }
 
-  private static double getLocationAngleRadians(SnapLocations snapLocations) {
+  public static double getLocationAngleRadians(SnapLocation snapLocations) {
     double angleRadians = 0;
     switch (snapLocations) {
+      case FORWARD:
+        angleRadians = SnapLocation.FORWARD.getRobotAngle().in(Radians);
       case LeftCoralStation:
-        angleRadians = Constants.FieldAndRobotConstants.LEFT_CORAL_STATION_ANGLE_RADIANS;
+        angleRadians = SnapLocation.LeftCoralStation.getRobotAngle().in(Radians);
         break;
       case RightCoralStation:
-        angleRadians = Constants.FieldAndRobotConstants.RIGHT_CORAL_STATION_ANGLE_RADIANS;
+        angleRadians = SnapLocation.RightCoralStation.getRobotAngle().in(Radians);
         break;
       case ReefAB:
-        angleRadians = Constants.FieldAndRobotConstants.REEF_AB;
+        angleRadians = SnapLocation.ReefAB.getRobotAngle().in(Radians);
         break;
       case ReefCD:
-        angleRadians = Constants.FieldAndRobotConstants.REEF_CD;
+        angleRadians = SnapLocation.ReefCD.getRobotAngle().in(Radians);
         break;
       case ReefEF:
-        angleRadians = Constants.FieldAndRobotConstants.REEF_EF;
+        angleRadians = SnapLocation.ReefEF.getRobotAngle().in(Radians);
         break;
       case ReefGH:
-        angleRadians = Constants.FieldAndRobotConstants.REEF_GH;
+        angleRadians = SnapLocation.ReefGH.getRobotAngle().in(Radians);
         break;
       case ReefIJ:
-        angleRadians = Constants.FieldAndRobotConstants.REEF_IJ;
+        angleRadians = SnapLocation.ReefIJ.getRobotAngle().in(Radians);
         break;
       case ReefKL:
-        angleRadians = Constants.FieldAndRobotConstants.REEF_KL;
+        angleRadians = SnapLocation.ReefKL.getRobotAngle().in(Radians);
         break;
     }
+
     return angleRadians;
   }
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    double currentRotation = RobotState.getInstance().getFieldToRobot().getRotation().getDegrees();
+    if (currentRotation + 5 > Units.radiansToDegrees(getLocationAngleRadians(goalSnap))
+        && currentRotation - 5 < Units.radiansToDegrees(getLocationAngleRadians(goalSnap))) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  public enum SnapLocations {
-    LeftCoralStation,
-    RightCoralStation,
-    ReefAB,
-    ReefCD,
-    ReefEF,
-    ReefGH,
-    ReefIJ,
-    ReefKL
+  public enum SnapLocation {
+    FORWARD(Degrees.of(0)),
+    LeftCoralStation(Degrees.of(306)),
+    RightCoralStation(Degrees.of(-306)),
+    ReefAB(Degrees.of(180)),
+    ReefCD(Degrees.of(240)),
+    ReefEF(Degrees.of(300)),
+    ReefGH(Degrees.of(0)),
+    ReefIJ(Degrees.of(90)),
+    ReefKL(Degrees.of(120));
+
+    private Angle robotAngle;
+
+    private SnapLocation(Angle robotAngle) {
+      this.robotAngle = robotAngle;
+    }
+
+    public Angle getRobotAngle() {
+      return robotAngle;
+    }
   }
 }

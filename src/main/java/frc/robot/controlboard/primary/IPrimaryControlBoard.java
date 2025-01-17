@@ -36,7 +36,7 @@ public interface IPrimaryControlBoard {
 
   Trigger shoot();
 
-  Trigger aimToGoal();
+  Trigger reefAlignment();
 
   Trigger aimToAmp();
 }

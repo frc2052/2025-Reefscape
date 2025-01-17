@@ -7,15 +7,15 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import frc.robot.auto.AutoFactory.Auto;
+import frc.robot.auto.common.AutoFactory.Auto;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class Dashboard {
-  // private final LoggedDashboardChooser<DriveMode> driveModeChooser =
-  //     new LoggedDashboardChooser<>("Drive Mode");
+  private final LoggedDashboardChooser<DriveMode> driveModeChooser =
+      new LoggedDashboardChooser<>("Drive Mode");
 
-  private final LoggedDashboardChooser<Auto> autoChooser = 
-    new LoggedDashboardChooser<Auto>("Auto Mode");
+  private final LoggedDashboardChooser<Auto> autoChooser =
+      new LoggedDashboardChooser<Auto>("Auto Mode");
 
   private final GenericEntry waitTimeEntry = 
     Shuffleboard.getTab("Drive").add("Wait Tmime Entry", 0).getEntry();
@@ -31,9 +31,9 @@ public class Dashboard {
   }
 
   private Dashboard() {
-    // driveModeChooser.addDefaultOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
-    // driveModeChooser.addOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
-    // driveModeChooser.addOption(DriveMode.ROBOT_CENTRIC.name(), DriveMode.ROBOT_CENTRIC);
+    driveModeChooser.addDefaultOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
+    driveModeChooser.addOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
+    driveModeChooser.addOption(DriveMode.ROBOT_CENTRIC.name(), DriveMode.ROBOT_CENTRIC);
 
     autoChooser.addDefaultOption(Auto.NO_AUTO.name(), Auto.NO_AUTO);
 
@@ -59,11 +59,11 @@ public class Dashboard {
   }
 
   public boolean isFieldCentric() {
-    // return driveModeChooser.get() == DriveMode.FIELD_CENTRIC;
-    return true;
+    return driveModeChooser.get() == DriveMode.FIELD_CENTRIC;
+    // return true;
   }
 
-  public Auto getAuto(){
+  public Auto getAuto() {
     return autoChooser.get();
   }
 

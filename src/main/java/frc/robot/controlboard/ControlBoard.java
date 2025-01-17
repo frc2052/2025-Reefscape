@@ -98,8 +98,8 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger aimToGoal() {
-    return primaryControlBoard.aimToGoal();
+  public Trigger reefAlignment() {
+    return primaryControlBoard.reefAlignment();
   }
 
   @Override
