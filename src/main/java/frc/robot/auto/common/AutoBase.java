@@ -65,10 +65,31 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // SR = Start Right
     // LL = Left (Barge Side) Coral Station
     // RL = Right (Processor Side) Coral Station
+    // DA = Descore (Remove) Algae From Reef
     // Letter + Number = Reef Scoring Position
 
     // ex:
     // public final static PathPlannerPath AB_BARGECS = getPathFromFile("AB - Barge Coral Station");
 
+    public static final PathPlannerPath J2_LL = getPathFromFile("J2 LL");
+    public static final PathPlannerPath K3_LL = getPathFromFile("K3 LL");
+    public static final PathPlannerPath K4_LL = getPathFromFile("K4 LL");
+    public static final PathPlannerPath L4_LL = getPathFromFile("L4 LL");
+    public static final PathPlannerPath LL_K3 = getPathFromFile("LL K3");
+    public static final PathPlannerPath LL_K4 = getPathFromFile("LL K4");
+    public static final PathPlannerPath LL_L3 = getPathFromFile("LL L3");
+    public static final PathPlannerPath LL_L4 = getPathFromFile("LL L4");
+    public static final PathPlannerPath SL_J2 = getPathFromFile("LL J2");
+    public static final PathPlannerPath SL_K4 = getPathFromFile("LL K4");
+    public static final PathPlannerPath SR_E2 = getPathFromFile("SR E2");
+    public static final PathPlannerPath E2_RL = getPathFromFile("E2 RL");
+    public static final PathPlannerPath RL_D4 = getPathFromFile("RL D4");
+    public static final PathPlannerPath D4_RL = getPathFromFile("D4 RL");
+    public static final PathPlannerPath RL_C4 = getPathFromFile("RL C4");
+    public static final PathPlannerPath C4_RL = getPathFromFile("C4 RL");
+    public static final PathPlannerPath SR_D4 = getPathFromFile("SR D4");
+    public static final PathPlannerPath RL_D3 = getPathFromFile("RL D3");
+    public static final PathPlannerPath D3_RL = getPathFromFile("D3 RL");
+    public static final PathPlannerPath RL_C3 = getPathFromFile("RL C3");
   }
 }
