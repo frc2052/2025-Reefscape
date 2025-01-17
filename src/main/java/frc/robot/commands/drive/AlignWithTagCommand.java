@@ -34,8 +34,7 @@ public class AlignWithTagCommand extends DefaultDriveCommand {
       AlignLocation scoringLocation,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
-      DoubleSupplier
-          rotationSupplier) { // add enum supplier for scoring position, left middle or right
+      DoubleSupplier rotationSupplier) { // add enum supplier for scoring position, left middle or right
     super(xSupplier, ySupplier, rotationSupplier, () -> false);
 
     this.scoringLocation = scoringLocation;

@@ -2,7 +2,9 @@ package frc.robot.auto.modes.StartRight;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
+import frc.robot.auto.common.AutoDescription;
 
+@AutoDescription(description = "21 Point Auto - One L2, Two L4")
 public class AutoE2D4C4 extends AutoBase {
   // Start Left Equivalent: AutoJ2K4L4
 
