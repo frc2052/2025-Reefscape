@@ -58,18 +58,7 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   private void pullCameraData(TagTracker tagTracker) {
-    List<PhotonPipelineResult> latestResults = tagTracker.photonCamera.getAllUnreadResults();
-    for (int i = 0; i < latestResults.size(); i++) {
-      Optional<MultiTagPoseEstimate> visionUpdate =
-          tagTracker.resultToMultiTag(latestResults.get(i));
-
-      if (visionUpdate.isPresent()) {
-        synchronizedVisionUpdates.add(visionUpdate.get());
-        Logger.recordOutput(tagTracker.getName() + " has update", true);
-      } else {
-        Logger.recordOutput(tagTracker.getName() + " has update", false);
-      }
-    }
+    synchronizedVisionUpdates.addAll(tagTracker.getAllResults());
   }
 
   private void updateEstimator(MultiTagPoseEstimate update) {

@@ -4,6 +4,9 @@ import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.RobotState;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -47,6 +50,18 @@ public class TagTracker {
     }
 
     return Optional.ofNullable(closestTarget);
+  }
+
+  public List<MultiTagPoseEstimate> getAllResults() {
+    List<MultiTagPoseEstimate> estimates = new ArrayList<MultiTagPoseEstimate>();
+    List<PhotonPipelineResult> latestResults = photonCamera.getAllUnreadResults();
+    for (int i = 0; i < latestResults.size(); i++) {
+      if(resultToMultiTag(latestResults.get(i)).isPresent()) {
+        estimates.add(resultToMultiTag(latestResults.get(i)).get());
+      }
+    }
+
+    return estimates;
   }
 
   public Optional<MultiTagPoseEstimate> resultToMultiTag(PhotonPipelineResult result) {
