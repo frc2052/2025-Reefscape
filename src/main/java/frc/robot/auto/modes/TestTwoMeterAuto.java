@@ -4,10 +4,10 @@
 
 package frc.robot.auto.modes;
 
-import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.auto.AutoBuilder;
 
-import frc.robot.auto.AutoBase;
-import frc.robot.auto.AutoBase.Paths;
+import frc.robot.auto.common.AutoBase;
+
 
 /** Add your docs here. */
 public class TestTwoMeterAuto extends AutoBase{
@@ -18,7 +18,8 @@ public class TestTwoMeterAuto extends AutoBase{
 
     @Override
     public void init() {
-        waitTime();
-        addCommands(followPathCommand(Paths.test2MeterPath));
+        delaySelectedTime();
+        AutoBuilder.buildAuto("Test Auto - 2 Meters Straight");
+        // addCommands(followPathCommand(Paths.TEST_PATH_2_METERS));
     }
 }

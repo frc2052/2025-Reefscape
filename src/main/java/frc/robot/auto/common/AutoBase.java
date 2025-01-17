@@ -5,6 +5,7 @@
 package frc.robot.auto.common;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,14 +13,18 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
+
+import java.util.List;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
 public abstract class AutoBase extends SequentialCommandGroup {
   private final RobotState robotState = RobotState.getInstance();
   private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
+  private final AutoFactory autoFactory = AutoFactory.getInstance();
   private Pose2d startPose;
 
   protected AutoBase(Optional<Pose2d> pathStartPose) {
@@ -40,6 +45,10 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
   public abstract void init(); // defined in each Auto class
 
+  public void delaySelectedTime(){
+    addCommands(new WaitCommand(autoFactory.getSavedWaitSeconds()));
+  }
+
   private void setStartPose(Pose2d pathStartPose) {
     addCommands(new InstantCommand(() -> drivetrain.resetPose(pathStartPose)));
   }
@@ -59,6 +68,20 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
   }
 
+  // test
+  public static Optional<Pose2d> getStartPoseFromAutoFile(String autoName) {
+    try {
+      List<PathPlannerPath> pathList = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
+      return (pathList.get(0).getStartingHolonomicPose());
+    } catch (Exception e) {
+      DriverStation.reportError(
+          "Couldn't get starting pose from auto file: " + autoName + e.getMessage(),
+          e.getStackTrace());
+      return null;
+    }
+  }
+
+
   public static final class Paths { // to avoid rewriting in every path
 
     // SL = Start Left
@@ -70,6 +93,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     // ex:
     // public final static PathPlannerPath AB_BARGECS = getPathFromFile("AB - Barge Coral Station");
+    public static final PathPlannerPath TEST_PATH_2_METERS = getPathFromFile("Test Path - 2 Meters Straight");
 
     public static final PathPlannerPath J2_LL = getPathFromFile("J2 LL");
     public static final PathPlannerPath K3_LL = getPathFromFile("K3 LL");
