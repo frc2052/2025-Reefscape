@@ -5,11 +5,11 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.auto.AutoFactory;
+import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.controlboard.ControlBoard;
@@ -97,6 +97,7 @@ public class RobotContainer {
   public void forceRecompile() {
     autoFactory.recompile();
   }
+
   public void precompileAuto() {
     if (autoFactory.recompileNeeded()) {
       autoFactory.recompile();

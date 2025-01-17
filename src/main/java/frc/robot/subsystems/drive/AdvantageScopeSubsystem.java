@@ -12,8 +12,9 @@ public class AdvantageScopeSubsystem extends SubsystemBase {
   static String folder = "Data_";
 
   private static AdvantageScopeSubsystem INSTANCE;
-  public static AdvantageScopeSubsystem getInstance(){
-    if(INSTANCE == null){
+
+  public static AdvantageScopeSubsystem getInstance() {
+    if (INSTANCE == null) {
       INSTANCE = new AdvantageScopeSubsystem(drivetrainSubsystem);
     }
     return INSTANCE;
@@ -28,9 +29,9 @@ public class AdvantageScopeSubsystem extends SubsystemBase {
     recordDrivetrainData();
   }
 
-  public static void recordDrivetrainData(){
+  public static void recordDrivetrainData() {
     String drivetrainFolder = "Drivetrain_";
-    
+
     // TODO: swerve array + Pose2d
   }
 }

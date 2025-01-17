@@ -1,19 +1,17 @@
 package frc.robot.util.io;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import frc.robot.auto.AutoFactory.Auto;
+import frc.robot.auto.common.AutoFactory.Auto;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class Dashboard {
   // private final LoggedDashboardChooser<DriveMode> driveModeChooser =
   //     new LoggedDashboardChooser<>("Drive Mode");
 
-  private final LoggedDashboardChooser<Auto> autoChooser = 
-    new LoggedDashboardChooser<Auto>("Auto Mode");
+  private final LoggedDashboardChooser<Auto> autoChooser =
+      new LoggedDashboardChooser<Auto>("Auto Mode");
 
   private static Dashboard INSTANCE;
 
@@ -58,7 +56,7 @@ public class Dashboard {
     return true;
   }
 
-  public Auto getAuto(){
+  public Auto getAuto() {
     return autoChooser.get();
   }
 
