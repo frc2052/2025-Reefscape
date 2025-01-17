@@ -11,6 +11,7 @@ import com.team2052.lib.vision.VisionPoseAcceptor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants.Camera0Constants;
+import frc.robot.Constants.VisionConstants.Camera1Constants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class VisionSubsystem extends SubsystemBase {
   List<MultiTagPoseEstimate> synchronizedVisionUpdates =
       Collections.synchronizedList(new ArrayList<MultiTagPoseEstimate>());
 
-  private List<TagTracker> tagTrackers = new ArrayList<TagTracker>();
+  private List<TagTracker> localizationTagTrackers = new ArrayList<TagTracker>();
 
   private TagTracker reefTagTracker =
       new TagTracker(Camera0Constants.TagTrackerConstants(), robotState);
@@ -42,14 +43,18 @@ public class VisionSubsystem extends SubsystemBase {
     return INSTANCE;
   }
 
-  private VisionSubsystem() {}
+  private VisionSubsystem() {
+    Collections.addAll(
+        localizationTagTrackers,
+        new TagTracker(Camera1Constants.TagTrackerConstants(), robotState));
+  }
 
   public Optional<PhotonTrackedTarget> getReefCamClosestTarget() {
     return reefTagTracker.getClosestTagToCamera();
   }
 
-  private void update() {
-    tagTrackers.parallelStream().forEach(this::pullCameraData);
+  private void updateLocalizationTrackers() {
+    localizationTagTrackers.parallelStream().forEach(this::pullCameraData);
   }
 
   private void pullCameraData(TagTracker tagTracker) {
@@ -74,6 +79,11 @@ public class VisionSubsystem extends SubsystemBase {
         robotState.getFieldToRobot(),
         DriverStation.isAutonomous())) {
       DrivetrainSubsystem.getInstance().addVisionUpdate(update);
+
+      Logger.recordOutput(update.cameraName + " update valid", true);
+    } else {
+
+      Logger.recordOutput(update.cameraName + " update valid", false);
     }
   }
 
@@ -81,7 +91,7 @@ public class VisionSubsystem extends SubsystemBase {
   public void periodic() {
     synchronizedVisionUpdates.clear();
 
-    update();
+    updateLocalizationTrackers();
 
     synchronizedVisionUpdates.forEach(this::updateEstimator);
   }

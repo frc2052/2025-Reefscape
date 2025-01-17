@@ -9,6 +9,7 @@ import edu.wpi.first.math.numbers.N3;
 import frc.robot.Constants.VisionConstants;
 import java.util.ArrayList;
 import java.util.List;
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -74,6 +75,7 @@ public class MultiTagPoseEstimate {
         xyStds = 2.0;
       }
     }
+    Logger.recordOutput(cameraName + "xy stds", xyStds);
 
     return xyStds;
   }

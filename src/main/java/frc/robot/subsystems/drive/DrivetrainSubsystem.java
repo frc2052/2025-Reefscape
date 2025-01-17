@@ -101,17 +101,10 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
   }
 
   public void addVisionUpdate(MultiTagPoseEstimate visionUpdate) {
-    // if (visionUpdate.getVisionMeasurementStdDevs() == null) {
     this.addVisionMeasurement(
         visionUpdate.estimatedPose.toPose2d(),
-        visionUpdate.timestampSeconds,
+        Utils.fpgaToCurrentTime(visionUpdate.timestampSeconds),
         visionUpdate.getVisionMeasurementStdDevs());
-    // } else {
-    //   this.addVisionMeasurement(
-    //       visionUpdate.estimatedPose.toPose2d(),
-    //       visionUpdate.timestampSeconds,
-    //       visionUpdate.getVisionMeasurementStdDevs());
-    // }
   }
 
   @Override

@@ -60,7 +60,7 @@ public class Constants {
   }
 
   public static class VisionConstants {
-    public static final double XY_STDDEV = 0.1;
+    public static final double XY_STDDEV = 0.2;
     public static final double HEADING_STDDEV = .1;
     public static final Matrix<N3, N1> VISION_STDDEV =
         VecBuilder.fill(XY_STDDEV, XY_STDDEV, HEADING_STDDEV);
@@ -82,18 +82,18 @@ public class Constants {
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
-      public static final Distance X_OFFSET = Inches.of(0.0);
-      public static final Distance Y_OFFSET = Inches.of(0.0);
-      public static final Distance Z_OFFSET = Inches.of(0.0);
+      // public static final Distance X_OFFSET = Inches.of(0.0);
+      // public static final Distance Y_OFFSET = Inches.of(0.0);
+      // public static final Distance Z_OFFSET = Inches.of(0.0);
 
-      public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
-      public static final Angle THETA_Y_OFFSET = Degrees.of(-15); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
+      // public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
+      // public static final Angle THETA_Y_OFFSET = Degrees.of(-15); // pitch
+      // public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
 
-      public static final Transform3d ROBOT_TO_CAMERA_METERS =
-          new Transform3d(
-              new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
-              new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
+      public static final Transform3d ROBOT_TO_CAMERA_METERS = new Transform3d();
+      // new Transform3d(
+      //     new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
+      //     new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
 
       public static TagTrackerConstants TagTrackerConstants() {
         return new TagTrackerConstants(
@@ -103,17 +103,17 @@ public class Constants {
 
     /* Front Right Camera */
     public static final class Camera1Constants {
-      public static final String CAMERA_NAME = "KrawlerCam_FR_001";
+      public static final String CAMERA_NAME = "KrawlerCam_001";
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
       public static final Distance X_OFFSET = Inches.of(0.0);
-      public static final Distance Y_OFFSET = Inches.of(0.0);
-      public static final Distance Z_OFFSET = Inches.of(0.0);
+      public static final Distance Y_OFFSET = Inches.of(4);
+      public static final Distance Z_OFFSET = Inches.of(7);
 
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
-      public static final Angle THETA_Y_OFFSET = Degrees.of(-45); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
+      public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
+      public static final Angle THETA_Z_OFFSET = Degrees.of(180); // yaw
 
       public static final Transform3d ROBOT_TO_CAMERA_METERS =
           new Transform3d(
