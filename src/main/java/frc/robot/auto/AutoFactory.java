@@ -6,14 +6,13 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
-import edu.wpi.first.epilogue.Logged;
 import frc.robot.Constants.DashboardConstants;
 import frc.robot.auto.modes.TestTwoMeterAuto;
 import frc.robot.util.io.Dashboard;
 // select, compile, recompile autos before start of a match
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
-    private final Supplier<Double> waitSecondsEntrySupplier = () -> Dashboard.getInstance().getWaitEntry();
+    private final Supplier<Double> waitSecondsEntrySupplier = () -> Dashboard.getInstance().getWaitSeconds();
 
     private Auto currentAuto;
     private AutoBase compiledAuto;

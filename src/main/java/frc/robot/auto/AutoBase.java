@@ -83,6 +83,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
   }
 
+  // TODO: ----- MANUAL PATH CREATION METHODS ---- //
+
   public static final class Paths { // to avoid rewriting in every path
     // SL = Start Left 
     // SR = Start Right
