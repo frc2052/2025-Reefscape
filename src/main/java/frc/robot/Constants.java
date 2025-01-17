@@ -4,22 +4,27 @@ import static edu.wpi.first.units.Units.*;
 
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.team2052.lib.vision.TagTracker.TagTrackerConstants;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.*;
-import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.drive.ctre.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Constants {
 
   public static class DriverConstants {
-    public static final boolean FORCE_GAMEPAD = true;
+    public static final boolean FORCE_GAMEPAD = false;
     public static final double JOYSTICK_DEADBAND = 0.005;
     public static final double GAMEPAD_DEADBAND = 0.025; // add deadband here if there is drift
   }
@@ -49,16 +54,82 @@ public class Constants {
 
     public static final Mass DRIVETRAIN_MASS = Pounds.of(100); // TODO: weigh the robot
 
-    public static final Matrix<N3, N1> ODOMETRY_STDDEV = VecBuilder.fill(0.1, 0.1, 0.1);
+    public static final Matrix<N3, N1> ODOMETRY_STDDEV = VecBuilder.fill(0.1, 0.1, 0.05);
 
     public static final Angle HEADING_TOLERANCE = Degrees.of(3);
   }
 
   public static class VisionConstants {
-    public static final double XY_STDDEV = 0.7;
-    public static final double HEADING_STDDEV = 99;
+    public static final double XY_STDDEV = 0.2;
+    public static final double HEADING_STDDEV = .1;
     public static final Matrix<N3, N1> VISION_STDDEV =
         VecBuilder.fill(XY_STDDEV, XY_STDDEV, HEADING_STDDEV);
+
+    public static final double MAX_POSE_AMBIGUITY = 0.15;
+    public static final Distance FIELD_BORDER_MARGIN = Meters.of(0.5);
+    public static final Distance MAX_VISION_CORRECTION = Meters.of(1);
+
+    public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =
+        AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+
+    /*
+     * Camera Order:
+     * 0 1
+     */
+    /* Front Left Camera */
+    public static final class Camera0Constants {
+      public static final String CAMERA_NAME = "KrawlerCam_000";
+
+      public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
+
+      // public static final Distance X_OFFSET = Inches.of(0.0);
+      // public static final Distance Y_OFFSET = Inches.of(0.0);
+      // public static final Distance Z_OFFSET = Inches.of(0.0);
+
+      // public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
+      // public static final Angle THETA_Y_OFFSET = Degrees.of(-15); // pitch
+      // public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
+
+      public static final Transform3d ROBOT_TO_CAMERA_METERS = new Transform3d();
+      // new Transform3d(
+      //     new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
+      //     new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
+
+      public static TagTrackerConstants TagTrackerConstants() {
+        return new TagTrackerConstants(
+            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, VisionConstants.APRIL_TAG_FIELD_LAYOUT, STRATEGY);
+      }
+    }
+
+    /* Front Right Camera */
+    public static final class Camera1Constants {
+      public static final String CAMERA_NAME = "KrawlerCam_001";
+
+      public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
+
+      public static final Distance X_OFFSET = Inches.of(0.0);
+      public static final Distance Y_OFFSET = Inches.of(4);
+      public static final Distance Z_OFFSET = Inches.of(7);
+
+      public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
+      public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
+      public static final Angle THETA_Z_OFFSET = Degrees.of(180); // yaw
+
+      public static final Transform3d ROBOT_TO_CAMERA_METERS =
+          new Transform3d(
+              new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
+              new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
+
+      public static TagTrackerConstants TagTrackerConstants() {
+        return new TagTrackerConstants(
+            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, VisionConstants.APRIL_TAG_FIELD_LAYOUT, STRATEGY);
+      }
+    }
+  }
+
+  public static class FieldConstants {
+    public static final Distance FIELD_LENGTH = Centimeters.of(805);
+    public static final Distance FIELD_WIDTH = Centimeters.of(1755);
   }
 
   public static final class DashboardConstants {
@@ -77,12 +148,6 @@ public class Constants {
     public static final double ROTATION_KD = 0;
 
     // Rough estimation (1/12) * mass * (length^2 + width^2)
-    public static final MomentOfInertia ROBOT_MOI =
-        KilogramSquareMeters.of(
-            (1 / 12)
-                * DrivetrainConstants.DRIVETRAIN_MASS.in(Kilograms)
-                * (Math.pow(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH.in(Meters), 2)
-                    + Math.pow(DrivetrainConstants.DRIVETRAIN_WHEELBASE.in(Meters), 2)));
 
     public static final ModuleConfig MODULE_CONFIG =
         new ModuleConfig(
@@ -93,29 +158,9 @@ public class Constants {
             DrivetrainConstants.DRIVE_CURRENT_LIMIT_AMPS,
             1);
 
-    public static final RobotConfig ROBOT_CONFIG =
-        new RobotConfig(
-            DrivetrainConstants.DRIVETRAIN_MASS,
-            ROBOT_MOI,
-            MODULE_CONFIG,
-            DrivetrainSubsystem.getInstance().getModuleLocations());
-
     public static final PPHolonomicDriveController PATH_FOLLOWING_CONTROLLER =
         new PPHolonomicDriveController(
             new PIDConstants(TRANSLATION_KP, TRANSLATION_KI, TRANSLATION_KD),
             new PIDConstants(ROTATION_KP, ROTATION_KI, ROTATION_KD));
-  }
-
-  public static final class FieldAndRobotConstants {
-
-    // assumes 0 degrees has the intake facing the driverstation wall
-    public static final double LEFT_CORAL_STATION_ANGLE_RADIANS = Math.toRadians(126);
-    public static final double RIGHT_CORAL_STATION_ANGLE_RADIANS = Math.toRadians(-126);
-    public static final double REEF_AB = Math.toRadians(0);
-    public static final double REEF_CD = Math.toRadians(300);
-    public static final double REEF_EF = Math.toRadians(240);
-    public static final double REEF_GH = Math.toRadians(180);
-    public static final double REEF_IJ = Math.toRadians(120);
-    public static final double REEF_KL = Math.toRadians(60);
   }
 }

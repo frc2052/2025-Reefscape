@@ -1,6 +1,6 @@
 package frc.robot.controlboard.primary;
 
-import com.team2052.lib.MathHelpers;
+import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
@@ -93,7 +93,7 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
-  public Trigger aimToGoal() {
+  public Trigger reefAlignment() {
     return controller.button(1);
   }
 

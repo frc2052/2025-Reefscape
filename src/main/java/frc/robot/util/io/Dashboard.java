@@ -7,8 +7,8 @@ import frc.robot.auto.common.AutoFactory.Auto;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class Dashboard {
-  // private final LoggedDashboardChooser<DriveMode> driveModeChooser =
-  //     new LoggedDashboardChooser<>("Drive Mode");
+  private final LoggedDashboardChooser<DriveMode> driveModeChooser =
+      new LoggedDashboardChooser<>("Drive Mode");
 
   private final LoggedDashboardChooser<Auto> autoChooser =
       new LoggedDashboardChooser<Auto>("Auto Mode");
@@ -24,9 +24,9 @@ public class Dashboard {
   }
 
   private Dashboard() {
-    // driveModeChooser.addDefaultOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
-    // driveModeChooser.addOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
-    // driveModeChooser.addOption(DriveMode.ROBOT_CENTRIC.name(), DriveMode.ROBOT_CENTRIC);
+    driveModeChooser.addDefaultOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
+    driveModeChooser.addOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
+    driveModeChooser.addOption(DriveMode.ROBOT_CENTRIC.name(), DriveMode.ROBOT_CENTRIC);
 
     autoChooser.addDefaultOption(Auto.NO_AUTO.name(), Auto.NO_AUTO);
 
@@ -52,8 +52,8 @@ public class Dashboard {
   }
 
   public boolean isFieldCentric() {
-    // return driveModeChooser.get() == DriveMode.FIELD_CENTRIC;
-    return true;
+    return driveModeChooser.get() == DriveMode.FIELD_CENTRIC;
+    // return true;
   }
 
   public Auto getAuto() {

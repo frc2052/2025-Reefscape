@@ -1,12 +1,10 @@
 package frc.robot;
 
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
-import com.team2052.lib.MathHelpers;
+import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-// import frc.robot.subsystems.drive.DrivetrainSubsystem;
-// import frc.robot.subsystems.vision.VisionUpdate;
 import org.littletonrobotics.junction.Logger;
 
 public class RobotState {
@@ -44,10 +42,6 @@ public class RobotState {
   public void addDrivetrainState(SwerveDriveState drivetrainState) {
     this.drivetrainState = drivetrainState;
   }
-
-  // public void addVisionUpdate(VisionUpdate visionUpdate) {
-  //   DrivetrainSubsystem.getInstance().addVisionMeasurement(visionUpdate);
-  // }
 
   /**
    * Returns true if the robot is on red alliance.

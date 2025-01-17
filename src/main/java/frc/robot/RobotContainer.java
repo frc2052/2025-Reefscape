@@ -8,13 +8,17 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
+import frc.robot.commands.drive.AlignWithTagCommand;
+import frc.robot.commands.drive.AlignWithTagCommand.AlignLocation;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.drive.AdvantageScopeSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.Telemetry;
 import frc.robot.util.io.Dashboard;
 
@@ -24,6 +28,7 @@ public class RobotContainer {
 
   public final RobotState robotState = RobotState.getInstance();
   public final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
+  public final VisionSubsystem vision = VisionSubsystem.getInstance();
   public final AdvantageScopeSubsystem advantageScope = AdvantageScopeSubsystem.getInstance();
   public final AutoFactory autoFactory = AutoFactory.getInstance();
 
@@ -45,51 +50,102 @@ public class RobotContainer {
 
   private void configureBindings() {
     drivetrain.registerTelemetry(logger::telemeterize);
+    controlBoard.resetGyro().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
     configurePOVBindings();
+    controlBoard
+        .reefAlignment()
+        .whileTrue(
+            new AlignWithTagCommand(
+                AlignLocation.MIDDLE,
+                controlBoard::getThrottle,
+                // Sideways velocity supplier.
+                controlBoard::getStrafe,
+                // Rotation velocity supplier.
+                controlBoard::getRotation));
   }
 
   private void configurePOVBindings() {
     ControlBoard controlBoard = ControlBoard.getInstance();
 
-    controlBoard.povUp().whileTrue(new SnapToLocationAngleCommand(
-      SnapToLocationAngleCommand.SnapLocations.ReefGH,
-      controlBoard::getThrottle, controlBoard::getStrafe, controlBoard::getRotation, dashboard::isFieldCentric
-    ));
+    controlBoard
+        .povUp()
+        .whileTrue(
+            new SnapToLocationAngleCommand(
+                SnapToLocationAngleCommand.SnapLocation.ReefGH,
+                controlBoard::getThrottle,
+                controlBoard::getStrafe,
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
 
-    controlBoard.povUpRight().whileTrue(new SnapToLocationAngleCommand(
-      SnapToLocationAngleCommand.SnapLocations.ReefEF,
-      controlBoard::getThrottle, controlBoard::getStrafe, controlBoard::getRotation, dashboard::isFieldCentric
-    ));
+    controlBoard
+        .povUpRight()
+        .whileTrue(
+            new SnapToLocationAngleCommand(
+                SnapToLocationAngleCommand.SnapLocation.ReefEF,
+                controlBoard::getThrottle,
+                controlBoard::getStrafe,
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
 
-    controlBoard.povRight().whileTrue(new SnapToLocationAngleCommand(
-      SnapToLocationAngleCommand.SnapLocations.RightCoralStation,
-      controlBoard::getThrottle, controlBoard::getStrafe, controlBoard::getRotation, dashboard::isFieldCentric
-    ));
+    controlBoard
+        .povRight()
+        .whileTrue(
+            new SnapToLocationAngleCommand(
+                SnapToLocationAngleCommand.SnapLocation.RightCoralStation,
+                controlBoard::getThrottle,
+                controlBoard::getStrafe,
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
 
-    controlBoard.povDownRight().whileTrue(new SnapToLocationAngleCommand(
-      SnapToLocationAngleCommand.SnapLocations.ReefCD,
-      controlBoard::getThrottle, controlBoard::getStrafe, controlBoard::getRotation, dashboard::isFieldCentric
-    ));
+    controlBoard
+        .povDownRight()
+        .whileTrue(
+            new SnapToLocationAngleCommand(
+                SnapToLocationAngleCommand.SnapLocation.ReefCD,
+                controlBoard::getThrottle,
+                controlBoard::getStrafe,
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
 
-    controlBoard.povDown().whileTrue(new SnapToLocationAngleCommand(
-      SnapToLocationAngleCommand.SnapLocations.ReefAB,
-      controlBoard::getThrottle, controlBoard::getStrafe, controlBoard::getRotation, dashboard::isFieldCentric
-    ));
+    controlBoard
+        .povDown()
+        .whileTrue(
+            new SnapToLocationAngleCommand(
+                SnapToLocationAngleCommand.SnapLocation.ReefAB,
+                controlBoard::getThrottle,
+                controlBoard::getStrafe,
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
 
-    controlBoard.povDownLeft().whileTrue(new SnapToLocationAngleCommand(
-      SnapToLocationAngleCommand.SnapLocations.ReefKL,
-      controlBoard::getThrottle,controlBoard::getStrafe,controlBoard::getRotation,dashboard::isFieldCentric
-    ));
+    controlBoard
+        .povDownLeft()
+        .whileTrue(
+            new SnapToLocationAngleCommand(
+                SnapToLocationAngleCommand.SnapLocation.ReefKL,
+                controlBoard::getThrottle,
+                controlBoard::getStrafe,
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
 
-    controlBoard.povLeft().whileTrue(new SnapToLocationAngleCommand(
-      SnapToLocationAngleCommand.SnapLocations.LeftCoralStation,
-      controlBoard::getThrottle,controlBoard::getStrafe,controlBoard::getRotation,dashboard::isFieldCentric
-    ));
+    controlBoard
+        .povLeft()
+        .whileTrue(
+            new SnapToLocationAngleCommand(
+                SnapToLocationAngleCommand.SnapLocation.LeftCoralStation,
+                controlBoard::getThrottle,
+                controlBoard::getStrafe,
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
 
-    controlBoard.povUpLeft().whileTrue(new SnapToLocationAngleCommand(
-      SnapToLocationAngleCommand.SnapLocations.ReefIJ,
-      controlBoard::getThrottle,controlBoard::getStrafe,controlBoard::getRotation,dashboard::isFieldCentric
-    ));
+    controlBoard
+        .povUpLeft()
+        .whileTrue(
+            new SnapToLocationAngleCommand(
+                SnapToLocationAngleCommand.SnapLocation.ReefIJ,
+                controlBoard::getThrottle,
+                controlBoard::getStrafe,
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
 
     System.out.println("POV Bindings Configured");
   }
@@ -105,7 +161,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("Example Auto");
+    return new PathPlannerAuto("New Auto");
     // return autoFactory.getCompiledAuto();
   }
 }
