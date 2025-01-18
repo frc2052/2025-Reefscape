@@ -6,6 +6,7 @@ public class Ports { // TODO: Set the ports for the robot
    */
   public static final int ARM_CANCODER_ID = 0;
   public static final int ARM_TALONFX_ID = 0;
+  public static final int HAND_TALONFX_ID = 0;
 
   /*
    *  DIO
