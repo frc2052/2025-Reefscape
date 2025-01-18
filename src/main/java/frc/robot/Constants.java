@@ -23,6 +23,29 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Constants {
 
+  public static final class ElevatorConstants {
+    public static final class IDs {
+      public static final int LIMIT_SWITCH = 0;
+      public static final int LEFT_MOTOR = 0;
+      public static final int RIGHT_MOTOR = 0;
+      public static final int ENCODER = 0;
+    }
+
+    public static final class MotorPIDConstants {
+      public static final double KP = 0;
+      public static final double KI = 0;
+      public static final double KD = 0;
+      public static final double ERROR = 0;
+    }
+
+    public static final boolean LEFT_MOTOR_INVERTED = false;
+    public static final boolean RIGHT_MOTOR_INVERTED = false;
+
+    public static final double DEGREES_TO_INCHES_RATIO = 1;
+
+    public static final double MANUL_MOTOR_SPEED = 0.5;
+  }
+
   public static class DriverConstants {
     public static final boolean FORCE_GAMEPAD = false;
     public static final double JOYSTICK_DEADBAND = 0.005;

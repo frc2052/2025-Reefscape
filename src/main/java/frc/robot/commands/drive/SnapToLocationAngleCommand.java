@@ -4,6 +4,8 @@
 
 package frc.robot.commands.drive;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Constants;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Radians;
 
@@ -14,6 +16,7 @@ import frc.robot.RobotState;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SnapToLocationAngleCommand extends SnapToAngleCommand {
   SnapLocation goalSnap;
 
