@@ -64,7 +64,8 @@ public class RobotContainer {
                 // Sideways velocity supplier.
                 controlBoard::getStrafe,
                 // Rotation velocity supplier.
-                controlBoard::getRotation));
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
 
     controlBoard.sysIDQuasiForward().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
     controlBoard.sysIDQuasiReverse().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));

@@ -2,8 +2,8 @@ package com.team2052.lib.planners;
 
 import com.team2052.lib.PIDFFController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import java.util.OptionalDouble;
@@ -18,25 +18,29 @@ public class AutoAlignPlanner {
 
   public AutoAlignPlanner() {
     startTime = OptionalDouble.of(Timer.getFPGATimestamp());
-    xController = new PIDFFController(1.5, 0.0, 0.25, 0.1, 0.0, 0.0);
-    yController = new PIDFFController(1.5, 0.0, 0.25, 0.1, 0.0, 0.0);
+    xController = new PIDFFController(2, 0.0, 0, 0.1, 0.0, 0.0);
+    yController = new PIDFFController(2, 0.0, 0, 0.1, 0.0, 0.0);
     thetaController = new PIDFFController(1.5, 0.0, 0.1, 0.3, 0.0, 0.0);
 
     xController.setTolerance(0.08, 0.05);
     yController.setTolerance(0.02, 0.05);
     thetaController.setTolerance(0.03, 0.05);
+
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   public ChassisSpeeds calculate(
-      Transform3d currentTransform, Transform2d goalTransform, Pose2d currentRobotPose) {
-    xController.setSetpoint(goalTransform.getX());
-    yController.setSetpoint(goalTransform.getY());
-    thetaController.setSetpoint(goalTransform.getRotation().getRadians());
-    
+      Translation2d currentTranslation,
+      Translation2d goalTranslationFromRobot,
+      Rotation2d goalRotation,
+      Pose2d currentRobotPose) {
+    xController.setSetpoint(goalTranslationFromRobot.getX());
+    yController.setSetpoint(goalTranslationFromRobot.getY());
+    thetaController.setSetpoint(goalRotation.getRadians());
 
-    double xOutput = xController.calculate(currentTransform.getX());
-    double yOutput = yController.calculate(currentTransform.getY());
-    double thetaOutput = thetaController.calculate(currentTransform.getRotation().getAngle());
+    double xOutput = xController.calculate(currentTranslation.getX());
+    double yOutput = yController.calculate(currentTranslation.getY());
+    double thetaOutput = thetaController.calculate(currentRobotPose.getRotation().getRadians());
 
     ChassisSpeeds calculatedSpeeds;
 

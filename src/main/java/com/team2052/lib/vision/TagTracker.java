@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonUtils;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -33,22 +34,30 @@ public class TagTracker {
     return photonCamera.getName();
   }
 
-  public Optional<PhotonTrackedTarget> getClosestTagToCamera() {
-    PhotonTrackedTarget closestTarget = null;
+  public Optional<PhotonPipelineResult> getClosestTagToCamera() {
+    PhotonPipelineResult closestTarget = null;
     for (PhotonPipelineResult r : photonCamera.getAllUnreadResults()) {
       if (r.hasTargets()) {
         PhotonTrackedTarget target = r.getBestTarget();
         if (closestTarget == null) {
-          closestTarget = r.getBestTarget();
+          closestTarget = r;
         } else if (target.getBestCameraToTarget()
             == MathHelpers.getSmallestTransform(
-                target.getBestCameraToTarget(), closestTarget.getBestCameraToTarget())) {
-          closestTarget = r.getBestTarget();
+                target.getBestCameraToTarget(), closestTarget.getBestTarget().getBestCameraToTarget())) {
+          closestTarget = r;
         }
       }
     }
 
     return Optional.ofNullable(closestTarget);
+  }
+
+  public void getTagToRobot() {
+    if(getClosestTagToCamera().isPresent()) {
+
+      Optional<EstimatedRobotPose> = poseEstimator.(getClosestTagToCamera().get());
+      PhotonUtils.estimateFieldToRobotAprilTag();
+    }
   }
 
   public List<MultiTagPoseEstimate> getAllResults() {
