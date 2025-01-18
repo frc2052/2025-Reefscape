@@ -103,11 +103,6 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger aimToAmp() {
-    return primaryControlBoard.aimToAmp();
-  }
-
-  @Override
   public Trigger intake() {
     return primaryControlBoard.intake();
   }
@@ -122,5 +117,25 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   @Override
   public Trigger climb() {
     return secondaryControlBoard.climb();
+  }
+
+  @Override
+  public Trigger sysIDQuasiForward() {
+    return primaryControlBoard.sysIDQuasiForward();
+  }
+
+  @Override
+  public Trigger sysIDQuasiReverse() {
+    return primaryControlBoard.sysIDQuasiReverse();
+  }
+
+  @Override
+  public Trigger sysIDDynamicForward() {
+    return primaryControlBoard.sysIDDynamicForward();
+  }
+
+  @Override
+  public Trigger sysIDDynamicReverse() {
+    return primaryControlBoard.sysIDDynamicReverse();
   }
 }
