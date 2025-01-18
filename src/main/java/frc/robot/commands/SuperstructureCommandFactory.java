@@ -7,6 +7,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.elevator.ElevatorCommandFactory;
 import frc.robot.commands.hand.HandCommandFactory;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ArmSubsystem.ArmPosition;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
@@ -14,76 +15,109 @@ import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
 public class SuperstructureCommandFactory {
 
     private static Command levelOnePositionCommand() {
-        return Commands.parallel(
-            ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L1),
-            new ConditionalCommand(
-                ArmCommandFactory.setArmPosition(ArmPosition.L1), 
-                ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL), 
-                () -> ElevatorSubsystem.getInstance().atPosition())
-        );
+        return Commands.sequence(
+            ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL).until(() -> ArmSubsystem.getInstance().isAtPosition(5)),
+            Commands.parallel(
+                ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L1),
+                new ConditionalCommand(
+                    ArmCommandFactory.setArmPosition(ArmPosition.L1), 
+                    ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL), 
+                    () -> ElevatorSubsystem.getInstance().atPosition())
+            )
+        ).withName("Level One Position Command");
     }
 
     private static Command levelTwoPositionCommand() {
-        return Commands.parallel(
-            ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L2),
-            new ConditionalCommand(
-                ArmCommandFactory.setArmPosition(ArmPosition.MID_LEVEL), 
-                ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL), 
-                () -> ElevatorSubsystem.getInstance().atPosition())
-        );
+        return Commands.sequence(
+            ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL).until(() -> ArmSubsystem.getInstance().isAtPosition(5)),
+            Commands.parallel(
+                ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L2),
+                new ConditionalCommand(
+                    ArmCommandFactory.setArmPosition(ArmPosition.MID_LEVEL), 
+                    ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL), 
+                    () -> ElevatorSubsystem.getInstance().atPosition())
+            )
+        ).withName("Level Two Position Command");
     }
 
     private static Command levelThreePositionCommand() {
-        return Commands.parallel(
-            ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L3),
-            new ConditionalCommand(
-                ArmCommandFactory.setArmPosition(ArmPosition.MID_LEVEL), 
-                ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL), 
-                () -> ElevatorSubsystem.getInstance().atPosition())
-        );
+        return Commands.sequence(
+            ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL).until(() -> ArmSubsystem.getInstance().isAtPosition(5)),
+            Commands.parallel(
+                ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L3),
+                new ConditionalCommand(
+                    ArmCommandFactory.setArmPosition(ArmPosition.MID_LEVEL), 
+                    ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL), 
+                    () -> ElevatorSubsystem.getInstance().atPosition())
+            )
+        ).withName("Level Three Position Command");
     }
 
     private static Command levelFourPositionCommand() {
-        return Commands.parallel(
-            ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L4),
-            new ConditionalCommand(
-                ArmCommandFactory.setArmPosition(ArmPosition.L4), 
-                ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL), 
-                () -> ElevatorSubsystem.getInstance().atPosition())
-        );
+        return Commands.sequence(
+            ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL).until(() -> ArmSubsystem.getInstance().isAtPosition(5)),
+            Commands.parallel(
+                ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L4),
+                new ConditionalCommand(
+                    ArmCommandFactory.setArmPosition(ArmPosition.L4), 
+                    ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL), 
+                    () -> ElevatorSubsystem.getInstance().atPosition())
+            )
+        ).withName("Level Four Position Command");
     }
 
     private static Command travelPositionCommand() {
-        return Commands.parallel(
-            ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.TRAVEL),
-            ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL)
-        );
+        return Commands.sequence(
+            ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL).until(() -> ArmSubsystem.getInstance().isAtPosition(5)),
+            Commands.parallel(
+                ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.TRAVEL),
+                ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL)
+            )
+        ).withName("Travel Position Command");
     }
 
     private static Command descoreHighAlgaePositionCommand() {
-        return Commands.parallel(
-            ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.UPPER_ALGAE),
-            ArmCommandFactory.setArmPosition(ArmPosition.UPPER_ALGAE_DESCORE)
-        );
+        return Commands.sequence(
+            ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL).until(() -> ArmSubsystem.getInstance().isAtPosition(5)),
+            Commands.parallel(
+                ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.UPPER_ALGAE),
+                new ConditionalCommand(
+                    ArmCommandFactory.setArmPosition(ArmPosition.UPPER_ALGAE_DESCORE), 
+                    ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL), 
+                    () -> ElevatorSubsystem.getInstance().atPosition())
+            )
+        ).withName("Descoring High Algae Position Command");
     }
 
     private static Command descoreLowerAlgaePositionCommand() {
-        return Commands.parallel(
-            ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.LOWER_ALGAE),
-            ArmCommandFactory.setArmPosition(ArmPosition.LOWER_ALGAE_DESCORE)
-        );
+        return Commands.sequence(
+            ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL).until(() -> ArmSubsystem.getInstance().isAtPosition(5)),
+            Commands.parallel(
+                ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.LOWER_ALGAE),
+                new ConditionalCommand(
+                    ArmCommandFactory.setArmPosition(ArmPosition.LOWER_ALGAE_DESCORE), 
+                    ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL), 
+                    () -> ElevatorSubsystem.getInstance().atPosition())
+            )
+        ).withName("Descoring Lower Algae Position Command");
     }
 
     private static Command handoffPositionCommand() {
-        return Commands.parallel(
-            ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.HANDOFF),
-            ArmCommandFactory.setArmPosition(ArmPosition.HANDOFF)
-        );
+        return Commands.sequence(
+            ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL).until(() -> ArmSubsystem.getInstance().isAtPosition(5)),
+            Commands.parallel(
+                ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.HANDOFF),
+                new ConditionalCommand(
+                    ArmCommandFactory.setArmPosition(ArmPosition.HANDOFF), 
+                    ArmCommandFactory.setArmPosition(ArmPosition.TRAVEL), 
+                    () -> ElevatorSubsystem.getInstance().atPosition())
+            )
+        ).withName("Handoff Position Command");
     }
 
 
 
-    public enum Level {
+    public enum ToLevel {
         L1(levelOnePositionCommand()),
         L2(levelTwoPositionCommand()),
         L3(levelThreePositionCommand()),
@@ -95,7 +129,7 @@ public class SuperstructureCommandFactory {
 
         private final Command command;
 
-        Level(Command command) {
+        ToLevel(Command command) {
             this.command = command;
         }
 
