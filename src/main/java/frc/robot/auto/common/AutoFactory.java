@@ -8,7 +8,6 @@ import frc.robot.auto.modes.StartLeft.AutoJ2K4L4;
 import frc.robot.auto.modes.StartLeft.AutoK4L4DAK3L3;
 import frc.robot.auto.modes.StartRight.AutoD4C4DAD3C3;
 import frc.robot.auto.modes.StartRight.AutoE2D4C4;
-import frc.robot.auto.modes.TestTwoMeterAuto;
 import frc.robot.util.io.Dashboard;
 // select, compile, recompile autos before start of a match
 import java.util.function.Supplier;
@@ -51,6 +50,7 @@ public class AutoFactory {
   ;
 
   public boolean recompileNeeded() {
+    // System.out.println("======== AUTO WAIT TIME VAL " + waitSecondsEntrySupplier.get());
     return autoSupplier.get() != currentAuto || waitSecondsEntrySupplier.get() != savedWaitSeconds;
   }
 
@@ -71,12 +71,14 @@ public class AutoFactory {
     // update wait seconds
     waitSecondsSavedKey.set(false);
     selectedWaitSeconds = waitSecondsEntrySupplier.get().doubleValue();
+    System.out.println("SELECTED WAIT SECONDS: " + waitSecondsEntrySupplier.get().doubleValue());
     savedWaitSeconds = selectedWaitSeconds;
     waitSecondsDisplay.set("Chosen Wait Seconds: " + savedWaitSeconds);
     waitSecondsSavedKey.set(true);
   }
 
   public AutoBase getCompiledAuto() {
+    // compiled auto is null
     return compiledAuto;
   }
 
@@ -87,7 +89,7 @@ public class AutoFactory {
   public static enum Auto {
     // ordered Start Left, Start Right
     NO_AUTO(null),
-    TEST_2_METER_PP_AUTO(TestTwoMeterAuto.class),
+    // TEST_2_METER_PP_AUTO(TestTwoMeterAuto.class),
 
     AUTO_J2_K4_L4(AutoJ2K4L4.class),
     AUTO_E2_D4_C4(AutoE2D4C4.class),

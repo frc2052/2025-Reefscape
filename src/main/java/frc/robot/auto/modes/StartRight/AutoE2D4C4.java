@@ -12,14 +12,16 @@ public class AutoE2D4C4 extends AutoBase {
 
   public AutoE2D4C4() {
     super(startingPath.getStartingHolonomicPose());
+    System.out.println("========START AUTO");
   }
 
   @Override
   public void init() {
-    addCommands(followPathCommand(startingPath));
+    addCommands(delaySelectedTime());
+    addCommands(followPathCommand(startingPath)); // accurate
     addCommands(followPathCommand(Paths.E2_RL));
     addCommands(followPathCommand(Paths.RL_D4));
     addCommands(followPathCommand(Paths.D4_RL));
-    addCommands(followPathCommand(Paths.RL_C4));
+    // addCommands(followPathCommand(Paths.RL_C4));
   }
 }

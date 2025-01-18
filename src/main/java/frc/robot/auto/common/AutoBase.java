@@ -49,8 +49,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
   public abstract void init(); // defined in each Auto class
 
-  public void delaySelectedTime() {
-    addCommands(new WaitCommand(autoFactory.getSavedWaitSeconds()));
+  protected Command delaySelectedTime() {
+    System.out.println("=========== WAIT SECONDS" + autoFactory.getSavedWaitSeconds());
+    return new WaitCommand(autoFactory.getSavedWaitSeconds());
   }
 
   private void setStartPose(Pose2d pathStartPose) {
@@ -81,7 +82,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
       return path;
     } catch (Exception e) {
       DriverStation.reportError(
-          "FAILED TO GET PATH FROM PATHFILE" + e.getMessage(), e.getStackTrace());
+          "FAILED TO GET PATH FROM PATHFILE" + pathName + e.getMessage(), e.getStackTrace());
       return null;
     }
   }
@@ -110,7 +111,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     // ex:
     // public final static PathPlannerPath AB_BARGECS = getPathFromFile("AB - Barge Coral Station");
-    public static final PathPlannerPath TEST_PATH_SL_EF = getPathFromFile("Test Auto - SL-EF");
+    // public static final PathPlannerPath TEST_PATH_SL_EF = getPathFromFile("Test Auto - SL-EF");
 
     public static final PathPlannerPath J2_LL = getPathFromFile("J2 LL");
     public static final PathPlannerPath K3_LL = getPathFromFile("K3 LL");
@@ -120,7 +121,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     public static final PathPlannerPath LL_K4 = getPathFromFile("LL K4");
     public static final PathPlannerPath LL_L3 = getPathFromFile("LL L3");
     public static final PathPlannerPath LL_L4 = getPathFromFile("LL L4");
-    public static final PathPlannerPath SL_J2 = getPathFromFile("LL J2");
+    public static final PathPlannerPath SL_J2 = getPathFromFile("SL J2");
     public static final PathPlannerPath SL_K4 = getPathFromFile("LL K4");
     public static final PathPlannerPath SR_E2 = getPathFromFile("SR E2");
     public static final PathPlannerPath E2_RL = getPathFromFile("E2 RL");

@@ -1,6 +1,10 @@
 package frc.robot.util.io;
 
+import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,8 +18,16 @@ public class Dashboard {
   private final LoggedDashboardChooser<Auto> autoChooser =
       new LoggedDashboardChooser<Auto>("Auto Mode");
 
+  private final LoggedDashboardChooser<Double> waitSecondsChooser =
+      new LoggedDashboardChooser<Double>("Wait Seconds");
+
   private final GenericEntry waitTimeEntry =
-      Shuffleboard.getTab("Drive").add("Wait Tmime Entry", 0).getEntry();
+      Shuffleboard.getTab("Drive").add("Wait Time Entry", 0).getEntry();
+
+  private final NetworkTableInstance networkTables = NetworkTableInstance.getDefault();
+  private final NetworkTable debugTable = networkTables.getTable("debug network tables tab");
+  private final DoubleTopic waitTimeTopic = debugTable.getDoubleTopic("waitTime");
+  private final DoubleSubscriber waitTimeSubscriber = waitTimeTopic.subscribe(0.0);
 
   private static Dashboard INSTANCE;
 
@@ -32,11 +44,15 @@ public class Dashboard {
     driveModeChooser.addOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
     driveModeChooser.addOption(DriveMode.ROBOT_CENTRIC.name(), DriveMode.ROBOT_CENTRIC);
 
+    waitTimeTopic.publish().accept(0.0);
+
     autoChooser.addDefaultOption(Auto.NO_AUTO.name(), Auto.NO_AUTO);
 
     for (Auto auto : Auto.values()) {
       autoChooser.addOption(auto.name(), auto);
     }
+    waitSecondsChooser.addDefaultOption("None Chosen", 0.0);
+    waitSecondsChooser.addOption("1 Second", 1.0);
   }
 
   public <V> void putData(String key, V value) {
@@ -65,7 +81,8 @@ public class Dashboard {
   }
 
   public double getWaitSeconds() {
-    return waitTimeEntry.getDouble(0.0);
+    // return waitSecondsChooser.get().doubleValue();
+    return waitTimeSubscriber.get();
   }
 
   // Enums for Dashboard elements:
