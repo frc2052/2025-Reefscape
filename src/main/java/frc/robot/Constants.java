@@ -163,4 +163,8 @@ public class Constants {
             new PIDConstants(TRANSLATION_KP, TRANSLATION_KI, TRANSLATION_KD),
             new PIDConstants(ROTATION_KP, ROTATION_KI, ROTATION_KD));
   }
+
+  public static final class MotorID {
+    public static final int CLIMBING_MOTOR_ID = 0;
+  }
 }
