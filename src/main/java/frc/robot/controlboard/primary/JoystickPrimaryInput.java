@@ -1,6 +1,6 @@
 package frc.robot.controlboard.primary;
 
-import com.team2052.lib.MathHelpers;
+import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -96,7 +96,7 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
-  public Trigger aimToGoal() {
+  public Trigger reefAlignment() {
     return new JoystickButton(rotateStick, 3);
   }
 
