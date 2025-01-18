@@ -1,9 +1,11 @@
 package frc.robot.util;
 
-public class Ports {
+public class Ports { // TODO: Set the ports for the robot
   /*
    *  CAN IDS
    */
+  public static final int ARM_CANCODER_ID = 0;
+  public static final int ARM_TALONFX_ID = 0;
 
   /*
    *  DIO
