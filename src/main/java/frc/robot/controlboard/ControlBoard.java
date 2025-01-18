@@ -138,4 +138,54 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   public Trigger sysIDDynamicReverse() {
     return primaryControlBoard.sysIDDynamicReverse();
   }
+
+  @Override
+  public Trigger manualUp() {
+    return secondaryControlBoard.manualUp();
+  }
+
+  @Override
+  public Trigger manualDown() {
+    return secondaryControlBoard.manualDown();
+  }
+
+  @Override
+  public Trigger setElevatorPositionL1() {
+    return secondaryControlBoard.setElevatorPositionL1();
+  }
+
+  @Override
+  public Trigger setElevatorPositionL2() {
+    return secondaryControlBoard.setElevatorPositionL2();
+  }
+
+  @Override
+  public Trigger setElevatorPositionL3() {
+    return secondaryControlBoard.setElevatorPositionL3();
+  }
+
+  @Override
+  public Trigger setElevatorPositionL4() {
+    return secondaryControlBoard.setElevatorPositionL4();
+  }
+
+  @Override
+  public Trigger setElevatorPositionUpperAlgae() {
+    return secondaryControlBoard.setElevatorPositionUpperAlgae();
+  }
+
+  @Override
+  public Trigger setElevatorPositionLowerAlgae() {
+    return secondaryControlBoard.setElevatorPositionLowerAlgae();
+  }
+
+  @Override
+  public Trigger setElevatorPositionHandoff() {
+    return secondaryControlBoard.setElevatorPositionHandoff();
+  }
+
+  @Override
+  public Trigger setElevatorPositionTravel() {
+    return secondaryControlBoard.setElevatorPositionTravel();
+  }
 }

@@ -9,7 +9,6 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.Ports;
@@ -29,7 +28,7 @@ public class HandSubsystem extends SubsystemBase {
     motor = new TalonFX(Ports.HAND_TALONFX_ID);
 
     TalonFXConfiguration config = new TalonFXConfiguration();
-    
+
     InvertedValue inverted =
         Constants.HandConstants.HAND_MOTOR_INVERTED
             ? InvertedValue.Clockwise_Positive

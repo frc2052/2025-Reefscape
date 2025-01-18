@@ -84,7 +84,7 @@ public class Constants {
 
   public static class ArmConstants {
     public static final boolean ARM_MOTOR_INVERTED = false;
-    
+
     public static class PIDs {
       public static final double KP = 0.0;
       public static final double KI = 0.0;

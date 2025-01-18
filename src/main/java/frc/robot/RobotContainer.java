@@ -18,6 +18,8 @@ import frc.robot.commands.drive.AlignWithTagCommand;
 import frc.robot.commands.drive.AlignWithTagCommand.AlignLocation;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
+import frc.robot.commands.elevator.ElevatorCommandFactory;
+import frc.robot.commands.superstructure.SuperstructureCommandFactory;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.drive.AdvantageScopeSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
@@ -160,6 +162,35 @@ public class RobotContainer {
                 dashboard::isFieldCentric));
 
     System.out.println("POV Bindings Configured");
+
+    controlBoard.manualUp().whileTrue(ElevatorCommandFactory.manualUp());
+
+    controlBoard.manualDown().whileTrue(ElevatorCommandFactory.manualDown());
+
+    controlBoard
+        .setElevatorPositionL1()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.L1.getCommand());
+    controlBoard
+        .setElevatorPositionL2()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.L2.getCommand());
+    controlBoard
+        .setElevatorPositionL3()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.L3.getCommand());
+    controlBoard
+        .setElevatorPositionL4()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.L4.getCommand());
+    controlBoard
+        .setElevatorPositionUpperAlgae()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.DESCORE_HIGH_ALGAE.getCommand());
+    controlBoard
+        .setElevatorPositionLowerAlgae()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.DESCORE_LOW_ALGAE.getCommand());
+    controlBoard
+        .setElevatorPositionHandoff()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.HANDOFF.getCommand());
+    controlBoard
+        .setElevatorPositionTravel()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.TRAVEL.getCommand());
   }
 
   public void forceRecompile() {
