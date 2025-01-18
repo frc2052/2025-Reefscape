@@ -166,5 +166,12 @@ public class Constants {
 
   public static final class MotorID {
     public static final int CLIMBING_MOTOR_ID = 0;
+    public static final int CLIMBER_MOTOR_ID = 0;
   }
+  public static final class ClimberConstants {
+    public static final boolean climberMotorInverted = false;
+    public static final int climberSpeed = 0; // TODO: needs to be updated
+
+  }
+
 }
