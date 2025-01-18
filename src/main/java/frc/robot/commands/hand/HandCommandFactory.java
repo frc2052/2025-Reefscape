@@ -8,10 +8,10 @@ public class HandCommandFactory {
   private static final HandSubsystem hand = HandSubsystem.getInstance();
 
   public static Command motorIn() {
-    return Commands.runOnce(() -> hand.motorIn(), hand);
+    return Commands.runEnd(() -> hand.motorIn(), () -> hand.stopMotor(), hand);
   }
 
   public static Command motorOut() {
-    return Commands.runOnce(() -> hand.motorOut(), hand);
+    return Commands.runEnd(() -> hand.motorOut(), () -> hand.stopMotor(), hand);
   }
 }

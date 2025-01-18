@@ -161,6 +161,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     return contoller.atSetpoint();
   }
 
+  public boolean atPosition(double setPoint) {
+    contoller.setSetpoint(setPoint);
+    Boolean isAtPoint = contoller.atSetpoint();
+    setPosition(heightToAngle(currentPosition.getHeight()));
+    return isAtPoint;
+  }
+
   private Angle heightToAngle(Distance height) {
     return Degrees.of(height.in(Inches) * Constants.ElevatorConstants.DEGREES_TO_INCHES_RATIO);
   }

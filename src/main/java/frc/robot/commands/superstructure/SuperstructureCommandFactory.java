@@ -1,10 +1,14 @@
 package frc.robot.commands.superstructure;
 
+import static edu.wpi.first.units.Units.Inch;
+import static edu.wpi.first.units.Units.Inches;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.elevator.ElevatorCommandFactory;
+import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ArmSubsystem.ArmPosition;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -133,4 +137,52 @@ public class SuperstructureCommandFactory {
       return command;
     }
   }
+
+  private static Command scoreLevelOneCommand() {
+    return Commands.sequence(
+        ToLevel.L1.getCommand().until(() -> (ElevatorSubsystem.getInstance().atPosition(ElevatorPosition.L1.getHeight().in(Inches)) && ArmSubsystem.getInstance().isAtPosition(5, ArmPosition.L1.getAngle()))),
+        HandCommandFactory.motorOut().withTimeout(0.5)
+    );
+  }
+
+  private static Command scoreLevelTwoCommand() {
+    return Commands.sequence(
+        ToLevel.L2.getCommand().until(() -> (ElevatorSubsystem.getInstance().atPosition(ElevatorPosition.L2.getHeight().in(Inches)) && ArmSubsystem.getInstance().isAtPosition(5, ArmPosition.MID_LEVEL.getAngle()))),
+        HandCommandFactory.motorOut().withTimeout(0.5)
+    );
+  }
+
+  private static Command scoreLevelThreeCommand() {
+    return Commands.sequence(
+        ToLevel.L3.getCommand().until(() -> (ElevatorSubsystem.getInstance().atPosition(ElevatorPosition.L3.getHeight().in(Inches)) && ArmSubsystem.getInstance().isAtPosition(5, ArmPosition.MID_LEVEL.getAngle()))),
+        HandCommandFactory.motorOut().withTimeout(0.5)
+    );
+  }
+
+  private static Command scoreLevelFourCommand() {
+    return Commands.sequence(
+        ToLevel.L4.getCommand().until(() -> (ElevatorSubsystem.getInstance().atPosition(ElevatorPosition.L4.getHeight().in(Inches)) && ArmSubsystem.getInstance().isAtPosition(5, ArmPosition.L4.getAngle()))),
+        HandCommandFactory.motorOut().withTimeout(0.5)
+    );
+  }
+
+  public enum ScoreLevel {
+    L1(scoreLevelOneCommand()),
+    L2(scoreLevelTwoCommand()),
+    L3(scoreLevelThreeCommand()),
+    L4(scoreLevelFourCommand());
+
+    private final Command command;
+
+    ScoreLevel(Command command) {
+      this.command = command;
+    }
+
+    public Command getCommand() {
+      return command;
+    }
+  }
+
+  
+
 }
