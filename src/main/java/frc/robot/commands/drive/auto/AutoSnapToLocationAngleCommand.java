@@ -4,8 +4,6 @@
 
 package frc.robot.commands.drive.auto;
 
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 
 public class AutoSnapToLocationAngleCommand extends SnapToLocationAngleCommand {

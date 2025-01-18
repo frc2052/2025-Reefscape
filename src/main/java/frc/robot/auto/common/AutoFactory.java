@@ -4,11 +4,11 @@
 package frc.robot.auto.common;
 
 import frc.robot.Constants.DashboardConstants;
-import frc.robot.auto.modes.TestTwoMeterAuto;
 import frc.robot.auto.modes.StartLeft.AutoJ2K4L4;
 import frc.robot.auto.modes.StartLeft.AutoK4L4DAK3L3;
 import frc.robot.auto.modes.StartRight.AutoD4C4DAD3C3;
 import frc.robot.auto.modes.StartRight.AutoE2D4C4;
+import frc.robot.auto.modes.TestTwoMeterAuto;
 import frc.robot.util.io.Dashboard;
 // select, compile, recompile autos before start of a match
 import java.util.function.Supplier;
@@ -17,7 +17,8 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
   private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
-  private final Supplier<Double> waitSecondsEntrySupplier = () -> Dashboard.getInstance().getWaitSeconds();
+  private final Supplier<Double> waitSecondsEntrySupplier =
+      () -> Dashboard.getInstance().getWaitSeconds();
 
   private Auto currentAuto;
   private AutoBase compiledAuto;
@@ -31,10 +32,10 @@ public class AutoFactory {
   private static LoggedNetworkString autoDescription =
       new LoggedNetworkString(DashboardConstants.AUTO_DESCRIPTION_KEY, "No Description");
 
-  private static LoggedNetworkBoolean waitSecondsSavedKey = 
-    new LoggedNetworkBoolean(DashboardConstants.WAIT_SECONDS_SAVED_KEY, false);
+  private static LoggedNetworkBoolean waitSecondsSavedKey =
+      new LoggedNetworkBoolean(DashboardConstants.WAIT_SECONDS_SAVED_KEY, false);
 
-  private static LoggedNetworkString waitSecondsDisplay = 
+  private static LoggedNetworkString waitSecondsDisplay =
       new LoggedNetworkString(DashboardConstants.WAIT_SECONDS_DISPLAY_KEY, "DEFAULT - 0.0");
 
   private static AutoFactory INSTANCE;
@@ -79,7 +80,7 @@ public class AutoFactory {
     return compiledAuto;
   }
 
-  public double getSavedWaitSeconds(){
+  public double getSavedWaitSeconds() {
     return savedWaitSeconds;
   }
 
@@ -88,12 +89,11 @@ public class AutoFactory {
     NO_AUTO(null),
     TEST_2_METER_PP_AUTO(TestTwoMeterAuto.class),
 
-    AUTO_J2_K4_L4(AutoJ2K4L4.class), 
+    AUTO_J2_K4_L4(AutoJ2K4L4.class),
     AUTO_E2_D4_C4(AutoE2D4C4.class),
 
-    AUTO_K4_L4_DA_K3_L3(AutoK4L4DAK3L3.class), 
+    AUTO_K4_L4_DA_K3_L3(AutoK4L4DAK3L3.class),
     AUTO_D4_C4_DA_D3_C3(AutoD4C4DAD3C3.class);
-
 
     private final Class<? extends AutoBase> autoClass;
 

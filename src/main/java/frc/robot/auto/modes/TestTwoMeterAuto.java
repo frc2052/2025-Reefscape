@@ -4,22 +4,21 @@
 
 package frc.robot.auto.modes;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-
 import frc.robot.auto.common.AutoBase;
-
+import frc.robot.commands.drive.AlignWithTagCommand.AlignLocation;
 
 /** Add your docs here. */
-public class TestTwoMeterAuto extends AutoBase{
+public class TestTwoMeterAuto extends AutoBase {
+  // private final VisionSubsystem vision = VisionSubsystem.getInstance();
 
-    public TestTwoMeterAuto(){
-        super(getStartPoseFromAutoFile("Test Auto"));
-    }
+  public TestTwoMeterAuto() {
+    super(Paths.TEST_PATH_SL_EF.getStartingHolonomicPose());
+  }
 
-    @Override
-    public void init() {
-        delaySelectedTime();
-        AutoBuilder.buildAuto("Test Auto - 2 Meters Straight");
-        // addCommands(followPathCommand(Paths.TEST_PATH_2_METERS));
-    }
+  @Override
+  public void init() {
+    delaySelectedTime();
+    addCommands(alignWithReefSideCommand(AlignLocation.MIDDLE, Paths.TEST_PATH_SL_EF));
+    // addCommands(followPathCommand(Paths.TEST_PATH_SL_EF));
+  }
 }

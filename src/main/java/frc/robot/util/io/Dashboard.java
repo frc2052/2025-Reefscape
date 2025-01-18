@@ -1,8 +1,5 @@
 package frc.robot.util.io;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -17,8 +14,8 @@ public class Dashboard {
   private final LoggedDashboardChooser<Auto> autoChooser =
       new LoggedDashboardChooser<Auto>("Auto Mode");
 
-  private final GenericEntry waitTimeEntry = 
-    Shuffleboard.getTab("Drive").add("Wait Tmime Entry", 0).getEntry();
+  private final GenericEntry waitTimeEntry =
+      Shuffleboard.getTab("Drive").add("Wait Tmime Entry", 0).getEntry();
 
   private static Dashboard INSTANCE;
 
@@ -67,7 +64,7 @@ public class Dashboard {
     return autoChooser.get();
   }
 
-  public double getWaitSeconds(){
+  public double getWaitSeconds() {
     return waitTimeEntry.getDouble(0.0);
   }
 
