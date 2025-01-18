@@ -50,11 +50,21 @@ public class AutoFactory {
   ;
 
   public boolean recompileNeeded() {
-    // System.out.println("======== AUTO WAIT TIME VAL " + waitSecondsEntrySupplier.get());
+    // System.out.println("======== AUTO WAIT TIME VAL " + waitSecondsEntrySupplier.get() + "   " +
+    // savedWaitSeconds);
     return autoSupplier.get() != currentAuto || waitSecondsEntrySupplier.get() != savedWaitSeconds;
   }
 
   public void recompile() {
+
+    // update wait seconds
+    waitSecondsSavedKey.set(false);
+    selectedWaitSeconds = waitSecondsEntrySupplier.get().doubleValue();
+    System.out.println("SELECTED WAIT SECONDS: " + waitSecondsEntrySupplier.get().doubleValue());
+    savedWaitSeconds = selectedWaitSeconds;
+    waitSecondsDisplay.set("Chosen Wait Seconds: " + savedWaitSeconds);
+    waitSecondsSavedKey.set(true);
+
     autoCompiled.set(false);
     currentAuto = autoSupplier.get();
     if (currentAuto == null) {
@@ -67,14 +77,6 @@ public class AutoFactory {
       compiledAuto.init();
     }
     autoCompiled.set(true);
-
-    // update wait seconds
-    waitSecondsSavedKey.set(false);
-    selectedWaitSeconds = waitSecondsEntrySupplier.get().doubleValue();
-    System.out.println("SELECTED WAIT SECONDS: " + waitSecondsEntrySupplier.get().doubleValue());
-    savedWaitSeconds = selectedWaitSeconds;
-    waitSecondsDisplay.set("Chosen Wait Seconds: " + savedWaitSeconds);
-    waitSecondsSavedKey.set(true);
   }
 
   public AutoBase getCompiledAuto() {
