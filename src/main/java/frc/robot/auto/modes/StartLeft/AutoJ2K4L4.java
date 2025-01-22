@@ -28,10 +28,10 @@ public class AutoJ2K4L4 extends AutoBase {
     addCommands(followPathCommand(Paths.LL_L4));
 
     // test align
-    addCommands(followPathCommand(startingPath));
-    addCommands(followPathCommand(Paths.J2_LL));
-    addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.LL_K4, SnapLocation.ReefKL));
-    addCommands(followPathCommand(Paths.K4_LL));
-    addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L4, SnapLocation.ReefKL));
+    // addCommands(followPathCommand(startingPath));
+    // addCommands(followPathCommand(Paths.J2_LL));
+    // addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.LL_K4, SnapLocation.ReefKL));
+    // addCommands(followPathCommand(Paths.K4_LL));
+    // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L4, SnapLocation.ReefKL));
   }
 }

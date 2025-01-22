@@ -30,12 +30,12 @@ public class AutoD4C4DAD3C3 extends AutoBase {
     addCommands(followPathCommand(Paths.RL_C3));
 
     // test align
-    addCommands(followPathCommand(startingPath));
-    addCommands(followPathCommand(Paths.D4_RL));
-    addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.RL_C4, SnapLocation.ReefCD));
-    addCommands(followPathCommand(Paths.C4_RL));
-    addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.RL_D3, SnapLocation.ReefCD));
-    addCommands(followPathCommand(Paths.D3_RL));
-    addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.RL_C3, SnapLocation.ReefCD));
+    // addCommands(followPathCommand(startingPath));
+    // addCommands(followPathCommand(Paths.D4_RL));
+    // addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.RL_C4, SnapLocation.ReefCD));
+    // addCommands(followPathCommand(Paths.C4_RL));
+    // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.RL_D3, SnapLocation.ReefCD));
+    // addCommands(followPathCommand(Paths.D3_RL));
+    // addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.RL_C3, SnapLocation.ReefCD));
   }
 }
