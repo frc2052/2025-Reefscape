@@ -45,7 +45,8 @@ public class VisionSubsystem extends SubsystemBase {
   private VisionSubsystem() {
     Collections.addAll(
         localizationTagTrackers,
-        new TagTracker(Camera1Constants.TagTrackerConstants(), robotState));
+        new TagTracker(Camera1Constants.TagTrackerConstants(), robotState),
+        reefTagTracker);
   }
 
   public Optional<PhotonPipelineResult> getReefCamClosestTarget() {

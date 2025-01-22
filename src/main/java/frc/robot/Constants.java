@@ -95,10 +95,6 @@ public class Constants {
     public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =
         AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
-    /*
-     * Camera Order:
-     * 0 1
-     */
     /* Front Left Camera */
     public static final class Camera0Constants {
       public static final String CAMERA_NAME = "KrawlerCam_000";
