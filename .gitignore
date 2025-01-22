@@ -182,3 +182,7 @@ ctre_sim/
 # clangd
 /.cache
 compile_commands.json
+
+
+# git info
+/src/main/java/frc/robot/BuildConstants.java

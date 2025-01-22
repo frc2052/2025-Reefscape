@@ -6,9 +6,9 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ArmSubsystem.ArmPosition;
 
 public class ArmCommandFactory {
-    private static final ArmSubsystem arm = ArmSubsystem.getInstance();
+  private static final ArmSubsystem arm = ArmSubsystem.getInstance();
 
-    public static Command setArmPosition(ArmPosition position) {
-        return Commands.runOnce(() -> arm.setArmPosition(position), arm);
-    }
+  public static Command setArmPosition(ArmPosition position) {
+    return Commands.runOnce(() -> arm.setArmPosition(position), arm);
+  }
 }

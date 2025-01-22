@@ -12,7 +12,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,7 +20,7 @@ import frc.robot.util.Ports;
 
 public class ArmSubsystem extends SubsystemBase {
   private final CANcoder encoder;
-  private final TalonFX motor; 
+  private final TalonFX motor;
   private final PIDController controller;
   private ArmPosition position;
   private static ArmSubsystem INSTANCE;
@@ -51,11 +50,11 @@ public class ArmSubsystem extends SubsystemBase {
 
     motor.getConfigurator().apply(config);
 
-    controller = new PIDController(
-      Constants.ArmConstants.PIDs.KP,
-      Constants.ArmConstants.PIDs.KI,
-      Constants.ArmConstants.PIDs.KD
-    );
+    controller =
+        new PIDController(
+            Constants.ArmConstants.PIDs.KP,
+            Constants.ArmConstants.PIDs.KI,
+            Constants.ArmConstants.PIDs.KD);
   }
 
   private void setArmAngle(Angle angle) {
@@ -84,7 +83,7 @@ public class ArmSubsystem extends SubsystemBase {
     setArmAngle(position.getAngle());
   }
 
-  public enum ArmPosition { //TODO: set angles for each position
+  public enum ArmPosition { // TODO: set angles for each position
     HANDOFF(Degrees.of(0)),
     TRAVEL(Degrees.of(0)),
     L1(Degrees.of(0)),

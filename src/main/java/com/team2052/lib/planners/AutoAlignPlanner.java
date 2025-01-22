@@ -32,7 +32,6 @@ public class AutoAlignPlanner {
     xController.setSetpoint(goalTransform.getX());
     yController.setSetpoint(goalTransform.getY());
     thetaController.setSetpoint(goalTransform.getRotation().getRadians());
-    
 
     double xOutput = xController.calculate(currentTransform.getX());
     double yOutput = yController.calculate(currentTransform.getY());
