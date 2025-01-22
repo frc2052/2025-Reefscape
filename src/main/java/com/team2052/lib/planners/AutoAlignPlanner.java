@@ -2,8 +2,6 @@ package com.team2052.lib.planners;
 
 import com.team2052.lib.PIDFFController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import java.util.OptionalDouble;
@@ -29,18 +27,14 @@ public class AutoAlignPlanner {
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
-  public ChassisSpeeds calculate(
-      Translation2d currentTranslation,
-      Translation2d goalTranslationFromRobot,
-      Rotation2d goalRotation,
-      Pose2d currentRobotPose) {
-    xController.setSetpoint(goalTranslationFromRobot.getX());
-    yController.setSetpoint(goalTranslationFromRobot.getY());
-    thetaController.setSetpoint(goalRotation.getRadians());
+  public ChassisSpeeds calculate(Pose2d currentPose, Pose2d goalPose) {
+    xController.setSetpoint(goalPose.getX());
+    yController.setSetpoint(goalPose.getY());
+    thetaController.setSetpoint(goalPose.getRotation().getRadians());
 
-    double xOutput = xController.calculate(currentTranslation.getX());
-    double yOutput = yController.calculate(currentTranslation.getY());
-    double thetaOutput = thetaController.calculate(currentRobotPose.getRotation().getRadians());
+    double xOutput = xController.calculate(currentPose.getX());
+    double yOutput = yController.calculate(currentPose.getY());
+    double thetaOutput = thetaController.calculate(currentPose.getRotation().getRadians());
 
     ChassisSpeeds calculatedSpeeds;
 
@@ -53,7 +47,7 @@ public class AutoAlignPlanner {
             xWithinTol ? 0.0 : xOutput,
             yWithinTol ? 0.0 : yOutput,
             thetaWithinTol ? 0.0 : thetaOutput,
-            currentRobotPose.getRotation());
+            currentPose.getRotation());
 
     autoAlignComplete = xWithinTol && yWithinTol && thetaWithinTol;
     if (startTime.isPresent() && autoAlignComplete) {

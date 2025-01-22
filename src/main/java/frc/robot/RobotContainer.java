@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
-import frc.robot.commands.drive.AlignWithTagCommand;
-import frc.robot.commands.drive.AlignWithTagCommand.AlignLocation;
+import frc.robot.commands.drive.AlignWithReefCommand;
+import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.controlboard.ControlBoard;
@@ -58,8 +58,8 @@ public class RobotContainer {
     controlBoard
         .reefAlignment()
         .whileTrue(
-            new AlignWithTagCommand(
-                AlignLocation.MIDDLE,
+            new AlignWithReefCommand(
+                () -> AlignLocation.MIDDLE,
                 controlBoard::getThrottle,
                 // Sideways velocity supplier.
                 controlBoard::getStrafe,

@@ -100,4 +100,54 @@ public class SnapToLocationAngleCommand extends SnapToAngleCommand {
       return robotAngle;
     }
   }
+
+  public static SnapLocation getSnapLocationByID(int id) {
+    SnapLocation location;
+    switch (id) {
+      case 18:
+        location = SnapLocation.ReefAB;
+        break;
+      case 17:
+        location = SnapLocation.ReefCD;
+        break;
+      case 22:
+        location = SnapLocation.ReefEF;
+        break;
+      case 21:
+        location = SnapLocation.ReefGH;
+        break;
+      case 20:
+        location = SnapLocation.ReefIJ;
+        break;
+      case 19:
+        location = SnapLocation.ReefKL;
+        break;
+      case 10:
+        location = SnapLocation.ReefGH;
+        break;
+      case 11:
+        location = SnapLocation.ReefIJ;
+        break;
+      case 6:
+        location = SnapLocation.ReefKL;
+        break;
+      case 7:
+        location = SnapLocation.ReefAB;
+        break;
+      case 8:
+        location = SnapLocation.ReefCD;
+        break;
+      case 9:
+        location = SnapLocation.ReefEF;
+        break;
+      default:
+        location = SnapLocation.FORWARD;
+    }
+
+    return location;
+  }
+
+  public static double getAlignAngleByID(int id) {
+    return getLocationAngleRadians(getSnapLocationByID(id));
+  }
 }
