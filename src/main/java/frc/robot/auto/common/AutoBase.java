@@ -6,6 +6,7 @@ package frc.robot.auto.common;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
 import frc.robot.commands.drive.AlignWithTagCommand;
 import frc.robot.commands.drive.AlignWithTagCommand.AlignLocation;
+import frc.robot.commands.drive.SnapToLocationAngleCommand;
+import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.List;
@@ -62,18 +65,25 @@ public abstract class AutoBase extends SequentialCommandGroup {
     return AutoBuilder.followPath(path);
   }
 
-  // protected Command alignToReefAngle(SnapLocation snapLocation, PathPlannerPath path) {
-  //   return new SnapToLocationAngleCommand(snapLocation, () -> 0, () -> 0, () -> 0, () -> true);
-  //   PPHolonomicDriveController.overrideXFeedback(null);
-  // }
+  protected Command snapToReefAngle(SnapLocation snapLocation) {
+    return new SnapToLocationAngleCommand(snapLocation, () -> 0, () -> 0, () -> 0, () -> true);
+  }
 
-  protected Command alignWithReefSideCommand(
-      AlignLocation alignLocation, PathPlannerPath altAlignPath) {
+  protected Command reefSideVisionOrPathAlign(
+    AlignLocation alignLocation, 
+    PathPlannerPath altAlignPath,
+    SnapLocation snaolocLocation) 
+  {
     return new ConditionalCommand(
-        new AlignWithTagCommand(alignLocation, () -> 0, () -> 0, () -> 0),
+      // if closest target presnet, align command
+      new AlignWithTagCommand(alignLocation, () -> 0, () -> 0, () -> 0), 
+      // if false, drive to side and snap to correct angle
+      new SequentialCommandGroup(
         followPathCommand(altAlignPath),
-        () -> vision.getReefCamClosestTarget().isPresent());
-    // return new SnapToLocationAngleCommand(snapLocation, () -> 0, () -> 0, () -> 0, () -> true);
+        snapToReefAngle(snaolocLocation)), 
+      // is closest target present
+      () -> vision.getReefCamClosestTarget().isPresent()
+    );
   }
 
   protected static PathPlannerPath getPathFromFile(String pathName) {
@@ -94,8 +104,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
       return (pathList.get(0).getStartingHolonomicPose());
     } catch (Exception e) {
       DriverStation.reportError(
-          "Couldn't get starting pose from auto file: " + autoName + e.getMessage(),
-          e.getStackTrace());
+        "Couldn't get starting pose from auto file: " + autoName + e.getMessage(),
+        e.getStackTrace());
       return null;
     }
   }

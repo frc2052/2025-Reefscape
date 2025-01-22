@@ -12,6 +12,8 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.drive.AlignWithTagCommand;
 import frc.robot.commands.drive.AlignWithTagCommand.AlignLocation;
+import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
+import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.controlboard.ControlBoard;
@@ -20,6 +22,8 @@ import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.Telemetry;
 import frc.robot.util.io.Dashboard;
+
+import com.pathplanner.lib.auto.NamedCommands;
 
 public class RobotContainer {
   private final ControlBoard controlBoard = ControlBoard.getInstance();
@@ -44,7 +48,22 @@ public class RobotContainer {
             controlBoard::getRotation,
             dashboard::isFieldCentric));
 
+    configureNamedCommands();
+
     configureBindings();
+  }
+
+  private void configureNamedCommands(){
+    // snap to angle in gui
+        NamedCommands.registerCommand("Snap Left Coral Station", new AutoSnapToLocationAngleCommand(SnapLocation.LeftCoralStation));
+        NamedCommands.registerCommand("Snap Right Coral Station", new AutoSnapToLocationAngleCommand(SnapLocation.RightCoralStation));
+
+        NamedCommands.registerCommand("Snap to AB", new AutoSnapToLocationAngleCommand(SnapLocation.ReefAB));
+        NamedCommands.registerCommand("Snap to CD", new AutoSnapToLocationAngleCommand(SnapLocation.ReefCD));
+        NamedCommands.registerCommand("Snap to EF", new AutoSnapToLocationAngleCommand(SnapLocation.ReefEF));
+        NamedCommands.registerCommand("Snap to GH", new AutoSnapToLocationAngleCommand(SnapLocation.ReefGH));
+        NamedCommands.registerCommand("Snap to IJ", new AutoSnapToLocationAngleCommand(SnapLocation.ReefIJ));
+        NamedCommands.registerCommand("Snap to KL", new AutoSnapToLocationAngleCommand(SnapLocation.ReefKL));
   }
 
   private void configureBindings() {

@@ -11,12 +11,9 @@ public class AutoSnapToLocationAngleCommand extends SnapToLocationAngleCommand {
     super(snapLocation, () -> 0, () -> 0, () -> 0, () -> false);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // PPHolonomicDriveController.overrideRotationFeedback(null);
-    // PPHolonomicDriveController.overrideXFeedback(null);
-    // PPHolonomicDriveController.overrideYFeedback(null);
+    // no overrides necessary? just a regular command
   }
 
   @Override
@@ -24,7 +21,6 @@ public class AutoSnapToLocationAngleCommand extends SnapToLocationAngleCommand {
 
   @Override
   public void end(boolean interrupted) {
-    // PPHolonomicDriveController.clearFeedbackOverrides();
   }
 
   @Override
