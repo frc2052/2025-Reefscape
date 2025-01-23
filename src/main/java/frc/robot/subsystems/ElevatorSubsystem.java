@@ -96,8 +96,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         <= ElevatorConstants.TICKS_DEADZONE;
   }
 
-  private Angle heightToAngle(Distance height) {
-    return Degrees.of(height.in(Inches) * Constants.ElevatorConstants.DEGREES_TO_INCHES_RATIO);
+  public void zeroEncoder() {
+    leftMotor.getConfigurator().setPosition(0);
   }
 
   @Override
