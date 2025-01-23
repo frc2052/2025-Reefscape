@@ -3,15 +3,21 @@ package frc.robot.commands.superstructure;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotState;
-import frc.robot.commands.drive.AlignWithSpecificTagCommand;
-import frc.robot.commands.drive.AlignWithTagCommand.AlignLocation;
+import frc.robot.commands.drive.AlignWithReefCommand;
+import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory.ScoreLevel;
+import frc.robot.util.io.Dashboard;
 
 public class ReefScoringCommandFactory {
 
   private static Command ScoreLocation(ScoreLevel level, AlignLocation alignLocation, int tagID) {
     return Commands.sequence(
-        new AlignWithSpecificTagCommand(alignLocation, () -> 0, () -> 0, () -> 0, tagID),
+        new AlignWithReefCommand(
+            () -> alignLocation,
+            () -> 0,
+            () -> 0,
+            () -> 0,
+            () -> Dashboard.getInstance().isFieldCentric()),
         level.getCommand());
   }
   // spotless:off
