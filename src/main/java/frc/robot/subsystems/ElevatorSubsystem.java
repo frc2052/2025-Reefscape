@@ -68,7 +68,6 @@ public void setPositionTicks(double elevatorPositionTicks) {
     return Commands.runOnce(
         () -> {
           leftMotor.set(ElevatorConstants.MANUAL_MOTOR_SPEED);
-          rightMotor.set(ElevatorConstants.MANUAL_MOTOR_SPEED);
         });
   }
 
@@ -77,7 +76,6 @@ public void setPositionTicks(double elevatorPositionTicks) {
         () -> {
           if (!elevatorZeroed()) {
             leftMotor.set(-ElevatorConstants.MANUAL_MOTOR_SPEED);
-            rightMotor.set(-ElevatorConstants.MANUAL_MOTOR_SPEED);
           }
         });
   }
