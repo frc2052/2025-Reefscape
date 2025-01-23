@@ -78,6 +78,14 @@ public class ArmSubsystem extends SubsystemBase {
     return controller.atSetpoint();
   }
 
+  public boolean isAtPosition(double error, Angle setPoint) {
+    controller.setSetpoint(setPoint.in(Degrees));
+    controller.setTolerance(error);
+    Boolean isAtPoint = controller.atSetpoint();
+    setArmAngle(position.getAngle());
+    return isAtPoint;
+  }
+
   @Override
   public void periodic() {
     setArmAngle(position.getAngle());
