@@ -6,7 +6,6 @@ package frc.robot.auto.common;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -53,7 +52,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
   public abstract void init(); // defined in each Auto class
 
   protected Command delaySelectedTime() {
-    System.out.println("=========== WAIT SECONDS" + autoFactory.getSavedWaitSeconds());
     return new WaitCommand(autoFactory.getSavedWaitSeconds());
   }
 

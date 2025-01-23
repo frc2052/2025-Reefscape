@@ -21,9 +21,6 @@ public class Dashboard {
   private final LoggedDashboardChooser<Double> waitSecondsChooser =
       new LoggedDashboardChooser<Double>("Wait Seconds");
 
-  private final GenericEntry waitTimeEntry =
-      Shuffleboard.getTab("Drive").add("Wait Time Entry", 0).getEntry();
-
   private final NetworkTableInstance networkTables = NetworkTableInstance.getDefault();
   private final NetworkTable debugTable = networkTables.getTable("debug network tables tab");
   private final DoubleTopic waitTimeTopic = debugTable.getDoubleTopic("waitTime");
@@ -73,7 +70,6 @@ public class Dashboard {
 
   public boolean isFieldCentric() {
     return driveModeChooser.get() == DriveMode.FIELD_CENTRIC;
-    // return true;
   }
 
   public Auto getAuto() {
@@ -81,7 +77,6 @@ public class Dashboard {
   }
 
   public double getWaitSeconds() {
-    // return waitSecondsChooser.get().doubleValue();
     return waitTimeSubscriber.get();
   }
 
