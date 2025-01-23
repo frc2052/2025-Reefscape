@@ -6,12 +6,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.auto.common.AutoFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
+  private AutoFactory autoFactory = AutoFactory.getInstance();
 
   private final RobotContainer m_robotContainer;
 
@@ -37,7 +39,9 @@ public class Robot extends LoggedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    m_robotContainer.precompileAuto();
+  }
 
   @Override
   public void disabledExit() {}

@@ -27,15 +27,14 @@ public class AlignWithTagCommand extends DefaultDriveCommand {
   private Timer targetTimer = new Timer();
 
   private SwerveRequest.ApplyFieldSpeeds drive =
-      new SwerveRequest.ApplyFieldSpeeds()
-          .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+    new SwerveRequest.ApplyFieldSpeeds()
+      .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
   public AlignWithTagCommand(
       AlignLocation scoringLocation,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
-      DoubleSupplier
-          rotationSupplier) { // add enum supplier for scoring position, left middle or right
+      DoubleSupplier rotationSupplier) { // add enum supplier for scoring position, left middle or right
     super(xSupplier, ySupplier, rotationSupplier, () -> false);
 
     this.scoringLocation = scoringLocation;
@@ -45,15 +44,13 @@ public class AlignWithTagCommand extends DefaultDriveCommand {
   @Override
   public SwerveRequest getSwerveRequest() {
     if (target != null) {
-      // System.out.println(
-      //     "Camera Transform Rotation"
-      //         + target.getBestCameraToTarget().getRotation().toRotation2d().getDegrees());
+      // System.out.println("Camera Transform Y" + target.getBestCameraToTarget().getY());
       // return super.getSwerveRequest();
       return drive.withSpeeds(
-          planner.calculate(
-              target.getBestCameraToTarget(),
-              scoringLocation.goalTransform,
-              robotState.getFieldToRobot()));
+        planner.calculate(
+          target.getBestCameraToTarget(),
+          scoringLocation.goalTransform,
+          robotState.getFieldToRobot()));
     } else {
       return super.getSwerveRequest();
     }

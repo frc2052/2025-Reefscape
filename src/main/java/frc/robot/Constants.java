@@ -136,6 +136,8 @@ public class Constants {
     public static final String DRIVE_MODE_KEY = "Drive Mode";
     public static final String AUTO_COMPILED_KEY = "Auto Compiled";
     public static final String AUTO_DESCRIPTION_KEY = "Auto Description";
+    public static final String WAIT_SECONDS_SAVED_KEY = "Wait Seconds Saved";
+    public static final String WAIT_SECONDS_DISPLAY_KEY = "Wait Seconds Display";
   }
 
   public static final class PathPlannerConstants {
