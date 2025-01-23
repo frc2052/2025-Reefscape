@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
-import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 public class VisionSubsystem extends SubsystemBase {
   private DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -45,10 +45,11 @@ public class VisionSubsystem extends SubsystemBase {
   private VisionSubsystem() {
     Collections.addAll(
         localizationTagTrackers,
-        new TagTracker(Camera1Constants.TagTrackerConstants(), robotState));
+        new TagTracker(Camera1Constants.TagTrackerConstants(), robotState),
+        reefTagTracker);
   }
 
-  public Optional<PhotonTrackedTarget> getReefCamClosestTarget() {
+  public Optional<PhotonPipelineResult> getReefCamClosestTarget() {
     return reefTagTracker.getClosestTagToCamera();
   }
 

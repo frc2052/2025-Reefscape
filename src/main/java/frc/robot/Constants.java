@@ -148,28 +148,24 @@ public class Constants {
     public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =
         AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
-    /*
-     * Camera Order:
-     * 0 1
-     */
     /* Front Left Camera */
     public static final class Camera0Constants {
       public static final String CAMERA_NAME = "KrawlerCam_000";
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
-      // public static final Distance X_OFFSET = Inches.of(0.0);
-      // public static final Distance Y_OFFSET = Inches.of(0.0);
-      // public static final Distance Z_OFFSET = Inches.of(0.0);
+      public static final Distance X_OFFSET = Inches.of(10.5);
+      public static final Distance Y_OFFSET = Inches.of(0.0);
+      public static final Distance Z_OFFSET = Inches.of(0.0);
 
-      // public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
-      // public static final Angle THETA_Y_OFFSET = Degrees.of(-15); // pitch
-      // public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
+      public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
+      public static final Angle THETA_Y_OFFSET = Degrees.of(-15); // pitch
+      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
 
-      public static final Transform3d ROBOT_TO_CAMERA_METERS = new Transform3d();
-      // new Transform3d(
-      //     new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
-      //     new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
+      public static final Transform3d ROBOT_TO_CAMERA_METERS =
+          new Transform3d(
+              new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
+              new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
 
       public static TagTrackerConstants TagTrackerConstants() {
         return new TagTrackerConstants(
