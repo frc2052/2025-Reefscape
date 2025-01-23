@@ -9,15 +9,13 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.team2052.lib.planners.AutoAlignPlanner;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotState;
+import frc.robot.commands.drive.AlignWithTagCommand.AlignLocation;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import frc.robot.commands.drive.AlignWithTagCommand.AlignLocation;
 
 public class AlignWithSpecificTagCommand extends DefaultDriveCommand {
   private final VisionSubsystem vision = VisionSubsystem.getInstance();
@@ -36,7 +34,7 @@ public class AlignWithSpecificTagCommand extends DefaultDriveCommand {
       AlignLocation scoringLocation,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
-      DoubleSupplier rotationSupplier, 
+      DoubleSupplier rotationSupplier,
       int tagID) { // add enum supplier for scoring position, left middle or right
     super(xSupplier, ySupplier, rotationSupplier, () -> false);
 
@@ -65,7 +63,9 @@ public class AlignWithSpecificTagCommand extends DefaultDriveCommand {
   @Override
   public void execute() {
     Optional<PhotonTrackedTarget> tar = vision.getReefCamClosestTarget();
-    if (tar.isPresent() && tar.get().getBestCameraToTarget() != null && tar.get().fiducialId == tagID) {
+    if (tar.isPresent()
+        && tar.get().getBestCameraToTarget() != null
+        && tar.get().fiducialId == tagID) {
       targetTimer.restart();
       target = tar.get();
     } else if (targetTimer.hasElapsed(0.2)) {
@@ -125,6 +125,5 @@ public class AlignWithSpecificTagCommand extends DefaultDriveCommand {
 
   //   return location;
   // }
-
 
 }

@@ -96,6 +96,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         <= ElevatorConstants.TICKS_DEADZONE;
   }
 
+  public boolean atPosition(ElevatorPosition position) {
+    return Math.abs(position.positionTicks - leftMotor.getPosition().getValueAsDouble())
+        <= ElevatorConstants.TICKS_DEADZONE;
+  }
+
   public void zeroEncoder() {
     leftMotor.getConfigurator().setPosition(0);
   }
