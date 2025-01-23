@@ -82,6 +82,22 @@ public class Constants {
     public static final Angle HEADING_TOLERANCE = Degrees.of(3);
   }
 
+  public static class ArmConstants {
+    public static final boolean ARM_MOTOR_INVERTED = false;
+
+    public static class PIDs {
+      public static final double KP = 0.0;
+      public static final double KI = 0.0;
+      public static final double KD = 0.0;
+    }
+  }
+
+  public static class HandConstants {
+    public static final boolean HAND_MOTOR_INVERTED = false;
+    public static final double HAND_MOTOR_CURRENT_LIMIT = 0;
+    public static final double HAND_MOTOR_SPEED = 0;
+  }
+
   public static class VisionConstants {
     public static final double XY_STDDEV = 0.2;
     public static final double HEADING_STDDEV = .1;

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.elevator;
+package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -161,6 +161,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     return contoller.atSetpoint();
   }
 
+  public boolean atPosition(double setPoint) {
+    contoller.setSetpoint(setPoint);
+    Boolean isAtPoint = contoller.atSetpoint();
+    setPosition(heightToAngle(currentPosition.getHeight()));
+    return isAtPoint;
+  }
+
   private Angle heightToAngle(Distance height) {
     return Degrees.of(height.in(Inches) * Constants.ElevatorConstants.DEGREES_TO_INCHES_RATIO);
   }
@@ -181,7 +188,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     L3(Inches.of(48)),
     L4(Inches.of(72)),
     LOWER_ALGAE(Inches.of(40)),
-    UPPER_ALGAE(Inches.of(54));
+    UPPER_ALGAE(Inches.of(54)),
+    TRAVEL(Inches.of(18));
 
     private final Distance positionHeight;
 
