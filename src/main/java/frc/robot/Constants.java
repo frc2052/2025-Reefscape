@@ -30,7 +30,7 @@ import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Constants {
-
+  // spotless:off
   public static final class ElevatorConstants {
     public static final boolean ELEVATOR_MOTORS_INVERTED = false;
 
@@ -38,8 +38,14 @@ public class Constants {
 
     public static final double MANUAL_MOTOR_SPEED = 0.5;
 
-    public static final Slot0Configs SLOT0_CONFIGS =
-        new Slot0Configs().withKS(0.25).withKV(0.12).withKA(0.01).withKP(4.8).withKI(0).withKD(0.1);
+    public static final Slot0Configs SLOT0_CONFIGS = 
+        new Slot0Configs()
+            .withKS(0.25)
+            .withKV(0.12)
+            .withKA(0.01)
+            .withKP(4.8)
+            .withKI(0)
+            .withKD(0.1);
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
@@ -233,4 +239,6 @@ public class Constants {
             new PIDConstants(TRANSLATION_KP, TRANSLATION_KI, TRANSLATION_KD),
             new PIDConstants(ROTATION_KP, ROTATION_KI, ROTATION_KD));
   }
+
+  // spotless:on
 }
