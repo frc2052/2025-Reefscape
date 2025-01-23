@@ -2,6 +2,14 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -22,28 +30,57 @@ import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Constants {
-
+  // spotless:off
   public static final class ElevatorConstants {
-    public static final class IDs {
-      public static final int LIMIT_SWITCH = 0;
-      public static final int LEFT_MOTOR = 0;
-      public static final int RIGHT_MOTOR = 0;
-      public static final int ENCODER = 0;
-    }
+    public static final boolean ELEVATOR_MOTORS_INVERTED = false;
 
-    public static final class MotorPIDConstants {
-      public static final double KP = 0;
-      public static final double KI = 0;
-      public static final double KD = 0;
-      public static final double ERROR = 0;
-    }
+    public static final double TICKS_DEADZONE = 250;
 
-    public static final boolean LEFT_MOTOR_INVERTED = false;
-    public static final boolean RIGHT_MOTOR_INVERTED = false;
+    public static final double MANUAL_MOTOR_SPEED = 0.5;
 
-    public static final double DEGREES_TO_INCHES_RATIO = 1;
+    public static final Slot0Configs SLOT0_CONFIGS = 
+        new Slot0Configs()
+            .withKS(0.25)
+            .withKV(0.12)
+            .withKA(0.01)
+            .withKP(4.8)
+            .withKI(0)
+            .withKD(0.1);
 
-    public static final double MANUL_MOTOR_SPEED = 0.5;
+    public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
+        new CurrentLimitsConfigs()
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(Amps.of(9.5))
+            .withSupplyCurrentLowerLimit(Amps.of(2.0))
+            .withSupplyCurrentLowerTime(Seconds.of(0.4));
+
+    // set Motion Magic settings
+    public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
+        new MotionMagicConfigs()
+            .withMotionMagicCruiseVelocity(80) // Target cruise velocity of 80 rps
+            .withMotionMagicAcceleration(160) // Target acceleration of 160 rps/s (0.5 seconds)
+            .withMotionMagicJerk(1600); // Target jerk of 1600 rps/s/s (0.1 seconds)
+
+    public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
+        new MotorOutputConfigs()
+            .withInverted(
+                ElevatorConstants.ELEVATOR_MOTORS_INVERTED
+                    ? InvertedValue.Clockwise_Positive
+                    : InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake);
+
+    public static final SoftwareLimitSwitchConfigs SOFTWARE_LIMIT_SWITCH_CONFIG =
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitEnable(true)
+            .withForwardSoftLimitThreshold(1000);
+
+    public static final TalonFXConfiguration MOTOR_CONFIG =
+        new TalonFXConfiguration()
+            .withCurrentLimits(CURRENT_LIMIT_CONFIG)
+            .withSoftwareLimitSwitch(SOFTWARE_LIMIT_SWITCH_CONFIG)
+            .withMotorOutput(MOTOR_OUTPUT_CONFIG)
+            .withMotionMagic(MOTION_MAGIC_CONFIG)
+            .withSlot0(SLOT0_CONFIGS);
   }
 
   public static class DriverConstants {
@@ -202,4 +239,6 @@ public class Constants {
             new PIDConstants(TRANSLATION_KP, TRANSLATION_KI, TRANSLATION_KD),
             new PIDConstants(ROTATION_KP, ROTATION_KI, ROTATION_KD));
   }
+
+  // spotless:on
 }

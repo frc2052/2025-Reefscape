@@ -14,7 +14,7 @@ public class ElevatorCommandFactory {
   private static final ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
 
   public static Command setElevatorPosition(ElevatorPosition position) {
-    return Commands.runOnce(() -> elevator.setElevatorPosition(position), elevator);
+    return Commands.runOnce(() -> elevator.setPosition(position), elevator);
   }
 
   public static Command manualUp() {
