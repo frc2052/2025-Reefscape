@@ -41,11 +41,12 @@ public class Constants {
     public static final Slot0Configs SLOT0_CONFIGS =
         new Slot0Configs().withKS(0.25).withKV(0.12).withKA(0.01).withKP(4.8).withKI(0).withKD(0.1);
 
-    public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG = new CurrentLimitsConfigs()
-        .withSupplyCurrentLimitEnable(true)
-        .withSupplyCurrentLimit(Amps.of(9.5))
-        .withSupplyCurrentLowerLimit(Amps.of(2.0))
-        .withSupplyCurrentLowerTime(Seconds.of(0.4));
+    public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
+        new CurrentLimitsConfigs()
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(Amps.of(9.5))
+            .withSupplyCurrentLowerLimit(Amps.of(2.0))
+            .withSupplyCurrentLowerTime(Seconds.of(0.4));
 
     // set Motion Magic settings
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
@@ -61,10 +62,11 @@ public class Constants {
                     ? InvertedValue.Clockwise_Positive
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake);
-    
-    public static final SoftwareLimitSwitchConfigs SOFTWARE_LIMIT_SWITCH_CONFIG = new SoftwareLimitSwitchConfigs()
-        .withForwardSoftLimitEnable(true)
-        .withForwardSoftLimitThreshold(1000);
+
+    public static final SoftwareLimitSwitchConfigs SOFTWARE_LIMIT_SWITCH_CONFIG =
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitEnable(true)
+            .withForwardSoftLimitThreshold(1000);
 
     public static final TalonFXConfiguration MOTOR_CONFIG =
         new TalonFXConfiguration()

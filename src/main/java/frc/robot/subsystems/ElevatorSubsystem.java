@@ -8,7 +8,6 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,9 +15,6 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.util.Ports;
 
 public class ElevatorSubsystem extends SubsystemBase {
-
-  private static ElevatorSubsystem INSTANCE;
-
   private static TalonFX leftMotor;
   private static TalonFX rightMotor;
 
@@ -27,19 +23,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   private MotionMagicTorqueCurrentFOC elevatorRequest;
 
-  /** Creates a new ElevatorSubsystem. */
-  public ElevatorSubsystem() {
-    goalPositionTicks = ElevatorPosition.STOW.getPositionTicks();
-    elevatorRequest = new MotionMagicTorqueCurrentFOC(goalPositionTicks);
-
-    leftMotor = new TalonFX(Ports.ELEVATOR_LEFT_ID);
-    rightMotor = new TalonFX(Ports.ELEVATOR_RIGHT_ID);
-
-    rightMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
-    leftMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG.HardwareLimitSwitch.withReverseLimitEnable(true).withReverseLimitRemoteSensorID(Ports.ELEVATOR_LIMIT_SWITCH));
-
-    rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
-  }
+  private static ElevatorSubsystem INSTANCE;
 
   public static ElevatorSubsystem getInstance() {
     if (INSTANCE == null) {
@@ -48,21 +32,40 @@ public class ElevatorSubsystem extends SubsystemBase {
     return INSTANCE;
   }
 
+  private ElevatorSubsystem() {
+    goalPositionTicks = ElevatorPosition.STOW.getPositionTicks();
+    elevatorRequest = new MotionMagicTorqueCurrentFOC(goalPositionTicks);
+
+    leftMotor = new TalonFX(Ports.ELEVATOR_LEFT_ID);
+    rightMotor = new TalonFX(Ports.ELEVATOR_RIGHT_ID);
+
+    rightMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
+    leftMotor
+        .getConfigurator()
+        .apply(
+            ElevatorConstants.MOTOR_CONFIG
+                .HardwareLimitSwitch
+                .withReverseLimitEnable(true)
+                .withReverseLimitRemoteSensorID(Ports.ELEVATOR_LIMIT_SWITCH));
+
+    rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
+  }
+
   public void setPosition(ElevatorPosition elevatorPosition) {
     setPositionTicks(elevatorPosition.getPositionTicks());
   }
 
-public void setPositionTicks(double elevatorPositionTicks) {
+  public void setPositionTicks(double elevatorPositionTicks) {
     if (goalPositionTicks == elevatorPositionTicks && atPosition()) {
-        return;
+      return;
     }
-    
+
     previousPositionTicks = goalPositionTicks;
     goalPositionTicks = elevatorPositionTicks;
 
     // set target position to 100 rotations
     leftMotor.setControl(elevatorRequest.withPosition(goalPositionTicks));
-}
+  }
 
   public Command manualUp() {
     return Commands.runOnce(
@@ -85,37 +88,36 @@ public void setPositionTicks(double elevatorPositionTicks) {
   }
 
   public Command stopElevator() {
-    return Commands.runOnce(() ->leftMotor.set(0.0));
+    return Commands.runOnce(() -> leftMotor.set(0.0));
   }
 
   public boolean atPosition() {
-    return Math.abs(
-        goalPositionTicks - leftMotor.getPosition().getValueAsDouble()
-    ) <= ElevatorConstants.TICKS_DEADZONE;
+    return Math.abs(goalPositionTicks - leftMotor.getPosition().getValueAsDouble())
+        <= ElevatorConstants.TICKS_DEADZONE;
   }
 
-    public void zeroEncoder() {
-      leftMotor.getConfigurator().setPosition(0);
-    }
+  public void zeroEncoder() {
+    leftMotor.getConfigurator().setPosition(0);
+  }
 
   @Override
   public void periodic() {
 
-      if (elevatorZeroed() || leftMotor.getPosition().getValueAsDouble() <= 0) {
-        zeroEncoder();
+    if (elevatorZeroed() || leftMotor.getPosition().getValueAsDouble() <= 0) {
+      zeroEncoder();
 
-        // If the elevator is traveling downwards stop the belt motor and end the current command.
-        if (goalPositionTicks < previousPositionTicks) {
-            goalPositionTicks = 0;
-            stopElevator().schedule();
-        }
+      // If the elevator is traveling downwards stop the belt motor and end the current command.
+      if (goalPositionTicks < previousPositionTicks) {
+        goalPositionTicks = 0;
+        stopElevator().schedule();
+      }
     } else {
-        if (atPosition()) {
-            stopElevator().schedule();
-        }
+      if (atPosition()) {
+        stopElevator().schedule();
+      }
     }
-
   }
+
   public static enum ElevatorPosition {
     STOW(0),
     HANDOFF(0),
@@ -130,11 +132,11 @@ public void setPositionTicks(double elevatorPositionTicks) {
     private final int positionTicks;
 
     private ElevatorPosition(int positionTicks) {
-        this.positionTicks = positionTicks;
+      this.positionTicks = positionTicks;
     }
 
     public int getPositionTicks() {
-        return positionTicks;
+      return positionTicks;
     }
   }
 }
