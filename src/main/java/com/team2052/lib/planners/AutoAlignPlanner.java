@@ -16,8 +16,8 @@ public class AutoAlignPlanner {
 
   public AutoAlignPlanner() {
     startTime = OptionalDouble.of(Timer.getFPGATimestamp());
-    xController = new PIDFFController(2, 0.0, 0, 0.1, 0.0, 0.0);
-    yController = new PIDFFController(2, 0.0, 0, 0.1, 0.0, 0.0);
+    xController = new PIDFFController(0.5, 0.0, 0, 0.0, 0.0, 0.0);
+    yController = new PIDFFController(0.5, 0.0, 0, 0.0, 0.0, 0.0);
     thetaController = new PIDFFController(1.5, 0.0, 0.1, 0.3, 0.0, 0.0);
 
     xController.setTolerance(0.08, 0.05);
@@ -44,7 +44,7 @@ public class AutoAlignPlanner {
 
     calculatedSpeeds =
         ChassisSpeeds.fromRobotRelativeSpeeds(
-            xWithinTol ? 0.0 : xOutput,
+            xWithinTol ? 0.0 : -xOutput,
             yWithinTol ? 0.0 : yOutput,
             thetaWithinTol ? 0.0 : thetaOutput,
             currentPose.getRotation());

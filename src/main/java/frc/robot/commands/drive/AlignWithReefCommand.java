@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -56,7 +55,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   @Override
   public SwerveRequest getSwerveRequest() {
     if (goalPose != null) {
-      Logger.recordOutput("Goal Align pose", goalPose);
+      // Logger.recordOutput("Goal Align Pose", goalPose);
       return drive.withSpeeds(planner.calculate(robotState.getFieldToRobot(), goalPose));
     } else {
       return super.getSwerveRequest();
@@ -81,7 +80,6 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
         goalPose = null;
       }
     } else {
-      System.out.println("no target");
       target = null;
     }
 
@@ -98,9 +96,9 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   }
 
   public enum AlignLocation { // provides an offset from the april tag
-    LEFT(new Transform2d(0.2, 0.5, new Rotation2d(0))),
-    MIDDLE(new Transform2d(0.2, 0.1, new Rotation2d(0))),
-    RIGHT(new Transform2d(0.2, -0.5, new Rotation2d(0)));
+    LEFT(new Transform2d(0.5, 0.5, new Rotation2d(0))),
+    MIDDLE(new Transform2d(0.5, 0.1, new Rotation2d(0))),
+    RIGHT(new Transform2d(0.5, -0.5, new Rotation2d(0)));
 
     private Transform2d transform;
 
