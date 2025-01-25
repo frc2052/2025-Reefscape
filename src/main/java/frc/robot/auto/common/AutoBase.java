@@ -11,7 +11,6 @@ import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -68,15 +67,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
   }
 
   protected Command reefSideVisionOrPathAlign(
-      AlignLocation alignLocation, PathPlannerPath altAlignPath, SnapLocation snaolocLocation) {
-    return new ConditionalCommand(
-        // if closest target presnet, align command
-        new AlignWithReefCommand(() -> alignLocation, () -> 0, () -> 0, () -> 0, () -> true),
-        // if false, drive to side and snap to correct angle
-        new SequentialCommandGroup(
-            followPathCommand(altAlignPath), snapToReefAngle(snaolocLocation)),
-        // is closest target present
-        () -> vision.getReefCamClosestTarget().isPresent());
+      AlignLocation alignLocation, PathPlannerPath altAlignPath, SnapLocation snaploc) {
+    return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
+        .until(() -> vision.getReefCamClosestTarget().isPresent())
+        .andThen(
+            new AlignWithReefCommand(() -> alignLocation, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   protected static PathPlannerPath getPathFromFile(String pathName) {
@@ -125,7 +120,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     public static final PathPlannerPath LL_L3 = getPathFromFile("LL L3");
     public static final PathPlannerPath LL_L4 = getPathFromFile("LL L4");
     public static final PathPlannerPath SL_J2 = getPathFromFile("SL J2");
-    public static final PathPlannerPath SL_K4 = getPathFromFile("LL K4");
+    public static final PathPlannerPath SL_K4 = getPathFromFile("SL K4");
     public static final PathPlannerPath SR_E2 = getPathFromFile("SR E2");
     public static final PathPlannerPath E2_RL = getPathFromFile("E2 RL");
     public static final PathPlannerPath RL_D4 = getPathFromFile("RL D4");
