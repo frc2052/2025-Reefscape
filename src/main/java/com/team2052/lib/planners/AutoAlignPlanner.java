@@ -51,8 +51,7 @@ public class AutoAlignPlanner {
 
     autoAlignComplete = xWithinTol && yWithinTol && thetaWithinTol;
     if (startTime.isPresent() && autoAlignComplete) {
-      System.out.println(
-          "Auto align took: " + (Timer.getFPGATimestamp() - startTime.getAsDouble()));
+      // System.out.println("Auto align took: " + (Timer.getFPGATimestamp() - startTime.getAsDouble()));
       startTime = OptionalDouble.empty();
     }
 

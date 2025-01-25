@@ -75,12 +75,10 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
           VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(target.fiducialId);
       if (tagPose.isPresent()) {
         goalPose = tagPose.get().toPose2d().transformBy(scoringLocation.get().transform);
-        System.out.println("FOUND POSE");
       } else {
         goalPose = null;
       }
     } else {
-      System.out.println("NO TARGET");
       target = null;
     }
 
