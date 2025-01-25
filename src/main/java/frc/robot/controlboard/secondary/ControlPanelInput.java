@@ -38,32 +38,27 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
   @Override
   public Trigger setElevatorPositionL1() {
-    return new Trigger(() -> false);
-    // return new JoystickButton(controlPanel, 4);
+    return new JoystickButton(controlPanel, 11);
   }
 
   @Override
   public Trigger setElevatorPositionL2() {
-    return new Trigger(() -> false);
-    // return new JoystickButton(controlPanel, 5);
+    return new JoystickButton(controlPanel, 12);
   }
 
   @Override
   public Trigger setElevatorPositionL3() {
-    return new Trigger(() -> false);
-    // return new JoystickButton(controlPanel, 6);
+    return new JoystickButton(controlPanel, 5);
   }
 
   @Override
   public Trigger setElevatorPositionL4() {
-    return new Trigger(() -> false);
-    // return new JoystickButton(controlPanel, 7);
+    return new JoystickButton(controlPanel, 7);
   }
 
   @Override
   public Trigger setElevatorPositionUpperAlgae() {
-    return new Trigger(() -> false);
-    // return new JoystickButton(controlPanel, 8);
+    return new JoystickButton(controlPanel, 8);
   }
 
   @Override
@@ -80,6 +75,6 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
   @Override
   public Trigger setElevatorPositionTravel() {
-    return new JoystickButton(controlPanel, 8);
+    return new Trigger(() -> controlPanel.getX() < 0.5);
   }
 }

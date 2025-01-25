@@ -34,7 +34,7 @@ public class Constants {
   public static final class ElevatorConstants {
     public static final boolean ELEVATOR_MOTORS_INVERTED = false;
 
-    public static final double TICKS_DEADZONE = 250;
+    public static final double TICKS_DEADZONE = 0.1;
 
     public static final double MANUAL_MOTOR_SPEED = 0.2;
 
@@ -50,21 +50,21 @@ public class Constants {
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
             .withSupplyCurrentLimitEnable(true)
-            .withSupplyCurrentLimit(Amps.of(9.5))
-            .withSupplyCurrentLowerLimit(Amps.of(2.0))
-            .withSupplyCurrentLowerTime(Seconds.of(0.4));
+            .withSupplyCurrentLimit(Amps.of(70))
+            .withSupplyCurrentLowerLimit(Amps.of(40))
+            .withSupplyCurrentLowerTime(Seconds.of(0.75));
 
     public static final CurrentLimitsConfigs HOMING_CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
             .withSupplyCurrentLimitEnable(true)
-            .withSupplyCurrentLimit(Amps.of(2.0))
-            .withSupplyCurrentLowerLimit(Amps.of(0.5))
-            .withSupplyCurrentLowerTime(Seconds.of(0.3));
+            .withSupplyCurrentLimit(Amps.of(70.0))
+            .withSupplyCurrentLowerLimit(Amps.of(2.0))
+            .withSupplyCurrentLowerTime(Seconds.of(0.6));
 
     // set Motion Magic settings
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(80) 
+            .withMotionMagicCruiseVelocity(40) 
             .withMotionMagicAcceleration(80) 
             .withMotionMagicJerk(800); 
 
@@ -79,7 +79,7 @@ public class Constants {
     public static final SoftwareLimitSwitchConfigs SOFTWARE_LIMIT_SWITCH_CONFIG =
         new SoftwareLimitSwitchConfigs()
             .withForwardSoftLimitEnable(true)
-            .withForwardSoftLimitThreshold(1000);
+            .withForwardSoftLimitThreshold(63);
 
     public static final TalonFXConfiguration MOTOR_CONFIG =
         new TalonFXConfiguration()

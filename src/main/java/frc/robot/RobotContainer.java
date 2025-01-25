@@ -168,53 +168,47 @@ public class RobotContainer {
 
     System.out.println("POV Bindings Configured");
 
-    controlBoard
-        .zeroElevator()
-        .onTrue(
-            new InstantCommand(
-                () -> ElevatorSubsystem.getInstance().zeroEncoder(),
-                ElevatorSubsystem.getInstance()));
+    controlBoard.zeroElevator().onTrue(ElevatorSubsystem.getInstance().homeElevator());
 
     controlBoard
         .manualUp()
         .onTrue(ElevatorSubsystem.getInstance().manualUp())
         .onFalse(ElevatorSubsystem.getInstance().stopElevator());
-    // controlBoard
-    //     .manualUp()
-    //     .whileTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.STOW));
+
+    controlBoard
+        .manualDown()
+        .onTrue(ElevatorSubsystem.getInstance().manualDown())
+        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
+
     controlBoard
         .setElevatorPositionTravel()
         .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.TRAVEL));
 
     controlBoard
-        .manualDown()
-        .onTrue(new InstantCommand(() -> ElevatorSubsystem.getInstance().manualManualDown()))
-        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
+        .setElevatorPositionL1()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L1));
 
-    // controlBoard
-    //     .setElevatorPositionL1()
-    //     .whileTrue(SuperstructureCommandFactory.ToLevel.L1.getCommand());
-    // controlBoard
-    //     .setElevatorPositionL2()
-    //     .whileTrue(SuperstructureCommandFactory.ToLevel.L2.getCommand());
-    // controlBoard
-    //     .setElevatorPositionL3()
-    //     .whileTrue(SuperstructureCommandFactory.ToLevel.L3.getCommand());
-    // controlBoard
-    //     .setElevatorPositionL4()
-    //     .whileTrue(SuperstructureCommandFactory.ToLevel.L4.getCommand());
-    // controlBoard
-    //     .setElevatorPositionUpperAlgae()
-    //     .whileTrue(SuperstructureCommandFactory.ToLevel.DESCORE_HIGH_ALGAE.getCommand());
+    controlBoard
+        .setElevatorPositionL2()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L2));
+    controlBoard
+        .setElevatorPositionL3()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L3));
+    controlBoard
+        .setElevatorPositionL4()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L4));
+    controlBoard
+        .setElevatorPositionUpperAlgae()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.UPPER_ALGAE));
     // controlBoard
     //     .setElevatorPositionLowerAlgae()
     //     .whileTrue(SuperstructureCommandFactory.ToLevel.DESCORE_LOW_ALGAE.getCommand());
     // controlBoard
     //     .setElevatorPositionHandoff()
     //     .whileTrue(SuperstructureCommandFactory.ToLevel.HANDOFF.getCommand());
-    // controlBoard
-    //     .setElevatorPositionTravel()
-    //     .whileTrue(SuperstructureCommandFactory.ToLevel.TRAVEL.getCommand());
+    controlBoard
+        .setElevatorPositionTravel()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.TRAVEL));
   }
 
   public void forceRecompile() {

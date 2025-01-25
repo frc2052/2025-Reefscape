@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
@@ -17,6 +18,8 @@ import org.littletonrobotics.junction.Logger;
 public class ElevatorSubsystem extends SubsystemBase {
   private static TalonFX frontMotor;
   private static TalonFX backMotor;
+
+  private static boolean atPosition;
 
   private double goalPositionTicks;
   private double previousPositionTicks;
@@ -41,6 +44,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     backMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
     frontMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
+
+    frontMotor.clearStickyFault_SupplyCurrLimit();
     // .HardwareLimitSwitch
     // .withReverseLimitEnable(true)
     // .withReverseLimitRemoteSensorID(Ports.ELEVATOR_LIMIT_SWITCH));
@@ -94,9 +99,22 @@ public class ElevatorSubsystem extends SubsystemBase {
     return frontMotor.getPosition().getValueAsDouble();
   }
 
-  public void homeElevator() {
-    frontMotor.getConfigurator().apply(ElevatorConstants.HOMING_CURRENT_LIMIT_CONFIG);
-    // manualDown().(() -> (frontMotor.getStatorCurrent().getValueAsDouble() > 2.0));
+  public Command homeElevator() {
+    return Commands.sequence(
+        new InstantCommand(
+            () -> {
+              frontMotor.getConfigurator().apply(ElevatorConstants.HOMING_CURRENT_LIMIT_CONFIG);
+              frontMotor.clearStickyFault_SupplyCurrLimit();
+            }),
+        manualDown()
+            .until((() -> (frontMotor.getStickyFault_SupplyCurrLimit().refresh().getValue()))),
+        stopElevator(),
+        new InstantCommand(() -> zeroEncoder()),
+        new InstantCommand(
+            () -> {
+              frontMotor.clearStickyFault_SupplyCurrLimit();
+              frontMotor.getConfigurator().apply(ElevatorConstants.CURRENT_LIMIT_CONFIG);
+            }));
   }
 
   public Command stopElevator() {
@@ -122,6 +140,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     Logger.recordOutput("Elevator Position", getPosition());
     Logger.recordOutput("Elevator Goal Position", goalPositionTicks);
     Logger.recordOutput("Elevator At Goal Position", atPosition());
+    Logger.recordOutput(
+        "Supply Curr Limit", frontMotor.getStickyFault_SupplyCurrLimit().getValue());
 
     // if (elevatorZeroed() || leftMotor.getPosition().getValueAsDouble() <= 0) {
     //   zeroEncoder();
