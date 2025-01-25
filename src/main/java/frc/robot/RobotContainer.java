@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -55,7 +56,9 @@ public class RobotContainer {
 
   private void configureBindings() {
     drivetrain.registerTelemetry(logger::telemeterize);
-    controlBoard.resetGyro().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
+    controlBoard
+        .resetGyro()
+        .onTrue(new InstantCommand(() -> drivetrain.resetRotation(new Rotation2d())));
     configurePOVBindings();
     controlBoard
         .reefAlignment()

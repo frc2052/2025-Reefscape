@@ -11,7 +11,6 @@ import com.team2052.lib.vision.VisionPoseAcceptor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants.Camera0Constants;
-import frc.robot.Constants.VisionConstants.Camera1Constants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ public class VisionSubsystem extends SubsystemBase {
   private VisionSubsystem() {
     Collections.addAll(
         localizationTagTrackers,
-        new TagTracker(Camera1Constants.TagTrackerConstants(), robotState),
+        // new TagTracker(Camera1Constants.TagTrackerConstants(), robotState),
         reefTagTracker);
   }
 

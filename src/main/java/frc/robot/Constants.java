@@ -136,8 +136,8 @@ public class Constants {
   }
 
   public static class VisionConstants {
-    public static final double XY_STDDEV = 0.2;
-    public static final double HEADING_STDDEV = .1;
+    public static final double XY_STDDEV = 0.3;
+    public static final double HEADING_STDDEV = 5.0;
     public static final Matrix<N3, N1> VISION_STDDEV =
         VecBuilder.fill(XY_STDDEV, XY_STDDEV, HEADING_STDDEV);
 
@@ -154,13 +154,13 @@ public class Constants {
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
-      public static final Distance X_OFFSET = Inches.of(10.5);
+      public static final Distance X_OFFSET = Inches.of(-10.5);
       public static final Distance Y_OFFSET = Inches.of(0.0);
       public static final Distance Z_OFFSET = Inches.of(0.0);
 
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
       public static final Angle THETA_Y_OFFSET = Degrees.of(-15); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
+      public static final Angle THETA_Z_OFFSET = Degrees.of(180); // yaw
 
       public static final Transform3d ROBOT_TO_CAMERA_METERS =
           new Transform3d(

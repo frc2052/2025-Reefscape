@@ -108,19 +108,19 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
-    if (elevatorZeroed() || leftMotor.getPosition().getValueAsDouble() <= 0) {
-      zeroEncoder();
+    // if (elevatorZeroed() || leftMotor.getPosition().getValueAsDouble() <= 0) {
+    //   zeroEncoder();
 
-      // If the elevator is traveling downwards stop the belt motor and end the current command.
-      if (goalPositionTicks < previousPositionTicks) {
-        goalPositionTicks = 0;
-        stopElevator().schedule();
-      }
-    } else {
-      if (atPosition()) {
-        stopElevator().schedule();
-      }
-    }
+    //   // If the elevator is traveling downwards stop the belt motor and end the current command.
+    //   if (goalPositionTicks < previousPositionTicks) {
+    //     goalPositionTicks = 0;
+    //     stopElevator().schedule();
+    //   }
+    // } else {
+    //   if (atPosition()) {
+    //     stopElevator().schedule();
+    //   }
+    // }
   }
 
   public static enum ElevatorPosition {
