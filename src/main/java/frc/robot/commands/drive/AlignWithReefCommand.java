@@ -55,7 +55,6 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   @Override
   public SwerveRequest getSwerveRequest() {
     if (goalPose != null) {
-      // Logger.recordOutput("Goal Align Pose", goalPose);
       return drive.withSpeeds(planner.calculate(robotState.getFieldToRobot(), goalPose));
     } else {
       return super.getSwerveRequest();
@@ -76,10 +75,12 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
           VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(target.fiducialId);
       if (tagPose.isPresent()) {
         goalPose = tagPose.get().toPose2d().transformBy(scoringLocation.get().transform);
+        System.out.println("FOUND POSE");
       } else {
         goalPose = null;
       }
     } else {
+      System.out.println("NO TARGET");
       target = null;
     }
 
@@ -90,6 +91,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   public boolean isFinished() {
     if (planner.getAutoAlignComplete()) {
       goalPose = null;
+      planner.resetPlanner();
       return true;
     }
     return false;
@@ -97,7 +99,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
 
   public enum AlignLocation { // provides an offset from the april tag
     LEFT(new Transform2d(0.5, 0.5, new Rotation2d(0))),
-    MIDDLE(new Transform2d(0.5, 0.1, new Rotation2d(0))),
+    MIDDLE(new Transform2d(0.4, 0.0, new Rotation2d(0))),
     RIGHT(new Transform2d(0.5, -0.5, new Rotation2d(0)));
 
     private Transform2d transform;

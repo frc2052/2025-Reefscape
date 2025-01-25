@@ -16,8 +16,8 @@ public class AutoAlignPlanner {
 
   public AutoAlignPlanner() {
     startTime = OptionalDouble.of(Timer.getFPGATimestamp());
-    xController = new PIDFFController(0.5, 0.0, 0, 0.0, 0.0, 0.0);
-    yController = new PIDFFController(0.5, 0.0, 0, 0.0, 0.0, 0.0);
+    xController = new PIDFFController(2.0, 0.0, 0, 0.0, 0.0, 0.0);
+    yController = new PIDFFController(3.0, 0.0, 0, 0.0, 0.0, 0.0);
     thetaController = new PIDFFController(1.5, 0.0, 0.1, 0.3, 0.0, 0.0);
 
     xController.setTolerance(0.08, 0.05);
@@ -43,11 +43,11 @@ public class AutoAlignPlanner {
     boolean thetaWithinTol = thetaController.atSetpoint();
 
     calculatedSpeeds =
-        ChassisSpeeds.fromRobotRelativeSpeeds(
-            xWithinTol ? 0.0 : -xOutput,
+        new ChassisSpeeds(
+            xWithinTol ? 0.0 : xOutput,
+            // 0.0,
             yWithinTol ? 0.0 : yOutput,
-            thetaWithinTol ? 0.0 : thetaOutput,
-            currentPose.getRotation());
+            thetaWithinTol ? 0.0 : thetaOutput);
 
     autoAlignComplete = xWithinTol && yWithinTol && thetaWithinTol;
     if (startTime.isPresent() && autoAlignComplete) {
@@ -61,5 +61,9 @@ public class AutoAlignPlanner {
 
   public boolean getAutoAlignComplete() {
     return autoAlignComplete;
+  }
+
+  public void resetPlanner() {
+    autoAlignComplete = false;
   }
 }
