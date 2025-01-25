@@ -22,57 +22,64 @@ public class ControlPanelInput implements ISecondaryControlBoard {
   }
 
   @Override
-  public Trigger climb() {
-    return new JoystickButton(controlPanel, 1);
-  }
-
-  @Override
-  public Trigger manualUp() {
+  public Trigger zeroElevator() {
     return new JoystickButton(controlPanel, 2);
   }
 
   @Override
+  public Trigger manualUp() {
+    return new JoystickButton(controlPanel, 1);
+  }
+
+  @Override
   public Trigger manualDown() {
-    return new JoystickButton(controlPanel, 3);
-  }
-
-  @Override
-  public Trigger setElevatorPositionL1() {
-    return new JoystickButton(controlPanel, 4);
-  }
-
-  @Override
-  public Trigger setElevatorPositionL2() {
-    return new JoystickButton(controlPanel, 5);
-  }
-
-  @Override
-  public Trigger setElevatorPositionL3() {
     return new JoystickButton(controlPanel, 6);
   }
 
   @Override
+  public Trigger setElevatorPositionL1() {
+    return new Trigger(() -> false);
+    // return new JoystickButton(controlPanel, 4);
+  }
+
+  @Override
+  public Trigger setElevatorPositionL2() {
+    return new Trigger(() -> false);
+    // return new JoystickButton(controlPanel, 5);
+  }
+
+  @Override
+  public Trigger setElevatorPositionL3() {
+    return new Trigger(() -> false);
+    // return new JoystickButton(controlPanel, 6);
+  }
+
+  @Override
   public Trigger setElevatorPositionL4() {
-    return new JoystickButton(controlPanel, 7);
+    return new Trigger(() -> false);
+    // return new JoystickButton(controlPanel, 7);
   }
 
   @Override
   public Trigger setElevatorPositionUpperAlgae() {
-    return new JoystickButton(controlPanel, 8);
+    return new Trigger(() -> false);
+    // return new JoystickButton(controlPanel, 8);
   }
 
   @Override
   public Trigger setElevatorPositionLowerAlgae() {
-    return new JoystickButton(controlPanel, 9);
+    return new Trigger(() -> false);
+    // return new JoystickButton(controlPanel, 9);
   }
 
   @Override
   public Trigger setElevatorPositionHandoff() {
-    return new JoystickButton(controlPanel, 10);
+    return new Trigger(() -> false);
+    // return new JoystickButton(controlPanel, 10);
   }
 
   @Override
   public Trigger setElevatorPositionTravel() {
-    return new JoystickButton(controlPanel, 11);
+    return new JoystickButton(controlPanel, 8);
   }
 }

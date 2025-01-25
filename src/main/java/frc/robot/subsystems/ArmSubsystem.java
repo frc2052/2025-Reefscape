@@ -8,19 +8,16 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.util.Ports;
 
 public class ArmSubsystem extends SubsystemBase {
-  private final CANcoder encoder;
-  private final TalonFX motor;
+  // private final CANcoder encoder;
+  // private final TalonFX motor;
   private final PIDController controller;
   private ArmPosition position;
   private static ArmSubsystem INSTANCE;
@@ -35,10 +32,10 @@ public class ArmSubsystem extends SubsystemBase {
   public ArmSubsystem() {
     position = ArmPosition.HANDOFF;
 
-    encoder = new CANcoder(Ports.ARM_CANCODER_ID);
-    motor = new TalonFX(Ports.ARM_TALONFX_ID);
+    // encoder = new CANcoder(Ports.ARM_CANCODER_ID);
+    // motor = new TalonFX(Ports.ARM_TALONFX_ID);
     TalonFXConfiguration config = new TalonFXConfiguration();
-    config.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
+    // config.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
     config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
 
     InvertedValue inverted =
@@ -48,7 +45,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     config.withMotorOutput(new MotorOutputConfigs().withInverted(inverted));
 
-    motor.getConfigurator().apply(config);
+    // motor.getConfigurator().apply(config);
 
     controller =
         new PIDController(
@@ -58,7 +55,8 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private void setArmAngle(Angle angle) {
-    motor.set(controller.calculate(motor.getPosition().getValue().in(Degrees), angle.in(Degrees)));
+    // motor.set(controller.calculate(motor.getPosition().getValue().in(Degrees),
+    // angle.in(Degrees)));
   }
 
   public void setArmPosition(ArmPosition position) {
@@ -70,7 +68,8 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public Angle getArmAngle() {
-    return motor.getPosition().getValue();
+    // return motor.getPosition().getValue();
+    return Degrees.of(0);
   }
 
   public boolean isAtPosition(double error) {

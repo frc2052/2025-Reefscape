@@ -36,7 +36,7 @@ public class Constants {
 
     public static final double TICKS_DEADZONE = 250;
 
-    public static final double MANUAL_MOTOR_SPEED = 0.5;
+    public static final double MANUAL_MOTOR_SPEED = 0.2;
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
@@ -54,12 +54,19 @@ public class Constants {
             .withSupplyCurrentLowerLimit(Amps.of(2.0))
             .withSupplyCurrentLowerTime(Seconds.of(0.4));
 
+    public static final CurrentLimitsConfigs HOMING_CURRENT_LIMIT_CONFIG =
+        new CurrentLimitsConfigs()
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(Amps.of(2.0))
+            .withSupplyCurrentLowerLimit(Amps.of(0.5))
+            .withSupplyCurrentLowerTime(Seconds.of(0.3));
+
     // set Motion Magic settings
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(80) // Target cruise velocity of 80 rps
-            .withMotionMagicAcceleration(160) // Target acceleration of 160 rps/s (0.5 seconds)
-            .withMotionMagicJerk(1600); // Target jerk of 1600 rps/s/s (0.1 seconds)
+            .withMotionMagicCruiseVelocity(80) 
+            .withMotionMagicAcceleration(80) 
+            .withMotionMagicJerk(800); 
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()

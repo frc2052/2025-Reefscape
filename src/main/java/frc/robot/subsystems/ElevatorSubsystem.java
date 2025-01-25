@@ -7,16 +7,16 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.util.Ports;
+import org.littletonrobotics.junction.Logger;
 
 public class ElevatorSubsystem extends SubsystemBase {
-  private static TalonFX leftMotor;
-  private static TalonFX rightMotor;
+  private static TalonFX frontMotor;
+  private static TalonFX backMotor;
 
   private double goalPositionTicks;
   private double previousPositionTicks;
@@ -36,19 +36,16 @@ public class ElevatorSubsystem extends SubsystemBase {
     goalPositionTicks = ElevatorPosition.STOW.getPositionTicks();
     elevatorRequest = new MotionMagicTorqueCurrentFOC(goalPositionTicks);
 
-    leftMotor = new TalonFX(Ports.ELEVATOR_LEFT_ID);
-    rightMotor = new TalonFX(Ports.ELEVATOR_RIGHT_ID);
+    frontMotor = new TalonFX(Ports.ELEVATOR_FRONT_ID, "Krawlivore");
+    backMotor = new TalonFX(Ports.ELEVATOR_BACK_ID, "Krawlivore");
 
-    rightMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
-    leftMotor
-        .getConfigurator()
-        .apply(
-            ElevatorConstants.MOTOR_CONFIG
-                .HardwareLimitSwitch
-                .withReverseLimitEnable(true)
-                .withReverseLimitRemoteSensorID(Ports.ELEVATOR_LIMIT_SWITCH));
+    backMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
+    frontMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
+    // .HardwareLimitSwitch
+    // .withReverseLimitEnable(true)
+    // .withReverseLimitRemoteSensorID(Ports.ELEVATOR_LIMIT_SWITCH));
 
-    rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
+    backMotor.setControl(new Follower(frontMotor.getDeviceID(), true));
   }
 
   public void setPosition(ElevatorPosition elevatorPosition) {
@@ -64,49 +61,67 @@ public class ElevatorSubsystem extends SubsystemBase {
     goalPositionTicks = elevatorPositionTicks;
 
     // set target position to 100 rotations
-    leftMotor.setControl(elevatorRequest.withPosition(goalPositionTicks));
+    frontMotor.setControl(elevatorRequest.withPosition(goalPositionTicks));
+  }
+
+  public void manualManualUp() {
+    frontMotor.set(ElevatorConstants.MANUAL_MOTOR_SPEED);
+  }
+
+  public void manualManualDown() {
+    frontMotor.set(-ElevatorConstants.MANUAL_MOTOR_SPEED);
   }
 
   public Command manualUp() {
-    return Commands.runOnce(
+    return new InstantCommand(
         () -> {
-          leftMotor.set(ElevatorConstants.MANUAL_MOTOR_SPEED);
-        });
+          frontMotor.set(ElevatorConstants.MANUAL_MOTOR_SPEED);
+        },
+        this);
   }
 
   public Command manualDown() {
-    return Commands.runOnce(
+    return new InstantCommand(
         () -> {
-          if (!elevatorZeroed()) {
-            leftMotor.set(-ElevatorConstants.MANUAL_MOTOR_SPEED);
-          }
-        });
+          // if (getPosition() > 0) {
+          frontMotor.set(-ElevatorConstants.MANUAL_MOTOR_SPEED);
+          // }
+        },
+        this);
   }
 
-  public boolean elevatorZeroed() {
-    return leftMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround;
+  public double getPosition() {
+    return frontMotor.getPosition().getValueAsDouble();
+  }
+
+  public void homeElevator() {
+    frontMotor.getConfigurator().apply(ElevatorConstants.HOMING_CURRENT_LIMIT_CONFIG);
+    // manualDown().(() -> (frontMotor.getStatorCurrent().getValueAsDouble() > 2.0));
   }
 
   public Command stopElevator() {
-    return Commands.runOnce(() -> leftMotor.set(0.0));
+    return new InstantCommand(() -> frontMotor.set(0.0));
   }
 
   public boolean atPosition() {
-    return Math.abs(goalPositionTicks - leftMotor.getPosition().getValueAsDouble())
+    return Math.abs(goalPositionTicks - frontMotor.getPosition().getValueAsDouble())
         <= ElevatorConstants.TICKS_DEADZONE;
   }
 
   public boolean atPosition(ElevatorPosition position) {
-    return Math.abs(position.positionTicks - leftMotor.getPosition().getValueAsDouble())
+    return Math.abs(position.positionTicks - frontMotor.getPosition().getValueAsDouble())
         <= ElevatorConstants.TICKS_DEADZONE;
   }
 
   public void zeroEncoder() {
-    leftMotor.getConfigurator().setPosition(0);
+    frontMotor.getConfigurator().setPosition(0);
   }
 
   @Override
   public void periodic() {
+    Logger.recordOutput("Elevator Position", getPosition());
+    Logger.recordOutput("Elevator Goal Position", goalPositionTicks);
+    Logger.recordOutput("Elevator At Goal Position", atPosition());
 
     // if (elevatorZeroed() || leftMotor.getPosition().getValueAsDouble() <= 0) {
     //   zeroEncoder();
@@ -124,23 +139,23 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public static enum ElevatorPosition {
-    STOW(0),
-    HANDOFF(0),
-    L1(0),
-    L2(0),
-    L3(0),
-    L4(0),
-    LOWER_ALGAE(0),
-    UPPER_ALGAE(0),
-    TRAVEL(0);
+    STOW(5),
+    HANDOFF(5),
+    L1(5),
+    L2(5),
+    L3(5),
+    L4(5),
+    LOWER_ALGAE(5),
+    UPPER_ALGAE(5),
+    TRAVEL(2.25);
 
-    private final int positionTicks;
+    private final double positionTicks;
 
-    private ElevatorPosition(int positionTicks) {
+    private ElevatorPosition(double positionTicks) {
       this.positionTicks = positionTicks;
     }
 
-    public int getPositionTicks() {
+    public double getPositionTicks() {
       return positionTicks;
     }
   }

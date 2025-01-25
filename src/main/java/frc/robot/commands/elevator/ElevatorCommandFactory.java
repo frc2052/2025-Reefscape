@@ -6,6 +6,7 @@ package frc.robot.commands.elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
 
@@ -14,7 +15,7 @@ public class ElevatorCommandFactory {
   private static final ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
 
   public static Command setElevatorPosition(ElevatorPosition position) {
-    return Commands.runOnce(() -> elevator.setPosition(position), elevator);
+    return new InstantCommand(() -> elevator.setPosition(position), elevator);
   }
 
   public static Command manualUp() {
