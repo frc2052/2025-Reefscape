@@ -14,6 +14,7 @@ import frc.robot.RobotState;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SnapToLocationAngleCommand extends SnapToAngleCommand {
   SnapLocation goalSnap;
 
@@ -98,5 +99,55 @@ public class SnapToLocationAngleCommand extends SnapToAngleCommand {
     public Angle getRobotAngle() {
       return robotAngle;
     }
+  }
+
+  public static SnapLocation getSnapLocationByID(int id) {
+    SnapLocation location;
+    switch (id) {
+      case 18:
+        location = SnapLocation.ReefAB;
+        break;
+      case 17:
+        location = SnapLocation.ReefCD;
+        break;
+      case 22:
+        location = SnapLocation.ReefEF;
+        break;
+      case 21:
+        location = SnapLocation.ReefGH;
+        break;
+      case 20:
+        location = SnapLocation.ReefIJ;
+        break;
+      case 19:
+        location = SnapLocation.ReefKL;
+        break;
+      case 10:
+        location = SnapLocation.ReefGH;
+        break;
+      case 11:
+        location = SnapLocation.ReefIJ;
+        break;
+      case 6:
+        location = SnapLocation.ReefKL;
+        break;
+      case 7:
+        location = SnapLocation.ReefAB;
+        break;
+      case 8:
+        location = SnapLocation.ReefCD;
+        break;
+      case 9:
+        location = SnapLocation.ReefEF;
+        break;
+      default:
+        location = SnapLocation.FORWARD;
+    }
+
+    return location;
+  }
+
+  public static double getAlignAngleByID(int id) {
+    return getLocationAngleRadians(getSnapLocationByID(id));
   }
 }

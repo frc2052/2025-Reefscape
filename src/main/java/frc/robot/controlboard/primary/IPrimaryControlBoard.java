@@ -38,5 +38,11 @@ public interface IPrimaryControlBoard {
 
   Trigger reefAlignment();
 
-  Trigger aimToAmp();
+  Trigger sysIDQuasiForward();
+
+  Trigger sysIDQuasiReverse();
+
+  Trigger sysIDDynamicForward();
+
+  Trigger sysIDDynamicReverse();
 }

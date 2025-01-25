@@ -16,7 +16,8 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
   private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
-  private final Supplier<Double> waitSecondsEntrySupplier = () -> Dashboard.getInstance().getWaitSeconds();
+  private final Supplier<Double> waitSecondsEntrySupplier =
+      () -> Dashboard.getInstance().getWaitSeconds();
 
   private Auto currentAuto;
   private AutoBase compiledAuto;
@@ -45,7 +46,8 @@ public class AutoFactory {
     return INSTANCE;
   }
 
-  private AutoFactory() {};
+  private AutoFactory() {}
+  ;
 
   public boolean recompileNeeded() {
     return autoSupplier.get() != currentAuto || waitSecondsEntrySupplier.get() != savedWaitSeconds;

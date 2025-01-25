@@ -33,17 +33,18 @@ public class TagTracker {
     return photonCamera.getName();
   }
 
-  public Optional<PhotonTrackedTarget> getClosestTagToCamera() {
-    PhotonTrackedTarget closestTarget = null;
+  public Optional<PhotonPipelineResult> getClosestTagToCamera() {
+    PhotonPipelineResult closestTarget = null;
     for (PhotonPipelineResult r : photonCamera.getAllUnreadResults()) {
       if (r.hasTargets()) {
         PhotonTrackedTarget target = r.getBestTarget();
         if (closestTarget == null) {
-          closestTarget = r.getBestTarget();
+          closestTarget = r;
         } else if (target.getBestCameraToTarget()
             == MathHelpers.getSmallestTransform(
-                target.getBestCameraToTarget(), closestTarget.getBestCameraToTarget())) {
-          closestTarget = r.getBestTarget();
+                target.getBestCameraToTarget(),
+                closestTarget.getBestTarget().getBestCameraToTarget())) {
+          closestTarget = r;
         }
       }
     }

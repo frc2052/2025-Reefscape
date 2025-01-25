@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
-import frc.robot.commands.drive.AlignWithTagCommand;
-import frc.robot.commands.drive.AlignWithTagCommand.AlignLocation;
+import frc.robot.commands.drive.AlignWithReefCommand;
+import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
@@ -68,20 +68,15 @@ public abstract class AutoBase extends SequentialCommandGroup {
   }
 
   protected Command reefSideVisionOrPathAlign(
-    AlignLocation alignLocation, 
-    PathPlannerPath altAlignPath,
-    SnapLocation snaolocLocation) 
-  {
+      AlignLocation alignLocation, PathPlannerPath altAlignPath, SnapLocation snaolocLocation) {
     return new ConditionalCommand(
-      // if closest target presnet, align command
-      new AlignWithTagCommand(alignLocation, () -> 0, () -> 0, () -> 0), 
-      // if false, drive to side and snap to correct angle
-      new SequentialCommandGroup(
-        followPathCommand(altAlignPath),
-        snapToReefAngle(snaolocLocation)), 
-      // is closest target present
-      () -> vision.getReefCamClosestTarget().isPresent()
-    );
+        // if closest target presnet, align command
+        new AlignWithReefCommand(() -> alignLocation, () -> 0, () -> 0, () -> 0, () -> true),
+        // if false, drive to side and snap to correct angle
+        new SequentialCommandGroup(
+            followPathCommand(altAlignPath), snapToReefAngle(snaolocLocation)),
+        // is closest target present
+        () -> vision.getReefCamClosestTarget().isPresent());
   }
 
   protected static PathPlannerPath getPathFromFile(String pathName) {
@@ -102,8 +97,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
       return (pathList.get(0).getStartingHolonomicPose());
     } catch (Exception e) {
       DriverStation.reportError(
-        "Couldn't get starting pose from auto file: " + autoName + e.getMessage(),
-        e.getStackTrace());
+          "Couldn't get starting pose from auto file: " + autoName + e.getMessage(),
+          e.getStackTrace());
       return null;
     }
   }

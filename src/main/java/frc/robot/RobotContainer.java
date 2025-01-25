@@ -6,24 +6,29 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import com.ctre.phoenix6.SignalLogger;
+import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
-import frc.robot.commands.drive.AlignWithTagCommand;
-import frc.robot.commands.drive.AlignWithTagCommand.AlignLocation;
-import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
-import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
+import frc.robot.commands.drive.AlignWithReefCommand;
+import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
+import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
+import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
+import frc.robot.commands.elevator.ElevatorCommandFactory;
+import frc.robot.commands.superstructure.SuperstructureCommandFactory;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.drive.AdvantageScopeSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.Telemetry;
 import frc.robot.util.io.Dashboard;
-
-import com.pathplanner.lib.auto.NamedCommands;
 
 public class RobotContainer {
   private final ControlBoard controlBoard = ControlBoard.getInstance();
@@ -53,33 +58,55 @@ public class RobotContainer {
     configureBindings();
   }
 
-  private void configureNamedCommands(){
+  private void configureNamedCommands() {
     // snap to angle in gui
-        NamedCommands.registerCommand("Snap Left Coral Station", new AutoSnapToLocationAngleCommand(SnapLocation.LeftCoralStation));
-        NamedCommands.registerCommand("Snap Right Coral Station", new AutoSnapToLocationAngleCommand(SnapLocation.RightCoralStation));
+    NamedCommands.registerCommand(
+        "Snap Left Coral Station",
+        new AutoSnapToLocationAngleCommand(SnapLocation.LeftCoralStation));
+    NamedCommands.registerCommand(
+        "Snap Right Coral Station",
+        new AutoSnapToLocationAngleCommand(SnapLocation.RightCoralStation));
 
-        NamedCommands.registerCommand("Snap to AB", new AutoSnapToLocationAngleCommand(SnapLocation.ReefAB));
-        NamedCommands.registerCommand("Snap to CD", new AutoSnapToLocationAngleCommand(SnapLocation.ReefCD));
-        NamedCommands.registerCommand("Snap to EF", new AutoSnapToLocationAngleCommand(SnapLocation.ReefEF));
-        NamedCommands.registerCommand("Snap to GH", new AutoSnapToLocationAngleCommand(SnapLocation.ReefGH));
-        NamedCommands.registerCommand("Snap to IJ", new AutoSnapToLocationAngleCommand(SnapLocation.ReefIJ));
-        NamedCommands.registerCommand("Snap to KL", new AutoSnapToLocationAngleCommand(SnapLocation.ReefKL));
+    NamedCommands.registerCommand(
+        "Snap to AB", new AutoSnapToLocationAngleCommand(SnapLocation.ReefAB));
+    NamedCommands.registerCommand(
+        "Snap to CD", new AutoSnapToLocationAngleCommand(SnapLocation.ReefCD));
+    NamedCommands.registerCommand(
+        "Snap to EF", new AutoSnapToLocationAngleCommand(SnapLocation.ReefEF));
+    NamedCommands.registerCommand(
+        "Snap to GH", new AutoSnapToLocationAngleCommand(SnapLocation.ReefGH));
+    NamedCommands.registerCommand(
+        "Snap to IJ", new AutoSnapToLocationAngleCommand(SnapLocation.ReefIJ));
+    NamedCommands.registerCommand(
+        "Snap to KL", new AutoSnapToLocationAngleCommand(SnapLocation.ReefKL));
   }
 
   private void configureBindings() {
     drivetrain.registerTelemetry(logger::telemeterize);
-    controlBoard.resetGyro().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
+    controlBoard
+        .resetGyro()
+        .onTrue(new InstantCommand(() -> drivetrain.resetRotation(new Rotation2d())));
     configurePOVBindings();
     controlBoard
         .reefAlignment()
         .whileTrue(
-            new AlignWithTagCommand(
-                AlignLocation.MIDDLE,
+            new AlignWithReefCommand(
+                () -> AlignLocation.MIDDLE,
                 controlBoard::getThrottle,
                 // Sideways velocity supplier.
                 controlBoard::getStrafe,
                 // Rotation velocity supplier.
-                controlBoard::getRotation));
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
+
+    controlBoard.sysIDQuasiForward().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+    controlBoard.sysIDQuasiReverse().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+    controlBoard.sysIDDynamicForward().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+    controlBoard.sysIDDynamicReverse().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+    controlBoard
+        .shoot()
+        .onTrue(Commands.runOnce(SignalLogger::start))
+        .onFalse(Commands.runOnce(SignalLogger::stop));
   }
 
   private void configurePOVBindings() {
@@ -166,6 +193,35 @@ public class RobotContainer {
                 dashboard::isFieldCentric));
 
     System.out.println("POV Bindings Configured");
+
+    controlBoard.manualUp().whileTrue(ElevatorCommandFactory.manualUp());
+
+    controlBoard.manualDown().whileTrue(ElevatorCommandFactory.manualDown());
+
+    controlBoard
+        .setElevatorPositionL1()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.L1.getCommand());
+    controlBoard
+        .setElevatorPositionL2()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.L2.getCommand());
+    controlBoard
+        .setElevatorPositionL3()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.L3.getCommand());
+    controlBoard
+        .setElevatorPositionL4()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.L4.getCommand());
+    controlBoard
+        .setElevatorPositionUpperAlgae()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.DESCORE_HIGH_ALGAE.getCommand());
+    controlBoard
+        .setElevatorPositionLowerAlgae()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.DESCORE_LOW_ALGAE.getCommand());
+    controlBoard
+        .setElevatorPositionHandoff()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.HANDOFF.getCommand());
+    controlBoard
+        .setElevatorPositionTravel()
+        .whileTrue(SuperstructureCommandFactory.ToLevel.TRAVEL.getCommand());
   }
 
   public void forceRecompile() {
