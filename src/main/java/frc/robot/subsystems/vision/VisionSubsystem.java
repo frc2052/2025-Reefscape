@@ -63,7 +63,7 @@ public class VisionSubsystem extends SubsystemBase {
   private void updateEstimator(MultiTagPoseEstimate update) {
     if (VisionPoseAcceptor.shouldAccept(
         update,
-        MathHelpers.norm(drivetrain.getCurrentRobotChassisSpeeds()),
+        MathHelpers.chassisSpeedsNorm(drivetrain.getCurrentRobotChassisSpeeds()),
         robotState.getFieldToRobot(),
         DriverStation.isAutonomous())) {
       DrivetrainSubsystem.getInstance().addVisionUpdate(update);

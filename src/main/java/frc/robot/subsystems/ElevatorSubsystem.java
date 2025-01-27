@@ -4,9 +4,13 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.team2052.lib.helpers.MathHelpers;
+import com.team2052.lib.util.DelayedBoolean;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,12 +23,13 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static TalonFX frontMotor;
   private static TalonFX backMotor;
 
-  private static boolean atPosition;
+  private ControlState controlState;
+
+  private boolean homing;
+  private boolean shouldHome = false;
+  private final DelayedBoolean homingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.2);
 
   private double goalPositionTicks;
-  private double previousPositionTicks;
-
-  private MotionMagicTorqueCurrentFOC elevatorRequest;
 
   private static ElevatorSubsystem INSTANCE;
 
@@ -36,8 +41,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   private ElevatorSubsystem() {
-    goalPositionTicks = ElevatorPosition.STOW.getPositionTicks();
-    elevatorRequest = new MotionMagicTorqueCurrentFOC(goalPositionTicks);
+    goalPositionTicks = ElevatorPosition.HOME.getPositionTicks();
 
     frontMotor = new TalonFX(Ports.ELEVATOR_FRONT_ID, "Krawlivore");
     backMotor = new TalonFX(Ports.ELEVATOR_BACK_ID, "Krawlivore");
@@ -46,79 +50,49 @@ public class ElevatorSubsystem extends SubsystemBase {
     frontMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
 
     frontMotor.clearStickyFault_SupplyCurrLimit();
-    // .HardwareLimitSwitch
-    // .withReverseLimitEnable(true)
-    // .withReverseLimitRemoteSensorID(Ports.ELEVATOR_LIMIT_SWITCH));
 
     backMotor.setControl(new Follower(frontMotor.getDeviceID(), true));
   }
 
-  public void setPosition(ElevatorPosition elevatorPosition) {
-    setPositionTicks(elevatorPosition.getPositionTicks());
+  public void setPositionMotionMagic(ElevatorPosition elevatorPosition) {
+    setPositionMotionMagic(elevatorPosition.getPositionTicks());
   }
 
-  public void setPositionTicks(double elevatorPositionTicks) {
+  public void setPositionMotionMagic(double elevatorPositionTicks) {
+    controlState = ControlState.MOTION_MAGIC;
     if (goalPositionTicks == elevatorPositionTicks && atPosition()) {
       return;
     }
 
-    previousPositionTicks = goalPositionTicks;
+    shouldHome = true;
     goalPositionTicks = elevatorPositionTicks;
 
-    // set target position to 100 rotations
-    frontMotor.setControl(elevatorRequest.withPosition(goalPositionTicks));
+    frontMotor.setControl(new MotionMagicTorqueCurrentFOC(elevatorPositionTicks));
   }
 
-  public void manualManualUp() {
-    frontMotor.set(ElevatorConstants.MANUAL_MOTOR_SPEED);
-  }
-
-  public void manualManualDown() {
-    frontMotor.set(-ElevatorConstants.MANUAL_MOTOR_SPEED);
+  public void setOpenLoop(double speed) {
+    controlState = ControlState.OPEN_LOOP;
+    frontMotor.set(speed);
   }
 
   public Command manualUp() {
-    return new InstantCommand(
-        () -> {
-          frontMotor.set(ElevatorConstants.MANUAL_MOTOR_SPEED);
-        },
-        this);
+    return Commands.runOnce(() -> setOpenLoop(ElevatorConstants.MANUAL_MOTOR_SPEED), this);
   }
 
   public Command manualDown() {
-    return new InstantCommand(
-        () -> {
-          // if (getPosition() > 0) {
-          frontMotor.set(-ElevatorConstants.MANUAL_MOTOR_SPEED);
-          // }
-        },
-        this);
-  }
-
-  public double getPosition() {
-    return frontMotor.getPosition().getValueAsDouble();
+    return Commands.runOnce(() -> setOpenLoop(-ElevatorConstants.MANUAL_MOTOR_SPEED), this);
   }
 
   public Command homeElevator() {
-    return Commands.sequence(
-        new InstantCommand(
-            () -> {
-              frontMotor.getConfigurator().apply(ElevatorConstants.HOMING_CURRENT_LIMIT_CONFIG);
-              frontMotor.clearStickyFault_SupplyCurrLimit();
-            }),
-        manualDown()
-            .until((() -> (frontMotor.getStickyFault_SupplyCurrLimit().refresh().getValue()))),
-        stopElevator(),
-        new InstantCommand(() -> zeroEncoder()),
-        new InstantCommand(
-            () -> {
-              frontMotor.clearStickyFault_SupplyCurrLimit();
-              frontMotor.getConfigurator().apply(ElevatorConstants.CURRENT_LIMIT_CONFIG);
-            }));
+    return new InstantCommand(() -> setWantHome(true));
   }
 
   public Command stopElevator() {
     return new InstantCommand(() -> frontMotor.set(0.0));
+  }
+
+  public double getPosition() {
+    return frontMotor.getPosition().getValueAsDouble();
   }
 
   public boolean atPosition() {
@@ -135,31 +109,60 @@ public class ElevatorSubsystem extends SubsystemBase {
     frontMotor.getConfigurator().setPosition(0);
   }
 
+  public void setWantHome(boolean home) {
+    homing = home;
+    // once homing is started, no longer needs to home
+    if (homing) {
+      shouldHome = false;
+    }
+  }
+
+  public boolean atHomingLocation() {
+    return getPosition() < ElevatorPosition.HOME.getPositionTicks()
+        || MathHelpers.epsilonEquals(getPosition(), ElevatorPosition.HOME.getPositionTicks(), 0.05);
+  }
+
   @Override
   public void periodic() {
     Logger.recordOutput("Elevator Position", getPosition());
     Logger.recordOutput("Elevator Goal Position", goalPositionTicks);
     Logger.recordOutput("Elevator At Goal Position", atPosition());
-    Logger.recordOutput(
-        "Supply Curr Limit", frontMotor.getStickyFault_SupplyCurrLimit().getValue());
 
-    // if (elevatorZeroed() || leftMotor.getPosition().getValueAsDouble() <= 0) {
-    //   zeroEncoder();
+    // if being used in open loop (usually manual mode), disable the height limit
+    if (controlState == ControlState.OPEN_LOOP) {
+      frontMotor
+          .getConfigurator()
+          .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(false));
+    } else {
+      frontMotor
+          .getConfigurator()
+          .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(true));
+    }
 
-    //   // If the elevator is traveling downwards stop the belt motor and end the current command.
-    //   if (goalPositionTicks < previousPositionTicks) {
-    //     goalPositionTicks = 0;
-    //     stopElevator().schedule();
-    //   }
-    // } else {
-    //   if (atPosition()) {
-    //     stopElevator().schedule();
-    //   }
-    // }
+    // if we still intend to go to the home position, currently at alleged home, and should re-home,
+    // then re-home
+    if (MathHelpers.epsilonEquals(goalPositionTicks, ElevatorPosition.HOME.getPositionTicks(), .02)
+        && atHomingLocation()
+        && shouldHome) {
+      setWantHome(true);
+    } else if (controlState != ControlState.OPEN_LOOP) {
+      setWantHome(false);
+    }
+
+    if (homing) {
+      setOpenLoop(ElevatorConstants.HOMING_SPEED);
+      if (homingDelay.update(
+          Timer.getFPGATimestamp(),
+          MathHelpers.epsilonEquals(frontMotor.getVelocity().getValueAsDouble(), 0.0, 0.01))) {
+        zeroEncoder();
+        setPositionMotionMagic(ElevatorPosition.HOME);
+        homing = false;
+      }
+    }
   }
 
   public static enum ElevatorPosition {
-    STOW(5),
+    HOME(5),
     HANDOFF(5),
     L1(5),
     L2(5),
@@ -178,5 +181,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     public double getPositionTicks() {
       return positionTicks;
     }
+  }
+
+  public static enum ControlState {
+    OPEN_LOOP,
+    MOTION_MAGIC
   }
 }

@@ -1,4 +1,4 @@
-package com.team2052.lib;
+package com.team2052.lib.controllers;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
