@@ -19,6 +19,8 @@ import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
+import frc.robot.commands.superstructure.ReefScoringCommandFactory.ReefScoringPosition;
+import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.List;
@@ -72,6 +74,14 @@ public abstract class AutoBase extends SequentialCommandGroup {
         .until(() -> vision.getReefCamClosestTarget().isPresent())
         .andThen(
             new AlignWithReefCommand(() -> alignLocation, () -> 0, () -> 0, () -> 0, () -> true));
+  }
+
+  protected Command toScoringPositionCommand(ReefScoringPosition scorePos) {
+    return scorePos.getCommand();
+  }
+
+  protected Command toLevelCommand(ToLevel level) {
+    return level.getCommand();
   }
 
   protected static PathPlannerPath getPathFromFile(String pathName) {
@@ -131,5 +141,10 @@ public abstract class AutoBase extends SequentialCommandGroup {
     public static final PathPlannerPath RL_D3 = getPathFromFile("RL D3");
     public static final PathPlannerPath D3_RL = getPathFromFile("D3 RL");
     public static final PathPlannerPath RL_C3 = getPathFromFile("RL C3");
+
+    public static final PathPlannerPath SC_H4 = getPathFromFile("SC H4");
+    public static final PathPlannerPath H4_PROCESS = getPathFromFile("H4 Processor");
+    public static final PathPlannerPath PROCESS_EF = getPathFromFile("Processor EF");
+    public static final PathPlannerPath EF_PROCESS = getPathFromFile("EF Processor");
   }
 }

@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.74,
-  "robotLength": 0.74,
+  "robotWidth": 0.9,
+  "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [],
   "autoFolders": [],
@@ -18,7 +18,7 @@
   "driveMotorType": "krakenX60FOC",
   "driveCurrentLimit": 30.0,
   "wheelCOF": 1.2,
-  "flModuleX": 0.298,
+  "flModuleX": 0.29845,
   "flModuleY": 0.29845,
   "frModuleX": 0.29845,
   "frModuleY": -0.29845,
@@ -29,8 +29,6 @@
   "bumperOffsetX": 0.0,
   "bumperOffsetY": 0.0,
   "robotFeatures": [
-    "{\"name\":\"camera\",\"type\":\"circle\",\"data\":{\"center\":{\"x\":-0.2,\"y\":0.0},\"radius\":0.05,\"strokeWidth\":0.02,\"filled\":false}}",
-    "{\"name\":\"battery - front\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":0.25,\"y\":0.0},\"size\":{\"width\":0.25,\"length\":0.1},\"borderRadius\":0.05,\"strokeWidth\":0.02,\"filled\":false}}",
-    "{\"name\":\"elevator\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":0.0,\"y\":0.25},\"size\":{\"width\":0.1,\"length\":0.4},\"borderRadius\":0.05,\"strokeWidth\":0.02,\"filled\":false}}"
+    "{\"name\":\"front\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":0.3,\"y\":0.0},\"size\":{\"width\":0.45,\"length\":0.1},\"borderRadius\":0.05,\"strokeWidth\":0.02,\"filled\":false}}"
   ]
 }

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3699865410497984,
-        "y": 7.320053835800807
+        "x": 1.678084129050925,
+        "y": 7.3841746238425925
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.917094892783143,
-        "y": 6.709504017536591
+        "x": 2.2251924807842696,
+        "y": 6.773624805578376
       },
       "isLocked": false,
       "linkedName": "LL Leftside"
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 124.24233200041199
+    "rotation": -61.32351797786225
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -53.3512695849836
+    "rotation": -53.74245509357652
   },
   "useDefaultConstraints": true
 }
