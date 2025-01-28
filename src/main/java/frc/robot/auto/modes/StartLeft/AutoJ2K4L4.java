@@ -5,6 +5,7 @@ import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
+import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
 
 @AutoDescription(description = "21 Point Auto - One L2, Two L4")
 public class AutoJ2K4L4 extends AutoBase {
@@ -22,16 +23,22 @@ public class AutoJ2K4L4 extends AutoBase {
 
     // just paths
     // addCommands(followPathCommand(startingPath));
+    // addCommands(scoreLevel(ToLevel.L2));
     // addCommands(followPathCommand(Paths.J2_LL));
     // addCommands(followPathCommand(Paths.LL_K4));
+    // addCommands(scoreLevel(ToLevel.L4));
     // addCommands(followPathCommand(Paths.K4_LL));
     // addCommands(followPathCommand(Paths.LL_L4));
+    // addCommands(scoreLevel(ToLevel.L4));
 
-    // test align
+    // vision align
     addCommands(followPathCommand(startingPath));
+    addCommands(scoreLevel(ToLevel.L2));
     addCommands(followPathCommand(Paths.J2_LL));
     addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.LL_K4, SnapLocation.ReefKL));
+    addCommands(scoreLevel(ToLevel.L4));
     addCommands(followPathCommand(Paths.K4_LL));
     addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L4, SnapLocation.ReefKL));
+    addCommands(scoreLevel(ToLevel.L4));
   }
 }

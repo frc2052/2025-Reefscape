@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Score L2"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "J LL"
@@ -23,6 +29,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "K LL"
@@ -32,6 +44,12 @@
           "type": "path",
           "data": {
             "pathName": "LL L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
           }
         }
       ]

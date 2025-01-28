@@ -5,6 +5,7 @@ import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
+import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
 
 @AutoDescription(description = "29 Point Auto - Two L4, Remove Algae, Two L3")
 public class AutoK4L4DAK3L3 extends AutoBase {
@@ -22,21 +23,29 @@ public class AutoK4L4DAK3L3 extends AutoBase {
 
     // just paths
     // addCommands(followPathCommand(startingPath));
+    // addCommands(scoreLevel(ToLevel.L4));
     // addCommands(followPathCommand(Paths.K4_LL));
     // addCommands(followPathCommand(Paths.LL_L4));
+    // addCommands(scoreLevel(ToLevel.L4));
     // addCommands(followPathCommand(Paths.L4_LL));
     // addCommands(followPathCommand(Paths.LL_K3));
+    // addCommands(scoreLevel(ToLevel.L3));
     // addCommands(followPathCommand(Paths.K3_LL));
     // addCommands(followPathCommand(Paths.LL_L3));
+    // addCommands(scoreLevel(ToLevel.L3));
 
-    // test align
+    // vision align
     addCommands(followPathCommand(startingPath));
-    // halts when it gets there
+    addCommands(scoreLevel(ToLevel.L4));
+    // halts right before it gets there
     addCommands(followPathCommand(Paths.K4_LL));
     addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L4, SnapLocation.ReefKL));
+    addCommands(scoreLevel(ToLevel.L4));
     addCommands(followPathCommand(Paths.L4_LL));
     addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.LL_K3, SnapLocation.ReefKL));
+    addCommands(scoreLevel(ToLevel.L3));
     addCommands(followPathCommand(Paths.K3_LL));
     addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L3, SnapLocation.ReefKL));
+    addCommands(scoreLevel(ToLevel.L3));
   }
 }

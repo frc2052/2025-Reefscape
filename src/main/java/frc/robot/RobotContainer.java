@@ -23,6 +23,7 @@ import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.elevator.ElevatorCommandFactory;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory;
+import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.drive.AdvantageScopeSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
@@ -79,6 +80,13 @@ public class RobotContainer {
         "Snap to IJ", new AutoSnapToLocationAngleCommand(SnapLocation.ReefIJ));
     NamedCommands.registerCommand(
         "Snap to KL", new AutoSnapToLocationAngleCommand(SnapLocation.ReefKL));
+
+    // score in gui
+    NamedCommands.registerCommand("Score L1", ToLevel.L1.getCommand());
+    NamedCommands.registerCommand("Score L2", ToLevel.L2.getCommand());
+    NamedCommands.registerCommand("Score L3", ToLevel.L3.getCommand());
+    NamedCommands.registerCommand("Score L4", ToLevel.L4.getCommand());
+    // NamedCommands.registerCommand("Score Processor", null);
   }
 
   private void configureBindings() {

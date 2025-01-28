@@ -80,7 +80,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     return scorePos.getCommand();
   }
 
-  protected Command toLevelCommand(ToLevel level) {
+  protected Command scoreLevel(ToLevel level) {
     return level.getCommand();
   }
 
@@ -122,7 +122,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // public static final PathPlannerPath TEST_PATH_SL_EF = getPathFromFile("Test Auto - SL-EF");
 
     // each letter to each loading station
-    
+
     // CD
     public static final PathPlannerPath RL_C4 = getPathFromFile("RL C");
     public static final PathPlannerPath C4_RL = getPathFromFile("C RL");
