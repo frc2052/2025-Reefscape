@@ -7,43 +7,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SR D4"
+            "pathName": "SR D"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "D4 RL"
+            "pathName": "D RL"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RL C4"
+            "pathName": "RL C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "C4 RL"
+            "pathName": "C RL"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RL D3"
+            "pathName": "RL D"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "D3 RL"
+            "pathName": "D RL"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RL C3"
+            "pathName": "RL C"
           }
         }
       ]

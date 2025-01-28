@@ -7,31 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SL J2"
+            "pathName": "SL J"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "J2 LL"
+            "pathName": "J LL"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LL K4"
+            "pathName": "LL K"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "K4 LL"
+            "pathName": "K LL"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LL L4"
+            "pathName": "LL L"
           }
         }
       ]

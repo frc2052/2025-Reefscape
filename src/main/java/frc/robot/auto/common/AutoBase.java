@@ -121,30 +121,40 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // public final static PathPlannerPath AB_BARGECS = getPathFromFile("AB - Barge Coral Station");
     // public static final PathPlannerPath TEST_PATH_SL_EF = getPathFromFile("Test Auto - SL-EF");
 
-    public static final PathPlannerPath J2_LL = getPathFromFile("J2 LL");
-    public static final PathPlannerPath K3_LL = getPathFromFile("K3 LL");
-    public static final PathPlannerPath K4_LL = getPathFromFile("K4 LL");
-    public static final PathPlannerPath L4_LL = getPathFromFile("L4 LL");
-    public static final PathPlannerPath LL_K3 = getPathFromFile("LL K3");
-    public static final PathPlannerPath LL_K4 = getPathFromFile("LL K4");
-    public static final PathPlannerPath LL_L3 = getPathFromFile("LL L3");
-    public static final PathPlannerPath LL_L4 = getPathFromFile("LL L4");
-    public static final PathPlannerPath SL_J2 = getPathFromFile("SL J2");
-    public static final PathPlannerPath SL_K4 = getPathFromFile("SL K4");
-    public static final PathPlannerPath SR_E2 = getPathFromFile("SR E2");
-    public static final PathPlannerPath E2_RL = getPathFromFile("E2 RL");
-    public static final PathPlannerPath RL_D4 = getPathFromFile("RL D4");
-    public static final PathPlannerPath D4_RL = getPathFromFile("D4 RL");
-    public static final PathPlannerPath RL_C4 = getPathFromFile("RL C4");
-    public static final PathPlannerPath C4_RL = getPathFromFile("C4 RL");
-    public static final PathPlannerPath SR_D4 = getPathFromFile("SR D4");
-    public static final PathPlannerPath RL_D3 = getPathFromFile("RL D3");
-    public static final PathPlannerPath D3_RL = getPathFromFile("D3 RL");
-    public static final PathPlannerPath RL_C3 = getPathFromFile("RL C3");
+    // each letter to each loading station
+    
+    // CD
+    public static final PathPlannerPath RL_C4 = getPathFromFile("RL C");
+    public static final PathPlannerPath C4_RL = getPathFromFile("C RL");
+    public static final PathPlannerPath RL_C3 = getPathFromFile("RL C");
+    public static final PathPlannerPath RL_D4 = getPathFromFile("RL D");
+    public static final PathPlannerPath D4_RL = getPathFromFile("D RL");
+    public static final PathPlannerPath SR_D4 = getPathFromFile("SR D");
+    public static final PathPlannerPath RL_D3 = getPathFromFile("RL D");
+    public static final PathPlannerPath D3_RL = getPathFromFile("D RL");
 
-    public static final PathPlannerPath SC_H4 = getPathFromFile("SC H4");
-    public static final PathPlannerPath H4_PROCESS = getPathFromFile("H4 Processor");
+    // ef
+    public static final PathPlannerPath E2_RL = getPathFromFile("E RL");
+    public static final PathPlannerPath SR_E2 = getPathFromFile("SR E");
     public static final PathPlannerPath PROCESS_EF = getPathFromFile("Processor EF");
     public static final PathPlannerPath EF_PROCESS = getPathFromFile("EF Processor");
+
+    // gh
+    public static final PathPlannerPath SC_H4 = getPathFromFile("SC H");
+    public static final PathPlannerPath H4_PROCESS = getPathFromFile("H Processor");
+
+    // ij
+    public static final PathPlannerPath J2_LL = getPathFromFile("J LL");
+    public static final PathPlannerPath SL_J2 = getPathFromFile("SL J");
+
+    // kl
+    public static final PathPlannerPath K3_LL = getPathFromFile("K LL");
+    public static final PathPlannerPath K4_LL = getPathFromFile("K LL");
+    public static final PathPlannerPath L4_LL = getPathFromFile("L LL");
+    public static final PathPlannerPath LL_K3 = getPathFromFile("LL K");
+    public static final PathPlannerPath LL_K4 = getPathFromFile("LL K");
+    public static final PathPlannerPath LL_L3 = getPathFromFile("LL L");
+    public static final PathPlannerPath LL_L4 = getPathFromFile("LL L");
+    public static final PathPlannerPath SL_K4 = getPathFromFile("SL K");
   }
 }

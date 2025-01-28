@@ -7,31 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SR E2"
+            "pathName": "SR E"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "E2 RL"
+            "pathName": "E RL"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RL D4"
+            "pathName": "RL D"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "D4 RL"
+            "pathName": "D RL"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RL C4"
+            "pathName": "RL C"
           }
         }
       ]
