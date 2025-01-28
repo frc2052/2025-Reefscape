@@ -31,7 +31,7 @@ public class MathHelpers {
     return (Math.abs(value) > Math.abs(deadband)) ? scaledValue : 0;
   }
 
-  public static double norm(ChassisSpeeds speeds) {
+  public static double chassisSpeedsNorm(ChassisSpeeds speeds) {
     return Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
   }
 
@@ -41,5 +41,9 @@ public class MathHelpers {
     }
 
     return t2;
+  }
+
+  public static boolean epsilonEquals(double a, double b, double epsilon) {
+    return (a - epsilon <= b) && (a + epsilon >= b);
   }
 }

@@ -1,6 +1,6 @@
 package com.team2052.lib.planners;
 
-import com.team2052.lib.PIDFFController;
+import com.team2052.lib.controllers.PIDFFController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
@@ -51,7 +51,8 @@ public class AutoAlignPlanner {
 
     autoAlignComplete = xWithinTol && yWithinTol && thetaWithinTol;
     if (startTime.isPresent() && autoAlignComplete) {
-      // System.out.println("Auto align took: " + (Timer.getFPGATimestamp() - startTime.getAsDouble()));
+      // System.out.println("Auto align took: " + (Timer.getFPGATimestamp() -
+      // startTime.getAsDouble()));
       startTime = OptionalDouble.empty();
     }
 
