@@ -37,7 +37,7 @@ public class Constants {
     public static final double TICKS_DEADZONE = 0.1;
 
     public static final double MANUAL_MOTOR_SPEED = 0.2;
-    public static final double HOMING_SPEED = 0.1;
+    public static final double HOMING_SPEED = -0.2;
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
@@ -58,9 +58,9 @@ public class Constants {
     // set Motion Magic settings
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(40) 
-            .withMotionMagicAcceleration(80) 
-            .withMotionMagicJerk(800);
+            .withMotionMagicCruiseVelocity(160) 
+            .withMotionMagicAcceleration(160) 
+            .withMotionMagicJerk(600);
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
@@ -155,13 +155,13 @@ public class Constants {
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
-      public static final Distance X_OFFSET = Inches.of(-10.5);
+      public static final Distance X_OFFSET = Inches.of(10.5);
       public static final Distance Y_OFFSET = Inches.of(0.0);
       public static final Distance Z_OFFSET = Inches.of(0.0);
 
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
       public static final Angle THETA_Y_OFFSET = Degrees.of(-15); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(180); // yaw
+      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
 
       public static final Transform3d ROBOT_TO_CAMERA_METERS =
           new Transform3d(

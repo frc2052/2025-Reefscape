@@ -75,6 +75,6 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
   @Override
   public Trigger setElevatorPositionTravel() {
-    return new Trigger(() -> controlPanel.getX() < 0.5);
+    return new Trigger(() -> controlPanel.getX() < -0.5);
   }
 }

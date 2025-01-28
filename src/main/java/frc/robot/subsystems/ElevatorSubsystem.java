@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -27,7 +26,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   private boolean homing;
   private boolean shouldHome = false;
-  private final DelayedBoolean homingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.2);
+  private final DelayedBoolean homingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.05);
 
   private double goalPositionTicks;
 
@@ -64,7 +63,10 @@ public class ElevatorSubsystem extends SubsystemBase {
       return;
     }
 
-    shouldHome = true;
+    if (elevatorPositionTicks != ElevatorPosition.HOME.getPositionTicks()) {
+      shouldHome = true;
+    }
+
     goalPositionTicks = elevatorPositionTicks;
 
     frontMotor.setControl(new MotionMagicTorqueCurrentFOC(elevatorPositionTicks));
@@ -129,15 +131,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     Logger.recordOutput("Elevator At Goal Position", atPosition());
 
     // if being used in open loop (usually manual mode), disable the height limit
-    if (controlState == ControlState.OPEN_LOOP) {
-      frontMotor
-          .getConfigurator()
-          .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(false));
-    } else {
-      frontMotor
-          .getConfigurator()
-          .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(true));
-    }
+    // if (controlState == ControlState.OPEN_LOOP) {
+    //   frontMotor
+    //       .getConfigurator()
+    //       .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(false));
+    // } else {
+    //   frontMotor
+    //       .getConfigurator()
+    //       .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(true));
+    // }
 
     // if we still intend to go to the home position, currently at alleged home, and should re-home,
     // then re-home
@@ -157,20 +159,21 @@ public class ElevatorSubsystem extends SubsystemBase {
         zeroEncoder();
         setPositionMotionMagic(ElevatorPosition.HOME);
         homing = false;
+        homingDelay.update(Timer.getFPGATimestamp(), false);
       }
     }
   }
 
   public static enum ElevatorPosition {
-    HOME(5),
-    HANDOFF(5),
-    L1(5),
-    L2(5),
-    L3(5),
-    L4(5),
-    LOWER_ALGAE(5),
-    UPPER_ALGAE(5),
-    TRAVEL(2.25);
+    HOME(2),
+    HANDOFF(7),
+    L1(10),
+    L2(20),
+    L3(37.5),
+    L4(55),
+    LOWER_ALGAE(25),
+    UPPER_ALGAE(27),
+    TRAVEL(5);
 
     private final double positionTicks;
 
