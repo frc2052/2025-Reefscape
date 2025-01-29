@@ -25,7 +25,9 @@ import frc.robot.commands.elevator.ElevatorCommandFactory;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
 import frc.robot.controlboard.ControlBoard;
-import frc.robot.subsystems.drive.AdvantageScopeSubsystem;
+import frc.robot.subsystems.AdvantageScopeSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.Telemetry;
@@ -117,6 +119,45 @@ public class RobotContainer {
         .shoot()
         .onTrue(Commands.runOnce(SignalLogger::start))
         .onFalse(Commands.runOnce(SignalLogger::stop));
+
+    controlBoard.zeroElevator().onTrue(ElevatorSubsystem.getInstance().homeElevator());
+
+    controlBoard
+        .manualUp()
+        .onTrue(ElevatorSubsystem.getInstance().manualUp())
+        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
+
+    controlBoard
+        .manualDown()
+        .onTrue(ElevatorSubsystem.getInstance().manualDown())
+        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
+
+    controlBoard
+        .setElevatorPositionTravel()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.HOME));
+
+    controlBoard
+        .setElevatorPositionL1()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L1));
+
+    controlBoard
+        .setElevatorPositionL2()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L2));
+    controlBoard
+        .setElevatorPositionL3()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L3));
+    controlBoard
+        .setElevatorPositionL4()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L4));
+    controlBoard
+        .setElevatorPositionUpperAlgae()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.UPPER_ALGAE));
+    // controlBoard
+    //     .setElevatorPositionLowerAlgae()
+    //     .whileTrue(SuperstructureCommandFactory.ToLevel.DESCORE_LOW_ALGAE.getCommand());
+    // controlBoard
+    //     .setElevatorPositionHandoff()
+    //     .whileTrue(SuperstructureCommandFactory.ToLevel.HANDOFF.getCommand());
   }
 
   private void configurePOVBindings() {
@@ -203,35 +244,6 @@ public class RobotContainer {
                 dashboard::isFieldCentric));
 
     System.out.println("POV Bindings Configured");
-
-    controlBoard.manualUp().whileTrue(ElevatorCommandFactory.manualUp());
-
-    controlBoard.manualDown().whileTrue(ElevatorCommandFactory.manualDown());
-
-    controlBoard
-        .setElevatorPositionL1()
-        .whileTrue(SuperstructureCommandFactory.ToLevel.L1.getCommand());
-    controlBoard
-        .setElevatorPositionL2()
-        .whileTrue(SuperstructureCommandFactory.ToLevel.L2.getCommand());
-    controlBoard
-        .setElevatorPositionL3()
-        .whileTrue(SuperstructureCommandFactory.ToLevel.L3.getCommand());
-    controlBoard
-        .setElevatorPositionL4()
-        .whileTrue(SuperstructureCommandFactory.ToLevel.L4.getCommand());
-    controlBoard
-        .setElevatorPositionUpperAlgae()
-        .whileTrue(SuperstructureCommandFactory.ToLevel.DESCORE_HIGH_ALGAE.getCommand());
-    controlBoard
-        .setElevatorPositionLowerAlgae()
-        .whileTrue(SuperstructureCommandFactory.ToLevel.DESCORE_LOW_ALGAE.getCommand());
-    controlBoard
-        .setElevatorPositionHandoff()
-        .whileTrue(SuperstructureCommandFactory.ToLevel.HANDOFF.getCommand());
-    controlBoard
-        .setElevatorPositionTravel()
-        .whileTrue(SuperstructureCommandFactory.ToLevel.TRAVEL.getCommand());
   }
 
   public void forceRecompile() {

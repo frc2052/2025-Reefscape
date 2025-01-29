@@ -34,9 +34,10 @@ public class Constants {
   public static final class ElevatorConstants {
     public static final boolean ELEVATOR_MOTORS_INVERTED = false;
 
-    public static final double TICKS_DEADZONE = 250;
+    public static final double TICKS_DEADZONE = 0.1;
 
-    public static final double MANUAL_MOTOR_SPEED = 0.5;
+    public static final double MANUAL_MOTOR_SPEED = 0.2;
+    public static final double HOMING_SPEED = -0.2;
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
@@ -50,16 +51,16 @@ public class Constants {
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
             .withSupplyCurrentLimitEnable(true)
-            .withSupplyCurrentLimit(Amps.of(9.5))
-            .withSupplyCurrentLowerLimit(Amps.of(2.0))
-            .withSupplyCurrentLowerTime(Seconds.of(0.4));
+            .withSupplyCurrentLimit(Amps.of(40))
+            .withSupplyCurrentLowerLimit(Amps.of(40))
+            .withSupplyCurrentLowerTime(Seconds.of(0.1));
 
     // set Motion Magic settings
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(80) // Target cruise velocity of 80 rps
-            .withMotionMagicAcceleration(160) // Target acceleration of 160 rps/s (0.5 seconds)
-            .withMotionMagicJerk(1600); // Target jerk of 1600 rps/s/s (0.1 seconds)
+            .withMotionMagicCruiseVelocity(160) 
+            .withMotionMagicAcceleration(160) 
+            .withMotionMagicJerk(600);
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
@@ -72,7 +73,7 @@ public class Constants {
     public static final SoftwareLimitSwitchConfigs SOFTWARE_LIMIT_SWITCH_CONFIG =
         new SoftwareLimitSwitchConfigs()
             .withForwardSoftLimitEnable(true)
-            .withForwardSoftLimitThreshold(1000);
+            .withForwardSoftLimitThreshold(63);
 
     public static final TalonFXConfiguration MOTOR_CONFIG =
         new TalonFXConfiguration()
@@ -154,13 +155,13 @@ public class Constants {
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
-      public static final Distance X_OFFSET = Inches.of(-10.5);
+      public static final Distance X_OFFSET = Inches.of(10.5);
       public static final Distance Y_OFFSET = Inches.of(0.0);
       public static final Distance Z_OFFSET = Inches.of(0.0);
 
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
       public static final Angle THETA_Y_OFFSET = Degrees.of(-15); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(180); // yaw
+      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
 
       public static final Transform3d ROBOT_TO_CAMERA_METERS =
           new Transform3d(

@@ -115,8 +115,8 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   /* Secondary */
 
   @Override
-  public Trigger climb() {
-    return secondaryControlBoard.climb();
+  public Trigger zeroElevator() {
+    return secondaryControlBoard.zeroElevator();
   }
 
   @Override

@@ -8,8 +8,8 @@ public class Ports { // TODO: Set the ports for the robot
   public static final int ARM_TALONFX_ID = 99;
   public static final int HAND_TALONFX_ID = 99;
 
-  public static final int ELEVATOR_LEFT_ID = 99;
-  public static final int ELEVATOR_RIGHT_ID = 99;
+  public static final int ELEVATOR_FRONT_ID = 14;
+  public static final int ELEVATOR_BACK_ID = 15;
 
   /*
    *  DIO
