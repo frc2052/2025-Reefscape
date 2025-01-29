@@ -23,6 +23,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Coral Station Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "LL K"
@@ -38,6 +44,12 @@
           "type": "path",
           "data": {
             "pathName": "K LL"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Station Intake"
           }
         },
         {

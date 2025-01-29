@@ -11,9 +11,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "H Processor"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Processor"
           }
         },
         {
@@ -23,9 +35,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Descore Algae"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "EF Processor"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Processor"
           }
         }
       ]

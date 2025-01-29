@@ -86,7 +86,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("Score L2", ToLevel.L2.getCommand());
     NamedCommands.registerCommand("Score L3", ToLevel.L3.getCommand());
     NamedCommands.registerCommand("Score L4", ToLevel.L4.getCommand());
-    // NamedCommands.registerCommand("Score Processor", null);
+    NamedCommands.registerCommand("Score Processor", null); // TODO: auto processor score
+    NamedCommands.registerCommand("DeScore Algae", null); // TODO: auto descore algae
+    NamedCommands.registerCommand("Coral Station Intake", null); // TODO: auto coral station intake
   }
 
   private void configureBindings() {

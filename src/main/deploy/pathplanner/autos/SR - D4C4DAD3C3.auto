@@ -11,15 +11,39 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "D RL"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Coral Station Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "RL C"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Descore Algae"
           }
         },
         {
@@ -29,9 +53,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Coral Station Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "RL D"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L3"
           }
         },
         {
@@ -41,9 +77,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Coral Station Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "RL C"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L3"
           }
         }
       ]
