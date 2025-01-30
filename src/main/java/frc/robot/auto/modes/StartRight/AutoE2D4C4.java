@@ -6,6 +6,7 @@ import frc.robot.auto.common.AutoDescription;
 import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
 
 @AutoDescription(description = "21 Point Auto - One L2, Two L4")
 public class AutoE2D4C4 extends AutoBase {
@@ -21,24 +22,15 @@ public class AutoE2D4C4 extends AutoBase {
   public void init() {
     addCommands(delaySelectedTime());
 
-    // just paths
-    // addCommands(followPathCommand(startingPath));
-    // addCommands(scoreLevel(ToLevel.L2));
-    // addCommands(followPathCommand(Paths.E2_RL));
-    // addCommands(followPathCommand(Paths.RL_D4));
-    // addCommands(scoreLevel(ToLevel.L4));
-    // addCommands(followPathCommand(Paths.D4_RL));
-    // addCommands(followPathCommand(Paths.RL_C4));
-    // addCommands(scoreLevel(ToLevel.L4));
-
-    // vision align
     addCommands(followPathCommand(startingPath));
-    addCommands(scoreLevel(ToLevel.L2));
+    addCommands(toPosition(ElevatorPosition.L2));
     addCommands(followPathCommand(Paths.E2_RL));
-    addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.RL_D4, SnapLocation.ReefCD));
-    addCommands(scoreLevel(ToLevel.L4));
+    addCommands(followPathCommand(Paths.RL_D4));
+    // addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.RL_D4, SnapLocation.ReefCD));
+    addCommands(toPosition(ElevatorPosition.L4));
     addCommands(followPathCommand(Paths.D4_RL));
-    addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.RL_C4, SnapLocation.ReefCD));
-    addCommands(scoreLevel(ToLevel.L4));
+    addCommands(followPathCommand(Paths.RL_C4));
+    // addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.RL_C4, SnapLocation.ReefCD));
+    addCommands(toPosition(ElevatorPosition.L4));
   }
 }

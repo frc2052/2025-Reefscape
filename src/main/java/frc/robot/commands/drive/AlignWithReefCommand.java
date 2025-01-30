@@ -6,11 +6,15 @@ package frc.robot.commands.drive;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
+import com.pathplanner.lib.util.DriveFeedforwards;
 import com.team2052.lib.planners.AutoAlignPlanner;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
@@ -66,6 +70,24 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
     goalPose = null;
   }
 
+  public double getDistanceToGoal(AlignLocation scoringLoc){
+    Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
+    if (tar.isPresent()) {
+      Optional<Pose3d> tagPose =
+          VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(tar.get().getBestTarget().fiducialId);
+      if (tagPose.isPresent()) {
+        goalPose = tagPose.get().toPose2d().transformBy(scoringLoc.transform);
+      } else {
+        return 50; // just needs to be distance we won't be less than ever
+      }
+    } else {
+      return 50;
+    }
+
+    Translation2d goalTranslation = new Translation2d(goalPose.getX(), goalPose.getY());
+    return goalTranslation.getDistance(new Translation2d(RobotState.getInstance().getFieldToRobot().getX(), RobotState.getInstance().getFieldToRobot().getY()));
+  }
+
   @Override
   public void execute() {
     Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
@@ -100,7 +122,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
     MIDDLE(new Transform2d(0.4, 0.0, new Rotation2d(180))),
     RIGHT(new Transform2d(0.5, -0.5, new Rotation2d(180)));
 
-    private Transform2d transform;
+    public Transform2d transform;
 
     private AlignLocation(Transform2d gt) {
       this.transform = gt;

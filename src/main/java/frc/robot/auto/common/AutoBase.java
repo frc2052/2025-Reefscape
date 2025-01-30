@@ -9,11 +9,14 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
 import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
@@ -27,7 +30,10 @@ import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 public abstract class AutoBase extends SequentialCommandGroup {
   private final RobotState robotState = RobotState.getInstance();
@@ -73,28 +79,42 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command reefSideVisionOrPathAlign(
       AlignLocation alignLocation, PathPlannerPath altAlignPath, SnapLocation snaploc) {
     return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
-        .until(() -> vision.getReefCamClosestTarget().isPresent())
+        .until(() -> vision.getReefCamClosestTarget().isPresent() && getDistanceToGoal(() -> alignLocation) < 3.0) // sees tag, goal pose won't be too far
         .andThen(
             new AlignWithReefCommand(() -> alignLocation, () -> 0, () -> 0, () -> 0, () -> true));
+  }
+
+  public double getDistanceToGoal(Supplier<AlignLocation> scoringLoc){
+    Pose2d goalPose;
+    Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
+    if (tar.isPresent()) {
+      Optional<Pose3d> tagPose =
+          VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(tar.get().getBestTarget().fiducialId);
+      if (tagPose.isPresent()) {
+        goalPose = tagPose.get().toPose2d().transformBy(scoringLoc.get().transform);
+      } else {
+        return 50; // any number greater than our bound to switch to vision
+      }
+    } else {
+      return 50;
+    }
+
+    Translation2d goalTranslation = new Translation2d(goalPose.getX(), goalPose.getY());
+    return goalTranslation.getDistance(
+      new Translation2d(RobotState.getInstance().getFieldToRobot().getX(), 
+      RobotState.getInstance().getFieldToRobot().getY()));
   }
 
   protected Command toScoringPositionCommand(ReefScoringPosition scorePos) {
     return scorePos.getCommand();
   }
 
-  protected Command scoreLevel(ToLevel level) {
-    return level.getCommand();
-  }
-
   protected Command toPosition(ElevatorPosition position) {
-    System.out.println("ARM TO POSITION METHOD");
     return new SequentialCommandGroup(
         ElevatorCommandFactory.setElevatorPosition(position),
         new WaitCommand(1),
         ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.TRAVEL));
   }
-
-  // ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L1)
 
   protected static PathPlannerPath getPathFromFile(String pathName) {
     try {

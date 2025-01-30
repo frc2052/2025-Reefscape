@@ -19,27 +19,11 @@ public class AutoK4L4DAK3L3 extends AutoBase {
   public void init() {
     addCommands(delaySelectedTime());
 
-    // just paths
-    // addCommands(followPathCommand(startingPath));
-    // addCommands(scoreLevel(ToLevel.L4));
-    // addCommands(followPathCommand(Paths.K4_LL));
-    // addCommands(followPathCommand(Paths.LL_L4));
-    // addCommands(scoreLevel(ToLevel.L4));
-    // addCommands(followPathCommand(Paths.L4_LL));
-    // addCommands(followPathCommand(Paths.LL_K3));
-    // addCommands(scoreLevel(ToLevel.L3));
-    // addCommands(followPathCommand(Paths.K3_LL));
-    // addCommands(followPathCommand(Paths.LL_L3));
-    // addCommands(scoreLevel(ToLevel.L3));
-
-    // vision align
     addCommands(followPathCommand(startingPath));
     addCommands(toPosition(ElevatorPosition.L4));
-    // halts right before it gets there
     addCommands(followPathCommand(Paths.K4_LL));
     addCommands(followPathCommand(Paths.LL_L4));
-    // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L4,
-    // SnapLocation.ReefKL));
+    // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L4, SnapLocation.ReefKL));
     addCommands(toPosition(ElevatorPosition.L4));
     addCommands(followPathCommand(Paths.L4_LL));
     addCommands(followPathCommand(Paths.LL_K3));
@@ -47,8 +31,7 @@ public class AutoK4L4DAK3L3 extends AutoBase {
     addCommands(toPosition(ElevatorPosition.L3));
     addCommands(followPathCommand(Paths.K3_LL));
     addCommands(followPathCommand(Paths.LL_L3));
-    // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L3,
-    // SnapLocation.ReefKL));
+    // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L3, SnapLocation.ReefKL));
     addCommands(toPosition(ElevatorPosition.L3));
   }
 }
