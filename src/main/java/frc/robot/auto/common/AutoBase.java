@@ -19,8 +19,10 @@ import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
+import frc.robot.commands.elevator.ElevatorCommandFactory;
 import frc.robot.commands.superstructure.ReefScoringCommandFactory.ReefScoringPosition;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.List;
@@ -84,6 +86,16 @@ public abstract class AutoBase extends SequentialCommandGroup {
     return level.getCommand();
   }
 
+  protected Command toPosition(ElevatorPosition position) {
+    System.out.println("ARM TO POSITION METHOD");
+    return new SequentialCommandGroup(
+        ElevatorCommandFactory.setElevatorPosition(position),
+        new WaitCommand(1),
+        ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.TRAVEL));
+  }
+
+  // ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L1)
+
   protected static PathPlannerPath getPathFromFile(String pathName) {
     try {
       PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
@@ -136,8 +148,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // ef
     public static final PathPlannerPath E2_RL = getPathFromFile("E RL");
     public static final PathPlannerPath SR_E2 = getPathFromFile("SR E");
-    public static final PathPlannerPath PROCESS_EF = getPathFromFile("Processor EF");
-    public static final PathPlannerPath EF_PROCESS = getPathFromFile("EF Processor");
+    // public static final PathPlannerPath PROCESS_EF = getPathFromFile("Processor EF");
+    // public static final PathPlannerPath EF_PROCESS = getPathFromFile("EF Processor");
 
     // gh
     public static final PathPlannerPath SC_H4 = getPathFromFile("SC H");

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.678084129050925,
-        "y": 7.3841746238425925
+        "x": 1.3066598360655735,
+        "y": 7.675256147540983
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.208259474508532,
-        "y": 6.897181719322772
+        "x": 1.8368351815231805,
+        "y": 7.188263243021162
       },
       "isLocked": false,
       "linkedName": "Left Load"
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -58.74454608505276
+    "rotation": -57.101901150404174
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -54.47313588555008
+    "rotation": -53.3512695849836
   },
   "useDefaultConstraints": true
 }

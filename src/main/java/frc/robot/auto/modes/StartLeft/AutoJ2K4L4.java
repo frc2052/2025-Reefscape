@@ -3,9 +3,7 @@ package frc.robot.auto.modes.StartLeft;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
-import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
-import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
 
 @AutoDescription(description = "21 Point Auto - One L2, Two L4")
 public class AutoJ2K4L4 extends AutoBase {
@@ -19,7 +17,7 @@ public class AutoJ2K4L4 extends AutoBase {
 
   @Override
   public void init() {
-    addCommands(delaySelectedTime());
+    // addCommands(delaySelectedTime());
 
     // just paths
     // addCommands(followPathCommand(startingPath));
@@ -33,12 +31,16 @@ public class AutoJ2K4L4 extends AutoBase {
 
     // vision align
     addCommands(followPathCommand(startingPath));
-    addCommands(scoreLevel(ToLevel.L2));
+    // addCommands(scoreLevel(ToLevel.L2));
+    addCommands(toPosition(ElevatorPosition.L2));
     addCommands(followPathCommand(Paths.J2_LL));
-    addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.LL_K4, SnapLocation.ReefKL));
-    addCommands(scoreLevel(ToLevel.L4));
+    // addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.LL_K4, SnapLocation.ReefKL));
+    addCommands(followPathCommand(Paths.LL_K4));
+    addCommands(toPosition(ElevatorPosition.L4));
     addCommands(followPathCommand(Paths.K4_LL));
-    addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L4, SnapLocation.ReefKL));
-    addCommands(scoreLevel(ToLevel.L4));
+    // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L4,
+    // SnapLocation.ReefKL));
+    addCommands(followPathCommand(Paths.LL_K4));
+    addCommands(toPosition(ElevatorPosition.L4));
   }
 }

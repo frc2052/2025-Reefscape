@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 5.846836663868802,
-        "y": 1.6548349932205575
+        "y": 1.6548349932205573
       },
       "isLocked": false,
       "linkedName": "Processor"
@@ -38,8 +38,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
