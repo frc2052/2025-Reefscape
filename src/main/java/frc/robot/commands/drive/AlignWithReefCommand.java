@@ -6,15 +6,12 @@ package frc.robot.commands.drive;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
-import com.pathplanner.lib.util.DriveFeedforwards;
 import com.team2052.lib.planners.AutoAlignPlanner;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
@@ -54,6 +51,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
     planner = new AutoAlignPlanner();
 
     addRequirements(drivetrain);
+    System.out.println("==== ALIGN WITH REEF COMMAND");
   }
 
   @Override
@@ -70,7 +68,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
     goalPose = null;
   }
 
-  public double getDistanceToGoal(AlignLocation scoringLoc){
+  public double getDistanceToGoal(AlignLocation scoringLoc) {
     Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
     if (tar.isPresent()) {
       Optional<Pose3d> tagPose =
@@ -85,7 +83,10 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
     }
 
     Translation2d goalTranslation = new Translation2d(goalPose.getX(), goalPose.getY());
-    return goalTranslation.getDistance(new Translation2d(RobotState.getInstance().getFieldToRobot().getX(), RobotState.getInstance().getFieldToRobot().getY()));
+    return goalTranslation.getDistance(
+        new Translation2d(
+            RobotState.getInstance().getFieldToRobot().getX(),
+            RobotState.getInstance().getFieldToRobot().getY()));
   }
 
   @Override
@@ -101,6 +102,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
         goalPose = null;
       }
     } else {
+      System.out.println("==== ALIGN WITH REEF TARGET NULL");
       target = null;
     }
 
@@ -114,6 +116,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
       planner.resetPlanner();
       return true;
     }
+    System.out.println(" STOP ALIGN WITH REEF");
     return false;
   }
 

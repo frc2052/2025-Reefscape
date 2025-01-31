@@ -3,9 +3,6 @@ package frc.robot.auto.modes.StartRight;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
-import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
-import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
 
 @AutoDescription(description = "21 Point Auto - One L2, Two L4")

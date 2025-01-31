@@ -24,14 +24,12 @@ import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.commands.elevator.ElevatorCommandFactory;
 import frc.robot.commands.superstructure.ReefScoringCommandFactory.ReefScoringPosition;
-import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 
@@ -79,15 +77,20 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command reefSideVisionOrPathAlign(
       AlignLocation alignLocation, PathPlannerPath altAlignPath, SnapLocation snaploc) {
     return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
-        .until(() -> vision.getReefCamClosestTarget().isPresent() && getDistanceToGoal(() -> alignLocation) < 3.0) // sees tag, goal pose won't be too far
+        .until(
+            () ->
+                vision.getReefCamClosestTarget().isPresent()
+                    && getDistanceToGoal(() -> alignLocation)
+                        != 50.0) // sees tag, goal pose won't be too far
         .andThen(
             new AlignWithReefCommand(() -> alignLocation, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
-  public double getDistanceToGoal(Supplier<AlignLocation> scoringLoc){
+  public double getDistanceToGoal(Supplier<AlignLocation> scoringLoc) {
     Pose2d goalPose;
     Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
     if (tar.isPresent()) {
+      System.out.println("SEES TARGET IN AUTOS");
       Optional<Pose3d> tagPose =
           VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(tar.get().getBestTarget().fiducialId);
       if (tagPose.isPresent()) {
@@ -101,8 +104,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     Translation2d goalTranslation = new Translation2d(goalPose.getX(), goalPose.getY());
     return goalTranslation.getDistance(
-      new Translation2d(RobotState.getInstance().getFieldToRobot().getX(), 
-      RobotState.getInstance().getFieldToRobot().getY()));
+        new Translation2d(
+            RobotState.getInstance().getFieldToRobot().getX(),
+            RobotState.getInstance().getFieldToRobot().getY()));
   }
 
   protected Command toScoringPositionCommand(ReefScoringPosition scorePos) {
@@ -112,8 +116,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command toPosition(ElevatorPosition position) {
     return new SequentialCommandGroup(
         ElevatorCommandFactory.setElevatorPosition(position),
-        new WaitCommand(1),
-        ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.TRAVEL));
+        new WaitCommand(0.75),
+        ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.TRAVEL),
+        new WaitCommand(0.5));
   }
 
   protected static PathPlannerPath getPathFromFile(String pathName) {
@@ -154,6 +159,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // public static final PathPlannerPath TEST_PATH_SL_EF = getPathFromFile("Test Auto - SL-EF");
 
     // each letter to each loading station
+
+    public static final PathPlannerPath LL_STOP = getPathFromFile("LL STOP");
 
     // CD
     public static final PathPlannerPath RL_C4 = getPathFromFile("RL C");

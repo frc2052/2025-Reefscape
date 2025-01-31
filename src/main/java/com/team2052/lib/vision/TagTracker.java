@@ -37,6 +37,7 @@ public class TagTracker {
     PhotonPipelineResult closestTarget = null;
     for (PhotonPipelineResult r : photonCamera.getAllUnreadResults()) {
       if (r.hasTargets()) {
+        // System.out.println("======= HAS TARGETS" + r.hasTargets());
         PhotonTrackedTarget target = r.getBestTarget();
         if (closestTarget == null) {
           closestTarget = r;
@@ -46,6 +47,8 @@ public class TagTracker {
                 closestTarget.getBestTarget().getBestCameraToTarget())) {
           closestTarget = r;
         }
+      } else {
+        System.out.println("NO PHOTON PIPELINE RESULTS");
       }
     }
 

@@ -23,7 +23,8 @@ public class AutoK4L4DAK3L3 extends AutoBase {
     addCommands(toPosition(ElevatorPosition.L4));
     addCommands(followPathCommand(Paths.K4_LL));
     addCommands(followPathCommand(Paths.LL_L4));
-    // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L4, SnapLocation.ReefKL));
+    // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L4,
+    // SnapLocation.ReefKL));
     addCommands(toPosition(ElevatorPosition.L4));
     addCommands(followPathCommand(Paths.L4_LL));
     addCommands(followPathCommand(Paths.LL_K3));
@@ -31,7 +32,8 @@ public class AutoK4L4DAK3L3 extends AutoBase {
     addCommands(toPosition(ElevatorPosition.L3));
     addCommands(followPathCommand(Paths.K3_LL));
     addCommands(followPathCommand(Paths.LL_L3));
-    // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L3, SnapLocation.ReefKL));
+    // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L3,
+    // SnapLocation.ReefKL));
     addCommands(toPosition(ElevatorPosition.L3));
   }
 }

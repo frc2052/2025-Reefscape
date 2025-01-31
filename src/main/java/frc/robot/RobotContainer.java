@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
+import frc.robot.commands.DistanceToVisionGoal;
 import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.DefaultDriveCommand;
@@ -98,8 +99,12 @@ public class RobotContainer {
         .resetGyro()
         .onTrue(new InstantCommand(() -> drivetrain.resetRotation(new Rotation2d())));
     configurePOVBindings();
+
+    // temporary distance to tag (2)
+    controlBoard.distanceToTag().whileTrue(new DistanceToVisionGoal(() -> AlignLocation.LEFT));
+
     controlBoard
-        .reefAlignment()
+        .reefAlignment() // 3
         .whileTrue(
             new AlignWithReefCommand(
                 () -> AlignLocation.MIDDLE,
