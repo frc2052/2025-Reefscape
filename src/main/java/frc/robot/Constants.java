@@ -202,10 +202,10 @@ public class Constants {
   }
 
   public static class FieldConstants {
-    public static final Distance FIELD_LENGTH = Centimeters.of(805);
-    public static final Distance FIELD_WIDTH = Centimeters.of(1755);
-    public static final Translation2d BLUE_REEF_CENTER = new Translation2d(Inches.of(190.75), Centimeters.of(805/2));
-    public static final Translation2d RED_REEF_CENTER = new Translation2d(Inches.of(FIELD_WIDTH.in(Inches) - 190.75), Centimeters.of(805/2));
+    public static final Distance FIELD_LENGTH = Centimeters.of(1755);
+    public static final Distance FIELD_WIDTH = Centimeters.of(805);
+    public static final Translation2d BLUE_REEF_CENTER = new Translation2d(Inches.of(177.06927), Inches.of(158.5));
+    public static final Translation2d RED_REEF_CENTER = new Translation2d(Inches.of(FIELD_LENGTH.in(Inches) - 177.06927), Inches.of(158.5));
 
   }
 

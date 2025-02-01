@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.Constants.FieldConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class AimingCalculator {
 
@@ -18,16 +19,34 @@ public class AimingCalculator {
     } else {
       reefLocation = FieldConstants.BLUE_REEF_CENTER;
     }
+    Logger.recordOutput("reef location", reefLocation);
 
-    Translation2d relativeTranslation = reefLocation.plus(initialPose.getTranslation());
+    Translation2d relativeTranslation = initialPose.getTranslation().minus(reefLocation);
 
     double radius = relativeTranslation.getNorm();
+    Logger.recordOutput("Radius", radius);
+
     Rotation2d theta =
-        new Rotation2d(Math.atan2(relativeTranslation.getX(), relativeTranslation.getY()));
+        new Rotation2d(-Math.atan(relativeTranslation.getY() / relativeTranslation.getX()));
 
     double newRadius = radius + addedDistance.in(Meters);
+    Logger.recordOutput("New Radius", newRadius);
 
     return new Pose2d(
-        new Translation2d(newRadius, theta).minus(reefLocation), initialPose.getRotation());
+        new Translation2d(
+                Math.copySign(newRadius * Math.cos(theta.getRadians()), relativeTranslation.getX()),
+                Math.copySign(newRadius * Math.sin(theta.getRadians()), relativeTranslation.getY()))
+            .plus(reefLocation),
+        initialPose.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
+  }
+
+  public static Pose2d horizontalAjustment(Distance ajustment, Pose2d pose) {
+    Translation2d offset = new Translation2d(0, ajustment.in(Meters));
+
+    Rotation2d rotation = pose.getRotation();
+
+    Translation2d relitivePose = offset.rotateBy(rotation);
+
+    return new Pose2d(relitivePose.plus(pose.getTranslation()), pose.getRotation());
   }
 }

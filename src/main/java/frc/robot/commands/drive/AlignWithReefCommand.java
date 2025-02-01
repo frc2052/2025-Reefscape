@@ -60,7 +60,10 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   public SwerveRequest getSwerveRequest() {
     if (goalPose != null) {
       Logger.recordOutput("GOAL ALIGN POSE", goalPose);
-
+      Logger.recordOutput(
+          "SHIFT LEFT", AimingCalculator.horizontalAjustment(Meters.of(-0.5), goalPose));
+      Logger.recordOutput(
+          "SHIFT RIGHT", AimingCalculator.horizontalAjustment(Meters.of(0.5), goalPose));
       return super.getSwerveRequest();
       // return drive.withSpeeds(planner.calculate(robotState.getFieldToRobot(), goalPose));
     } else {
@@ -81,18 +84,15 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
       Optional<Pose3d> tagPose =
           VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(target.fiducialId);
       if (tagPose.isPresent()) {
-        goalPose = AimingCalculator.scaleFromReef(tagPose.get().toPose2d(), Meters.of(0.5), false);
-        // new Pose2d(
-        //     transformedPose.getX(),
-        //     transformedPose.getY(),
-        //     transformedPose.getRotation().plus(Rotation2d.fromDegrees(180)));
+        goalPose = AimingCalculator.scaleFromReef(tagPose.get().toPose2d(), Meters.of(0.5), true);
+        Logger.recordOutput("Target for Alignment", true);
       } else {
         goalPose = null;
       }
     } else {
+      Logger.recordOutput("Target for Alignment", false);
       target = null;
     }
-
     super.execute();
   }
 
