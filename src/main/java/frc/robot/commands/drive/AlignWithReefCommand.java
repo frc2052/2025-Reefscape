@@ -91,6 +91,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
       }
     } else {
       Logger.recordOutput("Target for Alignment", false);
+      goalPose = null;
       target = null;
     }
     super.execute();
