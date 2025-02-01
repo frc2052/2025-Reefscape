@@ -5,11 +5,12 @@
 package frc.robot.subsystems.vision;
 
 import com.team2052.lib.helpers.MathHelpers;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants;
 import frc.robot.RobotState;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,7 @@ public class VisionSimSubsystem extends SubsystemBase {
   private final PhotonCamera reefCam = new PhotonCamera("KrawlerCam_000");
   private final int resWidth = 1280;
   private final int resHeight = 800;
+  AprilTagFieldLayout fieldLayout = AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
 
   VisionSystemSim visionSim;
   PhotonCameraSim reefCameraSim;
@@ -42,31 +44,38 @@ public class VisionSimSubsystem extends SubsystemBase {
 
   public VisionSimSubsystem() {
     visionSim = new VisionSystemSim("main");
-    visionSim.addAprilTags(VisionConstants.APRIL_TAG_FIELD_LAYOUT);
+    visionSim.addAprilTags(fieldLayout);
 
     // Needs real properties
     var reefCameraProperties = new SimCameraProperties();
-    reefCameraProperties.setCalibration(resWidth, resHeight, Rotation2d.fromDegrees(0));
+    reefCameraProperties.setCalibration(resWidth, resHeight, Rotation2d.fromDegrees(90));
     reefCameraProperties.setCalibError(0.35, 0.10);
     reefCameraProperties.setFPS(15);
     reefCameraProperties.setAvgLatencyMs(20);
     reefCameraProperties.setLatencyStdDevMs(5);
 
     reefCameraSim = new PhotonCameraSim(reefCam, reefCameraProperties);
-
+    reefCameraSim.enableDrawWireframe(true);
     // Empty Transform3d represents robot to camera offset
-    visionSim.addCamera(reefCameraSim, new Transform3d());
+    visionSim.addCamera(
+        reefCameraSim, Constants.VisionConstants.Camera1Constants.ROBOT_TO_CAMERA_METERS);
   }
 
   @Override
   public void periodic() {
-    Pose2d newOdometryPose = state.getInstance().getFieldToRobot();
+    Pose2d newOdometryPose = state.getFieldToRobot();
     updateVisionSimWithPose(newOdometryPose);
     Logger.recordOutput("Vision Sim Sees Target", isSeeingTarget());
   }
 
   public void updateVisionSimWithPose(Pose2d pose) {
     visionSim.update(pose);
+    var debugField = visionSim.getDebugField();
+    debugField.getObject("EstimatedRobot").setPose(pose);
+  }
+
+  public void getDebugField() {//go to localhost:1182 for the debug sim
+    visionSim.getDebugField();
   }
 
   public boolean isSeeingTarget() {
