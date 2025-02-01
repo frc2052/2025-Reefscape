@@ -20,6 +20,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -203,6 +204,9 @@ public class Constants {
   public static class FieldConstants {
     public static final Distance FIELD_LENGTH = Centimeters.of(805);
     public static final Distance FIELD_WIDTH = Centimeters.of(1755);
+    public static final Translation2d BLUE_REEF_CENTER = new Translation2d(Inches.of(190.75), Centimeters.of(805/2));
+    public static final Translation2d RED_REEF_CENTER = new Translation2d(Inches.of(FIELD_WIDTH.in(Inches) - 190.75), Centimeters.of(805/2));
+
   }
 
   public static final class DashboardConstants {

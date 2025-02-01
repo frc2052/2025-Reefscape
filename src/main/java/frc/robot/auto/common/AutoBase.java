@@ -81,7 +81,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
             () ->
                 vision.getReefCamClosestTarget().isPresent()
                     && getDistanceToGoal(() -> alignLocation)
-                        != 50.0) // sees tag, goal pose won't be too far
+                        < 3.0) // sees tag, goal pose won't be too far
         .andThen(
             new AlignWithReefCommand(() -> alignLocation, () -> 0, () -> 0, () -> 0, () -> true));
   }

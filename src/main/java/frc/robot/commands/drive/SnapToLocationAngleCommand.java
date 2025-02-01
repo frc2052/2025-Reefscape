@@ -86,9 +86,9 @@ public class SnapToLocationAngleCommand extends SnapToAngleCommand {
     ReefAB(Degrees.of(0)), // reverse gh
     ReefCD(Degrees.of(90)), // reverse ij
     ReefEF(Degrees.of(120)), // reverse kl
-    ReefGH(Degrees.of(180)), 
+    ReefGH(Degrees.of(180)),
     ReefIJ(Degrees.of(240)),
-    ReefKL(Degrees.of(300)); 
+    ReefKL(Degrees.of(300));
 
     private Angle robotAngle;
 

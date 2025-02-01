@@ -4,6 +4,8 @@
 
 package frc.robot.commands.drive;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.team2052.lib.planners.AutoAlignPlanner;
@@ -11,15 +13,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.util.AimingCalculator;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -51,13 +54,15 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
     planner = new AutoAlignPlanner();
 
     addRequirements(drivetrain);
-    System.out.println("==== ALIGN WITH REEF COMMAND");
   }
 
   @Override
   public SwerveRequest getSwerveRequest() {
     if (goalPose != null) {
-      return drive.withSpeeds(planner.calculate(robotState.getFieldToRobot(), goalPose));
+      Logger.recordOutput("GOAL ALIGN POSE", goalPose);
+
+      return super.getSwerveRequest();
+      // return drive.withSpeeds(planner.calculate(robotState.getFieldToRobot(), goalPose));
     } else {
       return super.getSwerveRequest();
     }
@@ -68,27 +73,6 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
     goalPose = null;
   }
 
-  public double getDistanceToGoal(AlignLocation scoringLoc) {
-    Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
-    if (tar.isPresent()) {
-      Optional<Pose3d> tagPose =
-          VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(tar.get().getBestTarget().fiducialId);
-      if (tagPose.isPresent()) {
-        goalPose = tagPose.get().toPose2d().transformBy(scoringLoc.transform);
-      } else {
-        return 50; // just needs to be distance we won't be less than ever
-      }
-    } else {
-      return 50;
-    }
-
-    Translation2d goalTranslation = new Translation2d(goalPose.getX(), goalPose.getY());
-    return goalTranslation.getDistance(
-        new Translation2d(
-            RobotState.getInstance().getFieldToRobot().getX(),
-            RobotState.getInstance().getFieldToRobot().getY()));
-  }
-
   @Override
   public void execute() {
     Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
@@ -97,12 +81,15 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
       Optional<Pose3d> tagPose =
           VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(target.fiducialId);
       if (tagPose.isPresent()) {
-        goalPose = tagPose.get().toPose2d().transformBy(scoringLocation.get().transform);
+        goalPose = AimingCalculator.scaleFromReef(tagPose.get().toPose2d(), Meters.of(0.5), false);
+        // new Pose2d(
+        //     transformedPose.getX(),
+        //     transformedPose.getY(),
+        //     transformedPose.getRotation().plus(Rotation2d.fromDegrees(180)));
       } else {
         goalPose = null;
       }
     } else {
-      System.out.println("==== ALIGN WITH REEF TARGET NULL");
       target = null;
     }
 
@@ -116,14 +103,13 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
       planner.resetPlanner();
       return true;
     }
-    System.out.println(" STOP ALIGN WITH REEF");
     return false;
   }
 
   public enum AlignLocation { // provides an offset from the april tag
-    LEFT(new Transform2d(0.5, 0.5, new Rotation2d(180))),
-    MIDDLE(new Transform2d(0.4, 0.0, new Rotation2d(180))),
-    RIGHT(new Transform2d(0.5, -0.5, new Rotation2d(180)));
+    LEFT(new Transform2d(0.5, 0.5, new Rotation2d(0))),
+    MIDDLE(new Transform2d(0.4, 0.0, new Rotation2d(0))),
+    RIGHT(new Transform2d(0.5, -0.5, new Rotation2d(0)));
 
     public Transform2d transform;
 
