@@ -120,9 +120,9 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   }
 
   public enum AlignLocation { // provides an offset from the april tag
-    LEFT(new Transform2d(0.5, 0.5, new Rotation2d(0))),
+    LEFT(new Transform2d(0.5, 0.25, new Rotation2d(0))),
     MIDDLE(new Transform2d(0.5, 0.0, new Rotation2d(0))),
-    RIGHT(new Transform2d(0.5, -0.5, new Rotation2d(0)));
+    RIGHT(new Transform2d(0.5, -0.25, new Rotation2d(0)));
 
     public Transform2d transform;
 

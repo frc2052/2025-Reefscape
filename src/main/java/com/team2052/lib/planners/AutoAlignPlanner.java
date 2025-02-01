@@ -16,9 +16,9 @@ public class AutoAlignPlanner {
 
   public AutoAlignPlanner() {
     startTime = OptionalDouble.of(Timer.getFPGATimestamp());
-    xController = new PIDFFController(2.5, 0.0, 0, 0.0, 0, 0.0, 0.0, 0.0);
-    yController = new PIDFFController(3.5, 0.0, 0, 0.1, 0, 0.0, 0.0, 0.0);
-    thetaController = new PIDFFController(1.0, 0.0, 0.1, 0.3, 0.0, 0.0, 3.0, 2.0);
+    xController = new PIDFFController(3, 0.0, 0, 0.0, 0, 0.0, 0.0, 0.0);
+    yController = new PIDFFController(4, 0.0, 0, 0.1, 0, 0.0, 0.0, 0.0);
+    thetaController = new PIDFFController(3.0, 0.0, 0.5, 0.3, 0.0, 0.0, 3.0, 2.0);
 
     xController.setTolerance(0.08, 0.05);
     yController.setTolerance(0.02, 0.05);
