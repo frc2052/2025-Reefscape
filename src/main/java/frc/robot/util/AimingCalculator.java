@@ -24,13 +24,11 @@ public class AimingCalculator {
     Translation2d relativeTranslation = initialPose.getTranslation().minus(reefLocation);
 
     double radius = relativeTranslation.getNorm();
-    Logger.recordOutput("Radius", radius);
 
     Rotation2d theta =
         new Rotation2d(-Math.atan(relativeTranslation.getY() / relativeTranslation.getX()));
 
     double newRadius = radius + addedDistance.in(Meters);
-    Logger.recordOutput("New Radius", newRadius);
 
     return new Pose2d(
         new Translation2d(
@@ -42,11 +40,8 @@ public class AimingCalculator {
 
   public static Pose2d horizontalAjustment(Distance ajustment, Pose2d pose) {
     Translation2d offset = new Translation2d(0, ajustment.in(Meters));
+    Translation2d relativePose = offset.rotateBy(pose.getRotation());
 
-    Rotation2d rotation = pose.getRotation();
-
-    Translation2d relitivePose = offset.rotateBy(rotation);
-
-    return new Pose2d(relitivePose.plus(pose.getTranslation()), pose.getRotation());
+    return new Pose2d(relativePose.plus(pose.getTranslation()), pose.getRotation());
   }
 }
