@@ -4,13 +4,13 @@
 
 package frc.robot.subsystems.vision;
 
-import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public class VisionSimSubsystem extends SubsystemBase {
   private final PhotonCamera reefCam = new PhotonCamera("KrawlerCam_000");
   private final int resWidth = 1280;
   private final int resHeight = 800;
-  AprilTagFieldLayout fieldLayout = AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
+  AprilTagFieldLayout fieldLayout = VisionConstants.APRIL_TAG_FIELD_LAYOUT;
 
   VisionSystemSim visionSim;
   PhotonCameraSim reefCameraSim;
@@ -51,12 +51,12 @@ public class VisionSimSubsystem extends SubsystemBase {
     reefCameraProperties.setCalibration(resWidth, resHeight, Rotation2d.fromDegrees(90));
     reefCameraProperties.setCalibError(0.35, 0.10);
     reefCameraProperties.setFPS(15);
-    reefCameraProperties.setAvgLatencyMs(20);
+    reefCameraProperties.setAvgLatencyMs(50);
     reefCameraProperties.setLatencyStdDevMs(5);
 
     reefCameraSim = new PhotonCameraSim(reefCam, reefCameraProperties);
     reefCameraSim.enableDrawWireframe(true);
-    // Empty Transform3d represents robot to camera offset
+
     visionSim.addCamera(
         reefCameraSim, Constants.VisionConstants.Camera1Constants.ROBOT_TO_CAMERA_METERS);
   }
@@ -66,44 +66,42 @@ public class VisionSimSubsystem extends SubsystemBase {
     Pose2d newOdometryPose = state.getFieldToRobot();
     updateVisionSimWithPose(newOdometryPose);
     Logger.recordOutput("Vision Sim Sees Target", isSeeingTarget());
+    Logger.recordOutput("Current Sim ID", getCurrentTagID());
   }
 
   public void updateVisionSimWithPose(Pose2d pose) {
     visionSim.update(pose);
-    var debugField = visionSim.getDebugField();
+    Field2d debugField = visionSim.getDebugField();
     debugField.getObject("EstimatedRobot").setPose(pose);
   }
 
-  public void getDebugField() {//go to localhost:1182 for the debug sim
+  public void getDebugField() { // Raw Stream @ localhost:1181, Processed Stream (w/ outlined tags) @ localhost:1182
     visionSim.getDebugField();
   }
 
+  @SuppressWarnings("removal")
   public boolean isSeeingTarget() {
-    List<PhotonPipelineResult> results = reefCam.getAllUnreadResults();
-    for (PhotonPipelineResult result : results) {
-      if (result.hasTargets()) {
-        return true;
-      }
-    }
+    PhotonPipelineResult result = reefCam.getLatestResult();
+    if (result.hasTargets()) return true;
     return false;
   }
 
+  @SuppressWarnings("removal")
   public Optional<PhotonPipelineResult> getReefCamClosestTarget() {
-    PhotonPipelineResult closestTarget = null;
-    for (PhotonPipelineResult r : reefCam.getAllUnreadResults()) {
-      if (r.hasTargets()) {
-        PhotonTrackedTarget target = r.getBestTarget();
-        if (closestTarget == null) {
-          closestTarget = r;
-        } else if (target.getBestCameraToTarget()
-            == MathHelpers.getSmallestTransform(
-                target.getBestCameraToTarget(),
-                closestTarget.getBestTarget().getBestCameraToTarget())) {
-          closestTarget = r;
-        }
-      }
+    PhotonPipelineResult result = reefCam.getLatestResult();
+    return Optional.ofNullable(result);
+  }
+
+  public int getCurrentTagID() {
+    Optional<PhotonPipelineResult> optionalResult = getReefCamClosestTarget();
+    PhotonPipelineResult result = optionalResult.isPresent() ? optionalResult.get() : null;
+
+    if (result == null || !result.hasTargets()) {
+      return 0;
     }
 
-    return Optional.ofNullable(closestTarget);
+    PhotonTrackedTarget target = result.getBestTarget();
+
+    return target.getFiducialId();
   }
 }
