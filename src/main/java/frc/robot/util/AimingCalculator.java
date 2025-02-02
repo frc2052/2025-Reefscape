@@ -1,20 +1,23 @@
 package frc.robot.util;
 
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Radians;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.util.Polar2d;
 import org.littletonrobotics.junction.Logger;
 
 public class AimingCalculator {
 
   public static Pose2d scaleFromReef(
-      Pose2d initialPose, Distance addedDistance, boolean isRedAlliance) {
+      Pose2d initialPose, Distance addedDistance, boolean isRedReef) {
     Translation2d reefLocation;
-    if (isRedAlliance) {
+    if (isRedReef) {
       reefLocation = FieldConstants.RED_REEF_CENTER;
     } else {
       reefLocation = FieldConstants.BLUE_REEF_CENTER;
@@ -44,4 +47,21 @@ public class AimingCalculator {
 
     return new Pose2d(relativePose.plus(pose.getTranslation()), pose.getRotation());
   }
+
+  public static PolarPose2d getPositionFromReef(Pose2d pose, boolean isRedReef) {
+    Translation2d reefLocation;
+    if (isRedReef) {
+      reefLocation = FieldConstants.RED_REEF_CENTER;
+    } else {
+      reefLocation = FieldConstants.BLUE_REEF_CENTER;
+    }
+
+    Polar2d polar = new Polar2d(pose.getTranslation().minus(reefLocation));
+
+    return new PolarPose2d(pose.getRotation(), polar);
+  }
+
+  
+
+  
 }

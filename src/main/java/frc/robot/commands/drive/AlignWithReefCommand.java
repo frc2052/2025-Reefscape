@@ -108,6 +108,16 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
     super.execute();
   }
 
+  public void setGoal(Pose2d goalPose) {
+    this.goalPose = goalPose; 
+    previousGoalPose = goalPose;
+    sinceLastUpdatedGoalPose.reset();
+  }
+
+  public AlignLocation getScoringLocation() {
+    return scoringLocation.get();
+  }
+
   @Override
   public boolean isFinished() {
     if (planner.getAutoAlignComplete()) {
