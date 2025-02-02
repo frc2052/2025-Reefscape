@@ -22,7 +22,7 @@ public class ControlPanelInput implements ISecondaryControlBoard {
   }
 
   @Override
-  public Trigger zeroElevator() {
+  public Trigger homeElevator() {
     return new JoystickButton(controlPanel, 2);
   }
 
@@ -36,45 +36,63 @@ public class ControlPanelInput implements ISecondaryControlBoard {
     return new JoystickButton(controlPanel, 6);
   }
 
+  @Override 
+  public Trigger reefAB() {
+    return new JoystickButton(controlPanel, 3);
+  }
+
   @Override
-  public Trigger setElevatorPositionL1() {
+  public Trigger reefCD() {
+    return new JoystickButton(controlPanel, 4);
+  }
+
+  @Override
+  public Trigger reefEF() {
+    return new JoystickButton(controlPanel, 10);
+  }
+
+  @Override
+  public Trigger reefGH() {
     return new JoystickButton(controlPanel, 11);
   }
 
   @Override
-  public Trigger setElevatorPositionL2() {
+  public Trigger reefIJ() {
     return new JoystickButton(controlPanel, 12);
   }
 
   @Override
-  public Trigger setElevatorPositionL3() {
+  public Trigger reefKL() {
     return new JoystickButton(controlPanel, 5);
   }
 
   @Override
-  public Trigger setElevatorPositionL4() {
+  public Trigger setGoalL1() {
+    return new JoystickButton(controlPanel, 11);
+  }
+
+  @Override
+  public Trigger setGoalL2() {
+    return new JoystickButton(controlPanel, 12);
+  }
+
+  @Override
+  public Trigger setGoalL3() {
+    return new JoystickButton(controlPanel, 5);
+  }
+
+  @Override
+  public Trigger setGoalL4() {
     return new JoystickButton(controlPanel, 7);
   }
 
   @Override
-  public Trigger setElevatorPositionUpperAlgae() {
+  public Trigger setGoalUpperAlgae() {
     return new JoystickButton(controlPanel, 8);
   }
 
   @Override
-  public Trigger setElevatorPositionLowerAlgae() {
-    return new Trigger(() -> false);
-    // return new JoystickButton(controlPanel, 9);
-  }
-
-  @Override
-  public Trigger setElevatorPositionHandoff() {
-    return new Trigger(() -> false);
-    // return new JoystickButton(controlPanel, 10);
-  }
-
-  @Override
-  public Trigger setElevatorPositionTravel() {
-    return new Trigger(() -> controlPanel.getX() < -0.5);
+  public Trigger setGoalLowerAlgae() {
+    return new JoystickButton(controlPanel, 9);
   }
 }

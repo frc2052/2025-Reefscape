@@ -112,13 +112,6 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
     return primaryControlBoard.shoot();
   }
 
-  /* Secondary */
-
-  @Override
-  public Trigger zeroElevator() {
-    return secondaryControlBoard.zeroElevator();
-  }
-
   @Override
   public Trigger sysIDQuasiForward() {
     return primaryControlBoard.sysIDQuasiForward();
@@ -139,6 +132,13 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
     return primaryControlBoard.sysIDDynamicReverse();
   }
 
+  /* Secondary */
+
+  @Override
+  public Trigger homeElevator() {
+    return secondaryControlBoard.homeElevator();
+  }
+
   @Override
   public Trigger manualUp() {
     return secondaryControlBoard.manualUp();
@@ -150,42 +150,62 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger setElevatorPositionL1() {
-    return secondaryControlBoard.setElevatorPositionL1();
+  public Trigger reefAB() {
+    return secondaryControlBoard.reefAB();
   }
 
   @Override
-  public Trigger setElevatorPositionL2() {
-    return secondaryControlBoard.setElevatorPositionL2();
+  public Trigger reefCD() {
+    return secondaryControlBoard.reefCD();
   }
 
   @Override
-  public Trigger setElevatorPositionL3() {
-    return secondaryControlBoard.setElevatorPositionL3();
+  public Trigger reefEF() {
+    return secondaryControlBoard.reefEF();
   }
 
   @Override
-  public Trigger setElevatorPositionL4() {
-    return secondaryControlBoard.setElevatorPositionL4();
+  public Trigger reefGH() {
+    return secondaryControlBoard.reefGH();
   }
 
   @Override
-  public Trigger setElevatorPositionUpperAlgae() {
-    return secondaryControlBoard.setElevatorPositionUpperAlgae();
+  public Trigger reefIJ() {
+    return secondaryControlBoard.reefIJ();
   }
 
   @Override
-  public Trigger setElevatorPositionLowerAlgae() {
-    return secondaryControlBoard.setElevatorPositionLowerAlgae();
+  public Trigger reefKL() {
+    return secondaryControlBoard.reefKL();
   }
 
   @Override
-  public Trigger setElevatorPositionHandoff() {
-    return secondaryControlBoard.setElevatorPositionHandoff();
+  public Trigger setGoalL1() {
+    return secondaryControlBoard.setGoalL1();
   }
 
   @Override
-  public Trigger setElevatorPositionTravel() {
-    return secondaryControlBoard.setElevatorPositionTravel();
+  public Trigger setGoalL2() {
+    return secondaryControlBoard.setGoalL2();
+  }
+
+  @Override
+  public Trigger setGoalL3() {
+    return secondaryControlBoard.setGoalL3();
+  }
+
+  @Override
+  public Trigger setGoalL4() {
+    return secondaryControlBoard.setGoalL4();
+  }
+
+  @Override
+  public Trigger setGoalUpperAlgae() {
+    return secondaryControlBoard.setGoalUpperAlgae();
+  }
+
+  @Override
+  public Trigger setGoalLowerAlgae() {
+    return secondaryControlBoard.setGoalLowerAlgae();
   }
 }

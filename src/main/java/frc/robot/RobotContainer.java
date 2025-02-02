@@ -82,8 +82,6 @@ public class RobotContainer {
         .onTrue(Commands.runOnce(SignalLogger::start))
         .onFalse(Commands.runOnce(SignalLogger::stop));
 
-    controlBoard.zeroElevator().onTrue(ElevatorSubsystem.getInstance().homeElevator());
-
     controlBoard
         .manualUp()
         .onTrue(ElevatorSubsystem.getInstance().manualUp())
@@ -95,24 +93,24 @@ public class RobotContainer {
         .onFalse(ElevatorSubsystem.getInstance().stopElevator());
 
     controlBoard
-        .setElevatorPositionTravel()
+        .homeElevator()
         .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.HOME));
 
     controlBoard
-        .setElevatorPositionL1()
+        .setGoalL1()
         .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L1));
 
     controlBoard
-        .setElevatorPositionL2()
+        .setGoalL2()
         .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L2));
     controlBoard
-        .setElevatorPositionL3()
+        .setGoalL3()
         .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L3));
     controlBoard
-        .setElevatorPositionL4()
+        .setGoalL4()
         .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L4));
     controlBoard
-        .setElevatorPositionUpperAlgae()
+        .setGoalUpperAlgae()
         .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.UPPER_ALGAE));
     // controlBoard
     //     .setElevatorPositionLowerAlgae()

@@ -25,7 +25,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private ControlState controlState;
 
   private boolean homing;
-  private boolean shouldHome = false;
+  private boolean shouldHome = true;
   private final DelayedBoolean homingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.05);
 
   private double goalPositionTicks;

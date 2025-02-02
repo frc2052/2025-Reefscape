@@ -3,25 +3,33 @@ package frc.robot.controlboard.secondary;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public interface ISecondaryControlBoard {
-  Trigger zeroElevator();
+  Trigger homeElevator();
 
   Trigger manualUp();
 
   Trigger manualDown();
 
-  Trigger setElevatorPositionL1();
+  Trigger reefAB();
 
-  Trigger setElevatorPositionL2();
+  Trigger reefCD();
 
-  Trigger setElevatorPositionL3();
+  Trigger reefEF();
 
-  Trigger setElevatorPositionL4();
+  Trigger reefGH();
 
-  Trigger setElevatorPositionUpperAlgae();
+  Trigger reefIJ();
+  
+  Trigger reefKL();
 
-  Trigger setElevatorPositionLowerAlgae();
+  Trigger setGoalL1();
 
-  Trigger setElevatorPositionHandoff();
+  Trigger setGoalL2();
 
-  Trigger setElevatorPositionTravel();
+  Trigger setGoalL3();
+
+  Trigger setGoalL4();
+
+  Trigger setGoalUpperAlgae();
+
+  Trigger setGoalLowerAlgae();
 }
