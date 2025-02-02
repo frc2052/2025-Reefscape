@@ -6,17 +6,6 @@ package frc.robot.commands.drive;
 
 import static edu.wpi.first.units.Units.Meters;
 
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
-import org.littletonrobotics.junction.Logger;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
-import com.team2052.lib.planners.AutoAlignPlanner;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.Constants.VisionConstants;
@@ -24,6 +13,13 @@ import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AimingCalculator;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class AlignWithSpecificReefCommand extends AlignWithReefCommand {
   private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -31,18 +27,16 @@ public class AlignWithSpecificReefCommand extends AlignWithReefCommand {
   private final int tagID;
   private final RobotState robotState = RobotState.getInstance();
 
-
   private PhotonTrackedTarget target;
 
   /** Creates a new AlignWithSpecificReefCommand. */
   public AlignWithSpecificReefCommand(
-    Supplier<AlignLocation> scoringLocation,
-    DoubleSupplier xSupplier,
-    DoubleSupplier ySupplier,
-    DoubleSupplier rotationSupplier,
-    BooleanSupplier fieldCentric,
-    int tagID
-  ) {
+      Supplier<AlignLocation> scoringLocation,
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier,
+      DoubleSupplier rotationSupplier,
+      BooleanSupplier fieldCentric,
+      int tagID) {
     super(scoringLocation, xSupplier, ySupplier, rotationSupplier, fieldCentric);
     this.tagID = tagID;
     addRequirements(drivetrain);
@@ -77,5 +71,4 @@ public class AlignWithSpecificReefCommand extends AlignWithReefCommand {
     }
     drivetrain.setControl(getSwerveRequest());
   }
-
 }

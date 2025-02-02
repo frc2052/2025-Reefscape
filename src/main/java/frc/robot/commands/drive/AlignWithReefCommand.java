@@ -109,7 +109,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   }
 
   public void setGoal(Pose2d goalPose) {
-    this.goalPose = goalPose; 
+    this.goalPose = goalPose;
     previousGoalPose = goalPose;
     sinceLastUpdatedGoalPose.reset();
   }

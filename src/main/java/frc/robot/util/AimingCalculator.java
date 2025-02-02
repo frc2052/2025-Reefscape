@@ -1,15 +1,14 @@
 package frc.robot.util;
 
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Radians;
 
+import com.team2052.lib.geometry.Polar2d;
+import com.team2052.lib.geometry.Pose2dPolar;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.util.Polar2d;
 import org.littletonrobotics.junction.Logger;
 
 public class AimingCalculator {
@@ -48,7 +47,7 @@ public class AimingCalculator {
     return new Pose2d(relativePose.plus(pose.getTranslation()), pose.getRotation());
   }
 
-  public static PolarPose2d getPositionFromReef(Pose2d pose, boolean isRedReef) {
+  public static Pose2dPolar getPositionFromReef(Pose2d pose, boolean isRedReef) {
     Translation2d reefLocation;
     if (isRedReef) {
       reefLocation = FieldConstants.RED_REEF_CENTER;
@@ -58,10 +57,6 @@ public class AimingCalculator {
 
     Polar2d polar = new Polar2d(pose.getTranslation().minus(reefLocation));
 
-    return new PolarPose2d(pose.getRotation(), polar);
+    return new Pose2dPolar(pose.getRotation(), polar);
   }
-
-  
-
-  
 }

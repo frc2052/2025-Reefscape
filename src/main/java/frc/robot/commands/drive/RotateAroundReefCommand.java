@@ -7,51 +7,57 @@ package frc.robot.commands.drive;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
 
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
-import org.photonvision.targeting.PhotonPipelineResult;
-
+import com.team2052.lib.geometry.Pose2dPolar;
 import com.team2052.lib.planners.AutoAlignPlanner;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.RobotState;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AimingCalculator;
-import frc.robot.util.PolarPose2d;
+import java.util.Optional;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RotateAroundReefCommand extends AlignWithSpecificReefCommand {
   private final RobotState robotState = RobotState.getInstance();
   private final VisionSubsystem vision = VisionSubsystem.getInstance();
   private final int tagID;
-  private static PolarPose2d polarPose;
+  private static Pose2dPolar polarPose;
   private static boolean isGoingRight = false;
   private static boolean hasTag = false;
   private static Supplier<Distance> radiusSupplier;
   private static AutoAlignPlanner planner;
-  
+
   /** Creates a new RotateAroundReefCommand. */
   public RotateAroundReefCommand(
-    Supplier<AlignLocation> scoringLocation,
-    int tagID,
-    Supplier<Distance> radiusSupplier
-  ) {
-    super(scoringLocation, getXSupplier(), getYSupplier(), getRotationSupplier(), () -> hasTag, tagID);
+      Supplier<AlignLocation> scoringLocation, int tagID, Supplier<Distance> radiusSupplier) {
+    super(
+        scoringLocation,
+        getXSupplier(),
+        getYSupplier(),
+        getRotationSupplier(),
+        () -> hasTag,
+        tagID);
     this.tagID = tagID;
     this.radiusSupplier = radiusSupplier;
-  // Use addRequirements() here to declare subsystem dependencies.
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   private static DoubleSupplier getXSupplier() {
     return new DoubleSupplier() {
       @Override
       public double getAsDouble() {
-        return planner.calculate(new Pose2d(0,0, polarPose.getRotation()), new Pose2d(0,0, new Rotation2d(polarPose.getPolarPose().getTheta().in(Radians) + Math.PI))).omegaRadiansPerSecond / 5;
+        return planner.calculate(
+                    new Pose2d(0, 0, polarPose.getRotation()),
+                    new Pose2d(
+                        0,
+                        0,
+                        new Rotation2d(polarPose.getPolarPose().getTheta().in(Radians) + Math.PI)))
+                .omegaRadiansPerSecond
+            / 5;
       }
     };
   }
@@ -60,7 +66,12 @@ public class RotateAroundReefCommand extends AlignWithSpecificReefCommand {
     return new DoubleSupplier() {
       @Override
       public double getAsDouble() {
-        return planner.calculate(new Pose2d(polarPose.getPolarPose().getRadius().in(Meters),0, new Rotation2d()), new Pose2d(radiusSupplier.get().in(Meters),0, new Rotation2d())).vxMetersPerSecond / 5;
+        return planner.calculate(
+                    new Pose2d(
+                        polarPose.getPolarPose().getRadius().in(Meters), 0, new Rotation2d()),
+                    new Pose2d(radiusSupplier.get().in(Meters), 0, new Rotation2d()))
+                .vxMetersPerSecond
+            / 5;
       }
     };
   }
@@ -81,7 +92,9 @@ public class RotateAroundReefCommand extends AlignWithSpecificReefCommand {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    polarPose = AimingCalculator.getPositionFromReef(robotState.getFieldToRobot(), robotState.isRedAlliance());
+    polarPose =
+        AimingCalculator.getPositionFromReef(
+            robotState.getFieldToRobot(), robotState.isRedAlliance());
     Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
     if (tar.isPresent()) {
       if (tar.get().getBestTarget().getFiducialId() == tagID) {
@@ -119,5 +132,4 @@ public class RotateAroundReefCommand extends AlignWithSpecificReefCommand {
       }
     }
   }
-
 }
