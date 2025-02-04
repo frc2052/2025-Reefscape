@@ -28,7 +28,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private boolean shouldHome = false;
   private final DelayedBoolean homingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.05);
 
-  private double goalPositionTicks;
+  private double goalPositionRotations;
 
   private static ElevatorSubsystem INSTANCE;
 
@@ -40,7 +40,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   private ElevatorSubsystem() {
-    goalPositionTicks = ElevatorPosition.HOME.getPositionTicks();
+    goalPositionRotations = ElevatorPosition.HOME.getPositionRotations();
 
     frontMotor = new TalonFX(Ports.ELEVATOR_FRONT_ID, "Krawlivore");
     backMotor = new TalonFX(Ports.ELEVATOR_BACK_ID, "Krawlivore");
@@ -54,22 +54,22 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void setPositionMotionMagic(ElevatorPosition elevatorPosition) {
-    setPositionMotionMagic(elevatorPosition.getPositionTicks());
+    setPositionMotionMagic(elevatorPosition.getPositionRotations());
   }
 
-  public void setPositionMotionMagic(double elevatorPositionTicks) {
+  public void setPositionMotionMagic(double elevatorPositionRotations) {
     controlState = ControlState.MOTION_MAGIC;
-    if (goalPositionTicks == elevatorPositionTicks && atPosition()) {
+    if (goalPositionRotations == elevatorPositionRotations && atPosition()) {
       return;
     }
 
-    if (elevatorPositionTicks != ElevatorPosition.HOME.getPositionTicks()) {
+    if (elevatorPositionRotations != ElevatorPosition.HOME.getPositionRotations()) {
       shouldHome = true;
     }
 
-    goalPositionTicks = elevatorPositionTicks;
+    goalPositionRotations = elevatorPositionRotations;
 
-    frontMotor.setControl(new MotionMagicTorqueCurrentFOC(elevatorPositionTicks));
+    frontMotor.setControl(new MotionMagicTorqueCurrentFOC(elevatorPositionRotations));
   }
 
   public void setOpenLoop(double speed) {
@@ -98,12 +98,12 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean atPosition() {
-    return Math.abs(goalPositionTicks - frontMotor.getPosition().getValueAsDouble())
+    return Math.abs(goalPositionRotations - frontMotor.getPosition().getValueAsDouble())
         <= ElevatorConstants.TICKS_DEADZONE;
   }
 
   public boolean atPosition(ElevatorPosition position) {
-    return Math.abs(position.positionTicks - frontMotor.getPosition().getValueAsDouble())
+    return Math.abs(position.positionRotations - frontMotor.getPosition().getValueAsDouble())
         <= ElevatorConstants.TICKS_DEADZONE;
   }
 
@@ -120,14 +120,15 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean atHomingLocation() {
-    return getPosition() < ElevatorPosition.HOME.getPositionTicks()
-        || MathHelpers.epsilonEquals(getPosition(), ElevatorPosition.HOME.getPositionTicks(), 0.05);
+    return getPosition() < ElevatorPosition.HOME.getPositionRotations()
+        || MathHelpers.epsilonEquals(
+            getPosition(), ElevatorPosition.HOME.getPositionRotations(), 0.05);
   }
 
   @Override
   public void periodic() {
     Logger.recordOutput("Elevator Position", getPosition());
-    Logger.recordOutput("Elevator Goal Position", goalPositionTicks);
+    Logger.recordOutput("Elevator Goal Position", goalPositionRotations);
     Logger.recordOutput("Elevator At Goal Position", atPosition());
 
     // if being used in open loop (usually manual mode), disable the height limit
@@ -143,7 +144,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     // if we still intend to go to the home position, currently at alleged home, and should re-home,
     // then re-home
-    if (MathHelpers.epsilonEquals(goalPositionTicks, ElevatorPosition.HOME.getPositionTicks(), .02)
+    if (MathHelpers.epsilonEquals(
+            goalPositionRotations, ElevatorPosition.HOME.getPositionRotations(), .02)
         && atHomingLocation()
         && shouldHome) {
       setWantHome(true);
@@ -175,14 +177,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     UPPER_ALGAE(27),
     TRAVEL(5);
 
-    private final double positionTicks;
+    private final double positionRotations;
 
-    private ElevatorPosition(double positionTicks) {
-      this.positionTicks = positionTicks;
+    private ElevatorPosition(double positionRotations) {
+      this.positionRotations = positionRotations;
     }
 
-    public double getPositionTicks() {
-      return positionTicks;
+    public double getPositionRotations() {
+      return positionRotations;
     }
   }
 

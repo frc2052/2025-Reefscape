@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
@@ -35,8 +34,6 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   private PhotonTrackedTarget target;
 
   private Pose2d goalPose;
-  private Pose2d previousGoalPose;
-  private Timer sinceLastUpdatedGoalPose;
   private Supplier<AlignLocation> scoringLocation;
 
   private AutoAlignPlanner planner;
@@ -55,8 +52,6 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
 
     this.scoringLocation = scoringLocation;
     planner = new AutoAlignPlanner();
-    sinceLastUpdatedGoalPose = new Timer();
-    sinceLastUpdatedGoalPose.start();
 
     addRequirements(drivetrain);
   }
@@ -64,11 +59,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   @Override
   public SwerveRequest getSwerveRequest() {
     if (goalPose != null) {
-      Logger.recordOutput("GOAL ALIGN POSE", goalPose);
-      // return super.getSwerveRequest();
       return drive.withSpeeds(planner.calculate(robotState.getFieldToRobot(), goalPose));
-    } else if (sinceLastUpdatedGoalPose.get() < 2 && previousGoalPose != null) {
-      return drive.withSpeeds(planner.calculate(robotState.getFieldToRobot(), previousGoalPose));
     } else {
       return super.getSwerveRequest();
     }
@@ -77,12 +68,14 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   @Override
   public void initialize() {
     goalPose = null;
+    robotState.setReefTracking(true);
   }
 
   @Override
   public void execute() {
     Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
     if (tar.isPresent()) {
+      Logger.recordOutput("Target for Alignment", true);
       target = tar.get().getBestTarget();
       Optional<Pose3d> tagPose =
           VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(target.fiducialId);
@@ -94,15 +87,13 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
                     tagPose.get().toPose2d(),
                     Meters.of(scoringLocation.get().transform.getX()),
                     robotState.isRedAlliance()));
-        previousGoalPose = goalPose;
-        sinceLastUpdatedGoalPose.reset();
-        Logger.recordOutput("Target for Alignment", true);
+        Logger.recordOutput("Tag Pose Present", true);
       } else {
+        Logger.recordOutput("Tag Pose Present", false);
         goalPose = null;
       }
     } else {
       Logger.recordOutput("Target for Alignment", false);
-      goalPose = null;
       target = null;
     }
     super.execute();
@@ -110,8 +101,6 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
 
   public void setGoal(Pose2d goalPose) {
     this.goalPose = goalPose;
-    previousGoalPose = goalPose;
-    sinceLastUpdatedGoalPose.reset();
   }
 
   public AlignLocation getScoringLocation() {
@@ -121,12 +110,17 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   @Override
   public boolean isFinished() {
     if (planner.getAutoAlignComplete()) {
-      goalPose = null;
-      planner.resetPlanner();
-      System.out.println("===== DONE ALIGNING");
       return true;
     }
     return false;
+  }
+
+  @Override
+  public void end(boolean interuppted) {
+    goalPose = null;
+    target = null;
+    planner.resetPlanner();
+    robotState.setReefTracking(false);
   }
 
   public enum AlignLocation { // provides an offset from the april tag

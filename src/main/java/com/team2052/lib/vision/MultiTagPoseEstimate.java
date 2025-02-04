@@ -23,14 +23,19 @@ public class MultiTagPoseEstimate {
   public double highestAmbiguity = 0.0;
   public double avgTagArea = 0.0;
   public final double poseDifference;
+  public boolean overrideStdDevs;
 
   public MultiTagPoseEstimate(
-      String cameraName, EstimatedRobotPose estimatedRobotPose, Pose2d currentRobotPose) {
+      String cameraName,
+      EstimatedRobotPose estimatedRobotPose,
+      Pose2d currentRobotPose,
+      boolean overrideStdDevs) {
     this.cameraName = cameraName;
     this.estimatedPose = estimatedRobotPose.estimatedPose;
     this.strategyUsed = estimatedRobotPose.strategy;
     this.targetsUsed = estimatedRobotPose.targetsUsed;
     this.timestampSeconds = estimatedRobotPose.timestampSeconds;
+    this.overrideStdDevs = overrideStdDevs;
 
     if (targetsUsed != null) {
       for (PhotonTrackedTarget target : targetsUsed) {
@@ -57,6 +62,9 @@ public class MultiTagPoseEstimate {
 
   private double calculateXYStdDevs() {
     double xyStds = VisionConstants.XY_STDDEV;
+    if (overrideStdDevs) {
+      return 0.1;
+    }
     if (targetsUsed.size() > 0) {
       // multiple targets detected
       if (targetsUsed.size() >= 2 && avgTagArea > 0.1) {

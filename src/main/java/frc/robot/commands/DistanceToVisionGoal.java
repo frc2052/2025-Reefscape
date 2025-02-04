@@ -39,7 +39,6 @@ public class DistanceToVisionGoal extends Command {
         return 50; // any number greater than our bound to switch to vision
       }
     } else {
-      System.out.println("==== NO TARGET");
       return 50;
     }
 
@@ -56,10 +55,6 @@ public class DistanceToVisionGoal extends Command {
   @Override
   public void execute() {
     double dist = getDistanceToGoal(alignLocSupplier);
-    if (dist != 50.0) {
-      System.out.println("SEES TARGET, DISTANCE: " + dist);
-    } else {
-    }
   }
 
   @Override
