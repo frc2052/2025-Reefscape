@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
@@ -66,7 +67,7 @@ public class VisionSimSubsystem extends SubsystemBase {
     Pose2d newOdometryPose = state.getFieldToRobot();
     updateVisionSimWithPose(newOdometryPose);
     Logger.recordOutput("Vision Sim Sees Target", isSeeingTarget());
-    Logger.recordOutput("Current Sim ID", getCurrentTagID());
+    Logger.recordOutput("Current Sim ID", getAllVisibleTagIDs());
   }
 
   public void updateVisionSimWithPose(Pose2d pose) {
@@ -75,7 +76,9 @@ public class VisionSimSubsystem extends SubsystemBase {
     debugField.getObject("EstimatedRobot").setPose(pose);
   }
 
-  public void getDebugField() { // Raw Stream @ localhost:1181, Processed Stream (w/ outlined tags) @ localhost:1182
+  public void
+      getDebugField() { // Raw Stream @ localhost:1181, Processed Stream (w/ outlined tags) @
+    // localhost:1182
     visionSim.getDebugField();
   }
 
@@ -103,5 +106,21 @@ public class VisionSimSubsystem extends SubsystemBase {
     PhotonTrackedTarget target = result.getBestTarget();
 
     return target.getFiducialId();
+  }
+
+  public int[] getAllVisibleTagIDs() {
+    List<PhotonPipelineResult> results = reefCam.getAllUnreadResults();
+    ArrayList<Integer> tagIDs = new ArrayList<>();
+    List<PhotonTrackedTarget> targets;
+    for (PhotonPipelineResult result : results) {
+      if (result.hasTargets()) {
+        targets = result.getTargets();
+        for (PhotonTrackedTarget target : targets) {
+          tagIDs.add(target.getFiducialId());
+        }
+      }
+    }
+
+    return tagIDs.stream().mapToInt(Integer::intValue).toArray();
   }
 }
