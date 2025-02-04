@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
 import frc.robot.commands.drive.AlignWithReefCommand;
+import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
@@ -61,6 +62,16 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command delaySelectedTime() {
     return new WaitCommand(autoFactory.getSavedWaitSeconds());
   }
+
+  protected Command getBumpCommand() {
+    if (shouldbump) {
+      return new DefaultDriveCommand(() -> -0.5, () -> 0, () -> 0, () -> false).withDeadline(new WaitCommand(1));
+    } else {
+      return new InstantCommand();
+    }
+  }
+
+
 
   private void setStartPose(Pose2d pathStartPose) {
     addCommands(new InstantCommand(() -> drivetrain.resetPose(pathStartPose)));

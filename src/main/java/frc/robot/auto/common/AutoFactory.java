@@ -19,6 +19,8 @@ public class AutoFactory {
   private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
   private final Supplier<Double> waitSecondsEntrySupplier =
       () -> Dashboard.getInstance().getWaitSeconds();
+  private final Supplier<Boolean> bumpNeededSupplier = 
+      () -> Dashboard.getInstance().getBumpNeeded();
 
   private Auto currentAuto;
   private AutoBase compiledAuto;
