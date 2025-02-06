@@ -18,7 +18,6 @@ import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.DefaultDriveCommand;
-import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.elevator.ElevatorCommandFactory;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
@@ -123,16 +122,23 @@ public class RobotContainer {
   private void configurePOVBindings() {
     ControlBoard controlBoard = ControlBoard.getInstance();
 
-    controlBoard.povUp().whileTrue(new DefaultDriveCommand(() -> 0.1, () -> 0.0, () -> 0.0, () -> false));
+    controlBoard
+        .povUp()
+        .whileTrue(new DefaultDriveCommand(() -> 0.2, () -> 0.0, () -> 0.0, () -> false));
 
     controlBoard
-        .povRight().whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.1, () -> 0.0, () -> false));
+        .povRight()
+        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.2, () -> 0.0, () -> false));
 
     controlBoard
-        .povDown().whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.1, () -> 0.0, () -> false));
+        .povDown()
+        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.2, () -> 0.0, () -> false));
 
     controlBoard
-        .povLeft().whileTrue(new DefaultDriveCommand(() -> 0.0, () -> -0.1, () -> 0.0, () -> false));
+        .povLeft()
+        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> -0.2, () -> 0.0, () -> false));
+
+    controlBoard.povUpRight().onTrue(new InstantCommand(() -> System.out.println("UP RIGHT")));
 
     System.out.println("POV Bindings Configured");
   }

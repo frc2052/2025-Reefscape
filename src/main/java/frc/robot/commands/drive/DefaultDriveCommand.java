@@ -56,6 +56,10 @@ public class DefaultDriveCommand extends Command {
       DoubleSupplier ySupplier,
       DoubleSupplier rotationSupplier,
       BooleanSupplier fieldCentricSupplier) {
+
+    if (xSupplier.getAsDouble() == 0.2) {
+      System.out.println("yi*********************");
+    }
     this.xSupplier = xSupplier;
     this.ySupplier = ySupplier;
     this.rotationSupplier = rotationSupplier;

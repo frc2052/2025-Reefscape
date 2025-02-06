@@ -18,7 +18,7 @@ public interface ISecondaryControlBoard {
   Trigger reefGH();
 
   Trigger reefIJ();
-  
+
   Trigger reefKL();
 
   Trigger setGoalL1();
