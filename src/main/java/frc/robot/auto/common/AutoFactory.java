@@ -19,7 +19,7 @@ public class AutoFactory {
   private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
   private final Supplier<Double> waitSecondsEntrySupplier =
       () -> Dashboard.getInstance().getWaitSeconds();
-  private final Supplier<Boolean> bumpNeededSupplier = 
+  private final Supplier<Boolean> bumpNeededSupplier =
       () -> Dashboard.getInstance().getBumpNeeded();
 
   private Auto currentAuto;
@@ -86,6 +86,10 @@ public class AutoFactory {
 
   public double getSavedWaitSeconds() {
     return savedWaitSeconds;
+  }
+
+  public boolean getBumpNeeded() {
+    return bumpNeededSupplier.get();
   }
 
   public static enum Auto {
