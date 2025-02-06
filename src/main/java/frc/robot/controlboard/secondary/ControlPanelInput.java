@@ -22,7 +22,77 @@ public class ControlPanelInput implements ISecondaryControlBoard {
   }
 
   @Override
-  public Trigger climb() {
+  public Trigger homeElevator() {
+    return new JoystickButton(controlPanel, 2);
+  }
+
+  @Override
+  public Trigger manualUp() {
     return new JoystickButton(controlPanel, 1);
+  }
+
+  @Override
+  public Trigger manualDown() {
+    return new JoystickButton(controlPanel, 6);
+  }
+
+  @Override 
+  public Trigger reefAB() {
+    return new JoystickButton(controlPanel, 3);
+  }
+
+  @Override
+  public Trigger reefCD() {
+    return new JoystickButton(controlPanel, 4);
+  }
+
+  @Override
+  public Trigger reefEF() {
+    return new JoystickButton(controlPanel, 10);
+  }
+
+  @Override
+  public Trigger reefGH() {
+    return new JoystickButton(controlPanel, 11);
+  }
+
+  @Override
+  public Trigger reefIJ() {
+    return new JoystickButton(controlPanel, 12);
+  }
+
+  @Override
+  public Trigger reefKL() {
+    return new JoystickButton(controlPanel, 5);
+  }
+
+  @Override
+  public Trigger setGoalL1() {
+    return new JoystickButton(controlPanel, 11);
+  }
+
+  @Override
+  public Trigger setGoalL2() {
+    return new JoystickButton(controlPanel, 12);
+  }
+
+  @Override
+  public Trigger setGoalL3() {
+    return new JoystickButton(controlPanel, 5);
+  }
+
+  @Override
+  public Trigger setGoalL4() {
+    return new JoystickButton(controlPanel, 7);
+  }
+
+  @Override
+  public Trigger setGoalUpperAlgae() {
+    return new JoystickButton(controlPanel, 8);
+  }
+
+  @Override
+  public Trigger setGoalLowerAlgae() {
+    return new JoystickButton(controlPanel, 9);
   }
 }

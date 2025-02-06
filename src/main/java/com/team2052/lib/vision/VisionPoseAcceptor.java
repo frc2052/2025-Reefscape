@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class VisionPoseAcceptor {
 
@@ -26,6 +27,8 @@ public class VisionPoseAcceptor {
         || estimatedPose.getTranslation().getY()
             > FieldConstants.FIELD_WIDTH.in(Meters)
                 + VisionConstants.FIELD_BORDER_MARGIN.in(Meters)) {
+      System.out.println("outside field");
+      Logger.recordOutput("outside field update", estimatedPose);
       return false;
     }
 

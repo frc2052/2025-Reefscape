@@ -83,6 +83,11 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
+  public Trigger distanceToTag() {
+    return controller.back().and(controller.start().negate());
+  }
+
+  @Override
   public Trigger intake() {
     return controller.leftTrigger(0.125);
   }
@@ -98,7 +103,22 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
-  public Trigger aimToAmp() {
-    return controller.button(2);
+  public Trigger sysIDQuasiForward() {
+    return new Trigger(() -> false);
+  }
+
+  @Override
+  public Trigger sysIDQuasiReverse() {
+    return new Trigger(() -> false);
+  }
+
+  @Override
+  public Trigger sysIDDynamicForward() {
+    return new Trigger(() -> false);
+  }
+
+  @Override
+  public Trigger sysIDDynamicReverse() {
+    return new Trigger(() -> false);
   }
 }

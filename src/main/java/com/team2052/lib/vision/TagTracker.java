@@ -4,7 +4,6 @@ import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.RobotState;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +18,8 @@ public class TagTracker {
   private PhotonPoseEstimator poseEstimator;
   public PhotonCamera photonCamera;
   public TagTrackerConstants constants;
-  public RobotState robotState;
+  private final RobotState robotState;
+  private List<PhotonPipelineResult> latestResults;
 
   public TagTracker(TagTrackerConstants camConstants, RobotState robotState) {
     this.constants = camConstants;
@@ -34,17 +34,18 @@ public class TagTracker {
     return photonCamera.getName();
   }
 
-  public Optional<PhotonTrackedTarget> getClosestTagToCamera() {
-    PhotonTrackedTarget closestTarget = null;
-    for (PhotonPipelineResult r : photonCamera.getAllUnreadResults()) {
+  public Optional<PhotonPipelineResult> getClosestTagToCamera() {
+    PhotonPipelineResult closestTarget = null;
+    for (PhotonPipelineResult r : latestResults) {
       if (r.hasTargets()) {
         PhotonTrackedTarget target = r.getBestTarget();
         if (closestTarget == null) {
-          closestTarget = r.getBestTarget();
+          closestTarget = r;
         } else if (target.getBestCameraToTarget()
             == MathHelpers.getSmallestTransform(
-                target.getBestCameraToTarget(), closestTarget.getBestCameraToTarget())) {
-          closestTarget = r.getBestTarget();
+                target.getBestCameraToTarget(),
+                closestTarget.getBestTarget().getBestCameraToTarget())) {
+          closestTarget = r;
         }
       }
     }
@@ -52,24 +53,30 @@ public class TagTracker {
     return Optional.ofNullable(closestTarget);
   }
 
-  public List<MultiTagPoseEstimate> getAllResults() {
+  public List<MultiTagPoseEstimate> getAllResults(boolean overrideStdDevs) {
     List<MultiTagPoseEstimate> estimates = new ArrayList<MultiTagPoseEstimate>();
-    List<PhotonPipelineResult> latestResults = photonCamera.getAllUnreadResults();
+    latestResults = photonCamera.getAllUnreadResults();
     for (int i = 0; i < latestResults.size(); i++) {
-      if(resultToMultiTag(latestResults.get(i)).isPresent()) {
-        estimates.add(resultToMultiTag(latestResults.get(i)).get());
+      PhotonPipelineResult result = latestResults.get(i);
+      Optional<MultiTagPoseEstimate> estimate = resultToMultiTag(result, overrideStdDevs);
+      if (estimate.isPresent()) {
+        estimates.add(estimate.get());
       }
     }
 
     return estimates;
   }
 
-  public Optional<MultiTagPoseEstimate> resultToMultiTag(PhotonPipelineResult result) {
+  public Optional<MultiTagPoseEstimate> resultToMultiTag(
+      PhotonPipelineResult result, boolean overrideStdDevs) {
     Optional<EstimatedRobotPose> estimatedRobotPose = poseEstimator.update(result);
     if (estimatedRobotPose.isPresent()) {
       return Optional.of(
           new MultiTagPoseEstimate(
-              this.photonCamera.getName(), estimatedRobotPose.get(), robotState.getFieldToRobot()));
+              this.photonCamera.getName(),
+              estimatedRobotPose.get(),
+              robotState.getFieldToRobot(),
+              overrideStdDevs));
     }
 
     return Optional.empty();

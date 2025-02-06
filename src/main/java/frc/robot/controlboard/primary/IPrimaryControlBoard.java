@@ -31,6 +31,8 @@ public interface IPrimaryControlBoard {
 
   Trigger resetGyro();
 
+  Trigger distanceToTag();
+
   // Real Controls
   Trigger intake();
 
@@ -38,5 +40,11 @@ public interface IPrimaryControlBoard {
 
   Trigger reefAlignment();
 
-  Trigger aimToAmp();
+  Trigger sysIDQuasiForward();
+
+  Trigger sysIDQuasiReverse();
+
+  Trigger sysIDDynamicForward();
+
+  Trigger sysIDDynamicReverse();
 }

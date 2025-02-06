@@ -2,6 +2,14 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -12,6 +20,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -22,6 +31,59 @@ import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Constants {
+  // spotless:off
+  public static final class ElevatorConstants {
+    public static final boolean ELEVATOR_MOTORS_INVERTED = false;
+
+    public static final double TICKS_DEADZONE = 0.1;
+
+    public static final double MANUAL_MOTOR_SPEED = 0.2;
+    public static final double HOMING_SPEED = -0.2;
+
+    public static final Slot0Configs SLOT0_CONFIGS = 
+        new Slot0Configs()
+            .withKS(0.25)
+            .withKV(0.12)
+            .withKA(0.01)
+            .withKP(4.8)
+            .withKI(0)
+            .withKD(0.1);
+
+    public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
+        new CurrentLimitsConfigs()
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(Amps.of(40))
+            .withSupplyCurrentLowerLimit(Amps.of(40))
+            .withSupplyCurrentLowerTime(Seconds.of(0.1));
+
+    // set Motion Magic settings
+    public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
+        new MotionMagicConfigs()
+            .withMotionMagicCruiseVelocity(160) 
+            .withMotionMagicAcceleration(160) 
+            .withMotionMagicJerk(600);
+
+    public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
+        new MotorOutputConfigs()
+            .withInverted(
+                ElevatorConstants.ELEVATOR_MOTORS_INVERTED
+                    ? InvertedValue.Clockwise_Positive
+                    : InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake); 
+
+    public static final SoftwareLimitSwitchConfigs SOFTWARE_LIMIT_SWITCH_CONFIG =
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitEnable(true)
+            .withForwardSoftLimitThreshold(63);
+
+    public static final TalonFXConfiguration MOTOR_CONFIG =
+        new TalonFXConfiguration()
+            .withCurrentLimits(CURRENT_LIMIT_CONFIG)
+            .withSoftwareLimitSwitch(SOFTWARE_LIMIT_SWITCH_CONFIG)
+            .withMotorOutput(MOTOR_OUTPUT_CONFIG)
+            .withMotionMagic(MOTION_MAGIC_CONFIG)
+            .withSlot0(SLOT0_CONFIGS);
+  }
 
   public static class DriverConstants {
     public static final boolean FORCE_GAMEPAD = false;
@@ -58,10 +120,29 @@ public class Constants {
 
     public static final Angle HEADING_TOLERANCE = Degrees.of(3);
   }
+ public static final class ClimberConstants {
+    public static final boolean climberMotorInverted = false;
+    public static final int climberSpeed = 0; // TODO: needs to be updated
+  }
+  public static class ArmConstants {
+    public static final boolean ARM_MOTOR_INVERTED = false;
+
+    public static class PIDs {
+      public static final double KP = 0.0;
+      public static final double KI = 0.0;
+      public static final double KD = 0.0;
+    }
+  }
+
+  public static class HandConstants {
+    public static final boolean HAND_MOTOR_INVERTED = false;
+    public static final double HAND_MOTOR_CURRENT_LIMIT = 0;
+    public static final double HAND_MOTOR_SPEED = 0;
+  }
 
   public static class VisionConstants {
-    public static final double XY_STDDEV = 0.2;
-    public static final double HEADING_STDDEV = .1;
+    public static final double XY_STDDEV = 0.3;
+    public static final double HEADING_STDDEV = 5.0;
     public static final Matrix<N3, N1> VISION_STDDEV =
         VecBuilder.fill(XY_STDDEV, XY_STDDEV, HEADING_STDDEV);
 
@@ -72,28 +153,24 @@ public class Constants {
     public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =
         AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
-    /*
-     * Camera Order:
-     * 0 1
-     */
     /* Front Left Camera */
     public static final class Camera0Constants {
       public static final String CAMERA_NAME = "KrawlerCam_000";
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
-      // public static final Distance X_OFFSET = Inches.of(0.0);
-      // public static final Distance Y_OFFSET = Inches.of(0.0);
-      // public static final Distance Z_OFFSET = Inches.of(0.0);
+      public static final Distance X_OFFSET = Inches.of(10.5);
+      public static final Distance Y_OFFSET = Inches.of(0.0);
+      public static final Distance Z_OFFSET = Inches.of(0.0);
 
-      // public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
-      // public static final Angle THETA_Y_OFFSET = Degrees.of(-15); // pitch
-      // public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
+      public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
+      public static final Angle THETA_Y_OFFSET = Degrees.of(-15); // pitch
+      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
 
-      public static final Transform3d ROBOT_TO_CAMERA_METERS = new Transform3d();
-      // new Transform3d(
-      //     new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
-      //     new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
+      public static final Transform3d ROBOT_TO_CAMERA_METERS =
+          new Transform3d(
+              new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
+              new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
 
       public static TagTrackerConstants TagTrackerConstants() {
         return new TagTrackerConstants(
@@ -128,14 +205,19 @@ public class Constants {
   }
 
   public static class FieldConstants {
-    public static final Distance FIELD_LENGTH = Centimeters.of(805);
-    public static final Distance FIELD_WIDTH = Centimeters.of(1755);
+    public static final Distance FIELD_LENGTH = Centimeters.of(1755);
+    public static final Distance FIELD_WIDTH = Centimeters.of(805);
+    public static final Translation2d BLUE_REEF_CENTER = new Translation2d(Inches.of(177.06927), Inches.of(158.5));
+    public static final Translation2d RED_REEF_CENTER = new Translation2d(Inches.of(FIELD_LENGTH.in(Inches) - 177.06927), Inches.of(158.5));
+
   }
 
   public static final class DashboardConstants {
     public static final String DRIVE_MODE_KEY = "Drive Mode";
     public static final String AUTO_COMPILED_KEY = "Auto Compiled";
     public static final String AUTO_DESCRIPTION_KEY = "Auto Description";
+    public static final String WAIT_SECONDS_SAVED_KEY = "Wait Seconds Saved";
+    public static final String WAIT_SECONDS_DISPLAY_KEY = "Wait Seconds Display";
   }
 
   public static final class PathPlannerConstants {
@@ -164,14 +246,7 @@ public class Constants {
             new PIDConstants(ROTATION_KP, ROTATION_KI, ROTATION_KD));
   }
 
-  public static final class MotorID {
-    public static final int CLIMBING_MOTOR_ID = 0;
-    public static final int CLIMBER_MOTOR_ID = 0;
-  }
-  public static final class ClimberConstants {
-    public static final boolean climberMotorInverted = false;
-    public static final int climberSpeed = 0; // TODO: needs to be updated
 
-  }
+ 
 
 }

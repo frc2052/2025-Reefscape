@@ -98,13 +98,13 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger reefAlignment() {
-    return primaryControlBoard.reefAlignment();
+  public Trigger distanceToTag() {
+    return primaryControlBoard.distanceToTag();
   }
 
   @Override
-  public Trigger aimToAmp() {
-    return primaryControlBoard.aimToAmp();
+  public Trigger reefAlignment() {
+    return primaryControlBoard.reefAlignment();
   }
 
   @Override
@@ -117,10 +117,100 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
     return primaryControlBoard.shoot();
   }
 
+  @Override
+  public Trigger sysIDQuasiForward() {
+    return primaryControlBoard.sysIDQuasiForward();
+  }
+
+  @Override
+  public Trigger sysIDQuasiReverse() {
+    return primaryControlBoard.sysIDQuasiReverse();
+  }
+
+  @Override
+  public Trigger sysIDDynamicForward() {
+    return primaryControlBoard.sysIDDynamicForward();
+  }
+
+  @Override
+  public Trigger sysIDDynamicReverse() {
+    return primaryControlBoard.sysIDDynamicReverse();
+  }
+
   /* Secondary */
 
   @Override
-  public Trigger climb() {
-    return secondaryControlBoard.climb();
+  public Trigger homeElevator() {
+    return secondaryControlBoard.homeElevator();
+  }
+
+  @Override
+  public Trigger manualUp() {
+    return secondaryControlBoard.manualUp();
+  }
+
+  @Override
+  public Trigger manualDown() {
+    return secondaryControlBoard.manualDown();
+  }
+
+  @Override
+  public Trigger reefAB() {
+    return secondaryControlBoard.reefAB();
+  }
+
+  @Override
+  public Trigger reefCD() {
+    return secondaryControlBoard.reefCD();
+  }
+
+  @Override
+  public Trigger reefEF() {
+    return secondaryControlBoard.reefEF();
+  }
+
+  @Override
+  public Trigger reefGH() {
+    return secondaryControlBoard.reefGH();
+  }
+
+  @Override
+  public Trigger reefIJ() {
+    return secondaryControlBoard.reefIJ();
+  }
+
+  @Override
+  public Trigger reefKL() {
+    return secondaryControlBoard.reefKL();
+  }
+
+  @Override
+  public Trigger setGoalL1() {
+    return secondaryControlBoard.setGoalL1();
+  }
+
+  @Override
+  public Trigger setGoalL2() {
+    return secondaryControlBoard.setGoalL2();
+  }
+
+  @Override
+  public Trigger setGoalL3() {
+    return secondaryControlBoard.setGoalL3();
+  }
+
+  @Override
+  public Trigger setGoalL4() {
+    return secondaryControlBoard.setGoalL4();
+  }
+
+  @Override
+  public Trigger setGoalUpperAlgae() {
+    return secondaryControlBoard.setGoalUpperAlgae();
+  }
+
+  @Override
+  public Trigger setGoalLowerAlgae() {
+    return secondaryControlBoard.setGoalLowerAlgae();
   }
 }

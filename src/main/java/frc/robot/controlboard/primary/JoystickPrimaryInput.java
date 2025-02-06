@@ -86,6 +86,11 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
+  public Trigger distanceToTag() {
+    return new JoystickButton(translateStick, 2);
+  }
+
+  @Override
   public Trigger intake() {
     return new JoystickButton(translateStick, 1);
   }
@@ -101,7 +106,22 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
-  public Trigger aimToAmp() {
-    return new JoystickButton(rotateStick, 4);
+  public Trigger sysIDQuasiForward() {
+    return new JoystickButton(translateStick, 7);
+  }
+
+  @Override
+  public Trigger sysIDQuasiReverse() {
+    return new JoystickButton(translateStick, 6);
+  }
+
+  @Override
+  public Trigger sysIDDynamicForward() {
+    return new JoystickButton(translateStick, 5);
+  }
+
+  @Override
+  public Trigger sysIDDynamicReverse() {
+    return new JoystickButton(translateStick, 10);
   }
 }

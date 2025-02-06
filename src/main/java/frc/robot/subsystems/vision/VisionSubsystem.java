@@ -11,7 +11,6 @@ import com.team2052.lib.vision.VisionPoseAcceptor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants.Camera0Constants;
-import frc.robot.Constants.VisionConstants.Camera1Constants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class VisionSubsystem extends SubsystemBase {
   private DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -46,25 +44,28 @@ public class VisionSubsystem extends SubsystemBase {
   private VisionSubsystem() {
     Collections.addAll(
         localizationTagTrackers,
-        new TagTracker(Camera1Constants.TagTrackerConstants(), robotState));
+        // new TagTracker(Camera1Constants.TagTrackerConstants(), robotState),
+        reefTagTracker);
   }
 
-  public Optional<PhotonTrackedTarget> getReefCamClosestTarget() {
+  public Optional<PhotonPipelineResult> getReefCamClosestTarget() {
     return reefTagTracker.getClosestTagToCamera();
   }
 
-  private void updateLocalizationTrackers() {
+  private void updateTagTrackers() {
     localizationTagTrackers.parallelStream().forEach(this::pullCameraData);
   }
 
   private void pullCameraData(TagTracker tagTracker) {
-    synchronizedVisionUpdates.addAll(tagTracker.getAllResults());
+    synchronizedVisionUpdates.addAll(
+        tagTracker.getAllResults(
+            robotState.getIsReefTracking() && tagTracker == reefTagTracker ? true : false));
   }
 
   private void updateEstimator(MultiTagPoseEstimate update) {
     if (VisionPoseAcceptor.shouldAccept(
         update,
-        MathHelpers.norm(drivetrain.getCurrentRobotChassisSpeeds()),
+        MathHelpers.chassisSpeedsNorm(drivetrain.getCurrentRobotChassisSpeeds()),
         robotState.getFieldToRobot(),
         DriverStation.isAutonomous())) {
       DrivetrainSubsystem.getInstance().addVisionUpdate(update);
@@ -80,7 +81,7 @@ public class VisionSubsystem extends SubsystemBase {
   public void periodic() {
     synchronizedVisionUpdates.clear();
 
-    updateLocalizationTrackers();
+    updateTagTrackers();
 
     synchronizedVisionUpdates.forEach(this::updateEstimator);
   }
