@@ -79,16 +79,16 @@ public class SnapToLocationAngleCommand extends SnapToAngleCommand {
     }
   }
 
-  public enum SnapLocation {
+  public enum SnapLocation { // blue
     FORWARD(Degrees.of(0)),
     LeftCoralStation(Degrees.of(306)),
     RightCoralStation(Degrees.of(-306)),
-    ReefAB(Degrees.of(180)),
-    ReefCD(Degrees.of(240)),
-    ReefEF(Degrees.of(300)),
-    ReefGH(Degrees.of(0)),
-    ReefIJ(Degrees.of(90)),
-    ReefKL(Degrees.of(120));
+    ReefAB(Degrees.of(0)), // reverse gh
+    ReefCD(Degrees.of(90)), // reverse ij
+    ReefEF(Degrees.of(120)), // reverse kl
+    ReefGH(Degrees.of(180)),
+    ReefIJ(Degrees.of(240)),
+    ReefKL(Degrees.of(300));
 
     private Angle robotAngle;
 

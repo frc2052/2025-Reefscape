@@ -20,6 +20,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -68,7 +69,7 @@ public class Constants {
                 ElevatorConstants.ELEVATOR_MOTORS_INVERTED
                     ? InvertedValue.Clockwise_Positive
                     : InvertedValue.CounterClockwise_Positive)
-            .withNeutralMode(NeutralModeValue.Brake);
+            .withNeutralMode(NeutralModeValue.Brake); 
 
     public static final SoftwareLimitSwitchConfigs SOFTWARE_LIMIT_SWITCH_CONFIG =
         new SoftwareLimitSwitchConfigs()
@@ -201,14 +202,19 @@ public class Constants {
   }
 
   public static class FieldConstants {
-    public static final Distance FIELD_LENGTH = Centimeters.of(805);
-    public static final Distance FIELD_WIDTH = Centimeters.of(1755);
+    public static final Distance FIELD_LENGTH = Centimeters.of(1755);
+    public static final Distance FIELD_WIDTH = Centimeters.of(805);
+    public static final Translation2d BLUE_REEF_CENTER = new Translation2d(Inches.of(177.06927), Inches.of(158.5));
+    public static final Translation2d RED_REEF_CENTER = new Translation2d(Inches.of(FIELD_LENGTH.in(Inches) - 177.06927), Inches.of(158.5));
+
   }
 
   public static final class DashboardConstants {
     public static final String DRIVE_MODE_KEY = "Drive Mode";
     public static final String AUTO_COMPILED_KEY = "Auto Compiled";
     public static final String AUTO_DESCRIPTION_KEY = "Auto Description";
+    public static final String WAIT_SECONDS_SAVED_KEY = "Wait Seconds Saved";
+    public static final String WAIT_SECONDS_DISPLAY_KEY = "Wait Seconds Display";
   }
 
   public static final class PathPlannerConstants {

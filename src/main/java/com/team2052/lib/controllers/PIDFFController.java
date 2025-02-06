@@ -1,19 +1,20 @@
 package com.team2052.lib.controllers;
 
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 
 public class PIDFFController {
-  private PIDController pidController;
+  private ProfiledPIDController pidController;
   private SimpleMotorFeedforward feedforward;
 
-  public PIDFFController(double p, double i, double d) {
-    pidController = new PIDController(p, i, d);
-    feedforward = new SimpleMotorFeedforward(0, 0, 0);
+  public PIDFFController(double p, double i, double d, double maxVelo, double maxAccel) {
+    this(p, i, d, 0, 0, 0, maxVelo, maxAccel);
   }
 
-  public PIDFFController(double p, double i, double d, double s, double v, double a) {
-    pidController = new PIDController(p, i, d);
+  public PIDFFController(
+      double p, double i, double d, double s, double v, double a, double maxVelo, double maxAccel) {
+    pidController = new ProfiledPIDController(p, i, d, new Constraints(maxVelo, maxAccel));
     feedforward = new SimpleMotorFeedforward(s, v, a);
   }
 
@@ -26,7 +27,7 @@ public class PIDFFController {
   }
 
   public void setSetpoint(double s) {
-    pidController.setSetpoint(s);
+    pidController.setGoal(s);
   }
 
   public double calculate(double measurement) {

@@ -31,6 +31,8 @@ public interface IPrimaryControlBoard {
 
   Trigger resetGyro();
 
+  Trigger distanceToTag();
+
   // Real Controls
   Trigger intake();
 

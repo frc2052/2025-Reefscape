@@ -17,7 +17,7 @@ import java.util.function.DoubleSupplier;
 
 public class DefaultDriveCommand extends Command {
 
-  private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
+  protected final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
 
   private final DoubleSupplier xSupplier;
   private final DoubleSupplier ySupplier;

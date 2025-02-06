@@ -83,6 +83,11 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
+  public Trigger distanceToTag() {
+    return controller.back().and(controller.start().negate());
+  }
+
+  @Override
   public Trigger intake() {
     return controller.leftTrigger(0.125);
   }
