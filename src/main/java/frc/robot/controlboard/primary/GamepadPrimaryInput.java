@@ -78,6 +78,16 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
+  public Trigger povRotLeft() {
+    return controller.povLeft();
+  }
+
+  @Override
+  public Trigger povRotRight() {
+    return controller.povRight();
+  }
+
+  @Override
   public Trigger resetGyro() {
     return controller.back().and(controller.start().negate());
   }

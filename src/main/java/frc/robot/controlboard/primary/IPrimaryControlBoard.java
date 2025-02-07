@@ -29,6 +29,10 @@ public interface IPrimaryControlBoard {
 
   Trigger povUpLeft();
 
+  Trigger povRotLeft();
+
+  Trigger povRotRight();
+
   Trigger resetGyro();
 
   // Real Controls

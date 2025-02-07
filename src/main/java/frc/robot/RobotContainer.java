@@ -124,18 +124,41 @@ public class RobotContainer {
     controlBoard
         .povUp()
         .whileTrue(new DefaultDriveCommand(() -> 0.05, () -> 0.0, () -> 0.0, () -> false));
+    controlBoard
+        .povUpRight()
+        .whileTrue(new DefaultDriveCommand(() -> 0.05, () -> -0.05, () -> 0.0, () -> false));
 
     controlBoard
         .povRight()
         .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> -0.05, () -> 0.0, () -> false));
 
     controlBoard
+        .povDownRight()
+        .whileTrue(new DefaultDriveCommand(() -> -0.05, () -> -0.05, () -> 0.0, () -> false));
+
+    controlBoard
         .povDown()
         .whileTrue(new DefaultDriveCommand(() -> -0.05, () -> 0.0, () -> 0.0, () -> false));
 
     controlBoard
+        .povDownLeft()
+        .whileTrue(new DefaultDriveCommand(() -> -0.05, () -> 0.05, () -> 0.0, () -> false));
+
+    controlBoard
         .povLeft()
         .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.05, () -> 0.0, () -> false));
+
+    controlBoard
+        .povUpLeft()
+        .whileTrue(new DefaultDriveCommand(() -> 0.05, () -> 0.05, () -> 0.0, () -> false));
+
+    controlBoard
+        .povRotLeft()
+        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.0, () -> 0.05, () -> false));
+
+    controlBoard
+        .povRotRight()
+        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.0, () -> -0.05, () -> false));
 
     System.out.println("POV Bindings Configured");
   }

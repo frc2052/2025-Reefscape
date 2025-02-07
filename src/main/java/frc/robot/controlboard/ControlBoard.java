@@ -93,6 +93,16 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
+  public Trigger povRotLeft() {
+    return primaryControlBoard.povRotLeft();
+  }
+
+  @Override
+  public Trigger povRotRight() {
+    return primaryControlBoard.povRotRight();
+  }
+
+  @Override
   public Trigger resetGyro() {
     return primaryControlBoard.resetGyro();
   }

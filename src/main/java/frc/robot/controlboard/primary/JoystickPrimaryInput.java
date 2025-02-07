@@ -81,6 +81,16 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
+  public Trigger povRotLeft() {
+    return new Trigger(rotateStick.povLeft(povLooper));
+  }
+
+  @Override
+  public Trigger povRotRight() {
+    return new Trigger(rotateStick.povRight(povLooper));
+  }
+
+  @Override
   public Trigger resetGyro() {
     return new JoystickButton(translateStick, 8);
   }
