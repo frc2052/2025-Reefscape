@@ -103,7 +103,6 @@ public class DefaultDriveCommand extends Command {
 
   @Override
   public void execute() {
-    System.out.println(getX() * maxSpeed);
     drivetrain.setControl(getSwerveRequest());
   }
 
@@ -113,8 +112,7 @@ public class DefaultDriveCommand extends Command {
   }
 
   protected double slewAxis(SlewRateLimiter limiter, double value) {
-    // return limiter.calculate(Math.copySign(Math.pow(value, 3), value));
-
-    return limiter.calculate(value);
+    return value;
+    // return limiter.calculate(value);
   }
 }
