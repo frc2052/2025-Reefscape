@@ -52,12 +52,14 @@ public class VisionSubsystem extends SubsystemBase {
     return reefTagTracker.getClosestTagToCamera();
   }
 
-  private void updateLocalizationTrackers() {
+  private void updateTagTrackers() {
     localizationTagTrackers.parallelStream().forEach(this::pullCameraData);
   }
 
   private void pullCameraData(TagTracker tagTracker) {
-    synchronizedVisionUpdates.addAll(tagTracker.getAllResults());
+    synchronizedVisionUpdates.addAll(
+        tagTracker.getAllResults(
+            robotState.getIsReefTracking() && tagTracker == reefTagTracker ? true : false));
   }
 
   private void updateEstimator(MultiTagPoseEstimate update) {
@@ -79,7 +81,7 @@ public class VisionSubsystem extends SubsystemBase {
   public void periodic() {
     synchronizedVisionUpdates.clear();
 
-    updateLocalizationTrackers();
+    updateTagTrackers();
 
     synchronizedVisionUpdates.forEach(this::updateEstimator);
   }

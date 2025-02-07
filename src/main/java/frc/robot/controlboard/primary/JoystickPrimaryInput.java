@@ -96,6 +96,11 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
+  public Trigger distanceToTag() {
+    return new JoystickButton(translateStick, 2);
+  }
+
+  @Override
   public Trigger intake() {
     return new JoystickButton(translateStick, 1);
   }

@@ -108,6 +108,11 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
+  public Trigger distanceToTag() {
+    return primaryControlBoard.distanceToTag();
+  }
+
+  @Override
   public Trigger reefAlignment() {
     return primaryControlBoard.reefAlignment();
   }
