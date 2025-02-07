@@ -10,6 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.DriverConstants;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import java.util.function.BooleanSupplier;
@@ -112,7 +113,10 @@ public class DefaultDriveCommand extends Command {
   }
 
   protected double slewAxis(SlewRateLimiter limiter, double value) {
+    if (DriverConstants.DEV_CONTROLS) {
+      return limiter.calculate(Math.copySign(Math.pow(value, 2), value));
+    }
+
     return value;
-    // return limiter.calculate(value);
   }
 }
