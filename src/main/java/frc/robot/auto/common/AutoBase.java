@@ -65,8 +65,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
   protected Command getBumpCommand() {
     if (autoFactory.getBumpNeeded()) {
-      return new DefaultDriveCommand(() -> -0.5, () -> 0, () -> 0, () -> false)
-          .withDeadline(new WaitCommand(1));
+      return new DefaultDriveCommand(() -> -0.3, () -> 0, () -> 0, () -> false)
+          .withDeadline(new WaitCommand(0.5));
     } else {
       return new InstantCommand();
     }
