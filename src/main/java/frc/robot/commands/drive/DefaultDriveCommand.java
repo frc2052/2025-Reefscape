@@ -10,6 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.DriverConstants;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import java.util.function.BooleanSupplier;
@@ -38,13 +39,15 @@ public class DefaultDriveCommand extends Command {
       new SwerveRequest.FieldCentric()
           .withDeadband(maxSpeed * 0.05)
           .withRotationalDeadband(maxAngularRate * 0.05) // Add a 5% deadband
-          .withDriveRequestType(DriveRequestType.Velocity);
+          .withDriveRequestType(DriveRequestType.Velocity)
+          .withDesaturateWheelSpeeds(true);
 
   protected final SwerveRequest.RobotCentric robotCentricDrive =
       new SwerveRequest.RobotCentric()
           .withDeadband(maxSpeed * 0.05)
           .withRotationalDeadband(maxAngularRate * 0.05) // Add a 5% deadband
-          .withDriveRequestType(DriveRequestType.Velocity);
+          .withDriveRequestType(DriveRequestType.Velocity)
+          .withDesaturateWheelSpeeds(true);
 
   /**
    * @param xSupplier supplier for forward velocity.
@@ -56,6 +59,7 @@ public class DefaultDriveCommand extends Command {
       DoubleSupplier ySupplier,
       DoubleSupplier rotationSupplier,
       BooleanSupplier fieldCentricSupplier) {
+
     this.xSupplier = xSupplier;
     this.ySupplier = ySupplier;
     this.rotationSupplier = rotationSupplier;
@@ -109,6 +113,10 @@ public class DefaultDriveCommand extends Command {
   }
 
   protected double slewAxis(SlewRateLimiter limiter, double value) {
-    return limiter.calculate(Math.copySign(Math.pow(value, 2), value));
+    if (DriverConstants.DEV_CONTROLS) {
+      return limiter.calculate(Math.copySign(Math.pow(value, 2), value));
+    }
+
+    return value;
   }
 }

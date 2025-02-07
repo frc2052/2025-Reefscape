@@ -36,7 +36,7 @@ public class ControlPanelInput implements ISecondaryControlBoard {
     return new JoystickButton(controlPanel, 6);
   }
 
-  @Override 
+  @Override
   public Trigger reefAB() {
     return new JoystickButton(controlPanel, 3);
   }
