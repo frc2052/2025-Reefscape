@@ -7,7 +7,6 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -124,21 +123,19 @@ public class RobotContainer {
 
     controlBoard
         .povUp()
-        .whileTrue(new DefaultDriveCommand(() -> 0.2, () -> 0.0, () -> 0.0, () -> false));
+        .whileTrue(new DefaultDriveCommand(() -> 0.05, () -> 0.0, () -> 0.0, () -> false));
 
     controlBoard
         .povRight()
-        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.2, () -> 0.0, () -> false));
+        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> -0.05, () -> 0.0, () -> false));
 
     controlBoard
         .povDown()
-        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.2, () -> 0.0, () -> false));
+        .whileTrue(new DefaultDriveCommand(() -> -0.05, () -> 0.0, () -> 0.0, () -> false));
 
     controlBoard
         .povLeft()
-        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> -0.2, () -> 0.0, () -> false));
-
-    controlBoard.povUpRight().onTrue(new InstantCommand(() -> System.out.println("UP RIGHT")));
+        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.05, () -> 0.0, () -> false));
 
     System.out.println("POV Bindings Configured");
   }
@@ -154,7 +151,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("New Auto");
-    // return autoFactory.getCompiledAuto();
+    return autoFactory.getCompiledAuto();
   }
 }

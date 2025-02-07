@@ -38,13 +38,15 @@ public class DefaultDriveCommand extends Command {
       new SwerveRequest.FieldCentric()
           .withDeadband(maxSpeed * 0.05)
           .withRotationalDeadband(maxAngularRate * 0.05) // Add a 5% deadband
-          .withDriveRequestType(DriveRequestType.Velocity);
+          .withDriveRequestType(DriveRequestType.Velocity)
+          .withDesaturateWheelSpeeds(true);
 
   protected final SwerveRequest.RobotCentric robotCentricDrive =
       new SwerveRequest.RobotCentric()
           .withDeadband(maxSpeed * 0.05)
           .withRotationalDeadband(maxAngularRate * 0.05) // Add a 5% deadband
-          .withDriveRequestType(DriveRequestType.Velocity);
+          .withDriveRequestType(DriveRequestType.Velocity)
+          .withDesaturateWheelSpeeds(true);
 
   /**
    * @param xSupplier supplier for forward velocity.
@@ -57,9 +59,6 @@ public class DefaultDriveCommand extends Command {
       DoubleSupplier rotationSupplier,
       BooleanSupplier fieldCentricSupplier) {
 
-    if (xSupplier.getAsDouble() == 0.2) {
-      System.out.println("yi*********************");
-    }
     this.xSupplier = xSupplier;
     this.ySupplier = ySupplier;
     this.rotationSupplier = rotationSupplier;
@@ -104,6 +103,7 @@ public class DefaultDriveCommand extends Command {
 
   @Override
   public void execute() {
+    System.out.println(getX() * maxSpeed);
     drivetrain.setControl(getSwerveRequest());
   }
 
@@ -113,6 +113,8 @@ public class DefaultDriveCommand extends Command {
   }
 
   protected double slewAxis(SlewRateLimiter limiter, double value) {
-    return limiter.calculate(Math.copySign(Math.pow(value, 2), value));
+    // return limiter.calculate(Math.copySign(Math.pow(value, 3), value));
+
+    return limiter.calculate(value);
   }
 }
