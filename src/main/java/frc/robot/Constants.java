@@ -156,7 +156,7 @@ public class Constants {
         new FeedbackConfigs()
             .withFeedbackRemoteSensorID(Ports.ARM_CANCODER_ID)
             .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-            .withSensorToMechanismRatio(99.556);
+            .withRotorToSensorRatio(99.556);
     
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
         new SoftwareLimitSwitchConfigs()

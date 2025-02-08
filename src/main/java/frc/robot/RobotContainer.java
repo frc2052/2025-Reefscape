@@ -16,17 +16,16 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.DistanceToVisionGoal;
+import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
-import frc.robot.commands.elevator.ElevatorCommandFactory;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
+import frc.robot.subsystems.ArmSubsystem.ArmPosition;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.Telemetry;
@@ -123,36 +122,44 @@ public class RobotContainer {
         .onTrue(Commands.runOnce(SignalLogger::start))
         .onFalse(Commands.runOnce(SignalLogger::stop));
 
-    controlBoard
-        .manualUp()
-        .onTrue(ElevatorSubsystem.getInstance().manualUp())
-        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
+    // controlBoard
+    //     .manualUp()
+    //     .onTrue(ElevatorSubsystem.getInstance().manualUp())
+    //     .onFalse(ElevatorSubsystem.getInstance().stopElevator());
 
-    controlBoard
-        .manualDown()
-        .onTrue(ElevatorSubsystem.getInstance().manualDown())
-        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
+    // controlBoard
+    //     .manualDown()
+    //     .onTrue(ElevatorSubsystem.getInstance().manualDown())
+    //     .onFalse(ElevatorSubsystem.getInstance().stopElevator());
 
-    controlBoard
-        .homeElevator()
-        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.HOME));
+    // controlBoard
+    //     .homeElevator()
+    //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.HOME));
+    controlBoard.setGoalL1().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.L1));
 
-    controlBoard
-        .setGoalL1()
-        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L1));
-
-    controlBoard
-        .setGoalL2()
-        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L2));
-    controlBoard
-        .setGoalL3()
-        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L3));
-    controlBoard
-        .setGoalL4()
-        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L4));
+    controlBoard.setGoalL2().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.HANDOFF));
+    controlBoard.setGoalL3().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.MID_LEVEL));
+    controlBoard.setGoalL4().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.L4));
     controlBoard
         .setGoalUpperAlgae()
-        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.UPPER_ALGAE));
+        .onTrue(ArmCommandFactory.setArmPosition(ArmPosition.UPPER_ALGAE_DESCORE));
+
+    // controlBoard
+    //     .setGoalL1()
+    //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L1));
+
+    // controlBoard
+    //     .setGoalL2()
+    //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L2));
+    // controlBoard
+    //     .setGoalL3()
+    //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L3));
+    // controlBoard
+    //     .setGoalL4()
+    //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L4));
+    // controlBoard
+    //     .setGoalUpperAlgae()
+    //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.UPPER_ALGAE));
     // controlBoard
     //     .setElevatorPositionLowerAlgae()
     //     .whileTrue(SuperstructureCommandFactory.ToLevel.DESCORE_LOW_ALGAE.getCommand());

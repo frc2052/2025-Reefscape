@@ -93,13 +93,13 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public enum ArmPosition { // TODO: set angles for each position
-    HANDOFF(Degrees.of(0)),
+    HANDOFF(Degrees.of(300)),
     TRAVEL(Degrees.of(180)),
-    L1(Degrees.of(0)),
-    MID_LEVEL(Degrees.of(0)), // for both L2 and L3
-    L4(Degrees.of(0)),
-    UPPER_ALGAE_DESCORE(Degrees.of(0)),
-    LOWER_ALGAE_DESCORE(Degrees.of(0));
+    L1(Degrees.of(110)),
+    MID_LEVEL(Degrees.of(55)), // for both L2 and L3
+    L4(Degrees.of(75)),
+    UPPER_ALGAE_DESCORE(Degrees.of(90)),
+    LOWER_ALGAE_DESCORE(Degrees.of(90));
 
     private final Angle angle;
 
