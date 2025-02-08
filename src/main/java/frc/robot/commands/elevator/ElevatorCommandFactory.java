@@ -12,10 +12,6 @@ import frc.robot.subsystems.ElevatorSubsystem;
 public class ElevatorCommandFactory {
   private static final ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
 
-  public static Command setElevatorPosition(TargetAction position) {
-    return Commands.runOnce(() -> elevator.setPositionMotionMagic(position), elevator);
-  }
-
   public static Command manualUp() {
     return Commands.runEnd(() -> elevator.manualUp(), () -> elevator.stopElevator(), elevator);
   }

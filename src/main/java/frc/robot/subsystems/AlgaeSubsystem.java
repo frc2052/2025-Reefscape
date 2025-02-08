@@ -93,6 +93,12 @@ public class AlgaeSubsystem extends SubsystemBase {
     hasAlgae = false;
   }
 
+  public boolean isAtPosition(double tol, Angle goal) {
+    return true;
+    // return pivotMotor.getPosition().getValueAsDouble() < goal.in(Degrees) + tol
+    //     && pivotMotor.getPosition().getValueAsDouble() > goal.in(Degrees) - tol;
+  }
+
   public void stopScoringMotor() {
     // scoringMotor.stopMotor();
     isIntaking = false;

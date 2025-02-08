@@ -23,7 +23,6 @@ import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.commands.elevator.ElevatorCommandFactory;
-import frc.robot.commands.superstructure.ReefScoringCommandFactory.ReefScoringPosition;
 import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
 import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
@@ -119,15 +118,17 @@ public abstract class AutoBase extends SequentialCommandGroup {
             RobotState.getInstance().getFieldToRobot().getY()));
   }
 
-  protected Command toScoringPositionCommand(ReefScoringPosition scorePos) {
-    return scorePos.getCommand();
+  protected Command toScoringPositionCommand(
+    // ReefScoringPosition scorePos
+    ) {
+    return null; // scorePos.getCommand();
   }
 
   protected Command toPosition(TargetAction position) {
     return new SequentialCommandGroup(
-        ElevatorCommandFactory.setElevatorPosition(position),
+        // ElevatorCommandFactory.setElevatorPosition(position),
         new WaitCommand(0.75),
-        ElevatorCommandFactory.setElevatorPosition(TargetAction.TR),
+        // ElevatorCommandFactory.setElevatorPosition(TargetAction.TR),
         new WaitCommand(0.5));
   }
 

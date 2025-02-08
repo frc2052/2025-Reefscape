@@ -16,15 +16,12 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.DistanceToVisionGoal;
-import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
-import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
-import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -81,14 +78,14 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Snap to KL", new AutoSnapToLocationAngleCommand(SnapLocation.ReefKL));
 
-    // score in gui
-    NamedCommands.registerCommand("Score L1", ToLevel.L1.getCommand());
-    NamedCommands.registerCommand("Score L2", ToLevel.L2.getCommand());
-    NamedCommands.registerCommand("Score L3", ToLevel.L3.getCommand());
-    NamedCommands.registerCommand("Score L4", ToLevel.L4.getCommand());
-    NamedCommands.registerCommand("Score Processor", null); // TODO: auto processor score
-    NamedCommands.registerCommand("DeScore Algae", null); // TODO: auto descore algae
-    NamedCommands.registerCommand("Coral Station Intake", null); // TODO: auto coral station intake
+    // // score in gui
+    // NamedCommands.registerCommand("Score L1", ToLevel.L1.getCommand());
+    // NamedCommands.registerCommand("Score L2", ToLevel.L2.getCommand());
+    // NamedCommands.registerCommand("Score L3", ToLevel.L3.getCommand());
+    // NamedCommands.registerCommand("Score L4", ToLevel.L4.getCommand());
+    // NamedCommands.registerCommand("Score Processor", null); // TODO: auto processor score
+    // NamedCommands.registerCommand("DeScore Algae", null); // TODO: auto descore algae
+    // NamedCommands.registerCommand("Coral Station Intake", null); // TODO: auto coral station intake
   }
 
   private void configureBindings() {
@@ -135,13 +132,6 @@ public class RobotContainer {
     // controlBoard
     //     .homeElevator()
     //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.HOME));
-    controlBoard.setGoalL1().onTrue(ArmCommandFactory.setArmPosition(TargetAction.L1));
-    controlBoard.setGoalL2().onTrue(ArmCommandFactory.setArmPosition(TargetAction.L2));
-    controlBoard.setGoalL3().onTrue(ArmCommandFactory.setArmPosition(TargetAction.L3));
-    controlBoard.setGoalL4().onTrue(ArmCommandFactory.setArmPosition(TargetAction.L4));
-    controlBoard
-        .setGoalUpperAlgae()
-        .onTrue(ArmCommandFactory.setArmPosition(TargetAction.UA));
 
     // controlBoard
     //     .setGoalL1()

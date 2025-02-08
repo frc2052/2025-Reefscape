@@ -117,6 +117,10 @@ public class PositionSuperstructure {
         public Angle getCoralArmAngle() {
             return coralArmAngle;
         }
+
+        public Angle getAlgaeArmPosition() {
+            return algaeArmAngle;
+        }
     }
 
     public static enum ReefSubSide {

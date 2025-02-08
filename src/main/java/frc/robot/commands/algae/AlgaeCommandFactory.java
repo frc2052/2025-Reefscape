@@ -6,11 +6,7 @@ import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import frc.robot.subsystems.AlgaeSubsystem;
 public class AlgaeCommandFactory {
   private static final AlgaeSubsystem algaeArm = AlgaeSubsystem.getInstance();
-
-  public static Command setAlgaeArmPosition(TargetAction position) {
-    return Commands.runOnce(() -> algaeArm.setGoalPosition(position));
-  }
-
+  
   public static Command intake() {
     return Commands.runOnce(() -> algaeArm.intake(), algaeArm)
         .finallyDo(() -> algaeArm.stopScoringMotor());
