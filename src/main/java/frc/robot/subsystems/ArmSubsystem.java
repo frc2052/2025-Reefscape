@@ -8,18 +8,19 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.util.Ports;
 
 public class ArmSubsystem extends SubsystemBase {
-  // private final CANcoder encoder;
-  // private final TalonFX motor;
-  private final PIDController controller;
-  private ArmPosition position;
+  private final TalonFX pivotMotor;
+  private ArmPosition goalPosition;
   private static ArmSubsystem INSTANCE;
 
   public static ArmSubsystem getInstance() {
@@ -30,64 +31,37 @@ public class ArmSubsystem extends SubsystemBase {
   }
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
-    position = ArmPosition.HANDOFF;
+    goalPosition = ArmPosition.HANDOFF;
 
-    // encoder = new CANcoder(Ports.ARM_CANCODER_ID);
-    // motor = new TalonFX(Ports.ARM_TALONFX_ID);
-    TalonFXConfiguration config = new TalonFXConfiguration();
-    // config.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
-    config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+    pivotMotor = new TalonFX(Ports.ARM_TALONFX_ID);
 
-    InvertedValue inverted =
-        Constants.ArmConstants.ARM_MOTOR_INVERTED
-            ? InvertedValue.Clockwise_Positive
-            : InvertedValue.CounterClockwise_Positive;
-
-    config.withMotorOutput(new MotorOutputConfigs().withInverted(inverted));
-
-    // motor.getConfigurator().apply(config);
-
-    controller =
-        new PIDController(
-            Constants.ArmConstants.PIDs.KP,
-            Constants.ArmConstants.PIDs.KI,
-            Constants.ArmConstants.PIDs.KD);
+    pivotMotor.getConfigurator().apply(ArmConstants.MOTOR_CONFIG);
   }
 
   private void setArmAngle(Angle angle) {
-    // motor.set(controller.calculate(motor.getPosition().getValue().in(Degrees),
-    // angle.in(Degrees)));
+    pivotMotor.setPosition(angle);
   }
 
   public void setArmPosition(ArmPosition position) {
-    this.position = position;
+    this.goalPosition = position;
   }
 
   public ArmPosition getArmPosition() {
-    return position;
+    return goalPosition;
   }
 
   public Angle getArmAngle() {
-    // return motor.getPosition().getValue();
-    return Degrees.of(0);
+    return pivotMotor.getPosition().getValue();
   }
 
-  public boolean isAtPosition(double error) {
-    controller.setTolerance(error);
-    return controller.atSetpoint();
-  }
-
-  public boolean isAtPosition(double error, Angle setPoint) {
-    controller.setSetpoint(setPoint.in(Degrees));
-    controller.setTolerance(error);
-    Boolean isAtPoint = controller.atSetpoint();
-    setArmAngle(position.getAngle());
-    return isAtPoint;
+  public boolean isAtPosition(double error, Angle goal) {
+    return pivotMotor.getPosition().getValueAsDouble() < goal.in(Degrees) + ArmConstants.DEG_TOL
+        && pivotMotor.getPosition().getValueAsDouble() > goal.in(Degrees) - ArmConstants.DEG_TOL;
   }
 
   @Override
   public void periodic() {
-    setArmAngle(position.getAngle());
+    setArmAngle(goalPosition.getAngle());
   }
 
   public enum ArmPosition { // TODO: set angles for each position
