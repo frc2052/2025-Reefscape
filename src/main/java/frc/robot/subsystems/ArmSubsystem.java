@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,18 +37,18 @@ public class ArmSubsystem extends SubsystemBase {
     pivotMotor.getConfigurator().apply(ArmConstants.MOTOR_CONFIG);
   }
 
-  // private void setArmAngle(Angle angle) {
-  //   pivotMotor.setPosition(angle);
-  // }
+  private void setPivotAngle(Angle angle) {
+    pivotMotor.setControl(new PositionTorqueCurrentFOC(angle).withSlot(0));
+  }
 
   public void setArmPosition(ArmPosition position) {
     this.goalPosition = clampPosition(position.getAngle());
+    setPivotAngle(goalPosition);
   }
 
   private Angle clampPosition(Angle pos) {
     if (ElevatorSubsystem.getInstance().getPosition() < ArmConstants.MIN_HP_ELEVATOR_HEIGHT
         && pos.in(Degrees) > ArmPosition.HANDOFF.getAngle().in(Degrees)) {
-
       System.out.println("DESIRED ANGLE PAST HP");
       return ArmPosition.HANDOFF.getAngle();
     }
@@ -89,7 +90,6 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
     Logger.recordOutput("Arm Angle", pivotMotor.getPosition().getValueAsDouble());
     Logger.recordOutput("Arm Goal Angle", goalPosition.in(Degrees));
-    // setArmAngle(goalPosition);
   }
 
   public enum ArmPosition { // TODO: set angles for each position
