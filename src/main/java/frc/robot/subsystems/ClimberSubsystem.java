@@ -9,8 +9,8 @@ import frc.robot.Constants.ClimberConstants;
 
 public class ClimberSubsystem extends SubsystemBase {
 
-    private final TalonFX leadMotor;
-    private final TalonFX followerMotor;
+    // private final TalonFX leadMotor;
+    // private final TalonFX followerMotor;
 
     private static ClimberSubsystem INSTANCE;
 
@@ -22,35 +22,35 @@ public class ClimberSubsystem extends SubsystemBase {
     } 
 
     public ClimberSubsystem() {
-        leadMotor = new TalonFX(ClimberConstants.Motors.LEAD_MOTOR_ID);
-        followerMotor = new TalonFX(ClimberConstants.Motors.FOLLOW_MOTOR_ID);
+        // leadMotor = new TalonFX(ClimberConstants.Motors.LEAD_MOTOR_ID);
+        // followerMotor = new TalonFX(ClimberConstants.Motors.FOLLOW_MOTOR_ID);
 
-        leadMotor.getConfigurator().apply(ClimberConstants.Configs.LEAD_MOTOR);
+        // leadMotor.getConfigurator().apply(ClimberConstants.Configs.LEAD_MOTOR);
 
-        followerMotor.setControl(new Follower(leadMotor.getDeviceID(), ClimberConstants.Configs.FOLLOW_MOTOR_OPPOSING_DIRECTION));
+        // followerMotor.setControl(new Follower(leadMotor.getDeviceID(), ClimberConstants.Configs.FOLLOW_MOTOR_OPPOSING_DIRECTION));
     }
     
     public void moveUp(boolean fineControl) {
         if (fineControl) {
-            leadMotor.set(ClimberConstants.fineSpeed);
+            // leadMotor.set(ClimberConstants.fineSpeed);
         } else {
-            leadMotor.set(ClimberConstants.baseSpeed);
+            // leadMotor.set(ClimberConstants.baseSpeed);
         }
     }
 
     public void moveDown(boolean fineControl) {
         if (fineControl) {
-            leadMotor.set(-ClimberConstants.fineSpeed);
+            // leadMotor.set(-ClimberConstants.fineSpeed);
         } else {
-            leadMotor.set(-ClimberConstants.baseSpeed);
+            // leadMotor.set(-ClimberConstants.baseSpeed);
         }
     }
 
     public void stopMotors() {
-        leadMotor.stopMotor();
+        // leadMotor.stopMotor();
     }
 
     public double getSpeed() {
-        return leadMotor.get();
+        return 0; // leadMotor.get();
     }
 }
