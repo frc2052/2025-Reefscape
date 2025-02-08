@@ -3,11 +3,13 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
@@ -28,6 +30,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.*;
 import frc.robot.subsystems.drive.ctre.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
+import frc.robot.util.Ports;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Constants {
@@ -124,12 +127,50 @@ public class Constants {
 
   public static class ArmConstants {
     public static final boolean ARM_MOTOR_INVERTED = false;
+    public static final double CLOSED_LOOP_ERROR = 0.1;
+    public static final double DEG_TOL = 0.1;
 
-    public static class PIDs {
-      public static final double KP = 0.0;
-      public static final double KI = 0.0;
-      public static final double KD = 0.0;
-    }
+    public static final Angle MIN_CORAL_ANGLE = Degrees.of(30);
+    public static final Angle MAX_CORAL_ANGLE = Degrees.of(330);
+
+    public static final double MIN_HP_ELEVATOR_HEIGHT = 10;
+
+    public static final Slot0Configs SLOT0_CONFIGS = 
+        new Slot0Configs()
+            .withKP(0.0)
+            .withKI(0.0)
+            .withKD(0.0)
+            .withKS(0.0)
+            .withKV(0.0)
+            .withKA(0.0);
+
+    public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
+        new MotorOutputConfigs()
+            .withInverted(
+                ElevatorConstants.ELEVATOR_MOTORS_INVERTED
+                    ? InvertedValue.Clockwise_Positive
+                    : InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake); 
+
+    public static final FeedbackConfigs FEEDBACK_CONFIG =
+        new FeedbackConfigs()
+            .withFeedbackRemoteSensorID(Ports.ARM_CANCODER_ID)
+            .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
+            .withRotorToSensorRatio(99.556);
+    
+    public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitThreshold(Degrees.of(30)) // TODO: adjust as needed
+            .withForwardSoftLimitEnable(true)
+            .withReverseSoftLimitThreshold(Degrees.of(330))
+            .withReverseSoftLimitEnable(true);
+    
+    public static final TalonFXConfiguration MOTOR_CONFIG = 
+        new TalonFXConfiguration()
+            .withSlot0(SLOT0_CONFIGS)
+            .withMotorOutput(MOTOR_OUTPUT_CONFIG)
+            .withFeedback(FEEDBACK_CONFIG)
+            .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS);
   }
 
   public static class HandConstants {

@@ -6,20 +6,19 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.InvertedValue;
-import edu.wpi.first.math.controller.PIDController;
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.RobotState;
+import frc.robot.util.Ports;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmSubsystem extends SubsystemBase {
-  // private final CANcoder encoder;
-  // private final TalonFX motor;
-  private final PIDController controller;
-  private ArmPosition position;
+  private final RobotState robotState = RobotState.getInstance();
+  private final TalonFX pivotMotor;
+  private Angle goalPosition;
+
   private static ArmSubsystem INSTANCE;
 
   public static ArmSubsystem getInstance() {
@@ -28,76 +27,79 @@ public class ArmSubsystem extends SubsystemBase {
     }
     return INSTANCE;
   }
-  /** Creates a new ArmSubsystem. */
-  public ArmSubsystem() {
-    position = ArmPosition.HANDOFF;
 
-    // encoder = new CANcoder(Ports.ARM_CANCODER_ID);
-    // motor = new TalonFX(Ports.ARM_TALONFX_ID);
-    TalonFXConfiguration config = new TalonFXConfiguration();
-    // config.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
-    config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+  private ArmSubsystem() {
+    goalPosition = ArmPosition.HANDOFF.getAngle();
 
-    InvertedValue inverted =
-        Constants.ArmConstants.ARM_MOTOR_INVERTED
-            ? InvertedValue.Clockwise_Positive
-            : InvertedValue.CounterClockwise_Positive;
+    pivotMotor = new TalonFX(Ports.ARM_TALONFX_ID);
 
-    config.withMotorOutput(new MotorOutputConfigs().withInverted(inverted));
-
-    // motor.getConfigurator().apply(config);
-
-    controller =
-        new PIDController(
-            Constants.ArmConstants.PIDs.KP,
-            Constants.ArmConstants.PIDs.KI,
-            Constants.ArmConstants.PIDs.KD);
+    pivotMotor.getConfigurator().apply(ArmConstants.MOTOR_CONFIG);
   }
 
-  private void setArmAngle(Angle angle) {
-    // motor.set(controller.calculate(motor.getPosition().getValue().in(Degrees),
-    // angle.in(Degrees)));
-  }
+  // private void setArmAngle(Angle angle) {
+  //   pivotMotor.setPosition(angle);
+  // }
 
   public void setArmPosition(ArmPosition position) {
-    this.position = position;
+    this.goalPosition = clampPosition(position.getAngle());
   }
 
-  public ArmPosition getArmPosition() {
-    return position;
+  private Angle clampPosition(Angle pos) {
+    if (ElevatorSubsystem.getInstance().getPosition() < ArmConstants.MIN_HP_ELEVATOR_HEIGHT
+        && pos.in(Degrees) > ArmPosition.HANDOFF.getAngle().in(Degrees)) {
+
+      System.out.println("DESIRED ANGLE PAST HP");
+      return ArmPosition.HANDOFF.getAngle();
+    }
+    if (robotState.getHasCoral()) {
+      if (pos.in(Degrees) < ArmConstants.MIN_CORAL_ANGLE.in(Degrees)) {
+        System.out.println("DESIRED ANGLE BEYOND MIN LIMIT");
+        return ArmConstants.MIN_CORAL_ANGLE;
+      } else if (pos.in(Degrees) > ArmConstants.MAX_CORAL_ANGLE.in(Degrees)) {
+        System.out.println("DESIRED ANGLE BEYOND MAX LIMIT");
+        return ArmConstants.MAX_CORAL_ANGLE;
+      }
+    }
+
+    return pos;
+  }
+
+  public Angle getArmDesiredPosition() {
+    return goalPosition;
   }
 
   public Angle getArmAngle() {
-    // return motor.getPosition().getValue();
-    return Degrees.of(0);
+    return pivotMotor.getPosition().getValue();
   }
 
-  public boolean isAtPosition(double error) {
-    controller.setTolerance(error);
-    return controller.atSetpoint();
+  public boolean isAtDesiredPosition() {
+    return isAtDesiredPosition(ArmConstants.DEG_TOL);
   }
 
-  public boolean isAtPosition(double error, Angle setPoint) {
-    controller.setSetpoint(setPoint.in(Degrees));
-    controller.setTolerance(error);
-    Boolean isAtPoint = controller.atSetpoint();
-    setArmAngle(position.getAngle());
-    return isAtPoint;
+  public boolean isAtDesiredPosition(double tol) {
+    return isAtPosition(tol, goalPosition);
+  }
+
+  public boolean isAtPosition(double tol, Angle goal) {
+    return pivotMotor.getPosition().getValueAsDouble() < goal.in(Degrees) + tol
+        && pivotMotor.getPosition().getValueAsDouble() > goal.in(Degrees) - tol;
   }
 
   @Override
   public void periodic() {
-    setArmAngle(position.getAngle());
+    Logger.recordOutput("Arm Angle", pivotMotor.getPosition().getValueAsDouble());
+    Logger.recordOutput("Arm Goal Angle", goalPosition.in(Degrees));
+    // setArmAngle(goalPosition);
   }
 
   public enum ArmPosition { // TODO: set angles for each position
-    HANDOFF(Degrees.of(0)),
-    TRAVEL(Degrees.of(0)),
-    L1(Degrees.of(0)),
-    MID_LEVEL(Degrees.of(0)), // for both L2 and L3
-    L4(Degrees.of(0)),
-    UPPER_ALGAE_DESCORE(Degrees.of(0)),
-    LOWER_ALGAE_DESCORE(Degrees.of(0));
+    HANDOFF(Degrees.of(300)),
+    TRAVEL(Degrees.of(180)),
+    L1(Degrees.of(110)),
+    MID_LEVEL(Degrees.of(55)), // for both L2 and L3
+    L4(Degrees.of(75)),
+    UPPER_ALGAE_DESCORE(Degrees.of(90)),
+    LOWER_ALGAE_DESCORE(Degrees.of(90));
 
     private final Angle angle;
 
