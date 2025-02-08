@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
+import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AimingCalculator;
@@ -31,7 +32,7 @@ public class AlignWithSpecificReefCommand extends AlignWithReefCommand {
 
   /** Creates a new AlignWithSpecificReefCommand. */
   public AlignWithSpecificReefCommand(
-      Supplier<AlignLocation> scoringLocation,
+      Supplier<ReefSubSide> scoringLocation,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier rotationSupplier,

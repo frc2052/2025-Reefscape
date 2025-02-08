@@ -11,6 +11,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.RobotState;
+import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import frc.robot.util.Ports;
 import org.littletonrobotics.junction.Logger;
 
@@ -29,7 +30,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private ArmSubsystem() {
-    goalPosition = ArmPosition.HANDOFF.getAngle();
+    goalPosition = TargetAction.HP.coralArmAngle;
 
     pivotMotor = new TalonFX(Ports.ARM_TALONFX_ID);
 
@@ -40,16 +41,16 @@ public class ArmSubsystem extends SubsystemBase {
   //   pivotMotor.setPosition(angle);
   // }
 
-  public void setArmPosition(ArmPosition position) {
-    this.goalPosition = clampPosition(position.getAngle());
+  public void setArmPosition(TargetAction position) {
+    this.goalPosition = clampPosition(position.getCoralArmAngle());
   }
 
   private Angle clampPosition(Angle pos) {
     if (ElevatorSubsystem.getInstance().getPosition() < ArmConstants.MIN_HP_ELEVATOR_HEIGHT
-        && pos.in(Degrees) > ArmPosition.HANDOFF.getAngle().in(Degrees)) {
+        && pos.in(Degrees) > TargetAction.HP.getCoralArmAngle().in(Degrees)) {
 
       System.out.println("DESIRED ANGLE PAST HP");
-      return ArmPosition.HANDOFF.getAngle();
+      return TargetAction.HP.getCoralArmAngle();
     }
     if (robotState.getHasCoral()) {
       if (pos.in(Degrees) < ArmConstants.MIN_CORAL_ANGLE.in(Degrees)) {
@@ -92,23 +93,4 @@ public class ArmSubsystem extends SubsystemBase {
     // setArmAngle(goalPosition);
   }
 
-  public enum ArmPosition { // TODO: set angles for each position
-    HANDOFF(Degrees.of(300)),
-    TRAVEL(Degrees.of(180)),
-    L1(Degrees.of(110)),
-    MID_LEVEL(Degrees.of(55)), // for both L2 and L3
-    L4(Degrees.of(75)),
-    UPPER_ALGAE_DESCORE(Degrees.of(90)),
-    LOWER_ALGAE_DESCORE(Degrees.of(90));
-
-    private final Angle angle;
-
-    ArmPosition(Angle angle) {
-      this.angle = angle;
-    }
-
-    public Angle getAngle() {
-      return angle;
-    }
-  }
 }

@@ -95,4 +95,35 @@ public class ControlPanelInput implements ISecondaryControlBoard {
   public Trigger setGoalLowerAlgae() {
     return new JoystickButton(controlPanel, 9);
   }
+
+  @Override
+  public Trigger setSubReefLeft() {
+    return new JoystickButton(controlPanel, 99);
+  }
+
+  @Override
+  public Trigger setSubReefCenter() {
+    return new JoystickButton(controlPanel, 99);
+  }
+
+  @Override
+  public Trigger setSubReefRight() {
+    return new JoystickButton(controlPanel, 99);
+  }
+
+  @Override
+  public Trigger setGoalCoralStation() {
+    return new JoystickButton(controlPanel, 99);
+  }
+
+  @Override
+  public Trigger setGoalAlgaeScoring() {
+    return new JoystickButton(controlPanel, 99);
+
+  }
+
+  @Override
+  public Trigger setGoalTravel() {
+    return new JoystickButton(controlPanel, 99);
+  }
 }

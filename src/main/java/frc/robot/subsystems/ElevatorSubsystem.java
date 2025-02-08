@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import frc.robot.util.Ports;
 import org.littletonrobotics.junction.Logger;
 
@@ -40,7 +41,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   private ElevatorSubsystem() {
-    goalPositionRotations = ElevatorPosition.HOME.getPositionRotations();
+    goalPositionRotations = TargetAction.HM.getElevatorPositionRotations();
 
     frontMotor = new TalonFX(Ports.ELEVATOR_FRONT_ID, "Krawlivore");
     backMotor = new TalonFX(Ports.ELEVATOR_BACK_ID, "Krawlivore");
@@ -53,8 +54,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     backMotor.setControl(new Follower(frontMotor.getDeviceID(), true));
   }
 
-  public void setPositionMotionMagic(ElevatorPosition elevatorPosition) {
-    setPositionMotionMagic(elevatorPosition.getPositionRotations());
+  public void setPositionMotionMagic(TargetAction elevatorAction) {
+    setPositionMotionMagic(elevatorAction.getElevatorPositionRotations());
   }
 
   public void setPositionMotionMagic(double elevatorPositionRotations) {
@@ -63,7 +64,7 @@ public class ElevatorSubsystem extends SubsystemBase {
       return;
     }
 
-    if (elevatorPositionRotations != ElevatorPosition.HOME.getPositionRotations()) {
+    if (elevatorPositionRotations != TargetAction.HM.getElevatorPositionRotations()) {
       shouldHome = true;
     }
 
@@ -102,8 +103,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         <= ElevatorConstants.TICKS_DEADZONE;
   }
 
-  public boolean atPosition(ElevatorPosition position) {
-    return Math.abs(position.positionRotations - frontMotor.getPosition().getValueAsDouble())
+  public boolean atPosition(TargetAction position) {
+    return Math.abs(position.ElevatorPositionRotations - frontMotor.getPosition().getValueAsDouble())
         <= ElevatorConstants.TICKS_DEADZONE;
   }
 
@@ -120,9 +121,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean atHomingLocation() {
-    return getPosition() < ElevatorPosition.HOME.getPositionRotations()
+    return getPosition() < TargetAction.HM.getElevatorPositionRotations()
         || MathHelpers.epsilonEquals(
-            getPosition(), ElevatorPosition.HOME.getPositionRotations(), 0.05);
+            getPosition(), TargetAction.HM.getElevatorPositionRotations(), 0.05);
   }
 
   @Override
@@ -145,7 +146,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     // if we still intend to go to the home position, currently at alleged home, and should re-home,
     // then re-home
     if (MathHelpers.epsilonEquals(
-            goalPositionRotations, ElevatorPosition.HOME.getPositionRotations(), .02)
+            goalPositionRotations, TargetAction.HM.getElevatorPositionRotations(), .02)
         && atHomingLocation()
         && shouldHome) {
       setWantHome(true);
@@ -159,32 +160,10 @@ public class ElevatorSubsystem extends SubsystemBase {
           Timer.getFPGATimestamp(),
           MathHelpers.epsilonEquals(frontMotor.getVelocity().getValueAsDouble(), 0.0, 0.01))) {
         zeroEncoder();
-        setPositionMotionMagic(ElevatorPosition.HOME);
+        setPositionMotionMagic(TargetAction.HM);
         homing = false;
         homingDelay.update(Timer.getFPGATimestamp(), false);
       }
-    }
-  }
-
-  public static enum ElevatorPosition {
-    HOME(2),
-    HANDOFF(7),
-    L1(10),
-    L2(20),
-    L3(37.5),
-    L4(55),
-    LOWER_ALGAE(25),
-    UPPER_ALGAE(27),
-    TRAVEL(5);
-
-    private final double positionRotations;
-
-    private ElevatorPosition(double positionRotations) {
-      this.positionRotations = positionRotations;
-    }
-
-    public double getPositionRotations() {
-      return positionRotations;
     }
   }
 

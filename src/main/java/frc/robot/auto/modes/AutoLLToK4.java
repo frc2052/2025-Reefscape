@@ -7,8 +7,8 @@ package frc.robot.auto.modes;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
+import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
 
 @AutoDescription(description = "testing vision to reef side")
 public class AutoLLToK4 extends AutoBase {
@@ -22,6 +22,6 @@ public class AutoLLToK4 extends AutoBase {
   @Override
   public void init() {
     System.out.println("START LL - K4");
-    addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, startPath, SnapLocation.ReefKL));
+    addCommands(reefSideVisionOrPathAlign(ReefSubSide.LEFT, startPath, SnapLocation.ReefKL));
   }
 }

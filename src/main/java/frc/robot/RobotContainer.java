@@ -18,14 +18,14 @@ import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.DistanceToVisionGoal;
 import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.drive.AlignWithReefCommand;
-import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
 import frc.robot.controlboard.ControlBoard;
+import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
+import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
-import frc.robot.subsystems.ArmSubsystem.ArmPosition;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.Telemetry;
@@ -99,13 +99,13 @@ public class RobotContainer {
     configurePOVBindings();
 
     // temporary distance to tag (2)
-    controlBoard.distanceToTag().whileTrue(new DistanceToVisionGoal(() -> AlignLocation.LEFT));
+    controlBoard.distanceToTag().whileTrue(new DistanceToVisionGoal(() -> ReefSubSide.LEFT));
 
     controlBoard
         .reefAlignment() // 3
         .whileTrue(
             new AlignWithReefCommand(
-                () -> AlignLocation.MIDDLE,
+                () -> ReefSubSide.CENTER,
                 controlBoard::getThrottle,
                 // Sideways velocity supplier.
                 controlBoard::getStrafe,
@@ -135,14 +135,13 @@ public class RobotContainer {
     // controlBoard
     //     .homeElevator()
     //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.HOME));
-    controlBoard.setGoalL1().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.L1));
-
-    controlBoard.setGoalL2().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.HANDOFF));
-    controlBoard.setGoalL3().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.MID_LEVEL));
-    controlBoard.setGoalL4().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.L4));
+    controlBoard.setGoalL1().onTrue(ArmCommandFactory.setArmPosition(TargetAction.L1));
+    controlBoard.setGoalL2().onTrue(ArmCommandFactory.setArmPosition(TargetAction.L2));
+    controlBoard.setGoalL3().onTrue(ArmCommandFactory.setArmPosition(TargetAction.L3));
+    controlBoard.setGoalL4().onTrue(ArmCommandFactory.setArmPosition(TargetAction.L4));
     controlBoard
         .setGoalUpperAlgae()
-        .onTrue(ArmCommandFactory.setArmPosition(ArmPosition.UPPER_ALGAE_DESCORE));
+        .onTrue(ArmCommandFactory.setArmPosition(TargetAction.UA));
 
     // controlBoard
     //     .setGoalL1()

@@ -6,13 +6,13 @@ package frc.robot.commands.elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
 
 public class ElevatorCommandFactory {
   private static final ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
 
-  public static Command setElevatorPosition(ElevatorPosition position) {
+  public static Command setElevatorPosition(TargetAction position) {
     return Commands.runOnce(() -> elevator.setPositionMotionMagic(position), elevator);
   }
 

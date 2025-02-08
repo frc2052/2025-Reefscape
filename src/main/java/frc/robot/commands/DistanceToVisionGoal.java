@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
-import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
+import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -18,15 +18,15 @@ import org.photonvision.targeting.PhotonPipelineResult;
 
 public class DistanceToVisionGoal extends Command {
   private VisionSubsystem vision = VisionSubsystem.getInstance();
-  private Supplier<AlignLocation> alignLocSupplier;
+  private Supplier<ReefSubSide> alignLocSupplier;
 
-  public DistanceToVisionGoal(Supplier<AlignLocation> alignLoc) {
+  public DistanceToVisionGoal(Supplier<ReefSubSide> alignLoc) {
     alignLocSupplier = alignLoc;
     // System.out.println("==== NEW DISTANCE TO VISION GOAL");
   }
 
   public double getDistanceToGoal(
-      Supplier<AlignLocation> scoringLoc) { // accurate when we can see the tar
+      Supplier<ReefSubSide> scoringLoc) { // accurate when we can see the tar
     Pose2d goalPose;
     Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
     if (tar.isPresent()) {

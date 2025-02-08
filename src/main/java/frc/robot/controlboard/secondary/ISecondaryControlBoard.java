@@ -32,4 +32,16 @@ public interface ISecondaryControlBoard {
   Trigger setGoalUpperAlgae();
 
   Trigger setGoalLowerAlgae();
+
+  Trigger setGoalCoralStation();
+
+  Trigger setGoalAlgaeScoring();
+
+  Trigger setGoalTravel();
+
+  Trigger setSubReefLeft();
+
+  Trigger setSubReefCenter();
+
+  Trigger setSubReefRight();
 }

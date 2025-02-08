@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -34,7 +35,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   private PhotonTrackedTarget target;
 
   private Pose2d goalPose;
-  private Supplier<AlignLocation> scoringLocation;
+  private Supplier<ReefSubSide> scoringLocation;
 
   private AutoAlignPlanner planner;
 
@@ -43,7 +44,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
   public AlignWithReefCommand(
-      Supplier<AlignLocation> scoringLocation,
+      Supplier<ReefSubSide> scoringLocation,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier rotationSupplier,
@@ -103,7 +104,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
     this.goalPose = goalPose;
   }
 
-  public AlignLocation getScoringLocation() {
+  public ReefSubSide getScoringLocation() {
     return scoringLocation.get();
   }
 
@@ -123,15 +124,4 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
     robotState.setReefTracking(false);
   }
 
-  public enum AlignLocation { // provides an offset from the april tag
-    LEFT(new Transform2d(0.5, 0.25, new Rotation2d(0))),
-    MIDDLE(new Transform2d(0.5, 0.0, new Rotation2d(0))),
-    RIGHT(new Transform2d(0.5, -0.25, new Rotation2d(0)));
-
-    public Transform2d transform;
-
-    private AlignLocation(Transform2d gt) {
-      this.transform = gt;
-    }
-  }
 }
