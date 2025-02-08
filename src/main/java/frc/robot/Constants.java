@@ -138,6 +138,33 @@ public class Constants {
     public static final double HAND_MOTOR_SPEED = 0;
   }
 
+  public static class AlgaeSubsystemConstants {
+    public static class Motors {
+      public static final double SCORING_INTAKE_SPEED = 0;
+      public static final double SCORING_SCORE_SPEED = 0;
+
+      public static final TalonFXConfiguration PIVOT_CONFIG = new TalonFXConfiguration()
+        .withMotorOutput(
+          new MotorOutputConfigs()
+            .withInverted(InvertedValue.Clockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake)
+        );
+
+        public static final TalonFXConfiguration SCORING_CONFIG = new TalonFXConfiguration()
+        .withMotorOutput(
+          new MotorOutputConfigs()
+            .withInverted(InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Coast)
+        );
+    }
+
+    public static class PIDs {
+      public static final double PIVOT_KP = 0.0;
+      public static final double PIVOT_KI = 0.0;
+      public static final double PIVOT_KD = 0.0;
+    }
+  }
+
   public static class VisionConstants {
     public static final double XY_STDDEV = 0.3;
     public static final double HEADING_STDDEV = 5.0;
