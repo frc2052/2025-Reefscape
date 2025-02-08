@@ -28,7 +28,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   private List<TagTracker> localizationTagTrackers = new ArrayList<TagTracker>();
 
-  private TagTracker reefTagTracker =
+  public TagTracker reefTagTracker =
       new TagTracker(Camera0Constants.TagTrackerConstants(), robotState);
 
   private static VisionSubsystem INSTANCE;

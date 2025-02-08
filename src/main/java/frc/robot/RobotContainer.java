@@ -29,7 +29,7 @@ import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
-import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSimSubsystem;
 import frc.robot.util.Telemetry;
 import frc.robot.util.io.Dashboard;
 
@@ -39,7 +39,7 @@ public class RobotContainer {
 
   public final RobotState robotState = RobotState.getInstance();
   public final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
-  public final VisionSubsystem vision = VisionSubsystem.getInstance();
+  public final VisionSimSubsystem vision = VisionSimSubsystem.getInstance();
   public final AdvantageScopeSubsystem advantageScope = AdvantageScopeSubsystem.getInstance();
   public final AutoFactory autoFactory = AutoFactory.getInstance();
 
