@@ -138,6 +138,7 @@ public class Constants {
     public static final double HAND_MOTOR_SPEED = 0;
   }
 
+
   public static class AlgaeSubsystemConstants {
     public static class Motors {
       public static final double SCORING_INTAKE_SPEED = 0;
@@ -162,6 +163,29 @@ public class Constants {
       public static final double PIVOT_KP = 0.0;
       public static final double PIVOT_KI = 0.0;
       public static final double PIVOT_KD = 0.0;
+    }
+  }
+  
+  public static final class ClimberConstants {
+    public static final int baseSpeed = 0;
+    public static final int fineSpeed = 0;
+
+    public static final class Motors {
+      public static final int LEAD_MOTOR_ID = 0;
+      public static final int FOLLOW_MOTOR_ID = 0;
+    }
+
+    public static final class Configs {
+      
+      public static final TalonFXConfiguration LEAD_MOTOR = new TalonFXConfiguration().withMotorOutput(
+        new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)
+        .withNeutralMode(NeutralModeValue.Brake)
+      ).withCurrentLimits(
+        new CurrentLimitsConfigs()
+      );
+
+      public static final boolean FOLLOW_MOTOR_OPPOSING_DIRECTION = false;
+
     }
   }
 
