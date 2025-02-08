@@ -137,6 +137,28 @@ public class Constants {
     public static final double HAND_MOTOR_SPEED = 0;
   }
 
+  public static final class ClimberConstants {
+    public static final int baseSpeed = 0;
+    public static final int fineSpeed = 0;
+
+    public static final class Motors {
+      public static final int LEAD_MOTOR_ID = 0;
+      public static final int FOLLOW_MOTOR_ID = 0;
+    }
+
+    public static final class Configs {
+      
+      public static final TalonFXConfiguration LEAD_MOTOR = new TalonFXConfiguration().withMotorOutput(
+        new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)
+        .withNeutralMode(NeutralModeValue.Brake)
+      ).withCurrentLimits(
+        new CurrentLimitsConfigs()
+      );
+
+      public static final boolean FOLLOW_MOTOR_OPPOSING_DIRECTION = false;
+    }
+  }
+
   public static class VisionConstants {
     public static final double XY_STDDEV = 0.3;
     public static final double HEADING_STDDEV = 5.0;
