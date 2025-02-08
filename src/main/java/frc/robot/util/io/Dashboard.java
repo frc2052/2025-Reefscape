@@ -20,6 +20,9 @@ public class Dashboard {
   private final LoggedDashboardChooser<Double> waitSecondsChooser =
       new LoggedDashboardChooser<Double>("Wait Seconds");
 
+  private final LoggedDashboardChooser<Boolean> bump =
+      new LoggedDashboardChooser<Boolean>("Bump Needed");
+
   private final NetworkTableInstance networkTables = NetworkTableInstance.getDefault();
   private final NetworkTable debugTable = networkTables.getTable("debug network tables tab");
   private final DoubleTopic waitTimeTopic = debugTable.getDoubleTopic("waitTime");
@@ -49,6 +52,9 @@ public class Dashboard {
     }
     waitSecondsChooser.addDefaultOption("None Chosen", 0.0);
     waitSecondsChooser.addOption("1 Second", 1.0);
+    
+    bump.addDefaultOption("No Bump Needed", false);
+    bump.addOption("Bump Needed", true);
   }
 
   public <V> void putData(String key, V value) {
@@ -77,6 +83,10 @@ public class Dashboard {
 
   public double getWaitSeconds() {
     return waitTimeSubscriber.get();
+  }
+
+  public boolean getBumpNeeded() {
+    return bump.get();
   }
 
   // Enums for Dashboard elements:
