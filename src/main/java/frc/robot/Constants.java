@@ -31,7 +31,6 @@ import edu.wpi.first.units.measure.*;
 import frc.robot.subsystems.drive.ctre.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import frc.robot.util.Ports;
-
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Constants {
@@ -131,6 +130,11 @@ public class Constants {
     public static final double CLOSED_LOOP_ERROR = 0.1;
     public static final double DEG_TOL = 0.1;
 
+    public static final Angle MIN_CORAL_ANGLE = Degrees.of(30);
+    public static final Angle MAX_CORAL_ANGLE = Degrees.of(330);
+
+    public static final double MIN_HP_ELEVATOR_HEIGHT = 10;
+
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
             .withKP(0.0)
@@ -154,11 +158,19 @@ public class Constants {
             .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
             .withSensorToMechanismRatio(99.556);
     
+    public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitThreshold(Degrees.of(30)) // TODO: adjust as needed
+            .withForwardSoftLimitEnable(true)
+            .withReverseSoftLimitThreshold(Degrees.of(330))
+            .withReverseSoftLimitEnable(true);
+    
     public static final TalonFXConfiguration MOTOR_CONFIG = 
         new TalonFXConfiguration()
             .withSlot0(SLOT0_CONFIGS)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-            .withFeedback(FEEDBACK_CONFIG);
+            .withFeedback(FEEDBACK_CONFIG)
+            .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS);
   }
 
   public static class HandConstants {
