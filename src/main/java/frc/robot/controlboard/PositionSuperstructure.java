@@ -13,7 +13,7 @@ public class PositionSuperstructure {
     private RobotState state = RobotState.getInstance();
     private ControlBoard controlBoard = ControlBoard.getInstance();
 
-    private static TargetReefSide targetReefSide = TargetReefSide.AB;
+    private static TargetFieldLocation targetReefSide = TargetFieldLocation.AB;
     private static TargetAction targetAction = TargetAction.HP;
     private static ReefSubSide reefSubSide = ReefSubSide.CENTER;
 
@@ -36,19 +36,19 @@ public class PositionSuperstructure {
         controlBoard.setGoalTravel().onTrue(new InstantCommand(() -> setTargetAction(TargetAction.TR)));
         controlBoard.homeElevator().onTrue(new InstantCommand(() -> setTargetAction(TargetAction.HM)));
 
-        controlBoard.reefAB().onTrue(new InstantCommand(() -> setTargetReefSide(TargetReefSide.AB)));
-        controlBoard.reefCD().onTrue(new InstantCommand(() -> setTargetReefSide(TargetReefSide.CD)));
-        controlBoard.reefEF().onTrue(new InstantCommand(() -> setTargetReefSide(TargetReefSide.EF)));
-        controlBoard.reefGH().onTrue(new InstantCommand(() -> setTargetReefSide(TargetReefSide.GH)));
-        controlBoard.reefIJ().onTrue(new InstantCommand(() -> setTargetReefSide(TargetReefSide.IJ)));
-        controlBoard.reefKL().onTrue(new InstantCommand(() -> setTargetReefSide(TargetReefSide.KL)));
+        controlBoard.reefAB().onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.AB)));
+        controlBoard.reefCD().onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.CD)));
+        controlBoard.reefEF().onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.EF)));
+        controlBoard.reefGH().onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.GH)));
+        controlBoard.reefIJ().onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.IJ)));
+        controlBoard.reefKL().onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.KL)));
 
         controlBoard.setSubReefLeft().onTrue(new InstantCommand(() -> setReefSubSide(ReefSubSide.LEFT)));
         controlBoard.setSubReefCenter().onTrue(new InstantCommand(() -> setReefSubSide(ReefSubSide.CENTER)));
         controlBoard.setSubReefRight().onTrue(new InstantCommand(() -> setReefSubSide(ReefSubSide.RIGHT)));
     }
 
-    public static void setTargetReefSide(TargetReefSide target) {
+    public static void setTargetReefSide(TargetFieldLocation target) {
         targetReefSide = target;
         revealCombonation();
     }
@@ -63,7 +63,7 @@ public class PositionSuperstructure {
         revealCombonation();
     }
 
-    public static TargetReefSide getTargetReefSide() {
+    public static TargetFieldLocation getTargetReefSide() {
         return targetReefSide;
     }
 
@@ -79,13 +79,40 @@ public class PositionSuperstructure {
         System.out.println("Targeting : " + getTargetReefSide().toString() + " at " + getReefSubSide().toString() + " with action " + getTargetAction().toString());
     }
 
-    public static enum TargetReefSide {
-        AB,
-        CD,
-        EF,
-        GH,
-        IJ,
-        KL
+    public static enum TargetFieldLocation {
+        AB(7, 18, Degrees.of(0)),
+        CD(8, 17, Degrees.of(60)),
+        EF(9, 22, Degrees.of(120)),
+        GH(10, 21, Degrees.of(180)),
+        IJ(11, 20, Degrees.of(240)),
+        KL(6, 19, Degrees.of(300)),
+        RCS(2, 12, Degrees.of(-306)),
+        LCS(1, 13, Degrees.of(306)),
+        PRC(3, 16, Degrees.of(0)), // Processor (side of the feild, not where the teams human player is)
+        FBG(15, 4, Degrees.of(-90)), // Far Side of Barge from teams driver station (so if on blue, the red tag will be on the near side)
+        NBG(14, 0, Degrees.of(90)); // Same as above but for the near side
+
+        public final int redTagID;
+        public final int blueTagID;
+        public final Angle lineupAngle;
+
+        private TargetFieldLocation(int redTagID, int blueTagID, Angle lineupAngle) {
+            this.redTagID = redTagID;
+            this.blueTagID = blueTagID;
+            this.lineupAngle = lineupAngle;
+        }
+
+        public int getRedTagID() {
+            return redTagID;
+        }
+
+        public int getBlueTagID() {
+            return blueTagID;
+        }
+
+        public Angle getLineupAngle() {
+            return lineupAngle;
+        }
     }
 
     public static enum TargetAction {
@@ -104,9 +131,9 @@ public class PositionSuperstructure {
         public final Angle coralArmAngle;
         public final Angle algaeArmAngle;
 
-        private TargetAction(double positionRotations, Angle armAngle, Angle algaeArmAngle) {
+        private TargetAction(double positionRotations, Angle coralArmAngle, Angle algaeArmAngle) {
             this.ElevatorPositionRotations = positionRotations;
-            this.coralArmAngle = armAngle;
+            this.coralArmAngle = coralArmAngle;
             this.algaeArmAngle = algaeArmAngle;
         }
 
