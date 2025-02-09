@@ -13,6 +13,8 @@ public class RobotState {
   private SwerveDriveState drivetrainState = new SwerveDriveState();
 
   private boolean isReefTracking;
+  private boolean isStationTracking;
+  private boolean isProcessorTracking;
 
   private static RobotState INSTANCE;
 
@@ -43,12 +45,29 @@ public class RobotState {
     }
   }
 
+  // tracking tags
   public void setReefTracking(boolean isReefTracking) {
     this.isReefTracking = isReefTracking;
   }
 
   public boolean getIsReefTracking() {
     return isReefTracking;
+  }
+
+  public void setStationTracking(boolean isStationTracking) {
+    this.isStationTracking = isStationTracking;
+  }
+
+  public boolean getStationTracking() {
+    return isStationTracking;
+  }
+
+  public void setProcessorTracking(boolean isProcessorTracking) {
+    this.isProcessorTracking = isProcessorTracking;
+  }
+
+  public boolean setProcessorTracking() {
+    return isProcessorTracking;
   }
 
   public void addDrivetrainState(SwerveDriveState drivetrainState) {

@@ -11,6 +11,8 @@ import com.team2052.lib.vision.VisionPoseAcceptor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants.Camera0Constants;
+import frc.robot.Constants.VisionConstants.Camera1Constants;
+import frc.robot.Constants.VisionConstants.Camera2Constants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import java.util.ArrayList;
@@ -31,6 +33,12 @@ public class VisionSubsystem extends SubsystemBase {
   public TagTracker reefTagTracker =
       new TagTracker(Camera0Constants.TagTrackerConstants(), robotState);
 
+  public TagTracker algaeTagTracker =
+      new TagTracker(Camera1Constants.TagTrackerConstants(), robotState);
+
+  public TagTracker coralStationTracker =
+      new TagTracker(Camera2Constants.TagTrackerConstants(), robotState);
+
   private static VisionSubsystem INSTANCE;
 
   public static VisionSubsystem getInstance() {
@@ -45,11 +53,20 @@ public class VisionSubsystem extends SubsystemBase {
     Collections.addAll(
         localizationTagTrackers,
         // new TagTracker(Camera1Constants.TagTrackerConstants(), robotState),
-        reefTagTracker);
+        reefTagTracker,
+        algaeTagTracker);
   }
 
   public Optional<PhotonPipelineResult> getReefCamClosestTarget() {
     return reefTagTracker.getClosestTagToCamera();
+  }
+
+  public Optional<PhotonPipelineResult> getAlgaeCamTarget() {
+    return algaeTagTracker.getClosestTagToCamera();
+  }
+
+  public Optional<PhotonPipelineResult> getCoralStationTarget() {
+    return coralStationTracker.getClosestTagToCamera();
   }
 
   private void updateTagTrackers() {

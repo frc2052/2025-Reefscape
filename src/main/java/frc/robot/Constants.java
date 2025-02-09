@@ -179,8 +179,32 @@ public class Constants {
     }
 
     /* Front Right Camera */
-    public static final class Camera1Constants {
+    public static final class Camera1Constants { // TODO: adjust offset
       public static final String CAMERA_NAME = "KrawlerCam_001";
+
+      public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
+
+      public static final Distance X_OFFSET = Inches.of(0.0);
+      public static final Distance Y_OFFSET = Inches.of(4);
+      public static final Distance Z_OFFSET = Inches.of(7);
+
+      public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
+      public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
+      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw TODO: need to change back to 180 for actual stuff
+
+      public static final Transform3d ROBOT_TO_CAMERA_METERS =
+          new Transform3d(
+              new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
+              new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
+
+      public static TagTrackerConstants TagTrackerConstants() {
+        return new TagTrackerConstants(
+            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, VisionConstants.APRIL_TAG_FIELD_LAYOUT, STRATEGY);
+      }
+    }
+
+    public static final class Camera2Constants { // TODO: adjust offset
+      public static final String CAMERA_NAME = "KrawlerCam_002";
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
@@ -204,7 +228,7 @@ public class Constants {
     }
   }
 
-  public static class FieldConstants {
+  public static class FieldConstants { // TODO: replaced in aiming calculator
     public static final Distance FIELD_LENGTH = Centimeters.of(1755);
     public static final Distance FIELD_WIDTH = Centimeters.of(805);
     public static final Translation2d BLUE_REEF_CENTER = new Translation2d(Inches.of(177.06927), Inches.of(158.5));
