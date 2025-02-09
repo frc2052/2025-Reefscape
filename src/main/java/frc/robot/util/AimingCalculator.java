@@ -17,6 +17,33 @@ import org.littletonrobotics.junction.Logger;
 
 public class AimingCalculator {
 
+  public static Pose2d scaleAll(Pose2d initial, Distance add, FieldElement fieldElem){
+    Translation2d fieldElementLoc = fieldElem.getFieldPosition();
+
+    Logger.recordOutput(fieldElem.getDisplayName() + " location", fieldElementLoc);
+
+    Translation2d relativeTranslation = initial.getTranslation().minus(fieldElementLoc);
+    double radius = relativeTranslation.getNorm();
+    Rotation2d theta =
+        new Rotation2d(-Math.atan(relativeTranslation.getY() / relativeTranslation.getX()));
+    double newRadius = radius + add.in(Meters);
+
+    Rotation2d rotateValue = Rotation2d.fromDegrees(180); // straight on
+
+    if(fieldElem.equals(FieldElement.RED_PROCESSOR) || fieldElem.equals(FieldElement.BLUE_PROCESSOR)){
+      rotateValue = Rotation2d.fromDegrees(90);
+    }
+
+    return new Pose2d(
+      new Translation2d(
+            Math.copySign(newRadius * Math.cos(theta.getRadians()), relativeTranslation.getX()),
+            Math.copySign(newRadius * Math.sin(theta.getRadians()), relativeTranslation.getY()))
+        .plus(fieldElementLoc),
+        // straight on is 180
+      initial.getRotation().rotateBy(rotateValue));
+  }
+
+
   public static Pose2d scaleFromReef( // adjusts for scoring location
       Pose2d initialPose, Distance addedDistance, boolean isRedReef) {
     Translation2d reefLocation;
@@ -40,65 +67,6 @@ public class AimingCalculator {
                 Math.copySign(newRadius * Math.sin(theta.getRadians()), relativeTranslation.getY()))
             .plus(reefLocation),
         initialPose.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
-  }
-
-  public static Pose2d scaleFromCoralStation(
-      Pose2d initPose, Distance addDistance, boolean isRedAlliance, boolean rightSide) {
-    Translation2d coralStationLoc;
-
-    if (isRedAlliance) {
-      if (rightSide) {
-        coralStationLoc = ElementFieldPosition.REDSIDE_RIGHT_STAITON.getElemPose();
-      } else {
-        coralStationLoc = ElementFieldPosition.REDSIDE_LEFT_STATION.getElemPose();
-      }
-    } else {
-      if (rightSide) {
-        coralStationLoc = ElementFieldPosition.BLUESIDE_LEFT_STATION.getElemPose();
-      } else {
-        coralStationLoc = ElementFieldPosition.BLUESIDE_LEFT_STATION.getElemPose();
-      }
-    }
-
-    Logger.recordOutput("coral station location", coralStationLoc);
-
-    Translation2d relativeTranslation = initPose.getTranslation().minus(coralStationLoc);
-    double radius = relativeTranslation.getNorm();
-    Rotation2d theta =
-        new Rotation2d(-Math.atan(relativeTranslation.getY() / relativeTranslation.getX()));
-    double newRadius = radius + addDistance.in(Meters);
-
-    return new Pose2d(
-        new Translation2d(
-                Math.copySign(newRadius * Math.cos(theta.getRadians()), relativeTranslation.getX()),
-                Math.copySign(newRadius * Math.sin(theta.getRadians()), relativeTranslation.getY()))
-            .plus(coralStationLoc),
-        initPose.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
-  }
-
-  public static Pose2d scaleFromProcessor(
-      Pose2d initPose, Distance addDistance, boolean isRedProcessor) {
-    Translation2d processorLoc;
-    if (isRedProcessor) {
-      processorLoc = ElementFieldPosition.RED_PROCESSOR.getElemPose();
-    } else {
-      processorLoc = ElementFieldPosition.BLUE_PROCESSOR.getElemPose();
-    }
-
-    Logger.recordOutput("processor location", processorLoc);
-
-    Translation2d relativeTranslation = initPose.getTranslation().minus(processorLoc);
-    double radius = relativeTranslation.getNorm();
-    Rotation2d theta =
-        new Rotation2d(-Math.atan(relativeTranslation.getY() / relativeTranslation.getX()));
-    double newRadius = radius + addDistance.in(Meters);
-
-    return new Pose2d(
-        new Translation2d(
-                Math.copySign(newRadius * Math.cos(theta.getRadians()), relativeTranslation.getX()),
-                Math.copySign(newRadius * Math.sin(theta.getRadians()), relativeTranslation.getY()))
-            .plus(processorLoc),
-        initPose.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
   }
 
   public static Pose2d horizontalAjustment(Distance ajustment, Pose2d pose) {

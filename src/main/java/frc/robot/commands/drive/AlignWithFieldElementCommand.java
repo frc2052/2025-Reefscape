@@ -49,8 +49,8 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
       new SwerveRequest.ApplyFieldSpeeds()
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
-  public AlignWithFieldElementCommand( // TODO: what field element it is depends on the tag we see: how to use in teleop?
-      Supplier<FieldElement> fieldEl, // what object
+  public AlignWithFieldElementCommand(
+      Supplier<FieldElement> fieldEl, // TODO: field element depends on tag in teleop / individual commands?
       Supplier<AllAlignOffsets> scoringLocation,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
@@ -97,120 +97,41 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
 
   @Override
   public void execute() { 
-    switch (fieldElement) {
-      case RED_PROCESSOR:
-        setGoalPoseProcessor();
-        break;
-      case RED_REEF:
-        setGoalPoseReef(true);
-        break;
-      case BLUE_REEF:
-        setGoalPoseReef(false);
-        break;
-      case BLUE_L_CORALSTATION:
-        setGoalPoseCoralStation(false, false);
-        break;
-      case BLUE_R_CORALSTATION:
-        setGoalPoseCoralStation(false, true);
-        break;
-      case RED_L_CORALSTATION:
-        setGoalPoseCoralStation(true, false);
-        break;
-      case RED_R_CORALSTATION:
-        setGoalPoseCoralStation(true, false);
-        break;
-      default:
-        break;
-    }
+    setGoalPose(fieldElement);
     super.execute();
   }
 
-  public void setGoalPoseReef(boolean isRedAlliance) {
-    Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
-    if (tar.isPresent()) {
-      Logger.recordOutput("Target for Alignment: " + fieldElement.getDisplayName(), true);
-      camTarget = tar.get().getBestTarget();
-      Optional<Pose3d> tagPose =
-          VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(camTarget.fiducialId);
-      if (tagPose.isPresent()) {
-        goalPose =
-            AimingCalculator.horizontalAjustment(
-                Meters.of(scoringLocation.get().transform.getY()),
-                AimingCalculator.scaleFromReef(
-                    tagPose.get().toPose2d(),
-                    Meters.of(scoringLocation.get().transform.getX()),
-                    robotState.isRedAlliance()));
-        Logger.recordOutput("Tag Pose Present", true);
-      } else {
-        Logger.recordOutput("Tag Pose Present", false);
-        goalPose = null;
-      }
-    } else {
-      Logger.recordOutput("Target for Alignment: " + fieldElement.getDisplayName(), false);
-      camTarget = null;
+  public void setGoalPose(FieldElement element){
+    // get target from correct cam
+    Optional<PhotonPipelineResult> tar;
+    if(fieldElement.equals(FieldElement.RED_PROCESSOR) || fieldElement.equals(FieldElement.BLUE_PROCESSOR)){
+        tar = vision.getAlgaeCamTarget();
+    } else if(fieldElement.equals(FieldElement.RED_REEF) || fieldElement.equals(FieldElement.BLUE_REEF)){
+        tar = vision.getReefCamClosestTarget();
+    } else { // must be coral station
+        tar = vision.getCoralStationTarget();
     }
-  }  
-  
-  public void setGoalPoseProcessor() {
-    Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
-    if (tar.isPresent()) {
-      Logger.recordOutput("Target for Alignment: " + fieldElement.getDisplayName(), true);
-      camTarget = tar.get().getBestTarget();
-      Optional<Pose3d> tagPose =
-          VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(camTarget.fiducialId);
 
-      if (tagPose.isPresent()) {
-        goalPose =
+    if(tar.isPresent()){
+        Logger.recordOutput("Target for Alignment: " + fieldElement.getDisplayName(), true);
+        camTarget = tar.get().getBestTarget();
+        Optional<Pose3d> tagPose = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(camTarget.fiducialId);
+
+        if(tagPose.isPresent()){
+          goalPose = 
             AimingCalculator.horizontalAjustment(
-                Meters.of(scoringLocation.get().transform.getY()),
-                AimingCalculator.scaleFromProcessor(
-                    tagPose.get().toPose2d(),
-                    Meters.of(scoringLocation.get().transform.getX()),
-                    robotState.isRedAlliance()));
-        Logger.recordOutput("Tag Pose Present", true);
-      } else {
-        Logger.recordOutput("Tag Pose Present", false);
-        goalPose = null;
-      }
+              Meters.of(scoringLocation.get().transform.getY()), 
+              AimingCalculator.scaleAll(
+                goalPose, 
+                Meters.of(scoringLocation.get().transform.getX()), 
+                element));
+        } else {
+            Logger.recordOutput("Tag Pose Present", false);
+            goalPose = null;
+        }
     } else {
-      Logger.recordOutput("Target for Alignment: " + fieldElement.getDisplayName(), false);
-      camTarget = null;
-    }
-  }
-
-  public boolean getStationSideRight(int id) { // TODO: how do we check we aren't seeing either
-    if (id == 1 || id == 13) { // 1 = red left, 13 = blue left
-      return false;
-    } else { // 2 = red right, 12 = blue right
-      return true;
-    }
-  }
-
-  public void setGoalPoseCoralStation(boolean isRedAlliance, boolean rightSide) {
-    Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
-    if (tar.isPresent()) {
-      Logger.recordOutput("Target for Alignment: " + fieldElement.getDisplayName(), true);
-      camTarget = tar.get().getBestTarget();
-      Optional<Pose3d> tagPose =
-          VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(camTarget.fiducialId);
-
-      if (tagPose.isPresent()) {
-        goalPose =
-            AimingCalculator.horizontalAjustment(
-                Meters.of(scoringLocation.get().transform.getY()),
-                AimingCalculator.scaleFromCoralStation(
-                    tagPose.get().toPose2d(),
-                    Meters.of(scoringLocation.get().transform.getX()),
-                    robotState.isRedAlliance(),
-                    getStationSideRight(camTarget.fiducialId)));
-        Logger.recordOutput("Tag Pose Present", true);
-      } else {
-        Logger.recordOutput("Tag Pose Present", false);
-        goalPose = null;
-      }
-    } else {
-      Logger.recordOutput("Target for Alignment: " + fieldElement.getDisplayName(), false);
-      camTarget = null;
+        Logger.recordOutput("Target for Alignment: " + fieldElement.getDisplayName(), false);
+        camTarget = null;
     }
   }
 
