@@ -4,12 +4,18 @@ public class Ports { // TODO: Set the ports for the robot
   /*
    *  CAN IDS
    */
-  public static final int ARM_CANCODER_ID = 99;
-  public static final int ARM_TALONFX_ID = 99;
+  public static final int ARM_CANCODER_ID = 17;
+  public static final int ARM_TALONFX_ID = 16;
+
+  
   public static final int HAND_TALONFX_ID = 99;
 
   public static final int ELEVATOR_FRONT_ID = 14;
   public static final int ELEVATOR_BACK_ID = 15;
+
+  public static final int ALGAE_ENCODER_ID = 99;
+  public static final int ALGAE_PIVOT_ID = 99;
+  public static final int ALGAE_SCORING_ID = 99;
 
   /*
    *  DIO

@@ -17,7 +17,7 @@ public class AutoE2D4C4 extends AutoBase {
 
   @Override
   public void init() {
-    addCommands(delaySelectedTime());
+    addCommands(getBumpCommand());
 
     addCommands(followPathCommand(startingPath));
     addCommands(toPosition(ElevatorPosition.L2));
