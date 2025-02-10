@@ -70,18 +70,15 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
   @Override
   public void initialize() {
     goalPose = null;
-    if (fieldElement.equals(FieldElement.RED_PROCESSOR) || fieldElement.equals(FieldElement.BLUE_PROCESSOR)) {
-      robotState.setReefTracking(false);
+    robotState.setReefTracking(false);
+    robotState.setProcessorTracking(false);
+    robotState.setStationTracking(false);
+
+    if (FieldElement.checkIsProcessor(fieldElement)) {
       robotState.setProcessorTracking(true);
-      robotState.setStationTracking(false);
-    } else if (fieldElement.equals(FieldElement.RED_REEF)
-        || fieldElement.equals(FieldElement.BLUE_REEF)) {
+    } else if (FieldElement.checkIsReef(fieldElement)) {
       robotState.setReefTracking(true);
-      robotState.setProcessorTracking(false);
-      robotState.setStationTracking(false);
     } else { // align coral station
-      robotState.setReefTracking(false);
-      robotState.setProcessorTracking(false);
       robotState.setStationTracking(true);
     }
   }
@@ -111,7 +108,6 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
     } else { // must be coral station
         tar = vision.getCoralStationTarget();
     }
-
     if(tar.isPresent()){
         Logger.recordOutput("Target for Alignment: " + fieldElement.getDisplayName(), true);
         camTarget = tar.get().getBestTarget();
@@ -159,6 +155,28 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
     private FieldElement(String name, Translation2d fieldPos) {
       elemName = name;
       elemFieldPosition = fieldPos;
+    }
+
+    public static boolean checkIsReef(FieldElement element){
+        if(element.equals(FieldElement.RED_REEF) || element.equals(FieldElement.BLUE_REEF)){
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean checkIsProcessor(FieldElement element){
+        if(element.equals(FieldElement.RED_PROCESSOR) || element.equals(FieldElement.BLUE_PROCESSOR)){
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean checkIsCoralStation(FieldElement element){
+        if(element.equals(FieldElement.RED_L_CORALSTATION) || element.equals(FieldElement.RED_R_CORALSTATION)
+            || element.equals(FieldElement.BLUE_L_CORALSTATION) || element.equals(FieldElement.BLUE_R_CORALSTATION)){
+            return true;
+        }
+        return false;
     }
   }
 

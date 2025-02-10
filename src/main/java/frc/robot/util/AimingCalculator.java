@@ -28,10 +28,10 @@ public class AimingCalculator {
         new Rotation2d(-Math.atan(relativeTranslation.getY() / relativeTranslation.getX()));
     double newRadius = radius + add.in(Meters);
 
-    Rotation2d rotateValue = Rotation2d.fromDegrees(180); // straight on
+    Rotation2d rotateValue = Rotation2d.fromDegrees(180); // front of robot pointed @ target: reef
 
-    if(fieldElem.equals(FieldElement.RED_PROCESSOR) || fieldElem.equals(FieldElement.BLUE_PROCESSOR)){
-      rotateValue = Rotation2d.fromDegrees(90);
+    if(FieldElement.checkIsProcessor(fieldElem)){
+      rotateValue = Rotation2d.fromDegrees(90); // ground pickup / processor score side pointed @ target?
     }
 
     return new Pose2d(
@@ -39,7 +39,6 @@ public class AimingCalculator {
             Math.copySign(newRadius * Math.cos(theta.getRadians()), relativeTranslation.getX()),
             Math.copySign(newRadius * Math.sin(theta.getRadians()), relativeTranslation.getY()))
         .plus(fieldElementLoc),
-        // straight on is 180
       initial.getRotation().rotateBy(rotateValue));
   }
 
