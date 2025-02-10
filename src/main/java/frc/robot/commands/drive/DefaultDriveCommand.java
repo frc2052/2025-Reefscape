@@ -73,15 +73,26 @@ public class DefaultDriveCommand extends Command {
   }
 
   protected double getX() {
-    return slewAxis(xLimiter, xSupplier.getAsDouble());
+    if (xSupplier.getAsDouble() > DriverConstants.GAMEPAD_DEADBAND) {
+      return slewAxis(xLimiter, expo(xSupplier.getAsDouble()) * maxSpeed);
+    }
+
+    return 0.0;
   }
 
   protected double getY() {
-    return slewAxis(yLimiter, ySupplier.getAsDouble());
+    if (ySupplier.getAsDouble() > DriverConstants.GAMEPAD_DEADBAND) {
+      return slewAxis(yLimiter, expo(ySupplier.getAsDouble()) * maxSpeed);
+    }
+
+    return 0.0;
   }
 
   protected double getRotation() {
-    return slewAxis(rotationLimiter, rotationSupplier.getAsDouble());
+    if (rotationSupplier.getAsDouble() > DriverConstants.GAMEPAD_DEADBAND) {
+      return slewAxis(rotationLimiter, expo(rotationSupplier.getAsDouble()) * maxAngularRate);
+    }
+    return 0.0;
   }
 
   protected boolean getFieldCentric() {
@@ -91,19 +102,26 @@ public class DefaultDriveCommand extends Command {
   protected SwerveRequest getSwerveRequest() {
     if (getFieldCentric()) {
       return fieldCentricDrive
-          .withVelocityX(getX() * maxSpeed)
-          .withVelocityY(getY() * maxSpeed)
-          .withRotationalRate(getRotation() * maxAngularRate);
+          .withVelocityX(getX())
+          .withVelocityY(getY())
+          .withRotationalRate(getRotation());
     } else {
       return robotCentricDrive
-          .withVelocityX(getX() * maxSpeed)
-          .withVelocityY(getY() * maxSpeed)
-          .withRotationalRate(getRotation() * maxAngularRate);
+          .withVelocityX(getX())
+          .withVelocityY(getY())
+          .withRotationalRate(getRotation());
     }
   }
 
   @Override
   public void execute() {
+    double xval = 0.05;
+    if (xval > DriverConstants.GAMEPAD_DEADBAND) {
+      System.out.println(slewAxis(xLimiter, expo(xval) * maxSpeed));
+    } else {
+      System.out.println(0.0);
+    }
+
     drivetrain.setControl(getSwerveRequest());
   }
 
@@ -112,9 +130,18 @@ public class DefaultDriveCommand extends Command {
     drivetrain.stop();
   }
 
-  protected double slewAxis(SlewRateLimiter limiter, double value) {
+  protected double expo(double value) {
     if (DriverConstants.DEV_CONTROLS) {
-      return limiter.calculate(Math.copySign(Math.pow(value, 2), value));
+      return Math.copySign(Math.pow(Math.abs(value), 2), value);
+    }
+
+    return Math.copySign(Math.pow(Math.abs(value), 3), value);
+  }
+
+  protected double slewAxis(SlewRateLimiter limiter, double value) {
+    value = limiter.calculate(value);
+    if (value < maxSpeed - 0.26) {
+      value += 0.26;
     }
 
     return value;
