@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.RobotState;
 import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
-
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 

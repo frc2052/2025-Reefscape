@@ -21,7 +21,6 @@ import frc.robot.RobotState;
 import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
-import frc.robot.commands.elevator.ElevatorCommandFactory;
 import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
 import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
@@ -119,8 +118,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
   }
 
   protected Command toScoringPositionCommand(
-    // ReefScoringPosition scorePos
-    ) {
+      // ReefScoringPosition scorePos
+      ) {
     return null; // scorePos.getCommand();
   }
 

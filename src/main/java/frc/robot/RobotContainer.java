@@ -61,11 +61,9 @@ public class RobotContainer {
   private void configureNamedCommands() {
     // snap to angle in gui
     NamedCommands.registerCommand(
-        "Snap Left Coral Station",
-        new AutoSnapToLocationAngleCommand(TargetFieldLocation.LCS));
+        "Snap Left Coral Station", new AutoSnapToLocationAngleCommand(TargetFieldLocation.LCS));
     NamedCommands.registerCommand(
-        "Snap Right Coral Station",
-        new AutoSnapToLocationAngleCommand(TargetFieldLocation.RCS));
+        "Snap Right Coral Station", new AutoSnapToLocationAngleCommand(TargetFieldLocation.RCS));
 
     NamedCommands.registerCommand(
         "Snap to AB", new AutoSnapToLocationAngleCommand(TargetFieldLocation.AB));
@@ -87,7 +85,8 @@ public class RobotContainer {
     // NamedCommands.registerCommand("Score L4", ToLevel.L4.getCommand());
     // NamedCommands.registerCommand("Score Processor", null); // TODO: auto processor score
     // NamedCommands.registerCommand("DeScore Algae", null); // TODO: auto descore algae
-    // NamedCommands.registerCommand("Coral Station Intake", null); // TODO: auto coral station intake
+    // NamedCommands.registerCommand("Coral Station Intake", null); // TODO: auto coral station
+    // intake
   }
 
   private void configureBindings() {

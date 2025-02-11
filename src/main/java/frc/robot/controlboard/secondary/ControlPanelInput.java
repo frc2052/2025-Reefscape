@@ -119,7 +119,6 @@ public class ControlPanelInput implements ISecondaryControlBoard {
   @Override
   public Trigger setGoalAlgaeScoring() {
     return new JoystickButton(controlPanel, 99);
-
   }
 
   @Override

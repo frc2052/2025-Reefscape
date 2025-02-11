@@ -92,5 +92,4 @@ public class ArmSubsystem extends SubsystemBase {
     Logger.recordOutput("Arm Goal Angle", goalPosition.in(Degrees));
     // setArmAngle(goalPosition);
   }
-
 }

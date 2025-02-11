@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.controlboard.PositionSuperstructure;
 import frc.robot.controlboard.PositionSuperstructure.TargetAction;
@@ -59,7 +58,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
         SecondaryImageManager.setCurrentImage(SecondaryImage.A1);
         break;
       case LA:
-        SecondaryImageManager.setCurrentImage(SecondaryImage.A2); 
+        SecondaryImageManager.setCurrentImage(SecondaryImage.A2);
         break;
       default:
         SecondaryImageManager.setCurrentImage(SecondaryImage.NONE);
@@ -83,7 +82,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
         coralArm.setArmPosition(target);
         algaeArm.setGoalPosition(target);
       } else {
-        if (coralArm.isAtPosition(5, TargetAction.TR.getCoralArmAngle()) && coralArm.isAtPosition(5, TargetAction.TR.getAlgaeArmPosition())) {
+        if (coralArm.isAtPosition(5, TargetAction.TR.getCoralArmAngle())
+            && coralArm.isAtPosition(5, TargetAction.TR.getAlgaeArmPosition())) {
           elevator.setPositionMotionMagic(target);
         } else {
           elevator.stopElevator();
@@ -92,11 +92,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
         }
       }
 
-      if (elevator.atPosition(target) && coralArm.isAtPosition(5, target.getCoralArmAngle()) && algaeArm.isAtPosition(5, target.getAlgaeArmPosition())) {
+      if (elevator.atPosition(target)
+          && coralArm.isAtPosition(5, target.getCoralArmAngle())
+          && algaeArm.isAtPosition(5, target.getAlgaeArmPosition())) {
         isChangingState = false;
         System.out.println("Arrived at Target State");
       }
-
     }
 
     previousAction = target;

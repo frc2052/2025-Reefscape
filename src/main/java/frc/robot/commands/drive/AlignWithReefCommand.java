@@ -12,8 +12,8 @@ import com.team2052.lib.planners.AutoAlignPlanner;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
 import frc.robot.RobotState;
+import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AimingCalculator;
@@ -121,5 +121,4 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
     planner.resetPlanner();
     robotState.setReefTracking(false);
   }
-
 }

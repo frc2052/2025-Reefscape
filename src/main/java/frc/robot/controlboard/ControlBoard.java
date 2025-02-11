@@ -224,7 +224,7 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
     return secondaryControlBoard.setGoalLowerAlgae();
   }
 
-  @Override 
+  @Override
   public Trigger setSubReefLeft() {
     return secondaryControlBoard.setSubReefLeft();
   }

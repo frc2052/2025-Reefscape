@@ -104,7 +104,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean atPosition(TargetAction position) {
-    return Math.abs(position.ElevatorPositionRotations - frontMotor.getPosition().getValueAsDouble())
+    return Math.abs(
+            position.ElevatorPositionRotations - frontMotor.getPosition().getValueAsDouble())
         <= ElevatorConstants.TICKS_DEADZONE;
   }
 
