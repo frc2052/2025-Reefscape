@@ -10,21 +10,21 @@ import frc.robot.subsystems.ClimberSubsystem;
 
 /** Add your docs here. */
 public class ClimberCommandFactory {
-    private static final ClimberSubsystem climber = ClimberSubsystem.getInstance();
+  private static final ClimberSubsystem climber = ClimberSubsystem.getInstance();
 
-    public static Command climberUp() {
-        return Commands.runOnce(() -> climber.moveUp(false), climber);
-    }
+  public static Command climberUp() {
+    return Commands.runOnce(() -> climber.moveUp(false), climber);
+  }
 
-    public static Command climberDown() {
-        return Commands.runOnce(() -> climber.moveDown(false), climber);
-    }
+  public static Command climberDown() {
+    return Commands.runOnce(() -> climber.moveDown(false), climber);
+  }
 
-    public static Command climberFineUp() {
-        return Commands.runOnce(() -> climber.moveUp(true), climber);
-    }
+  public static Command climberFineUp() {
+    return Commands.runOnce(() -> climber.moveUp(true), climber);
+  }
 
-    public static Command climberFineDown() {
-        return Commands.runOnce(() -> climber.moveDown(true), climber);
-    }
+  public static Command climberFineDown() {
+    return Commands.runOnce(() -> climber.moveDown(true), climber);
+  }
 }
