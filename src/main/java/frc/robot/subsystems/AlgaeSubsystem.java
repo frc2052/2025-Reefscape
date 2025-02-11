@@ -23,7 +23,7 @@ public class AlgaeSubsystem extends SubsystemBase {
   // private final TalonFX pivotMotor;
   // private final TalonFX scoringMotor;
 
-  private final AnalogEncoder pivotEncoder;
+  // private final AnalogEncoder pivotEncoder;
 
   private TargetAction position;
 
@@ -43,18 +43,18 @@ public class AlgaeSubsystem extends SubsystemBase {
   public AlgaeSubsystem() {
     // pivotMotor = new TalonFX(Ports.ALGAE_PIVOT_ID);
     // scoringMotor = new TalonFX(Ports.ALGAE_SCORING_ID);
-    pivotEncoder = new AnalogEncoder(Ports.ALGAE_ENCODER_ID);
+    // pivotEncoder = new AnalogEncoder(Ports.ALGAE_ENCODER_ID);
 
     // pivotMotor.getConfigurator().apply(AlgaeSubsystemConstants.Motors.PIVOT_CONFIG);
     // scoringMotor.getConfigurator().apply(AlgaeSubsystemConstants.Motors.SCORING_CONFIG);
 
     position = PositionSuperstructure.getInstance().getTargetAction();
 
-    pivotController =
-        new PIDController(
-            AlgaeSubsystemConstants.PIDs.PIVOT_KP,
-            AlgaeSubsystemConstants.PIDs.PIVOT_KI,
-            AlgaeSubsystemConstants.PIDs.PIVOT_KD);
+    // pivotController =
+    //     new PIDController(
+    //         AlgaeSubsystemConstants.PIDs.PIVOT_KP,
+    //         AlgaeSubsystemConstants.PIDs.PIVOT_KI,
+    //         AlgaeSubsystemConstants.PIDs.PIVOT_KD);
   }
 
   private void goToPivotAngle(Angle angle) {
