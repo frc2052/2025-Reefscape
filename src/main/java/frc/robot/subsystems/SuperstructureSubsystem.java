@@ -21,6 +21,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
   /** Private constructor to prevent instantiation. */
   private SuperstructureSubsystem() {
     previousAction = position.getTargetAction();
+    pushChangedValueToShuffleboard(previousAction);
     isChangingState = false;
   }
 
