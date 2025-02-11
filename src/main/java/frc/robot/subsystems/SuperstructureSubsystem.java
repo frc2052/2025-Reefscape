@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
+import com.team2052.lib.util.SecondaryImageManager;
+import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.controlboard.PositionSuperstructure;
 import frc.robot.controlboard.PositionSuperstructure.TargetAction;
@@ -30,12 +34,38 @@ public class SuperstructureSubsystem extends SubsystemBase {
     return INSTANCE;
   }
 
+  private void pushChangedValueToShuffleboard(TargetAction action) {
+    switch (action) {
+      case L1:
+        SecondaryImageManager.setCurrentImage(SecondaryImage.L1);
+        break;
+      case L2:
+        SecondaryImageManager.setCurrentImage(SecondaryImage.L2);
+        break;
+      case L3:
+        SecondaryImageManager.setCurrentImage(SecondaryImage.L3);
+        break;
+      case L4:
+        SecondaryImageManager.setCurrentImage(SecondaryImage.L4);
+        break;
+      case UA:
+        SecondaryImageManager.setCurrentImage(SecondaryImage.A1);
+        break;
+      case LA:
+        SecondaryImageManager.setCurrentImage(SecondaryImage.A2); 
+        break;
+      default:
+        SecondaryImageManager.setCurrentImage(SecondaryImage.NONE);
+        break;
+    }
+  }
+
   @Override
   public void periodic() {
     TargetAction target = position.getTargetAction();
 
     if (target != previousAction) {
-      
+      pushChangedValueToShuffleboard(target);
       isChangingState = true;
     }
 
