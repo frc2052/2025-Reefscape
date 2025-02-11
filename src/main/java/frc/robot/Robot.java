@@ -10,6 +10,9 @@ import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 
+import com.team2052.lib.util.SecondaryImageManager;
+import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
+
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
@@ -31,6 +34,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    SecondaryImageManager.setCurrentImage(SecondaryImage.L1);
   }
 
   @Override
