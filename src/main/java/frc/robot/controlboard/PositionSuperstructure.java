@@ -13,9 +13,9 @@ public class PositionSuperstructure {
     private RobotState state = RobotState.getInstance();
     private ControlBoard controlBoard = ControlBoard.getInstance();
 
-    private static TargetFieldLocation targetReefSide = TargetFieldLocation.AB;
-    private static TargetAction targetAction = TargetAction.HP;
-    private static ReefSubSide reefSubSide = ReefSubSide.CENTER;
+    private TargetFieldLocation targetReefSide = TargetFieldLocation.AB;
+    private TargetAction targetAction = TargetAction.HP;
+    private ReefSubSide reefSubSide = ReefSubSide.CENTER;
 
     public static PositionSuperstructure getInstance() {
         if (INSTANCE == null) {
@@ -48,38 +48,38 @@ public class PositionSuperstructure {
         controlBoard.setSubReefRight().onTrue(new InstantCommand(() -> setReefSubSide(ReefSubSide.RIGHT)));
     }
 
-    public static void setTargetReefSide(TargetFieldLocation target) {
+    public void setTargetReefSide(TargetFieldLocation target) {
         targetReefSide = target;
         revealCombonation();
     }
 
-    public static void setTargetAction(TargetAction target) {
+    public void setTargetAction(TargetAction target) {
         targetAction = target;
         revealCombonation();
     }
 
-    public static void setReefSubSide(ReefSubSide target) {
+    public void setReefSubSide(ReefSubSide target) {
         reefSubSide = target;
         revealCombonation();
     }
 
-    public static TargetFieldLocation getTargetReefSide() {
+    public TargetFieldLocation getTargetReefSide() {
         return targetReefSide;
     }
 
-    public static TargetAction getTargetAction() {
+    public TargetAction getTargetAction() {
         return targetAction;
     }
 
-    public static ReefSubSide getReefSubSide() {
+    public ReefSubSide getReefSubSide() {
         return reefSubSide;
     }
 
-    public static void revealCombonation() {
+    public void revealCombonation() {
         System.out.println("Targeting : " + getTargetReefSide().toString() + " at " + getReefSubSide().toString() + " with action " + getTargetAction().toString());
     }
 
-    public static enum TargetFieldLocation {
+    public enum TargetFieldLocation {
         AB(7, 18, Degrees.of(0)),
         CD(8, 17, Degrees.of(60)),
         EF(9, 22, Degrees.of(120)),
@@ -115,7 +115,7 @@ public class PositionSuperstructure {
         }
     }
 
-    public static enum TargetAction {
+    public enum TargetAction {
         HM(2.0,  Degrees.of(180.0), Degrees.of(90)), // Homing
         L1(10.0, Degrees.of(110.0), Degrees.of(90)),
         L2(20.0, Degrees.of(55.0),  Degrees.of(90)),
@@ -150,7 +150,7 @@ public class PositionSuperstructure {
         }
     }
 
-    public static enum ReefSubSide {
+    public enum ReefSubSide {
         LEFT(new Transform2d(0.5, 0.25, new Rotation2d(0))),
         CENTER(new Transform2d(0.5, 0.0, new Rotation2d(0))),
         RIGHT(new Transform2d(0.5, -0.25, new Rotation2d(0)));
