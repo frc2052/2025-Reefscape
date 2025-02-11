@@ -35,6 +35,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     TargetAction target = position.getTargetAction();
 
     if (target != previousAction) {
+      
       isChangingState = true;
     }
 
