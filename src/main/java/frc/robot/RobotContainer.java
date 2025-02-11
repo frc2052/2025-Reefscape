@@ -23,6 +23,7 @@ import frc.robot.controlboard.ControlBoard;
 import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
 import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
+import frc.robot.subsystems.SuperstructureSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.Telemetry;
@@ -37,6 +38,7 @@ public class RobotContainer {
   public final VisionSubsystem vision = VisionSubsystem.getInstance();
   public final AdvantageScopeSubsystem advantageScope = AdvantageScopeSubsystem.getInstance();
   public final AutoFactory autoFactory = AutoFactory.getInstance();
+  public final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
 
   private final Telemetry logger =
       new Telemetry(DrivetrainConstants.DRIVE_MAX_SPEED.in(MetersPerSecond));

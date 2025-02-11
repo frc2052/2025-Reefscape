@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 
@@ -34,6 +33,14 @@ public class SuperstructureSubsystem extends SubsystemBase {
     return INSTANCE;
   }
 
+  public boolean isAtTargetState() {
+    return isChangingState;
+  }
+
+  public TargetAction getLatestAction() {
+    return previousAction;
+  }
+
   private void pushChangedValueToShuffleboard(TargetAction action) {
     switch (action) {
       case L1:
@@ -65,6 +72,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     TargetAction target = position.getTargetAction();
 
     if (target != previousAction) {
+      System.out.println("Target State Has Changed");
       pushChangedValueToShuffleboard(target);
       isChangingState = true;
     }
