@@ -18,10 +18,10 @@ import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.DistanceToVisionGoal;
 import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.DefaultDriveCommand;
-import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
+import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -60,23 +60,23 @@ public class RobotContainer {
     // snap to angle in gui
     NamedCommands.registerCommand(
         "Snap Left Coral Station",
-        new AutoSnapToLocationAngleCommand(SnapLocation.LeftCoralStation));
+        new AutoSnapToLocationAngleCommand(TargetFieldLocation.LCS));
     NamedCommands.registerCommand(
         "Snap Right Coral Station",
-        new AutoSnapToLocationAngleCommand(SnapLocation.RightCoralStation));
+        new AutoSnapToLocationAngleCommand(TargetFieldLocation.RCS));
 
     NamedCommands.registerCommand(
-        "Snap to AB", new AutoSnapToLocationAngleCommand(SnapLocation.ReefAB));
+        "Snap to AB", new AutoSnapToLocationAngleCommand(TargetFieldLocation.AB));
     NamedCommands.registerCommand(
-        "Snap to CD", new AutoSnapToLocationAngleCommand(SnapLocation.ReefCD));
+        "Snap to CD", new AutoSnapToLocationAngleCommand(TargetFieldLocation.CD));
     NamedCommands.registerCommand(
-        "Snap to EF", new AutoSnapToLocationAngleCommand(SnapLocation.ReefEF));
+        "Snap to EF", new AutoSnapToLocationAngleCommand(TargetFieldLocation.EF));
     NamedCommands.registerCommand(
-        "Snap to GH", new AutoSnapToLocationAngleCommand(SnapLocation.ReefGH));
+        "Snap to GH", new AutoSnapToLocationAngleCommand(TargetFieldLocation.GH));
     NamedCommands.registerCommand(
-        "Snap to IJ", new AutoSnapToLocationAngleCommand(SnapLocation.ReefIJ));
+        "Snap to IJ", new AutoSnapToLocationAngleCommand(TargetFieldLocation.IJ));
     NamedCommands.registerCommand(
-        "Snap to KL", new AutoSnapToLocationAngleCommand(SnapLocation.ReefKL));
+        "Snap to KL", new AutoSnapToLocationAngleCommand(TargetFieldLocation.KL));
 
     // // score in gui
     // NamedCommands.registerCommand("Score L1", ToLevel.L1.getCommand());

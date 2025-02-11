@@ -21,10 +21,10 @@ import frc.robot.RobotState;
 import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
-import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.commands.elevator.ElevatorCommandFactory;
 import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
 import frc.robot.controlboard.PositionSuperstructure.TargetAction;
+import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.List;
@@ -79,12 +79,12 @@ public abstract class AutoBase extends SequentialCommandGroup {
     return AutoBuilder.followPath(path);
   }
 
-  protected Command snapToReefAngle(SnapLocation snapLocation) {
+  protected Command snapToReefAngle(TargetFieldLocation snapLocation) {
     return new SnapToLocationAngleCommand(snapLocation, () -> 0, () -> 0, () -> 0, () -> true);
   }
 
   protected Command reefSideVisionOrPathAlign(
-      ReefSubSide alignLocation, PathPlannerPath altAlignPath, SnapLocation snaploc) {
+      ReefSubSide alignLocation, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
     return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
         .until(
             () ->
