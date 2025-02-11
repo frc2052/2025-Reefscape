@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.team2052.lib.util.SecondaryImageManager;
+import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LoggedRobot;

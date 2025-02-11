@@ -18,6 +18,7 @@ import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.DistanceToVisionGoal;
 import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.DefaultDriveCommand;
+import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;

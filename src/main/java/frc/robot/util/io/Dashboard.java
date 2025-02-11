@@ -52,7 +52,7 @@ public class Dashboard {
     }
     waitSecondsChooser.addDefaultOption("None Chosen", 0.0);
     waitSecondsChooser.addOption("1 Second", 1.0);
-    
+
     bump.addDefaultOption("No Bump Needed", false);
     bump.addOption("Bump Needed", true);
   }
