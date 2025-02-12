@@ -30,6 +30,5 @@ public class AdvantageScopeSubsystem extends SubsystemBase {
     recordDrivetrainData();
   }
 
-  public static void recordDrivetrainData() {
-  }
+  public static void recordDrivetrainData() {}
 }

@@ -73,7 +73,7 @@ public class VisionSubsystem extends SubsystemBase {
     localizationTagTrackers.parallelStream().forEach(this::pullCameraData);
   }
 
-  private void pullCameraData(TagTracker tagTracker) {
+  private void pullCameraData(TagTracker tagTracker) { // TODO: add updates for the other cameras
     synchronizedVisionUpdates.addAll(
         tagTracker.getAllResults(
             robotState.getIsReefTracking() && tagTracker == reefTagTracker ? true : false));

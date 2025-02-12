@@ -3,8 +3,8 @@ package frc.robot.commands.superstructure;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotState;
-import frc.robot.commands.drive.AlignWithReefCommand;
-import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
+import frc.robot.commands.drive.alignment.AlignWithReefCommand;
+import frc.robot.commands.drive.alignment.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory.ScoreLevel;
 import frc.robot.util.io.Dashboard;
 

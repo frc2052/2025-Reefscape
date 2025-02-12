@@ -11,6 +11,7 @@ public class RobotState {
   private SwerveDriveState drivetrainState = new SwerveDriveState();
 
   private boolean isReefTracking;
+  private boolean isStationTracking;
   private boolean hasCoral;
   private boolean isProcessorTracking;
 

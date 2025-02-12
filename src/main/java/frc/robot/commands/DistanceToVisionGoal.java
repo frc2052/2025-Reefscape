@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
-import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
+import frc.robot.commands.drive.alignment.AlignWithReefCommand.AlignLocation;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.Optional;
 import java.util.function.Supplier;

@@ -2,7 +2,6 @@ package frc.robot.util;
 
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Rotation;
 
 import com.team2052.lib.geometry.Polar2d;
 import com.team2052.lib.geometry.Pose2dPolar;
@@ -11,13 +10,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.commands.drive.AlignWithFieldElementCommand.FieldElement;
-
+import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand.FieldElement;
 import org.littletonrobotics.junction.Logger;
 
 public class AimingCalculator {
 
-  public static Pose2d scaleAll(Pose2d initial, Distance add, FieldElement fieldElem){
+  public static Pose2d scaleAll(Pose2d initial, Distance add, FieldElement fieldElem) {
     Translation2d fieldElementLoc = fieldElem.getFieldPosition();
 
     Logger.recordOutput(fieldElem.getDisplayName() + " location", fieldElementLoc);
@@ -30,18 +28,18 @@ public class AimingCalculator {
 
     Rotation2d rotateValue = Rotation2d.fromDegrees(180); // front of robot pointed @ target: reef
 
-    if(FieldElement.checkIsProcessor(fieldElem)){
-      rotateValue = Rotation2d.fromDegrees(90); // ground pickup / processor score side pointed @ target?
+    if (FieldElement.checkIsProcessor(fieldElem)) {
+      rotateValue =
+          Rotation2d.fromDegrees(90); // ground pickup / processor score side pointed @ target?
     }
 
     return new Pose2d(
-      new Translation2d(
-            Math.copySign(newRadius * Math.cos(theta.getRadians()), relativeTranslation.getX()),
-            Math.copySign(newRadius * Math.sin(theta.getRadians()), relativeTranslation.getY()))
-        .plus(fieldElementLoc),
-      initial.getRotation().rotateBy(rotateValue));
+        new Translation2d(
+                Math.copySign(newRadius * Math.cos(theta.getRadians()), relativeTranslation.getX()),
+                Math.copySign(newRadius * Math.sin(theta.getRadians()), relativeTranslation.getY()))
+            .plus(fieldElementLoc),
+        initial.getRotation().rotateBy(rotateValue));
   }
-
 
   public static Pose2d scaleFromReef( // adjusts for scoring location
       Pose2d initialPose, Distance addedDistance, boolean isRedReef) {
@@ -88,7 +86,7 @@ public class AimingCalculator {
     return new Pose2dPolar(pose.getRotation(), polar);
   }
 
-  public enum ElementFieldPosition{
+  public enum ElementFieldPosition {
     BLUE_REEF(new Translation2d(Inches.of(177.06927), Inches.of(158.5))),
     RED_REEF(new Translation2d(Inches.of(177.06927), Inches.of(158.5))),
 
@@ -103,11 +101,11 @@ public class AimingCalculator {
 
     private Translation2d elemPose;
 
-    public Translation2d getElemPose(){
+    public Translation2d getElemPose() {
       return elemPose;
     }
 
-    private ElementFieldPosition(Translation2d translation){
+    private ElementFieldPosition(Translation2d translation) {
       elemPose = translation;
     }
   }
