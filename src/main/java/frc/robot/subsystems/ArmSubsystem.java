@@ -6,9 +6,13 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
+// import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.RobotState;
@@ -37,8 +41,12 @@ public class ArmSubsystem extends SubsystemBase {
     pivotMotor.getConfigurator().apply(ArmConstants.MOTOR_CONFIG);
   }
 
+  public Command runPct(double pct) {
+    return Commands.runOnce(() -> pivotMotor.set(pct), this);
+  }
+
   private void setPivotAngle(Angle angle) {
-    pivotMotor.setControl(new PositionTorqueCurrentFOC(angle).withSlot(0));
+    // pivotMotor.setControl(new PositionTorqueCurrentFOC(angle).withSlot(0));
   }
 
   public void setArmPosition(ArmPosition position) {
@@ -88,7 +96,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Logger.recordOutput("Arm Angle", pivotMotor.getPosition().getValueAsDouble());
+    Logger.recordOutput("Arm Angle", Units.rotationsToDegrees(pivotMotor.getPosition().getValueAsDouble()));
     Logger.recordOutput("Arm Goal Angle", goalPosition.in(Degrees));
   }
 

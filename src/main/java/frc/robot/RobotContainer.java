@@ -22,10 +22,15 @@ import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
+import frc.robot.commands.elevator.ElevatorCommandFactory;
+import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ArmSubsystem.ArmPosition;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.Telemetry;
@@ -99,64 +104,68 @@ public class RobotContainer {
     configurePOVBindings();
 
     // temporary distance to tag (2)
-    controlBoard.distanceToTag().whileTrue(new DistanceToVisionGoal(() -> AlignLocation.LEFT));
+    controlBoard.outtake().whileTrue(new DistanceToVisionGoal(() -> AlignLocation.LEFT));
 
-    controlBoard
-        .reefAlignment() // 3
-        .whileTrue(
-            new AlignWithReefCommand(
-                () -> AlignLocation.MIDDLE,
-                controlBoard::getThrottle,
-                // Sideways velocity supplier.
-                controlBoard::getStrafe,
-                // Rotation velocity supplier.
-                controlBoard::getRotation,
-                dashboard::isFieldCentric));
+    // controlBoard
+    //     .reefAlignment() // 3
+    //     .whileTrue(
+    //         new AlignWithReefCommand(
+    //             () -> AlignLocation.MIDDLE,
+    //             controlBoard::getThrottle,
+    //             // Sideways velocity supplier.
+    //             controlBoard::getStrafe,
+    //             // Rotation velocity supplier.
+    //             controlBoard::getRotation,
+    //             dashboard::isFieldCentric));
 
     controlBoard.sysIDQuasiForward().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
     controlBoard.sysIDQuasiReverse().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
     controlBoard.sysIDDynamicForward().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
     controlBoard.sysIDDynamicReverse().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+    controlBoard.intake().whileTrue(HandCommandFactory.motorIn());
+    controlBoard.outtake().whileTrue(HandCommandFactory.motorOut());
+    controlBoard.shoot().onTrue(ArmSubsystem.getInstance().runPct(-1.0)).onFalse(ArmSubsystem.getInstance().runPct(0.0));
+    controlBoard.reefAlignment().onTrue(ArmSubsystem.getInstance().runPct(0.25)).onFalse(ArmSubsystem.getInstance().runPct(0.0));
+        // .shoot()
+        // .onTrue(Commands.runOnce(SignalLogger::start))
+        // .onFalse(Commands.runOnce(SignalLogger::stop));
+    controlBoard.homeElevator().onTrue(new InstantCommand(() -> ElevatorSubsystem.getInstance().setWantHome(true)));
+
     controlBoard
-        .shoot()
-        .onTrue(Commands.runOnce(SignalLogger::start))
-        .onFalse(Commands.runOnce(SignalLogger::stop));
+        .manualUp()
+        .onTrue(ElevatorSubsystem.getInstance().manualUp())
+        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
 
-    // controlBoard
-    //     .manualUp()
-    //     .onTrue(ElevatorSubsystem.getInstance().manualUp())
-    //     .onFalse(ElevatorSubsystem.getInstance().stopElevator());
-
-    // controlBoard
-    //     .manualDown()
-    //     .onTrue(ElevatorSubsystem.getInstance().manualDown())
-    //     .onFalse(ElevatorSubsystem.getInstance().stopElevator());
+    controlBoard
+        .manualDown()
+        .onTrue(ElevatorSubsystem.getInstance().manualDown())
+        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
 
     // controlBoard
     //     .homeElevator()
     //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.HOME));
-    controlBoard.setGoalL1().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.L1));
+    // controlBoard.setGoalL1().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.L1));
 
-    controlBoard.setGoalL2().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.HANDOFF));
-    controlBoard.setGoalL3().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.MID_LEVEL));
-    controlBoard.setGoalL4().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.L4));
+    // controlBoard.setGoalL2().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.HANDOFF));
+    // controlBoard.setGoalL3().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.MID_LEVEL));
+    // controlBoard.setGoalL4().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.L4));
+    // controlBoard
+    //     .setGoalUpperAlgae()
+    //     .onTrue(ArmCommandFactory.setArmPosition(ArmPosition.UPPER_ALGAE_DESCORE));
+
     controlBoard
-        .setGoalUpperAlgae()
-        .onTrue(ArmCommandFactory.setArmPosition(ArmPosition.UPPER_ALGAE_DESCORE));
+        .setGoalL1()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L1));
 
-    // controlBoard
-    //     .setGoalL1()
-    //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L1));
-
-    // controlBoard
-    //     .setGoalL2()
-    //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L2));
-    // controlBoard
-    //     .setGoalL3()
-    //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L3));
-    // controlBoard
-    //     .setGoalL4()
-    //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L4));
+    controlBoard
+        .setGoalL2()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L2));
+    controlBoard
+        .setGoalL3()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L3));
+    controlBoard
+        .setGoalL4()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L4));
     // controlBoard
     //     .setGoalUpperAlgae()
     //     .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.UPPER_ALGAE));

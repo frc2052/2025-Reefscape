@@ -144,14 +144,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     // if we still intend to go to the home position, currently at alleged home, and should re-home,
     // then re-home
-    if (MathHelpers.epsilonEquals(
-            goalPositionRotations, ElevatorPosition.HOME.getPositionRotations(), .02)
-        && atHomingLocation()
-        && shouldHome) {
-      setWantHome(true);
-    } else if (controlState != ControlState.OPEN_LOOP) {
-      setWantHome(false);
-    }
+    // if (MathHelpers.epsilonEquals(
+    //         goalPositionRotations, ElevatorPosition.HOME.getPositionRotations(), .02)
+    //     && atHomingLocation()
+    //     && shouldHome) {
+    //   setWantHome(true);
+    // } else if (controlState != ControlState.OPEN_LOOP) {
+    //   setWantHome(false);
+    // }
 
     if (homing) {
       setOpenLoop(ElevatorConstants.HOMING_SPEED);
@@ -167,12 +167,12 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public static enum ElevatorPosition {
-    HOME(2),
-    HANDOFF(7),
+    HOME(1),
+    HANDOFF(2.5),
     L1(10),
     L2(20),
     L3(37.5),
-    L4(55),
+    L4(64),
     LOWER_ALGAE(25),
     UPPER_ALGAE(27),
     TRAVEL(5);

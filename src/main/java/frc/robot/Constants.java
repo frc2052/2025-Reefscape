@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
@@ -38,10 +39,10 @@ public class Constants {
   public static final class ElevatorConstants {
     public static final boolean ELEVATOR_MOTORS_INVERTED = false;
 
-    public static final double TICKS_DEADZONE = 0.1;
+    public static final double TICKS_DEADZONE = 0.05;
 
     public static final double MANUAL_MOTOR_SPEED = 0.2;
-    public static final double HOMING_SPEED = -0.2;
+    public static final double HOMING_SPEED = -0.1;
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
@@ -77,7 +78,7 @@ public class Constants {
     public static final SoftwareLimitSwitchConfigs SOFTWARE_LIMIT_SWITCH_CONFIG =
         new SoftwareLimitSwitchConfigs()
             .withForwardSoftLimitEnable(true)
-            .withForwardSoftLimitThreshold(63);
+            .withForwardSoftLimitThreshold(66);
 
     public static final TalonFXConfiguration MOTOR_CONFIG =
         new TalonFXConfiguration()
@@ -137,7 +138,7 @@ public class Constants {
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
-            .withKP(0.0)
+            .withKP(2.0)
             .withKI(0.0)
             .withKD(0.0)
             .withKS(0.0)
@@ -158,25 +159,25 @@ public class Constants {
             .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
             .withRotorToSensorRatio(99.556);
     
-    public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
-        new SoftwareLimitSwitchConfigs()
-            .withForwardSoftLimitThreshold(Degrees.of(30)) // TODO: adjust as needed
-            .withForwardSoftLimitEnable(true)
-            .withReverseSoftLimitThreshold(Degrees.of(330))
-            .withReverseSoftLimitEnable(true);
+    // public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
+    //     new SoftwareLimitSwitchConfigs()
+    //         .withForwardSoftLimitThreshold(Degrees.of(30)) // TODO: adjust as needed
+    //         .withForwardSoftLimitEnable(true)
+    //         .withReverseSoftLimitThreshold(Degrees.of(330))
+    //         .withReverseSoftLimitEnable(true);
     
     public static final TalonFXConfiguration MOTOR_CONFIG = 
         new TalonFXConfiguration()
             .withSlot0(SLOT0_CONFIGS)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-            .withFeedback(FEEDBACK_CONFIG)
-            .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS);
+            .withFeedback(FEEDBACK_CONFIG);
+            // .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS);
   }
 
   public static class HandConstants {
-    public static final boolean HAND_MOTOR_INVERTED = false;
-    public static final double HAND_MOTOR_CURRENT_LIMIT = 0;
-    public static final double HAND_MOTOR_SPEED = 0;
+    public static final boolean HAND_MOTOR_INVERTED = true;
+    public static final double HAND_MOTOR_CURRENT_LIMIT = 40;
+    public static final double HAND_MOTOR_SPEED = 0.75;
   }
 
   public static class VisionConstants {

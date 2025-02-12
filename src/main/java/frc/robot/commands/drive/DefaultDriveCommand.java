@@ -115,13 +115,6 @@ public class DefaultDriveCommand extends Command {
 
   @Override
   public void execute() {
-    double xval = 0.05;
-    if (xval > DriverConstants.GAMEPAD_DEADBAND) {
-      System.out.println(slewAxis(xLimiter, expo(xval) * maxSpeed));
-    } else {
-      System.out.println(0.0);
-    }
-
     drivetrain.setControl(getSwerveRequest());
   }
 
