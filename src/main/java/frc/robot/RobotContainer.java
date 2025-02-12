@@ -129,17 +129,6 @@ public class RobotContainer {
         // .shoot()
         // .onTrue(Commands.runOnce(SignalLogger::start))
         // .onFalse(Commands.runOnce(SignalLogger::stop));
-    controlBoard.homeElevator().onTrue(new InstantCommand(() -> ElevatorSubsystem.getInstance().setWantHome(true)));
-
-    controlBoard
-        .manualUp()
-        .onTrue(ElevatorSubsystem.getInstance().manualUp())
-        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
-
-    controlBoard
-        .manualDown()
-        .onTrue(ElevatorSubsystem.getInstance().manualDown())
-        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
 
     // controlBoard
     //     .homeElevator()
@@ -153,6 +142,17 @@ public class RobotContainer {
     //     .setGoalUpperAlgae()
     //     .onTrue(ArmCommandFactory.setArmPosition(ArmPosition.UPPER_ALGAE_DESCORE));
 
+    controlBoard.homeElevator().onTrue(new InstantCommand(() -> ElevatorSubsystem.getInstance().setWantHome(true)));
+
+    controlBoard
+        .manualUp()
+        .onTrue(ElevatorSubsystem.getInstance().manualUp())
+        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
+
+    controlBoard
+        .manualDown()
+        .onTrue(ElevatorSubsystem.getInstance().manualDown())
+        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
     controlBoard
         .setGoalL1()
         .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.L1));

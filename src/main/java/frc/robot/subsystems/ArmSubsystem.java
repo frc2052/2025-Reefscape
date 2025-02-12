@@ -6,7 +6,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-// import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.util.Units;
@@ -46,7 +46,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private void setPivotAngle(Angle angle) {
-    // pivotMotor.setControl(new PositionTorqueCurrentFOC(angle).withSlot(0));
+    pivotMotor.setControl(new PositionTorqueCurrentFOC(angle));
   }
 
   public void setArmPosition(ArmPosition position) {
@@ -101,7 +101,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public enum ArmPosition { // TODO: set angles for each position
-    HANDOFF(Degrees.of(300)),
+    HANDOFF(Degrees.of(260)),
     TRAVEL(Degrees.of(180)),
     L1(Degrees.of(110)),
     MID_LEVEL(Degrees.of(55)), // for both L2 and L3

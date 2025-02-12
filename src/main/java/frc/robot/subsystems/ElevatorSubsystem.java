@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.util.DelayedBoolean;
@@ -74,7 +75,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void setOpenLoop(double speed) {
     controlState = ControlState.OPEN_LOOP;
-    frontMotor.set(speed);
+    frontMotor.setControl(new TorqueCurrentFOC(speed));
   }
 
   public Command manualUp() {

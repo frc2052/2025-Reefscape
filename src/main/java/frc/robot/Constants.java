@@ -9,6 +9,7 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.core.CoreCANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -38,6 +39,8 @@ public class Constants {
   // spotless:off
   public static final class ElevatorConstants {
     public static final boolean ELEVATOR_MOTORS_INVERTED = false;
+
+    // public static final double ROTATIONS_PER_INCH = (1.0 / 12.0) * 2.0; // wrong
 
     public static final double TICKS_DEADZONE = 0.05;
 
@@ -134,7 +137,7 @@ public class Constants {
     public static final Angle MIN_CORAL_ANGLE = Degrees.of(30);
     public static final Angle MAX_CORAL_ANGLE = Degrees.of(330);
 
-    public static final double MIN_HP_ELEVATOR_HEIGHT = 10;
+    public static final double MIN_HP_ELEVATOR_HEIGHT = 0.5;
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
@@ -148,7 +151,7 @@ public class Constants {
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
             .withInverted(
-                ElevatorConstants.ELEVATOR_MOTORS_INVERTED
+                ArmConstants.ARM_MOTOR_INVERTED
                     ? InvertedValue.Clockwise_Positive
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake); 
@@ -156,8 +159,9 @@ public class Constants {
     public static final FeedbackConfigs FEEDBACK_CONFIG =
         new FeedbackConfigs()
             .withFeedbackRemoteSensorID(Ports.ARM_CANCODER_ID)
-            .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-            .withRotorToSensorRatio(99.556);
+            .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder)
+            .withRotorToSensorRatio(99.556)
+            .withSensorToMechanismRatio(1);
     
     // public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
     //     new SoftwareLimitSwitchConfigs()
