@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -75,7 +76,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void setOpenLoop(double speed) {
     controlState = ControlState.OPEN_LOOP;
-    frontMotor.set(speed);
+    frontMotor.setControl(new DutyCycleOut(speed));
   }
 
   public Command manualUp() {
@@ -132,6 +133,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     Logger.recordOutput("Elevator Position", getPosition());
     Logger.recordOutput("Elevator Goal Position", goalPositionRotations);
     Logger.recordOutput("Elevator At Goal Position", atPosition());
+    Logger.recordOutput("Elevator Motor Set Speed", frontMotor.get());
 
     // if being used in open loop (usually manual mode), disable the height limit
     // if (controlState == ControlState.OPEN_LOOP) {
@@ -165,6 +167,28 @@ public class ElevatorSubsystem extends SubsystemBase {
         homing = false;
         homingDelay.update(Timer.getFPGATimestamp(), false);
       }
+    }
+  }
+
+  public static enum ElevatorPosition {
+    HOME(1),
+    HANDOFF(2.5),
+    L1(10),
+    L2(20),
+    L3(37.5),
+    L4(64),
+    LOWER_ALGAE(25),
+    UPPER_ALGAE(27),
+    TRAVEL(5);
+
+    private final double positionRotations;
+
+    private ElevatorPosition(double positionRotations) {
+      this.positionRotations = positionRotations;
+    }
+
+    public double getPositionRotations() {
+      return positionRotations;
     }
   }
 

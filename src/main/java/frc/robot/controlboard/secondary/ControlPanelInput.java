@@ -38,32 +38,43 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
   @Override
   public Trigger reefAB() {
-    return new JoystickButton(controlPanel, 3);
+    return new Trigger(() -> false);
+    // return new JoystickButton(controlPanel, 3);
   }
 
   @Override
   public Trigger reefCD() {
-    return new JoystickButton(controlPanel, 4);
+    return new Trigger(() -> false);
+    // return new JoystickButton(controlPanel, 4);
   }
 
   @Override
   public Trigger reefEF() {
-    return new JoystickButton(controlPanel, 10);
+    return new Trigger(() -> false);
+    // return new JoystickButton(controlPanel, 10);
   }
 
   @Override
   public Trigger reefGH() {
-    return new JoystickButton(controlPanel, 11);
+    return new Trigger(() -> false);
+    // return new JoystickButton(controlPanel, 11);
   }
 
   @Override
   public Trigger reefIJ() {
-    return new JoystickButton(controlPanel, 12);
+    return new Trigger(() -> false);
+    // return new JoystickButton(controlPanel, 12);
   }
 
   @Override
   public Trigger reefKL() {
-    return new JoystickButton(controlPanel, 5);
+    return new Trigger(() -> false);
+    // return new JoystickButton(controlPanel, 5);
+  }
+
+  @Override
+  public Trigger setHandoff() {
+    return new Trigger(() -> controlPanel.getX() < -0.5);
   }
 
   @Override

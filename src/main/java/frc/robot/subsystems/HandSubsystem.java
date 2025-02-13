@@ -7,12 +7,14 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.util.Ports;
 
 public class HandSubsystem extends SubsystemBase {
-  // private final TalonFX motor;
+  private final TalonFX motor;
   private static HandSubsystem INSTANCE;
 
   public static HandSubsystem getInstance() {
@@ -23,7 +25,7 @@ public class HandSubsystem extends SubsystemBase {
   }
   /** Creates a new HandSubsystem. */
   public HandSubsystem() {
-    // motor = new TalonFX(Ports.HAND_TALONFX_ID);
+    motor = new TalonFX(Ports.HAND_TALONFX_ID);
 
     TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -35,19 +37,19 @@ public class HandSubsystem extends SubsystemBase {
     config.withMotorOutput(new MotorOutputConfigs().withInverted(inverted));
 
     CurrentLimitsConfigs limitConfigs = new CurrentLimitsConfigs();
-    limitConfigs.StatorCurrentLimit = Constants.HandConstants.HAND_MOTOR_CURRENT_LIMIT;
-    limitConfigs.StatorCurrentLimitEnable = true;
+    limitConfigs.SupplyCurrentLimit = Constants.HandConstants.HAND_MOTOR_CURRENT_LIMIT;
+    limitConfigs.SupplyCurrentLowerTime = (0.2);
+    limitConfigs.SupplyCurrentLimitEnable = true;
 
-    // motor.getConfigurator().apply(config);
-    // motor.getConfigurator().apply(limitConfigs);
+    motor.getConfigurator().apply(config.withCurrentLimits(limitConfigs));
   }
 
   private void setMotor(double speed) {
-    // motor.set(speed);
+    motor.set(speed);
   }
 
   public void stopMotor() {
-    // motor.stopMotor();
+    motor.stopMotor();
   }
 
   public void motorOut() {
