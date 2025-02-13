@@ -108,8 +108,8 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger distanceToTag() {
-    return primaryControlBoard.distanceToTag();
+  public Trigger outtake() {
+    return primaryControlBoard.outtake();
   }
 
   @Override
@@ -192,6 +192,11 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   @Override
   public Trigger reefKL() {
     return secondaryControlBoard.reefKL();
+  }
+
+  @Override
+  public Trigger setHandoff() {
+    return secondaryControlBoard.setHandoff();
   }
 
   @Override

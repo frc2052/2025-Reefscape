@@ -35,9 +35,8 @@ public interface IPrimaryControlBoard {
 
   Trigger resetGyro();
 
-  Trigger distanceToTag();
+  Trigger outtake();
 
-  // Real Controls
   Trigger intake();
 
   Trigger shoot();
