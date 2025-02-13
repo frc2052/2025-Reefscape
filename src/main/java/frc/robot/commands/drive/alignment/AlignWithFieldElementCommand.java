@@ -211,7 +211,7 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
     }
   }
 
-  public enum AllAlignOffsets { // provides an offset from the april tag
+  public enum AllAlignOffsets { //TODO verify offsets
     LEFT_REEF_LOC(new Transform2d(0.5, 0.25, new Rotation2d(0))),
     MIDDLE_REEF_LOC(new Transform2d(0.5, 0.0, new Rotation2d(0))),
     RIGHT_REEF_LOC(new Transform2d(0.5, -0.25, new Rotation2d(0))),

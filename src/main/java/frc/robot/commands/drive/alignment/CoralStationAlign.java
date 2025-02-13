@@ -7,6 +7,8 @@ package frc.robot.commands.drive.alignment;
 import frc.robot.RobotState;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -19,14 +21,14 @@ public class CoralStationAlign extends AlignWithFieldElementCommand {
 
   public CoralStationAlign(
       AllAlignOffsets offset,
-      Supplier<Double> xVal,
-      Supplier<Double> yVal,
-      Supplier<Double> rotationVal,
-      Supplier<Boolean> fieldCentric) {
-    super(() -> offset, () -> xVal.get(), () -> yVal.get(), () -> rotationVal.get(), () -> fieldCentric.get());
+      DoubleSupplier xVal,
+      DoubleSupplier yVal,
+      DoubleSupplier rotationVal,
+      BooleanSupplier fieldCentric) {
+    super(() -> offset, xVal, yVal, rotationVal, fieldCentric);
   }
 
-  public FieldElement getElementBasedOnTagID() { // TODO: print what tag we are looking at
+  public FieldElement getElementBasedOnTagID() {
     Optional<PhotonPipelineResult> tar = vision.getCoralStationTarget();
     if (tar.isPresent()) {
       camTarget = tar.get().getBestTarget();
