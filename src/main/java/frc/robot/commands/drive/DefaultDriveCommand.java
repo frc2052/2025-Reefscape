@@ -73,7 +73,7 @@ public class DefaultDriveCommand extends Command {
   }
 
   protected double getX() {
-    if (xSupplier.getAsDouble() > DriverConstants.GAMEPAD_DEADBAND) {
+    if (Math.abs(xSupplier.getAsDouble()) > DriverConstants.GAMEPAD_DEADBAND) {
       return slewAxis(xLimiter, expo(xSupplier.getAsDouble()) * maxSpeed);
     }
 
@@ -81,7 +81,7 @@ public class DefaultDriveCommand extends Command {
   }
 
   protected double getY() {
-    if (ySupplier.getAsDouble() > DriverConstants.GAMEPAD_DEADBAND) {
+    if (Math.abs(ySupplier.getAsDouble()) > DriverConstants.GAMEPAD_DEADBAND) {
       return slewAxis(yLimiter, expo(ySupplier.getAsDouble()) * maxSpeed);
     }
 
@@ -89,7 +89,7 @@ public class DefaultDriveCommand extends Command {
   }
 
   protected double getRotation() {
-    if (rotationSupplier.getAsDouble() > DriverConstants.GAMEPAD_DEADBAND) {
+    if (Math.abs(rotationSupplier.getAsDouble()) > DriverConstants.GAMEPAD_DEADBAND) {
       return slewAxis(rotationLimiter, expo(rotationSupplier.getAsDouble()) * maxAngularRate);
     }
     return 0.0;
@@ -128,14 +128,11 @@ public class DefaultDriveCommand extends Command {
       return Math.copySign(Math.pow(Math.abs(value), 2), value);
     }
 
-    return Math.copySign(Math.pow(Math.abs(value), 3), value);
+    return Math.copySign(Math.pow(Math.abs(value), 1.5), value);
   }
 
   protected double slewAxis(SlewRateLimiter limiter, double value) {
     value = limiter.calculate(value);
-    if (value < maxSpeed - 0.26) {
-      value += 0.26;
-    }
 
     return value;
   }

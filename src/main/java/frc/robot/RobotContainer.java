@@ -24,6 +24,7 @@ import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.elevator.ElevatorCommandFactory;
 import frc.robot.commands.hand.HandCommandFactory;
+import frc.robot.commands.superstructure.SuperstructureCommandFactory;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
@@ -118,17 +119,21 @@ public class RobotContainer {
     //             controlBoard::getRotation,
     //             dashboard::isFieldCentric));
 
-    controlBoard.sysIDQuasiForward().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-    controlBoard.sysIDQuasiReverse().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-    controlBoard.sysIDDynamicForward().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-    controlBoard.sysIDDynamicReverse().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+    controlBoard.sysIDQuasiForward().whileTrue(ArmSubsystem.getInstance().sysIdQuasistatic(Direction.kForward));
+    controlBoard.sysIDQuasiReverse().whileTrue(ArmSubsystem.getInstance().sysIdQuasistatic(Direction.kReverse));
+    controlBoard.sysIDDynamicForward().whileTrue(ArmSubsystem.getInstance().sysIdDynamic(Direction.kForward));
+    controlBoard.sysIDDynamicReverse().whileTrue(ArmSubsystem.getInstance().sysIdDynamic(Direction.kReverse));
     controlBoard.intake().whileTrue(HandCommandFactory.motorIn());
     controlBoard.outtake().whileTrue(HandCommandFactory.motorOut());
-    controlBoard.shoot().onTrue(ArmSubsystem.getInstance().runPct(-1.0)).onFalse(ArmSubsystem.getInstance().runPct(0.0));
-    controlBoard.reefAlignment().onTrue(ArmSubsystem.getInstance().runPct(0.25)).onFalse(ArmSubsystem.getInstance().runPct(0.0));
-        // .shoot()
-        // .onTrue(Commands.runOnce(SignalLogger::start))
-        // .onFalse(Commands.runOnce(SignalLogger::stop));
+    // controlBoard.shoot().onTrue(ArmSubsystem.getInstance().runPct(-0.25)).onFalse(ArmSubsystem.getInstance().runPct(0.0));
+    // controlBoard.reefAlignment().onTrue(ArmSubsystem.getInstance().runPct(0.25)).onFalse(ArmSubsystem.getInstance().runPct(0.0));
+    
+    controlBoard.shoot().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.HANDOFF));
+    controlBoard.reefAlignment().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.MID_LEVEL));
+    // controlBoard
+    //     .shoot()
+    //     .onTrue(Commands.runOnce(SignalLogger::start))
+    //     .onFalse(Commands.runOnce(SignalLogger::stop));
 
     // controlBoard
     //     .homeElevator()
@@ -172,9 +177,9 @@ public class RobotContainer {
     // controlBoard
     //     .setElevatorPositionLowerAlgae()
     //     .whileTrue(SuperstructureCommandFactory.ToLevel.DESCORE_LOW_ALGAE.getCommand());
-    // controlBoard
-    //     .setElevatorPositionHandoff()
-    //     .whileTrue(SuperstructureCommandFactory.ToLevel.HANDOFF.getCommand());
+    controlBoard
+        .setHandoff()
+        .onTrue(ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.HANDOFF));
   }
 
   private void configurePOVBindings() {

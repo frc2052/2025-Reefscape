@@ -195,6 +195,11 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
+  public Trigger setHandoff() {
+    return secondaryControlBoard.setHandoff();
+  }
+
+  @Override
   public Trigger setGoalL1() {
     return secondaryControlBoard.setGoalL1();
   }

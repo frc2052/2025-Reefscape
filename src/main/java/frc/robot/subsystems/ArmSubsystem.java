@@ -5,15 +5,20 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Volts;
 
-import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
+import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.RobotState;
 import frc.robot.util.Ports;
@@ -42,11 +47,24 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public Command runPct(double pct) {
-    return Commands.runOnce(() -> pivotMotor.set(pct), this);
+    return Commands.runOnce(() -> setPivotSpeed(pct), this);
+  }
+
+  private void setPivotSpeed(double pct) {
+    pivotMotor.set(pct);
+  }
+
+  private void setPivotVolts(Voltage v) {
+    pivotMotor.setVoltage(v.in(Volts));
   }
 
   private void setPivotAngle(Angle angle) {
-    pivotMotor.setControl(new PositionTorqueCurrentFOC(angle));
+    if (angle == goalPosition && isAtDesiredPosition()) {
+      System.out.println("Arm at goal position");
+      return;
+    }
+
+    pivotMotor.setControl(new MotionMagicExpoTorqueCurrentFOC(angle));
   }
 
   public void setArmPosition(ArmPosition position) {
@@ -55,11 +73,6 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private Angle clampPosition(Angle pos) {
-    if (ElevatorSubsystem.getInstance().getPosition() < ArmConstants.MIN_HP_ELEVATOR_HEIGHT
-        && pos.in(Degrees) > ArmPosition.HANDOFF.getAngle().in(Degrees)) {
-      System.out.println("DESIRED ANGLE PAST HP");
-      return ArmPosition.HANDOFF.getAngle();
-    }
     if (robotState.getHasCoral()) {
       if (pos.in(Degrees) < ArmConstants.MIN_CORAL_ANGLE.in(Degrees)) {
         System.out.println("DESIRED ANGLE BEYOND MIN LIMIT");
@@ -98,8 +111,46 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
     Logger.recordOutput("Arm Angle", Units.rotationsToDegrees(pivotMotor.getPosition().getValueAsDouble()));
     Logger.recordOutput("Arm Goal Angle", goalPosition.in(Degrees));
+    Logger.recordOutput("Arm Motor Set Speed", pivotMotor.get());
+    Logger.recordOutput("Arm Velocity", pivotMotor.getVelocity().getValueAsDouble());
+  }
+  
+  /* SysId routine for characterizing arm. This is used to find PID gains for the arm motor. */
+  private final SysIdRoutine m_sysIdRoutineArm =
+      new SysIdRoutine(
+          new SysIdRoutine.Config(
+              null, // Use default ramp rate (1 V/s)
+              Volts.of(7), // Use dynamic voltage of 7 V
+              null, // Use default timeout (10 s)
+              // Log state with SignalLogger class
+              state -> SignalLogger.writeString("SysIdArm_State", state.toString())),
+          new SysIdRoutine.Mechanism(
+              this::setPivotVolts, null, this));
+
+  /* The SysId routine to test */
+  private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineArm;
+  /**
+   * Runs the SysId Quasistatic test in the given direction for the routine specified by {@link
+   * #m_sysIdRoutineToApply}.
+   *
+   * @param direction Direction of the SysId Quasistatic test
+   * @return Command to run
+   */
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutineToApply.quasistatic(direction);
   }
 
+  /**
+   * Runs the SysId Dynamic test in the given direction for the routine specified by {@link
+   * #m_sysIdRoutineToApply}.
+   *
+   * @param direction Direction of the SysId Dynamic test
+   * @return Command to run
+   */
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutineToApply.dynamic(direction);
+  }
+  
   public enum ArmPosition { // TODO: set angles for each position
     HANDOFF(Degrees.of(260)),
     TRAVEL(Degrees.of(180)),

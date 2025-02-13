@@ -66,8 +66,8 @@ public class Constants {
     // set Motion Magic settings
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(160) 
-            .withMotionMagicAcceleration(160) 
+            .withMotionMagicCruiseVelocity(80) 
+            .withMotionMagicAcceleration(320) 
             .withMotionMagicJerk(600);
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
@@ -96,7 +96,7 @@ public class Constants {
     public static final boolean DEV_CONTROLS = false;
     public static final boolean FORCE_GAMEPAD = false;
     public static final double JOYSTICK_DEADBAND = 0.075;
-    public static final double GAMEPAD_DEADBAND = 0.075; // add deadband here if there is drift
+    public static final double GAMEPAD_DEADBAND = 0.025; // add deadband here if there is drift
   }
 
   public static class DrivetrainConstants {
@@ -130,23 +130,21 @@ public class Constants {
   }
 
   public static class ArmConstants {
-    public static final boolean ARM_MOTOR_INVERTED = false;
-    public static final double CLOSED_LOOP_ERROR = 0.1;
-    public static final double DEG_TOL = 0.1;
+    public static final boolean ARM_MOTOR_INVERTED = true;
+    public static final double CLOSED_LOOP_ERROR = 0.0;
+    public static final double DEG_TOL = 0.0;
 
     public static final Angle MIN_CORAL_ANGLE = Degrees.of(30);
     public static final Angle MAX_CORAL_ANGLE = Degrees.of(330);
 
-    public static final double MIN_HP_ELEVATOR_HEIGHT = 0.5;
-
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
-            .withKP(2.0)
+            .withKP(5)
             .withKI(0.0)
-            .withKD(0.0)
+            .withKD(0)
             .withKS(0.0)
-            .withKV(0.0)
-            .withKA(0.0);
+            .withKV(6.0) //11.7
+            .withKA(5.428);
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
@@ -163,18 +161,25 @@ public class Constants {
             .withRotorToSensorRatio(99.556)
             .withSensorToMechanismRatio(1);
     
-    // public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
-    //     new SoftwareLimitSwitchConfigs()
-    //         .withForwardSoftLimitThreshold(Degrees.of(30)) // TODO: adjust as needed
-    //         .withForwardSoftLimitEnable(true)
-    //         .withReverseSoftLimitThreshold(Degrees.of(330))
-    //         .withReverseSoftLimitEnable(true);
+    
+    public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
+        new MotionMagicConfigs()
+            .withMotionMagicCruiseVelocity(10);
+            // .withMotionMagicAcceleration(10) 
+            // .withMotionMagicJerk(25);
+    public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitThreshold(Degrees.of(30)) // TODO: adjust as needed
+            .withForwardSoftLimitEnable(false)
+            .withReverseSoftLimitThreshold(Degrees.of(330))
+            .withReverseSoftLimitEnable(false);
     
     public static final TalonFXConfiguration MOTOR_CONFIG = 
         new TalonFXConfiguration()
             .withSlot0(SLOT0_CONFIGS)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-            .withFeedback(FEEDBACK_CONFIG);
+            .withFeedback(FEEDBACK_CONFIG)
+            .withMotionMagic(MOTION_MAGIC_CONFIG);
             // .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS);
   }
 

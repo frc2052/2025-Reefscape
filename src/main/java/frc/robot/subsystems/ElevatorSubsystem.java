@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
@@ -75,7 +76,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void setOpenLoop(double speed) {
     controlState = ControlState.OPEN_LOOP;
-    frontMotor.setControl(new TorqueCurrentFOC(speed));
+    frontMotor.setControl(new DutyCycleOut(speed));
   }
 
   public Command manualUp() {
@@ -131,6 +132,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     Logger.recordOutput("Elevator Position", getPosition());
     Logger.recordOutput("Elevator Goal Position", goalPositionRotations);
     Logger.recordOutput("Elevator At Goal Position", atPosition());
+    Logger.recordOutput("Elevator Motor Set Speed", frontMotor.get());
 
     // if being used in open loop (usually manual mode), disable the height limit
     // if (controlState == ControlState.OPEN_LOOP) {
