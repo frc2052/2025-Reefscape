@@ -170,28 +170,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
   }
 
-  public static enum ElevatorPosition {
-    HOME(1),
-    HANDOFF(2.5),
-    L1(10),
-    L2(20),
-    L3(37.5),
-    L4(64),
-    LOWER_ALGAE(25),
-    UPPER_ALGAE(27),
-    TRAVEL(5);
-
-    private final double positionRotations;
-
-    private ElevatorPosition(double positionRotations) {
-      this.positionRotations = positionRotations;
-    }
-
-    public double getPositionRotations() {
-      return positionRotations;
-    }
-  }
-
   public static enum ControlState {
     OPEN_LOOP,
     MOTION_MAGIC

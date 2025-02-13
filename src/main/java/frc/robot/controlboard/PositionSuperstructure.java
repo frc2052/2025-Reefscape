@@ -153,14 +153,14 @@ public class PositionSuperstructure {
   }
 
   public enum TargetAction {
-    HM(2.0, Degrees.of(180.0), Degrees.of(90)), // Homing
+    HM(1.0, Degrees.of(170.0), Degrees.of(90)), // Homing
     L1(10.0, Degrees.of(110.0), Degrees.of(90)),
     L2(20.0, Degrees.of(55.0), Degrees.of(90)),
     L3(37.5, Degrees.of(55.0), Degrees.of(90)),
-    L4(55.0, Degrees.of(75.0), Degrees.of(90)),
+    L4(64.0, Degrees.of(75.0), Degrees.of(90)),
     LA(25.0, Degrees.of(90.0), Degrees.of(90)), // Lower Algae
     UA(27.0, Degrees.of(90.0), Degrees.of(90)), // Upper Algae
-    HP(7.0, Degrees.of(300), Degrees.of(90)), // Coral Station
+    HP(2.5, Degrees.of(110), Degrees.of(90)), // Coral Station
     AS(55.0, Degrees.of(180.0), Degrees.of(135)), // Algae Scoring
     TR(5.0, Degrees.of(180.0), Degrees.of(90)); // Travel
 
