@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.Volts;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.util.Units;
@@ -64,7 +65,7 @@ public class ArmSubsystem extends SubsystemBase {
       return;
     }
 
-    pivotMotor.setControl(new MotionMagicExpoTorqueCurrentFOC(angle));
+    pivotMotor.setControl(new PositionVoltage(angle));
   }
 
   public void setArmPosition(ArmPosition position) {
@@ -152,10 +153,10 @@ public class ArmSubsystem extends SubsystemBase {
   }
   
   public enum ArmPosition { // TODO: set angles for each position
-    HANDOFF(Degrees.of(260)),
+    HANDOFF(Degrees.of(110)),
     TRAVEL(Degrees.of(180)),
     L1(Degrees.of(110)),
-    MID_LEVEL(Degrees.of(55)), // for both L2 and L3
+    MID_LEVEL(Degrees.of(260)), // for both L2 and L3
     L4(Degrees.of(75)),
     UPPER_ALGAE_DESCORE(Degrees.of(90)),
     LOWER_ALGAE_DESCORE(Degrees.of(90));

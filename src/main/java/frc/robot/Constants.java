@@ -139,12 +139,12 @@ public class Constants {
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
-            .withKP(5)
-            .withKI(0.0)
-            .withKD(0)
+            .withKP(75.0)
+            .withKI(0.2)
+            .withKD(0.0)
             .withKS(0.0)
-            .withKV(6.0) //11.7
-            .withKA(5.428);
+            .withKV(11.7) //11.7
+            .withKA(0.0);
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
@@ -164,7 +164,7 @@ public class Constants {
     
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(10);
+            .withMotionMagicCruiseVelocity(100);
             // .withMotionMagicAcceleration(10) 
             // .withMotionMagicJerk(25);
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
