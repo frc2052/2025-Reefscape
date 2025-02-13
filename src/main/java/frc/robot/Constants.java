@@ -9,9 +9,7 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.core.CoreCANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
@@ -161,12 +159,6 @@ public class Constants {
             .withRotorToSensorRatio(99.556)
             .withSensorToMechanismRatio(1);
     
-    
-    public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
-        new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(100);
-            // .withMotionMagicAcceleration(10) 
-            // .withMotionMagicJerk(25);
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
         new SoftwareLimitSwitchConfigs()
             .withForwardSoftLimitThreshold(Degrees.of(30)) // TODO: adjust as needed
@@ -178,9 +170,7 @@ public class Constants {
         new TalonFXConfiguration()
             .withSlot0(SLOT0_CONFIGS)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-            .withFeedback(FEEDBACK_CONFIG)
-            .withMotionMagic(MOTION_MAGIC_CONFIG);
-            // .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS);
+            .withFeedback(FEEDBACK_CONFIG);
   }
 
   public static class HandConstants {

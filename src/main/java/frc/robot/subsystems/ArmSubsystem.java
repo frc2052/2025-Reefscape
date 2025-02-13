@@ -8,11 +8,8 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
@@ -110,12 +107,13 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Logger.recordOutput("Arm Angle", Units.rotationsToDegrees(pivotMotor.getPosition().getValueAsDouble()));
+    Logger.recordOutput(
+        "Arm Angle", Units.rotationsToDegrees(pivotMotor.getPosition().getValueAsDouble()));
     Logger.recordOutput("Arm Goal Angle", goalPosition.in(Degrees));
     Logger.recordOutput("Arm Motor Set Speed", pivotMotor.get());
     Logger.recordOutput("Arm Velocity", pivotMotor.getVelocity().getValueAsDouble());
   }
-  
+
   /* SysId routine for characterizing arm. This is used to find PID gains for the arm motor. */
   private final SysIdRoutine m_sysIdRoutineArm =
       new SysIdRoutine(
@@ -125,8 +123,7 @@ public class ArmSubsystem extends SubsystemBase {
               null, // Use default timeout (10 s)
               // Log state with SignalLogger class
               state -> SignalLogger.writeString("SysIdArm_State", state.toString())),
-          new SysIdRoutine.Mechanism(
-              this::setPivotVolts, null, this));
+          new SysIdRoutine.Mechanism(this::setPivotVolts, null, this));
 
   /* The SysId routine to test */
   private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineArm;
@@ -151,7 +148,7 @@ public class ArmSubsystem extends SubsystemBase {
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutineToApply.dynamic(direction);
   }
-  
+
   public enum ArmPosition { // TODO: set angles for each position
     HANDOFF(Degrees.of(110)),
     TRAVEL(Degrees.of(180)),

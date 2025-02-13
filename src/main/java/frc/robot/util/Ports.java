@@ -4,7 +4,7 @@ public class Ports {
   /*
    *  CAN IDS
    */
-  /* 
+  /*
    * Bus: RoboRio
    */
   public static final int ARM_CANCODER_ID = 1;

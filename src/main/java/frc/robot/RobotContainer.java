@@ -6,25 +6,21 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.DistanceToVisionGoal;
 import frc.robot.commands.arm.ArmCommandFactory;
-import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.elevator.ElevatorCommandFactory;
 import frc.robot.commands.hand.HandCommandFactory;
-import frc.robot.commands.superstructure.SuperstructureCommandFactory;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory.ToLevel;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
@@ -119,15 +115,23 @@ public class RobotContainer {
     //             controlBoard::getRotation,
     //             dashboard::isFieldCentric));
 
-    controlBoard.sysIDQuasiForward().whileTrue(ArmSubsystem.getInstance().sysIdQuasistatic(Direction.kForward));
-    controlBoard.sysIDQuasiReverse().whileTrue(ArmSubsystem.getInstance().sysIdQuasistatic(Direction.kReverse));
-    controlBoard.sysIDDynamicForward().whileTrue(ArmSubsystem.getInstance().sysIdDynamic(Direction.kForward));
-    controlBoard.sysIDDynamicReverse().whileTrue(ArmSubsystem.getInstance().sysIdDynamic(Direction.kReverse));
+    controlBoard
+        .sysIDQuasiForward()
+        .whileTrue(ArmSubsystem.getInstance().sysIdQuasistatic(Direction.kForward));
+    controlBoard
+        .sysIDQuasiReverse()
+        .whileTrue(ArmSubsystem.getInstance().sysIdQuasistatic(Direction.kReverse));
+    controlBoard
+        .sysIDDynamicForward()
+        .whileTrue(ArmSubsystem.getInstance().sysIdDynamic(Direction.kForward));
+    controlBoard
+        .sysIDDynamicReverse()
+        .whileTrue(ArmSubsystem.getInstance().sysIdDynamic(Direction.kReverse));
     controlBoard.intake().whileTrue(HandCommandFactory.motorIn());
     controlBoard.outtake().whileTrue(HandCommandFactory.motorOut());
     // controlBoard.shoot().onTrue(ArmSubsystem.getInstance().runPct(-0.25)).onFalse(ArmSubsystem.getInstance().runPct(0.0));
     // controlBoard.reefAlignment().onTrue(ArmSubsystem.getInstance().runPct(0.25)).onFalse(ArmSubsystem.getInstance().runPct(0.0));
-    
+
     controlBoard.shoot().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.HANDOFF));
     controlBoard.reefAlignment().onTrue(ArmCommandFactory.setArmPosition(ArmPosition.MID_LEVEL));
     // controlBoard
@@ -147,7 +151,9 @@ public class RobotContainer {
     //     .setGoalUpperAlgae()
     //     .onTrue(ArmCommandFactory.setArmPosition(ArmPosition.UPPER_ALGAE_DESCORE));
 
-    controlBoard.homeElevator().onTrue(new InstantCommand(() -> ElevatorSubsystem.getInstance().setWantHome(true)));
+    controlBoard
+        .homeElevator()
+        .onTrue(new InstantCommand(() -> ElevatorSubsystem.getInstance().setWantHome(true)));
 
     controlBoard
         .manualUp()
