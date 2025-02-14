@@ -38,10 +38,12 @@ public class Constants {
   public static final class ElevatorConstants {
     public static final boolean ELEVATOR_MOTORS_INVERTED = false;
 
-    public static final double TICKS_DEADZONE = 0.1;
+    // public static final double ROTATIONS_PER_INCH = (1.0 / 12.0) * 2.0; // wrong
+
+    public static final double TICKS_DEADZONE = 0.05;
 
     public static final double MANUAL_MOTOR_SPEED = 0.2;
-    public static final double HOMING_SPEED = -0.2;
+    public static final double HOMING_SPEED = -0.1;
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
@@ -62,8 +64,8 @@ public class Constants {
     // set Motion Magic settings
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(160) 
-            .withMotionMagicAcceleration(160) 
+            .withMotionMagicCruiseVelocity(80) 
+            .withMotionMagicAcceleration(320) 
             .withMotionMagicJerk(600);
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
@@ -77,7 +79,7 @@ public class Constants {
     public static final SoftwareLimitSwitchConfigs SOFTWARE_LIMIT_SWITCH_CONFIG =
         new SoftwareLimitSwitchConfigs()
             .withForwardSoftLimitEnable(true)
-            .withForwardSoftLimitThreshold(63);
+            .withForwardSoftLimitThreshold(66);
 
     public static final TalonFXConfiguration MOTOR_CONFIG =
         new TalonFXConfiguration()
@@ -89,10 +91,10 @@ public class Constants {
   }
 
   public static class DriverConstants {
-    public static final boolean DEV_CONTROLS = true;
+    public static final boolean DEV_CONTROLS = false;
     public static final boolean FORCE_GAMEPAD = false;
     public static final double JOYSTICK_DEADBAND = 0.075;
-    public static final double GAMEPAD_DEADBAND = 0.075; // add deadband here if there is drift
+    public static final double GAMEPAD_DEADBAND = 0.025; // add deadband here if there is drift
   }
 
   public static class DrivetrainConstants {
@@ -126,28 +128,26 @@ public class Constants {
   }
 
   public static class ArmConstants {
-    public static final boolean ARM_MOTOR_INVERTED = false;
-    public static final double CLOSED_LOOP_ERROR = 0.1;
-    public static final double DEG_TOL = 0.1;
+    public static final boolean ARM_MOTOR_INVERTED = true;
+    public static final double CLOSED_LOOP_ERROR = 0.0;
+    public static final double DEG_TOL = 0.0;
 
     public static final Angle MIN_CORAL_ANGLE = Degrees.of(30);
     public static final Angle MAX_CORAL_ANGLE = Degrees.of(330);
 
-    public static final double MIN_HP_ELEVATOR_HEIGHT = 10;
-
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
-            .withKP(0.0)
-            .withKI(0.0)
+            .withKP(75.0)
+            .withKI(0.2)
             .withKD(0.0)
             .withKS(0.0)
-            .withKV(0.0)
+            .withKV(11.7) //11.7
             .withKA(0.0);
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
             .withInverted(
-                ElevatorConstants.ELEVATOR_MOTORS_INVERTED
+                ArmConstants.ARM_MOTOR_INVERTED
                     ? InvertedValue.Clockwise_Positive
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake); 
@@ -155,28 +155,28 @@ public class Constants {
     public static final FeedbackConfigs FEEDBACK_CONFIG =
         new FeedbackConfigs()
             .withFeedbackRemoteSensorID(Ports.ARM_CANCODER_ID)
-            .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-            .withRotorToSensorRatio(99.556);
+            .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder)
+            .withRotorToSensorRatio(99.556)
+            .withSensorToMechanismRatio(1);
     
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
         new SoftwareLimitSwitchConfigs()
             .withForwardSoftLimitThreshold(Degrees.of(30)) // TODO: adjust as needed
-            .withForwardSoftLimitEnable(true)
+            .withForwardSoftLimitEnable(false)
             .withReverseSoftLimitThreshold(Degrees.of(330))
-            .withReverseSoftLimitEnable(true);
+            .withReverseSoftLimitEnable(false);
     
     public static final TalonFXConfiguration MOTOR_CONFIG = 
         new TalonFXConfiguration()
             .withSlot0(SLOT0_CONFIGS)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-            .withFeedback(FEEDBACK_CONFIG)
-            .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS);
+            .withFeedback(FEEDBACK_CONFIG);
   }
 
   public static class HandConstants {
-    public static final boolean HAND_MOTOR_INVERTED = false;
-    public static final double HAND_MOTOR_CURRENT_LIMIT = 0;
-    public static final double HAND_MOTOR_SPEED = 0;
+    public static final boolean HAND_MOTOR_INVERTED = true;
+    public static final double HAND_MOTOR_CURRENT_LIMIT = 40;
+    public static final double HAND_MOTOR_SPEED = 0.75;
   }
 
 
