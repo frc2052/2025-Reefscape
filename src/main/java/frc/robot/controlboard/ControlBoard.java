@@ -195,11 +195,6 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger setHandoff() {
-    return secondaryControlBoard.setHandoff();
-  }
-
-  @Override
   public Trigger setGoalL1() {
     return secondaryControlBoard.setGoalL1();
   }
@@ -227,5 +222,35 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   @Override
   public Trigger setGoalLowerAlgae() {
     return secondaryControlBoard.setGoalLowerAlgae();
+  }
+
+  @Override
+  public Trigger setSubReefLeft() {
+    return secondaryControlBoard.setSubReefLeft();
+  }
+
+  @Override
+  public Trigger setSubReefCenter() {
+    return secondaryControlBoard.setSubReefCenter();
+  }
+
+  @Override
+  public Trigger setSubReefRight() {
+    return secondaryControlBoard.setSubReefRight();
+  }
+
+  @Override
+  public Trigger setGoalCoralStation() {
+    return secondaryControlBoard.setGoalCoralStation();
+  }
+
+  @Override
+  public Trigger setGoalAlgaeScoring() {
+    return secondaryControlBoard.setGoalAlgaeScoring();
+  }
+
+  @Override
+  public Trigger setGoalTravel() {
+    return secondaryControlBoard.setGoalTravel();
   }
 }

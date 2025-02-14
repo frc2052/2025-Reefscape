@@ -5,10 +5,11 @@
 package frc.robot.commands.drive.auto;
 
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
+import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
 
 public class AutoSnapToLocationAngleCommand extends SnapToLocationAngleCommand {
-  public AutoSnapToLocationAngleCommand(SnapLocation snapLocation) {
-    super(snapLocation, () -> 0, () -> 0, () -> 0, () -> false);
+  public AutoSnapToLocationAngleCommand(TargetFieldLocation targetFieldLocation) {
+    super(targetFieldLocation, () -> 0, () -> 0, () -> 0, () -> false);
   }
 
   @Override

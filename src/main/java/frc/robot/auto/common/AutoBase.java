@@ -19,13 +19,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
 import frc.robot.commands.drive.AlignWithReefCommand;
-import frc.robot.commands.drive.AlignWithReefCommand.AlignLocation;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
-import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
-import frc.robot.commands.elevator.ElevatorCommandFactory;
-import frc.robot.commands.superstructure.ReefScoringCommandFactory.ReefScoringPosition;
-import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
+import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
+import frc.robot.controlboard.PositionSuperstructure.TargetAction;
+import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.List;
@@ -80,12 +78,12 @@ public abstract class AutoBase extends SequentialCommandGroup {
     return AutoBuilder.followPath(path);
   }
 
-  protected Command snapToReefAngle(SnapLocation snapLocation) {
+  protected Command snapToReefAngle(TargetFieldLocation snapLocation) {
     return new SnapToLocationAngleCommand(snapLocation, () -> 0, () -> 0, () -> 0, () -> true);
   }
 
   protected Command reefSideVisionOrPathAlign(
-      AlignLocation alignLocation, PathPlannerPath altAlignPath, SnapLocation snaploc) {
+      ReefSubSide alignLocation, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
     return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
         .until(
             () ->
@@ -96,7 +94,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
             new AlignWithReefCommand(() -> alignLocation, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
-  public double getDistanceToGoal(Supplier<AlignLocation> scoringLoc) {
+  public double getDistanceToGoal(Supplier<ReefSubSide> scoringLoc) {
     Pose2d goalPose;
     Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
     if (tar.isPresent()) {
@@ -119,15 +117,17 @@ public abstract class AutoBase extends SequentialCommandGroup {
             RobotState.getInstance().getFieldToRobot().getY()));
   }
 
-  protected Command toScoringPositionCommand(ReefScoringPosition scorePos) {
-    return scorePos.getCommand();
+  protected Command toScoringPositionCommand(
+      // ReefScoringPosition scorePos
+      ) {
+    return null; // scorePos.getCommand();
   }
 
-  protected Command toPosition(ElevatorPosition position) {
+  protected Command toPosition(TargetAction position) {
     return new SequentialCommandGroup(
-        ElevatorCommandFactory.setElevatorPosition(position),
+        // ElevatorCommandFactory.setElevatorPosition(position),
         new WaitCommand(0.75),
-        ElevatorCommandFactory.setElevatorPosition(ElevatorPosition.TRAVEL),
+        // ElevatorCommandFactory.setElevatorPosition(TargetAction.TR),
         new WaitCommand(0.5));
   }
 

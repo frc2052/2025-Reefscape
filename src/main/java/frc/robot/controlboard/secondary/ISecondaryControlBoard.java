@@ -21,8 +21,6 @@ public interface ISecondaryControlBoard {
 
   Trigger reefKL();
 
-  Trigger setHandoff();
-
   Trigger setGoalL1();
 
   Trigger setGoalL2();
@@ -34,4 +32,16 @@ public interface ISecondaryControlBoard {
   Trigger setGoalUpperAlgae();
 
   Trigger setGoalLowerAlgae();
+
+  Trigger setGoalCoralStation();
+
+  Trigger setGoalAlgaeScoring();
+
+  Trigger setGoalTravel();
+
+  Trigger setSubReefLeft();
+
+  Trigger setSubReefCenter();
+
+  Trigger setSubReefRight();
 }
