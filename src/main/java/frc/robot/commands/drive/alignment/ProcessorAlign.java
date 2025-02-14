@@ -9,7 +9,6 @@ import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -28,7 +27,7 @@ public class ProcessorAlign extends AlignWithFieldElementCommand {
     super(() -> offset, xVal, yVal, rotationVal, fieldCentric);
   }
 
-public FieldElement getElementBasedOnTagID() {
+  public FieldElement getElementBasedOnTagID() {
     Optional<PhotonPipelineResult> tar = vision.getCoralStationTarget();
     if (tar.isPresent()) {
       camTarget = tar.get().getBestTarget();
@@ -46,7 +45,7 @@ public FieldElement getElementBasedOnTagID() {
       camTarget = null;
       return FieldElement.NO_ELEMENT;
     }
-    }
+  }
 
   @Override
   public FieldElement getFieldElement() {
