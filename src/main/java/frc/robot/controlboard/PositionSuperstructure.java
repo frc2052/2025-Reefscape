@@ -44,49 +44,49 @@ public class PositionSuperstructure {
     controlBoard.setGoalTravel().onTrue(new InstantCommand(() -> setTargetAction(TargetAction.TR)));
     controlBoard.homeElevator().onTrue(new InstantCommand(() -> setTargetAction(TargetAction.HM)));
 
-    controlBoard
-        .reefAB()
-        .onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.AB)));
-    controlBoard
-        .reefCD()
-        .onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.CD)));
-    controlBoard
-        .reefEF()
-        .onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.EF)));
-    controlBoard
-        .reefGH()
-        .onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.GH)));
-    controlBoard
-        .reefIJ()
-        .onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.IJ)));
-    controlBoard
-        .reefKL()
-        .onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.KL)));
+    // controlBoard
+    //     .reefAB()
+    //     .onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.AB)));
+    // controlBoard
+    //     .reefCD()
+    //     .onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.CD)));
+    // controlBoard
+    //     .reefEF()
+    //     .onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.EF)));
+    // controlBoard
+    //     .reefGH()
+    //     .onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.GH)));
+    // controlBoard
+    //     .reefIJ()
+    //     .onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.IJ)));
+    // controlBoard
+    //     .reefKL()
+    //     .onTrue(new InstantCommand(() -> setTargetReefSide(TargetFieldLocation.KL)));
 
-    controlBoard
-        .setSubReefLeft()
-        .onTrue(new InstantCommand(() -> setReefSubSide(ReefSubSide.LEFT)));
-    controlBoard
-        .setSubReefCenter()
-        .onTrue(new InstantCommand(() -> setReefSubSide(ReefSubSide.CENTER)));
-    controlBoard
-        .setSubReefRight()
-        .onTrue(new InstantCommand(() -> setReefSubSide(ReefSubSide.RIGHT)));
+    // controlBoard
+    //     .setSubReefLeft()
+    //     .onTrue(new InstantCommand(() -> setReefSubSide(ReefSubSide.LEFT)));
+    // controlBoard
+    //     .setSubReefCenter()
+    //     .onTrue(new InstantCommand(() -> setReefSubSide(ReefSubSide.CENTER)));
+    // controlBoard
+    //     .setSubReefRight()
+    //     .onTrue(new InstantCommand(() -> setReefSubSide(ReefSubSide.RIGHT)));
   }
 
   public void setTargetReefSide(TargetFieldLocation target) {
     targetReefSide = target;
-    revealCombonation();
+    revealCombination();
   }
 
   public void setTargetAction(TargetAction target) {
     targetAction = target;
-    revealCombonation();
+    revealCombination();
   }
 
   public void setReefSubSide(ReefSubSide target) {
     reefSubSide = target;
-    revealCombonation();
+    revealCombination();
   }
 
   public TargetFieldLocation getTargetReefSide() {
@@ -101,7 +101,7 @@ public class PositionSuperstructure {
     return reefSubSide;
   }
 
-  public void revealCombonation() {
+  public void revealCombination() {
     System.out.println(
         "Targeting : "
             + getTargetReefSide().toString()
@@ -154,13 +154,13 @@ public class PositionSuperstructure {
 
   public enum TargetAction {
     HM(1.0, Degrees.of(170.0), Degrees.of(90)), // Homing
-    L1(10.0, Degrees.of(110.0), Degrees.of(90)),
-    L2(20.0, Degrees.of(55.0), Degrees.of(90)),
-    L3(37.5, Degrees.of(55.0), Degrees.of(90)),
-    L4(64.0, Degrees.of(75.0), Degrees.of(90)),
-    LA(25.0, Degrees.of(90.0), Degrees.of(90)), // Lower Algae
-    UA(27.0, Degrees.of(90.0), Degrees.of(90)), // Upper Algae
-    HP(2.5, Degrees.of(110), Degrees.of(90)), // Coral Station
+    L1(10.0, Degrees.of(270.0), Degrees.of(90)),
+    L2(20.0, Degrees.of(295.0), Degrees.of(90)),
+    L3(37.5, Degrees.of(295.0), Degrees.of(90)),
+    L4(62.0, Degrees.of(275.0), Degrees.of(90)),
+    LA(25.0, Degrees.of(170.0), Degrees.of(90)), // Lower Algae
+    UA(27.0, Degrees.of(170.0), Degrees.of(90)), // Upper Algae
+    HP(1.0, Degrees.of(110), Degrees.of(90)), // Coral Station
     AS(55.0, Degrees.of(180.0), Degrees.of(135)), // Algae Scoring
     TR(5.0, Degrees.of(180.0), Degrees.of(90)); // Travel
 

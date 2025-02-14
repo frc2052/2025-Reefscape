@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
@@ -40,19 +41,21 @@ public class Constants {
 
     // public static final double ROTATIONS_PER_INCH = (1.0 / 12.0) * 2.0; // wrong
 
-    public static final double TICKS_DEADZONE = 0.05;
+    public static final double TICKS_DEADZONE = 0.5;
 
     public static final double MANUAL_MOTOR_SPEED = 0.2;
     public static final double HOMING_SPEED = -0.1;
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
-            .withKS(0.25)
-            .withKV(0.12)
-            .withKA(0.01)
-            .withKP(4.8)
-            .withKI(0)
-            .withKD(0.1);
+            .withKP(6.0)
+            .withKI(0.0)
+            .withKD(3.0)
+            .withKS(0.5)
+            .withKV(0.0)
+            .withKA(0.0)
+            .withGravityType(GravityTypeValue.Elevator_Static)
+            .withKG(3.75);
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
@@ -64,9 +67,11 @@ public class Constants {
     // set Motion Magic settings
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(80) 
-            .withMotionMagicAcceleration(320) 
-            .withMotionMagicJerk(600);
+            .withMotionMagicCruiseVelocity(70)
+            .withMotionMagicExpo_kA(0.03)
+            .withMotionMagicExpo_kV(0.01);
+            // .withMotionMagicAcceleration(160) 
+            // .withMotionMagicJerk(600);
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
@@ -129,8 +134,7 @@ public class Constants {
 
   public static class ArmConstants {
     public static final boolean ARM_MOTOR_INVERTED = true;
-    public static final double CLOSED_LOOP_ERROR = 0.0;
-    public static final double DEG_TOL = 0.0;
+    public static final double DEG_TOL = 1.5;
 
     public static final Angle MIN_CORAL_ANGLE = Degrees.of(30);
     public static final Angle MAX_CORAL_ANGLE = Degrees.of(330);
@@ -175,7 +179,7 @@ public class Constants {
 
   public static class HandConstants {
     public static final boolean HAND_MOTOR_INVERTED = true;
-    public static final double HAND_MOTOR_CURRENT_LIMIT = 40;
+    public static final double HAND_MOTOR_CURRENT_LIMIT = 40.0;
     public static final double HAND_MOTOR_SPEED = 0.75;
   }
 

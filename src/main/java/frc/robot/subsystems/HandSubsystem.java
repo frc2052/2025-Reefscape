@@ -9,13 +9,22 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.team2052.lib.helpers.MathHelpers;
+import com.team2052.lib.util.DelayedBoolean;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.controlboard.PositionSuperstructure;
+import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import frc.robot.util.Ports;
+import org.littletonrobotics.junction.Logger;
 
 public class HandSubsystem extends SubsystemBase {
   private final TalonFX motor;
   private static HandSubsystem INSTANCE;
+
+  private boolean intaking;
+  private DelayedBoolean coralDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.1);
 
   public static HandSubsystem getInstance() {
     if (INSTANCE == null) {
@@ -37,9 +46,16 @@ public class HandSubsystem extends SubsystemBase {
     config.withMotorOutput(new MotorOutputConfigs().withInverted(inverted));
 
     CurrentLimitsConfigs limitConfigs = new CurrentLimitsConfigs();
+
     limitConfigs.SupplyCurrentLimit = Constants.HandConstants.HAND_MOTOR_CURRENT_LIMIT;
-    limitConfigs.SupplyCurrentLowerTime = (0.2);
+    limitConfigs.SupplyCurrentLowerTime = (0.15);
+    limitConfigs.SupplyCurrentLowerLimit = (1.0);
     limitConfigs.SupplyCurrentLimitEnable = true;
+
+    // limitConfigs.StatorCurrentLimit = Constants.HandConstants.HAND_MOTOR_CURRENT_LIMIT;
+    // limitConfigs.StatorCurrentLimit = (0.2);
+    // limitConfigs.SupplyCurrentLowerLimit = (10.0);
+    // limitConfigs.StatorCurrentLimitEnable = false;
 
     motor.getConfigurator().apply(config.withCurrentLimits(limitConfigs));
   }
@@ -49,19 +65,37 @@ public class HandSubsystem extends SubsystemBase {
   }
 
   public void stopMotor() {
+    intaking = false;
     motor.stopMotor();
   }
 
   public void motorOut() {
+    coralDelay.update(Timer.getFPGATimestamp(), false);
     setMotor(Constants.HandConstants.HAND_MOTOR_SPEED);
   }
 
   public void motorIn() {
+    intaking = true;
     setMotor(-Constants.HandConstants.HAND_MOTOR_SPEED);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    Logger.recordOutput("Hand Motor Velocity", motor.getVelocity().getValueAsDouble());
+    Logger.recordOutput("Hand Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
+
+    if (intaking) {
+      if (coralDelay.update(
+          Timer.getFPGATimestamp(),
+          MathHelpers.epsilonEquals(motor.getVelocity().getValueAsDouble(), 0.0, 1.0))) {
+        System.out.println("coralllll");
+        // stopMotor();
+        PositionSuperstructure.getInstance().setTargetAction(TargetAction.TR);
+        coralDelay.update(Timer.getFPGATimestamp(), false);
+      }
+    } else {
+      coralDelay.update(Timer.getFPGATimestamp(), false);
+    }
   }
 }

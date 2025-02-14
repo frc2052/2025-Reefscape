@@ -9,13 +9,10 @@ import static edu.wpi.first.units.Units.Degrees;
 import com.team2052.lib.util.DelayedBoolean;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.AlgaeSubsystemConstants;
 import frc.robot.controlboard.PositionSuperstructure;
 import frc.robot.controlboard.PositionSuperstructure.TargetAction;
-import frc.robot.util.Ports;
 
 public class AlgaeSubsystem extends SubsystemBase {
   private static AlgaeSubsystem INSTANCE;

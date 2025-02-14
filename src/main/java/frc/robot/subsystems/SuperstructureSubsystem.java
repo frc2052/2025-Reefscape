@@ -5,6 +5,7 @@ import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.controlboard.PositionSuperstructure;
 import frc.robot.controlboard.PositionSuperstructure.TargetAction;
+import org.littletonrobotics.junction.Logger;
 
 public class SuperstructureSubsystem extends SubsystemBase {
 
@@ -17,6 +18,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
   private TargetAction previousAction;
   private boolean isChangingState;
+  private boolean travelling;
 
   /** Private constructor to prevent instantiation. */
   private SuperstructureSubsystem() {
@@ -56,10 +58,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
         SecondaryImageManager.setCurrentImage(SecondaryImage.L4);
         break;
       case UA:
-        SecondaryImageManager.setCurrentImage(SecondaryImage.A1);
+        SecondaryImageManager.setCurrentImage(SecondaryImage.A2);
         break;
       case LA:
-        SecondaryImageManager.setCurrentImage(SecondaryImage.A2);
+        SecondaryImageManager.setCurrentImage(SecondaryImage.A1);
         break;
       default:
         SecondaryImageManager.setCurrentImage(SecondaryImage.NONE);
@@ -70,36 +72,61 @@ public class SuperstructureSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     TargetAction target = position.getTargetAction();
+    Logger.recordOutput("Target Superstructure Changing State", isChangingState);
 
     if (target != previousAction) {
-      System.out.println("Target State Has Changed");
+      Logger.recordOutput("Target Superstructure State Has Changed", true);
       pushChangedValueToShuffleboard(target);
       isChangingState = true;
+    } else {
+      Logger.recordOutput("Target Superstructure State Has Changed", false);
     }
 
     if (isChangingState) {
-
-      if (elevator.atPosition(target)) {
-        coralArm.setArmPosition(target);
-        algaeArm.setGoalPosition(target);
+      if (target == TargetAction.HM && elevator.shouldHome()) {
+        elevator.homeElevator().schedule();
       } else {
-        if (coralArm.isAtPosition(5, TargetAction.TR.getCoralArmAngle())
-            && coralArm.isAtPosition(5, TargetAction.TR.getAlgaeArmPosition())) {
-          elevator.setPositionMotionMagic(target);
-        } else {
-          elevator.stopElevator();
-          coralArm.setArmPosition(TargetAction.TR);
-          algaeArm.setGoalPosition(TargetAction.TR);
-        }
+        elevator.setPositionMotionMagic(target);
       }
+      coralArm.setArmPosition(target);
+      algaeArm.setGoalPosition(target);
 
       if (elevator.atPosition(target)
           && coralArm.isAtPosition(5, target.getCoralArmAngle())
           && algaeArm.isAtPosition(5, target.getAlgaeArmPosition())) {
         isChangingState = false;
-        System.out.println("Arrived at Target State");
+        Logger.recordOutput("Arrived at Target State", true);
+      } else {
+        Logger.recordOutput("Arrived at Target State", false);
       }
     }
+    // if (isChangingState) {
+    //   if (elevator.atPosition(2.5, target)) {
+    //     coralArm.setArmPosition(target);
+    //     algaeArm.setGoalPosition(target);
+    //     System.out.println("ONE");
+    //   } else {
+    //     if (coralArm.isAtPosition(25, TargetAction.TR.getCoralArmAngle())
+    //         && algaeArm.isAtPosition(10, TargetAction.TR.getAlgaeArmPosition())) {
+    //       elevator.setPositionMotionMagic(target);
+    //       System.out.println("TWO");
+    //     } else {
+    //       elevator.stopElevator();
+    //       coralArm.setArmPosition(TargetAction.TR);
+    //       algaeArm.setGoalPosition(TargetAction.TR);
+    //       System.out.println("THREE");
+    //     }
+    //   }
+
+    //   if (elevator.atPosition(target)
+    //       && coralArm.isAtPosition(5, target.getCoralArmAngle())
+    //       && algaeArm.isAtPosition(5, target.getAlgaeArmPosition())) {
+    //     isChangingState = false;
+    //     Logger.recordOutput("Arrived at Target State", true);
+    //   } else {
+    //     Logger.recordOutput("Arrived at Target State", false);
+    //   }
+    // }
 
     previousAction = target;
   }

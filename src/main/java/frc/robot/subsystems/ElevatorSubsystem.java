@@ -6,7 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.util.DelayedBoolean;
@@ -71,7 +71,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     goalPositionRotations = elevatorPositionRotations;
 
-    frontMotor.setControl(new MotionMagicTorqueCurrentFOC(elevatorPositionRotations));
+    frontMotor.setControl(new MotionMagicExpoTorqueCurrentFOC(elevatorPositionRotations));
   }
 
   public void setOpenLoop(double speed) {
@@ -100,14 +100,16 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean atPosition() {
-    return Math.abs(goalPositionRotations - frontMotor.getPosition().getValueAsDouble())
-        <= ElevatorConstants.TICKS_DEADZONE;
+    return Math.abs(goalPositionRotations - getPosition()) <= ElevatorConstants.TICKS_DEADZONE;
   }
 
   public boolean atPosition(TargetAction position) {
-    return Math.abs(
-            position.ElevatorPositionRotations - frontMotor.getPosition().getValueAsDouble())
+    return Math.abs(position.ElevatorPositionRotations - getPosition())
         <= ElevatorConstants.TICKS_DEADZONE;
+  }
+
+  public boolean atPosition(double tol, TargetAction position) {
+    return Math.abs(position.ElevatorPositionRotations - getPosition()) <= tol;
   }
 
   public void zeroEncoder() {
@@ -120,6 +122,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     if (homing) {
       shouldHome = false;
     }
+  }
+
+  public boolean shouldHome() {
+    return shouldHome;
   }
 
   public boolean atHomingLocation() {
@@ -148,20 +154,21 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     // if we still intend to go to the home position, currently at alleged home, and should re-home,
     // then re-home
-    if (MathHelpers.epsilonEquals(
-            goalPositionRotations, TargetAction.HM.getElevatorPositionRotations(), .02)
-        && atHomingLocation()
-        && shouldHome) {
-      setWantHome(true);
-    } else if (controlState != ControlState.OPEN_LOOP) {
-      setWantHome(false);
-    }
+    // if (MathHelpers.epsilonEquals(
+    //         goalPositionRotations, TargetAction.HM.getElevatorPositionRotations(), .02)
+    //     && atHomingLocation()
+    //     && shouldHome) {
+    //   setWantHome(true);
+    // } else if (controlState != ControlState.OPEN_LOOP) {
+    //   setWantHome(false);
+    // }
 
+    Logger.recordOutput("Elevator Homing", homing);
     if (homing) {
       setOpenLoop(ElevatorConstants.HOMING_SPEED);
       if (homingDelay.update(
           Timer.getFPGATimestamp(),
-          MathHelpers.epsilonEquals(frontMotor.getVelocity().getValueAsDouble(), 0.0, 0.01))) {
+          MathHelpers.epsilonEquals(frontMotor.getVelocity().getValueAsDouble(), 0.0, 0.03))) {
         zeroEncoder();
         setPositionMotionMagic(TargetAction.HM);
         homing = false;

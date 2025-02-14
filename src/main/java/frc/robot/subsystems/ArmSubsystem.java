@@ -5,12 +5,12 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -59,7 +59,6 @@ public class ArmSubsystem extends SubsystemBase {
 
   private void setPivotAngle(Angle angle) {
     if (angle == goalPosition && isAtDesiredPosition()) {
-      System.out.println("Arm at goal position");
       return;
     }
 
@@ -102,17 +101,20 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean isAtPosition(double tol, Angle goal) {
-    return pivotMotor.getPosition().getValueAsDouble() < goal.in(Degrees) + tol
-        && pivotMotor.getPosition().getValueAsDouble() > goal.in(Degrees) - tol;
+    return Math.abs(getPosition().in(Degrees) - goal.in(Degrees)) <= tol;
+  }
+
+  public Angle getPosition() {
+    return Rotations.of(pivotMotor.getPosition().getValueAsDouble());
   }
 
   @Override
   public void periodic() {
-    Logger.recordOutput(
-        "Arm Angle", Units.rotationsToDegrees(pivotMotor.getPosition().getValueAsDouble()));
+    Logger.recordOutput("Arm Angle", getPosition().in(Degrees));
     Logger.recordOutput("Arm Goal Angle", goalPosition.in(Degrees));
     Logger.recordOutput("Arm Motor Set Speed", pivotMotor.get());
     Logger.recordOutput("Arm Velocity", pivotMotor.getVelocity().getValueAsDouble());
+    Logger.recordOutput("Arm At Goal", isAtDesiredPosition(5));
   }
 
   /* SysId routine for characterizing arm. This is used to find PID gains for the arm motor. */

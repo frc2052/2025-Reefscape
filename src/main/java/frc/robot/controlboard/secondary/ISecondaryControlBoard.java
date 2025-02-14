@@ -21,8 +21,6 @@ public interface ISecondaryControlBoard {
 
   Trigger reefKL();
 
-  Trigger setHandoff();
-
   Trigger setGoalL1();
 
   Trigger setGoalL2();
