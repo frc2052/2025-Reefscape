@@ -6,21 +6,27 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.util.DelayedBoolean;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.AlgaeSubsystemConstants;
 import frc.robot.controlboard.PositionSuperstructure;
 import frc.robot.controlboard.PositionSuperstructure.TargetAction;
+import frc.robot.util.Ports;
 
 public class AlgaeSubsystem extends SubsystemBase {
   private static AlgaeSubsystem INSTANCE;
 
-  // private final TalonFX pivotMotor;
-  // private final TalonFX scoringMotor;
+  private final TalonFX pivotMotor;
+  private final TalonFX scoringMotor;
 
-  // private final AnalogEncoder pivotEncoder;
+  private final AnalogEncoder pivotEncoder;
 
   private TargetAction position;
 
@@ -38,27 +44,27 @@ public class AlgaeSubsystem extends SubsystemBase {
   }
 
   public AlgaeSubsystem() {
-    // pivotMotor = new TalonFX(Ports.ALGAE_PIVOT_ID);
-    // scoringMotor = new TalonFX(Ports.ALGAE_SCORING_ID);
-    // pivotEncoder = new AnalogEncoder(Ports.ALGAE_ENCODER_ID);
+    pivotMotor = new TalonFX(Ports.ALGAE_PIVOT_ID);
+    scoringMotor = new TalonFX(Ports.ALGAE_SCORING_ID);
+    pivotEncoder = new AnalogEncoder(Ports.ALGAE_ENCODER_ID);
 
-    // pivotMotor.getConfigurator().apply(AlgaeSubsystemConstants.Motors.PIVOT_CONFIG);
-    // scoringMotor.getConfigurator().apply(AlgaeSubsystemConstants.Motors.SCORING_CONFIG);
+    pivotMotor.getConfigurator().apply(AlgaeSubsystemConstants.Motors.PIVOT_CONFIG);
+    scoringMotor.getConfigurator().apply(AlgaeSubsystemConstants.Motors.SCORING_CONFIG);
 
     position = PositionSuperstructure.getInstance().getTargetAction();
 
-    // pivotController =
-    //     new PIDController(
-    //         AlgaeSubsystemConstants.PIDs.PIVOT_KP,
-    //         AlgaeSubsystemConstants.PIDs.PIVOT_KI,
-    //         AlgaeSubsystemConstants.PIDs.PIVOT_KD);
+    pivotController =
+       new PIDController(
+             AlgaeSubsystemConstants.PIDs.PIVOT_KP,
+             AlgaeSubsystemConstants.PIDs.PIVOT_KI,
+             AlgaeSubsystemConstants.PIDs.PIVOT_KD);
   }
 
   private void goToPivotAngle(Angle angle) {
     if (hasAlgae && angle.in(Degrees) < 90) {
       return;
     }
-    // pivotMotor.set(pivotController.calculate(pivotEncoder.get(), angle.in(Rotations)));
+    pivotMotor.set(pivotController.calculate(pivotEncoder.get(), angle.in(Degrees)));
   }
 
   @Override
@@ -66,8 +72,8 @@ public class AlgaeSubsystem extends SubsystemBase {
     goToPivotAngle(position.getCoralArmAngle());
     if (isIntaking) {
       if (intakingDelay.update(
-          Timer.getFPGATimestamp(), false
-          // MathHelpers.epsilonEquals(pivotMotor.getVelocity().getValueAsDouble(), 0.0, 0.01)
+          Timer.getFPGATimestamp(),
+          MathHelpers.epsilonEquals(pivotMotor.getVelocity().getValueAsDouble(), 0.0, 0.01)
           )) {
         stopScoringMotor();
         hasAlgae = true;
@@ -80,24 +86,23 @@ public class AlgaeSubsystem extends SubsystemBase {
   }
 
   public void intake() {
-    // scoringMotor.set(AlgaeSubsystemConstants.Motors.SCORING_INTAKE_SPEED);
+    scoringMotor.set(AlgaeSubsystemConstants.Motors.SCORING_INTAKE_SPEED);
     isIntaking = true;
   }
 
   public void score() {
-    // scoringMotor.set(AlgaeSubsystemConstants.Motors.SCORING_SCORE_SPEED);
+    scoringMotor.set(AlgaeSubsystemConstants.Motors.SCORING_SCORE_SPEED);
     isIntaking = false;
     hasAlgae = false;
   }
 
   public boolean isAtPosition(double tol, Angle goal) {
-    return true;
-    // return pivotMotor.getPosition().getValueAsDouble() < goal.in(Degrees) + tol
-    //     && pivotMotor.getPosition().getValueAsDouble() > goal.in(Degrees) - tol;
+    return pivotMotor.getPosition().getValueAsDouble() < goal.in(Degrees) + tol
+       && pivotMotor.getPosition().getValueAsDouble() > goal.in(Degrees) - tol;
   }
 
   public void stopScoringMotor() {
-    // scoringMotor.stopMotor();
+    scoringMotor.stopMotor();
     isIntaking = false;
   }
 }
