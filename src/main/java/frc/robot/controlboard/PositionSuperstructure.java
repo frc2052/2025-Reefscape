@@ -25,7 +25,8 @@ public class PositionSuperstructure {
   }
 
   private PositionSuperstructure() {
-    controlBoard.setGoalL1().onTrue(new InstantCommand(() -> setTargetAction(TargetAction.L1)));
+    controlBoard.setGoalL1L().onTrue(new InstantCommand(() -> setTargetAction(TargetAction.L1L)));
+    controlBoard.setGoalL1H().onTrue(new InstantCommand(() -> setTargetAction(TargetAction.L1H)));
     controlBoard.setGoalL2().onTrue(new InstantCommand(() -> setTargetAction(TargetAction.L2)));
     controlBoard.setGoalL3().onTrue(new InstantCommand(() -> setTargetAction(TargetAction.L3)));
     controlBoard.setGoalL4().onTrue(new InstantCommand(() -> setTargetAction(TargetAction.L4)));
@@ -154,11 +155,12 @@ public class PositionSuperstructure {
 
   public enum TargetAction {
     HM(1.0, Degrees.of(170.0), Degrees.of(90)), // Homing
-    L1(10.0, Degrees.of(270.0), Degrees.of(90)),
-    L2(20.0, Degrees.of(295.0), Degrees.of(90)),
-    L3(37.5, Degrees.of(295.0), Degrees.of(90)),
-    L4(62.0, Degrees.of(275.0), Degrees.of(90)),
-    LA(25.0, Degrees.of(170.0), Degrees.of(90)), // Lower Algae
+    L1L(1.0, Degrees.of(255.0), Degrees.of(90)),
+    L1H(1.0, Degrees.of(240.0), Degrees.of(90)),
+    L2(21.0, Degrees.of(287.0), Degrees.of(90)),
+    L3(38.5, Degrees.of(287.0), Degrees.of(90)),
+    L4(63.0, Degrees.of(283.0), Degrees.of(90)),
+    LA(1.0, Degrees.of(170.0), Degrees.of(18)), // Lower Algae
     UA(27.0, Degrees.of(170.0), Degrees.of(90)), // Upper Algae
     HP(1.0, Degrees.of(110), Degrees.of(90)), // Coral Station
     AS(55.0, Degrees.of(180.0), Degrees.of(135)), // Algae Scoring

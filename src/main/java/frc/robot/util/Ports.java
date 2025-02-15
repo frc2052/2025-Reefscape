@@ -12,19 +12,22 @@ public class Ports {
 
   public static final int HAND_TALONFX_ID = 3;
 
+  public static final int ALGAE_PIVOT_ID = 4;
+  public static final int ALGAE_SCORING_ID = 5;
+
   /*
    *  Bus: Krawlivore
    */
   public static final int ELEVATOR_FRONT_ID = 14;
   public static final int ELEVATOR_BACK_ID = 15;
 
-  public static final int ALGAE_ENCODER_ID = 99;
-  public static final int ALGAE_PIVOT_ID = 99;
-  public static final int ALGAE_SCORING_ID = 99;
+  public static final int CLIMBER_ID = 16;
 
   /*
    *  DIO
    */
+
+  public static final int ALGAE_ENCODER_ID = 0;
 
   /*
    *  USB

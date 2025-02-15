@@ -35,11 +35,13 @@ public interface IPrimaryControlBoard {
 
   Trigger resetGyro();
 
-  Trigger outtake();
+  Trigger outtakeCoral();
 
-  Trigger intake();
+  Trigger intakeCoral();
 
-  Trigger shoot();
+  Trigger intakeAlgae();
+
+  Trigger shootAlgae();
 
   Trigger reefAlignment();
 

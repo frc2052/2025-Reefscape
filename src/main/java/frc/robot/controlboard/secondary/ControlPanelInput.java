@@ -23,6 +23,11 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
   @Override
   public Trigger homeElevator() {
+    return new JoystickButton(controlPanel, 9);
+  }
+
+  @Override
+  public Trigger actTrigger() {
     return new JoystickButton(controlPanel, 2);
   }
 
@@ -34,6 +39,16 @@ public class ControlPanelInput implements ISecondaryControlBoard {
   @Override
   public Trigger manualDown() {
     return new JoystickButton(controlPanel, 4);
+  }
+
+  @Override
+  public Trigger climbUp() {
+    return new Trigger(() -> controlPanel.getY() > 0.5);
+  }
+
+  @Override
+  public Trigger climbDown() {
+    return new Trigger(() -> controlPanel.getY() < -0.5);
   }
 
   @Override
@@ -73,23 +88,28 @@ public class ControlPanelInput implements ISecondaryControlBoard {
   }
 
   @Override
-  public Trigger setGoalL1() {
-    return new JoystickButton(controlPanel, 11);
+  public Trigger setGoalL1L() {
+    return new JoystickButton(controlPanel, 10);
   }
 
   @Override
-  public Trigger setGoalL2() {
+  public Trigger setGoalL1H() {
     return new JoystickButton(controlPanel, 12);
   }
 
   @Override
-  public Trigger setGoalL3() {
+  public Trigger setGoalL2() {
     return new JoystickButton(controlPanel, 5);
   }
 
   @Override
-  public Trigger setGoalL4() {
+  public Trigger setGoalL3() {
     return new JoystickButton(controlPanel, 7);
+  }
+
+  @Override
+  public Trigger setGoalL4() {
+    return new JoystickButton(controlPanel, 8);
   }
 
   @Override
@@ -119,7 +139,8 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
   @Override
   public Trigger setGoalCoralStation() {
-    return new Trigger(() -> controlPanel.getX() < -0.5);
+    return new JoystickButton(controlPanel, 11);
+    // return new Trigger(() -> controlPanel.getX() < -0.5);
   }
 
   @Override

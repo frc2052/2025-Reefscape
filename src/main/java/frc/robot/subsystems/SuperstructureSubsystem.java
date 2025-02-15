@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.controlboard.ControlBoard;
 import frc.robot.controlboard.PositionSuperstructure;
 import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import org.littletonrobotics.junction.Logger;
@@ -13,7 +14,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
   private AlgaeSubsystem algaeArm = AlgaeSubsystem.getInstance();
   private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
-  private ArmSubsystem coralArm = ArmSubsystem.getInstance();
+  private CoralArmSubsystem coralArm = CoralArmSubsystem.getInstance();
   private PositionSuperstructure position = PositionSuperstructure.getInstance();
 
   private TargetAction previousAction;
@@ -45,7 +46,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
   private void pushChangedValueToShuffleboard(TargetAction action) {
     switch (action) {
-      case L1:
+      case L1H:
         SecondaryImageManager.setCurrentImage(SecondaryImage.L1);
         break;
       case L2:
@@ -82,7 +83,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
       Logger.recordOutput("Target Superstructure State Has Changed", false);
     }
 
-    if (isChangingState) {
+    if (isChangingState && ControlBoard.getInstance().actTrigger().getAsBoolean()) {
       if (target == TargetAction.HM && elevator.shouldHome()) {
         elevator.homeElevator().schedule();
       } else {

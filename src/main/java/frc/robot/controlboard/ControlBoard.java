@@ -108,23 +108,28 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger outtake() {
-    return primaryControlBoard.outtake();
+  public Trigger outtakeCoral() {
+    return primaryControlBoard.outtakeCoral();
+  }
+
+  @Override
+  public Trigger intakeCoral() {
+    return primaryControlBoard.intakeCoral();
+  }
+
+  @Override
+  public Trigger intakeAlgae() {
+    return primaryControlBoard.intakeAlgae();
+  }
+
+  @Override
+  public Trigger shootAlgae() {
+    return primaryControlBoard.shootAlgae();
   }
 
   @Override
   public Trigger reefAlignment() {
     return primaryControlBoard.reefAlignment();
-  }
-
-  @Override
-  public Trigger intake() {
-    return primaryControlBoard.intake();
-  }
-
-  @Override
-  public Trigger shoot() {
-    return primaryControlBoard.shoot();
   }
 
   @Override
@@ -155,6 +160,11 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
+  public Trigger actTrigger() {
+    return secondaryControlBoard.actTrigger();
+  }
+
+  @Override
   public Trigger manualUp() {
     return secondaryControlBoard.manualUp();
   }
@@ -162,6 +172,16 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   @Override
   public Trigger manualDown() {
     return secondaryControlBoard.manualDown();
+  }
+
+  @Override
+  public Trigger climbUp() {
+    return secondaryControlBoard.climbUp();
+  }
+
+  @Override
+  public Trigger climbDown() {
+    return secondaryControlBoard.climbDown();
   }
 
   @Override
@@ -195,8 +215,13 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger setGoalL1() {
-    return secondaryControlBoard.setGoalL1();
+  public Trigger setGoalL1L() {
+    return secondaryControlBoard.setGoalL1L();
+  }
+
+  @Override
+  public Trigger setGoalL1H() {
+    return secondaryControlBoard.setGoalL1H();
   }
 
   @Override

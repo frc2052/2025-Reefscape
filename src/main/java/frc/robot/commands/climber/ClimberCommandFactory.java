@@ -13,18 +13,18 @@ public class ClimberCommandFactory {
   private static final ClimberSubsystem climber = ClimberSubsystem.getInstance();
 
   public static Command climberUp() {
-    return Commands.runOnce(() -> climber.moveUp(false), climber);
+    return Commands.runEnd(() -> climber.moveUp(false), () -> climber.stop(), climber);
   }
 
   public static Command climberDown() {
-    return Commands.runOnce(() -> climber.moveDown(false), climber);
+    return Commands.runEnd(() -> climber.moveDown(false), () -> climber.stop(), climber);
   }
 
   public static Command climberFineUp() {
-    return Commands.runOnce(() -> climber.moveUp(true), climber);
+    return Commands.runEnd(() -> climber.moveUp(true), () -> climber.stop(), climber);
   }
 
   public static Command climberFineDown() {
-    return Commands.runOnce(() -> climber.moveDown(true), climber);
+    return Commands.runEnd(() -> climber.moveDown(true), () -> climber.stop(), climber);
   }
 }

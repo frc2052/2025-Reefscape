@@ -8,12 +8,10 @@ public class AlgaeCommandFactory {
   private static final AlgaeSubsystem algaeArm = AlgaeSubsystem.getInstance();
 
   public static Command intake() {
-    return Commands.runOnce(() -> algaeArm.intake(), algaeArm)
-        .finallyDo(() -> algaeArm.stopScoringMotor());
+    return Commands.runEnd(() -> algaeArm.intake(), () -> algaeArm.stopScoringMotor(), algaeArm);
   }
 
   public static Command score() {
-    return Commands.runOnce(() -> algaeArm.score(), algaeArm)
-        .finallyDo(() -> algaeArm.stopScoringMotor());
+    return Commands.runEnd(() -> algaeArm.score(), () -> algaeArm.stopScoringMotor(), algaeArm);
   }
 }

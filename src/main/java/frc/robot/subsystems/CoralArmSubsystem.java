@@ -19,26 +19,27 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.RobotState;
+import frc.robot.controlboard.PositionSuperstructure;
 import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import frc.robot.util.Ports;
 import org.littletonrobotics.junction.Logger;
 
-public class ArmSubsystem extends SubsystemBase {
+public class CoralArmSubsystem extends SubsystemBase {
   private final RobotState robotState = RobotState.getInstance();
   private final TalonFX pivotMotor;
   private Angle goalPosition;
 
-  private static ArmSubsystem INSTANCE;
+  private static CoralArmSubsystem INSTANCE;
 
-  public static ArmSubsystem getInstance() {
+  public static CoralArmSubsystem getInstance() {
     if (INSTANCE == null) {
-      INSTANCE = new ArmSubsystem();
+      INSTANCE = new CoralArmSubsystem();
     }
     return INSTANCE;
   }
 
-  private ArmSubsystem() {
-    goalPosition = TargetAction.HP.coralArmAngle;
+  private CoralArmSubsystem() {
+    goalPosition = PositionSuperstructure.getInstance().getTargetAction().getCoralArmAngle();
 
     pivotMotor = new TalonFX(Ports.ARM_TALONFX_ID);
 
@@ -110,11 +111,11 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Logger.recordOutput("Arm Angle", getPosition().in(Degrees));
-    Logger.recordOutput("Arm Goal Angle", goalPosition.in(Degrees));
-    Logger.recordOutput("Arm Motor Set Speed", pivotMotor.get());
-    Logger.recordOutput("Arm Velocity", pivotMotor.getVelocity().getValueAsDouble());
-    Logger.recordOutput("Arm At Goal", isAtDesiredPosition(5));
+    Logger.recordOutput("Coral Arm Angle", getPosition().in(Degrees));
+    Logger.recordOutput("Coral Arm Goal Angle", goalPosition.in(Degrees));
+    Logger.recordOutput("Coral Arm Motor Set Speed", pivotMotor.get());
+    Logger.recordOutput("Coral Arm Velocity", pivotMotor.getVelocity().getValueAsDouble());
+    Logger.recordOutput("Coral Arm At Goal", isAtDesiredPosition(5));
   }
 
   /* SysId routine for characterizing arm. This is used to find PID gains for the arm motor. */

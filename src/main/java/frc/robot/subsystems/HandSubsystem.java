@@ -71,12 +71,12 @@ public class HandSubsystem extends SubsystemBase {
 
   public void motorOut() {
     coralDelay.update(Timer.getFPGATimestamp(), false);
-    setMotor(Constants.HandConstants.HAND_MOTOR_SPEED);
+    setMotor(Constants.HandConstants.OUT_HAND_MOTOR_SPEED);
   }
 
   public void motorIn() {
     intaking = true;
-    setMotor(-Constants.HandConstants.HAND_MOTOR_SPEED);
+    setMotor(-Constants.HandConstants.IN_HAND_MOTOR_SPEED);
   }
 
   @Override
