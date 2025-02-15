@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -57,7 +58,12 @@ public class HandSubsystem extends SubsystemBase {
     // limitConfigs.SupplyCurrentLowerLimit = (10.0);
     // limitConfigs.StatorCurrentLimitEnable = false;
 
-    motor.getConfigurator().apply(config.withCurrentLimits(limitConfigs));
+    motor
+        .getConfigurator()
+        .apply(
+            config
+                .withCurrentLimits(limitConfigs)
+                .withAudio(new AudioConfigs().withBeepOnBoot(false)));
   }
 
   private void setMotor(double speed) {

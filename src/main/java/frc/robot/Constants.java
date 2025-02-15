@@ -2,6 +2,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -92,7 +93,8 @@ public class Constants {
             .withSoftwareLimitSwitch(SOFTWARE_LIMIT_SWITCH_CONFIG)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
             .withMotionMagic(MOTION_MAGIC_CONFIG)
-            .withSlot0(SLOT0_CONFIGS);
+            .withSlot0(SLOT0_CONFIGS)
+            .withAudio(new AudioConfigs().withBeepOnBoot(false));
   }
 
   public static class DriverConstants {
@@ -174,7 +176,8 @@ public class Constants {
         new TalonFXConfiguration()
             .withSlot0(SLOT0_CONFIGS)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-            .withFeedback(FEEDBACK_CONFIG);
+            .withFeedback(FEEDBACK_CONFIG)
+            .withAudio(new AudioConfigs().withBeepOnBoot(false));
   }
 
   public static class HandConstants {
