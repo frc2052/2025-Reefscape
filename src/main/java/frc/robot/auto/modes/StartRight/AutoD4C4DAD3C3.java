@@ -3,7 +3,7 @@ package frc.robot.auto.modes.StartRight;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.subsystems.ElevatorSubsystem.ElevatorPosition;
+import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 
 @AutoDescription(description = "29 Point Auto - Two L4, Remove Algae, Two L3")
 public class AutoD4C4DAD3C3 extends AutoBase {
@@ -20,19 +20,19 @@ public class AutoD4C4DAD3C3 extends AutoBase {
     addCommands(delaySelectedTime());
 
     addCommands(followPathCommand(startingPath));
-    addCommands(toPosition(ElevatorPosition.L4));
+    addCommands(toPosition(TargetAction.L4));
     addCommands(followPathCommand(Paths.D4_RL));
     addCommands(followPathCommand(Paths.RL_C4));
     // addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.RL_C4, SnapLocation.ReefCD));
-    addCommands(toPosition(ElevatorPosition.L4));
+    addCommands(toPosition(TargetAction.L4));
     addCommands(followPathCommand(Paths.C4_RL));
     addCommands(followPathCommand(Paths.RL_D3));
     // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.RL_D3,
     // SnapLocation.ReefCD));
-    addCommands(toPosition(ElevatorPosition.L3));
+    addCommands(toPosition(TargetAction.L3));
     addCommands(followPathCommand(Paths.D3_RL));
     addCommands(followPathCommand(Paths.RL_C3));
     // addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.RL_C3, SnapLocation.ReefCD));
-    addCommands(toPosition(ElevatorPosition.L3));
+    addCommands(toPosition(TargetAction.L3));
   }
 }

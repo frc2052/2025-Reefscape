@@ -9,11 +9,10 @@ import static edu.wpi.first.units.Units.Degrees;
 import com.team2052.lib.util.DelayedBoolean;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.AlgaeSubsystemConstants;
-import frc.robot.util.Ports;
+import frc.robot.controlboard.PositionSuperstructure;
+import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 
 public class AlgaeSubsystem extends SubsystemBase {
   private static AlgaeSubsystem INSTANCE;
@@ -21,13 +20,14 @@ public class AlgaeSubsystem extends SubsystemBase {
   // private final TalonFX pivotMotor;
   // private final TalonFX scoringMotor;
 
-  private final AnalogEncoder pivotEncoder;
+  // private final AnalogEncoder pivotEncoder;
 
-  private AlgaePosition position;
+  private TargetAction position;
 
   private PIDController pivotController;
 
   private boolean isIntaking = false;
+  private boolean hasAlgae = false;
   private DelayedBoolean intakingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.05);
 
   public static AlgaeSubsystem getInstance() {
@@ -40,43 +40,43 @@ public class AlgaeSubsystem extends SubsystemBase {
   public AlgaeSubsystem() {
     // pivotMotor = new TalonFX(Ports.ALGAE_PIVOT_ID);
     // scoringMotor = new TalonFX(Ports.ALGAE_SCORING_ID);
-    pivotEncoder = new AnalogEncoder(Ports.ALGAE_ENCODER_ID);
+    // pivotEncoder = new AnalogEncoder(Ports.ALGAE_ENCODER_ID);
 
     // pivotMotor.getConfigurator().apply(AlgaeSubsystemConstants.Motors.PIVOT_CONFIG);
     // scoringMotor.getConfigurator().apply(AlgaeSubsystemConstants.Motors.SCORING_CONFIG);
 
-    position = AlgaePosition.STOWED;
+    position = PositionSuperstructure.getInstance().getTargetAction();
 
-    pivotController =
-        new PIDController(
-            AlgaeSubsystemConstants.PIDs.PIVOT_KP,
-            AlgaeSubsystemConstants.PIDs.PIVOT_KI,
-            AlgaeSubsystemConstants.PIDs.PIVOT_KD);
+    // pivotController =
+    //     new PIDController(
+    //         AlgaeSubsystemConstants.PIDs.PIVOT_KP,
+    //         AlgaeSubsystemConstants.PIDs.PIVOT_KI,
+    //         AlgaeSubsystemConstants.PIDs.PIVOT_KD);
   }
 
   private void goToPivotAngle(Angle angle) {
+    if (hasAlgae && angle.in(Degrees) < 90) {
+      return;
+    }
     // pivotMotor.set(pivotController.calculate(pivotEncoder.get(), angle.in(Rotations)));
   }
 
   @Override
   public void periodic() {
-    goToPivotAngle(position.getAngle());
+    goToPivotAngle(position.getCoralArmAngle());
     if (isIntaking) {
       if (intakingDelay.update(
           Timer.getFPGATimestamp(), false
           // MathHelpers.epsilonEquals(pivotMotor.getVelocity().getValueAsDouble(), 0.0, 0.01)
           )) {
         stopScoringMotor();
+        hasAlgae = true;
       }
     }
   }
 
-  public void setGoalPosition(AlgaePosition position) {
+  public void setGoalPosition(TargetAction position) {
     this.position = position;
-  }
-
-  public AlgaePosition getCurrentPosition() {
-    return position;
   }
 
   public void intake() {
@@ -87,26 +87,17 @@ public class AlgaeSubsystem extends SubsystemBase {
   public void score() {
     // scoringMotor.set(AlgaeSubsystemConstants.Motors.SCORING_SCORE_SPEED);
     isIntaking = false;
+    hasAlgae = false;
+  }
+
+  public boolean isAtPosition(double tol, Angle goal) {
+    return true;
+    // return pivotMotor.getPosition().getValueAsDouble() < goal.in(Degrees) + tol
+    //     && pivotMotor.getPosition().getValueAsDouble() > goal.in(Degrees) - tol;
   }
 
   public void stopScoringMotor() {
     // scoringMotor.stopMotor();
     isIntaking = false;
-  }
-
-  public enum AlgaePosition {
-    NET(Degrees.of(135)),
-    DESCORE(Degrees.of(90)),
-    STOWED(Degrees.of(0));
-
-    private final Angle angle;
-
-    AlgaePosition(Angle angle) {
-      this.angle = angle;
-    }
-
-    public Angle getAngle() {
-      return angle;
-    }
   }
 }

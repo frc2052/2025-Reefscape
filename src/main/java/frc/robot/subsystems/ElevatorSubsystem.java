@@ -6,7 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.util.DelayedBoolean;
@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import frc.robot.util.Ports;
 import org.littletonrobotics.junction.Logger;
 
@@ -41,7 +42,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   private ElevatorSubsystem() {
-    goalPositionRotations = ElevatorPosition.HOME.getPositionRotations();
+    goalPositionRotations = TargetAction.HM.getElevatorPositionRotations();
 
     frontMotor = new TalonFX(Ports.ELEVATOR_FRONT_ID, "Krawlivore");
     backMotor = new TalonFX(Ports.ELEVATOR_BACK_ID, "Krawlivore");
@@ -54,8 +55,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     backMotor.setControl(new Follower(frontMotor.getDeviceID(), true));
   }
 
-  public void setPositionMotionMagic(ElevatorPosition elevatorPosition) {
-    setPositionMotionMagic(elevatorPosition.getPositionRotations());
+  public void setPositionMotionMagic(TargetAction elevatorAction) {
+    setPositionMotionMagic(elevatorAction.getElevatorPositionRotations());
   }
 
   public void setPositionMotionMagic(double elevatorPositionRotations) {
@@ -64,13 +65,13 @@ public class ElevatorSubsystem extends SubsystemBase {
       return;
     }
 
-    if (elevatorPositionRotations != ElevatorPosition.HOME.getPositionRotations()) {
+    if (elevatorPositionRotations != TargetAction.HM.getElevatorPositionRotations()) {
       shouldHome = true;
     }
 
     goalPositionRotations = elevatorPositionRotations;
 
-    frontMotor.setControl(new MotionMagicTorqueCurrentFOC(elevatorPositionRotations));
+    frontMotor.setControl(new MotionMagicExpoTorqueCurrentFOC(elevatorPositionRotations));
   }
 
   public void setOpenLoop(double speed) {
@@ -99,13 +100,16 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean atPosition() {
-    return Math.abs(goalPositionRotations - frontMotor.getPosition().getValueAsDouble())
+    return Math.abs(goalPositionRotations - getPosition()) <= ElevatorConstants.TICKS_DEADZONE;
+  }
+
+  public boolean atPosition(TargetAction position) {
+    return Math.abs(position.ElevatorPositionRotations - getPosition())
         <= ElevatorConstants.TICKS_DEADZONE;
   }
 
-  public boolean atPosition(ElevatorPosition position) {
-    return Math.abs(position.positionRotations - frontMotor.getPosition().getValueAsDouble())
-        <= ElevatorConstants.TICKS_DEADZONE;
+  public boolean atPosition(double tol, TargetAction position) {
+    return Math.abs(position.ElevatorPositionRotations - getPosition()) <= tol;
   }
 
   public void zeroEncoder() {
@@ -120,10 +124,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
   }
 
+  public boolean shouldHome() {
+    return shouldHome;
+  }
+
   public boolean atHomingLocation() {
-    return getPosition() < ElevatorPosition.HOME.getPositionRotations()
+    return getPosition() < TargetAction.HM.getElevatorPositionRotations()
         || MathHelpers.epsilonEquals(
-            getPosition(), ElevatorPosition.HOME.getPositionRotations(), 0.05);
+            getPosition(), TargetAction.HM.getElevatorPositionRotations(), 0.05);
   }
 
   @Override
@@ -147,7 +155,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     // if we still intend to go to the home position, currently at alleged home, and should re-home,
     // then re-home
     // if (MathHelpers.epsilonEquals(
-    //         goalPositionRotations, ElevatorPosition.HOME.getPositionRotations(), .02)
+    //         goalPositionRotations, TargetAction.HM.getElevatorPositionRotations(), .02)
     //     && atHomingLocation()
     //     && shouldHome) {
     //   setWantHome(true);
@@ -155,38 +163,17 @@ public class ElevatorSubsystem extends SubsystemBase {
     //   setWantHome(false);
     // }
 
+    Logger.recordOutput("Elevator Homing", homing);
     if (homing) {
       setOpenLoop(ElevatorConstants.HOMING_SPEED);
       if (homingDelay.update(
           Timer.getFPGATimestamp(),
-          MathHelpers.epsilonEquals(frontMotor.getVelocity().getValueAsDouble(), 0.0, 0.01))) {
+          MathHelpers.epsilonEquals(frontMotor.getVelocity().getValueAsDouble(), 0.0, 0.03))) {
         zeroEncoder();
-        setPositionMotionMagic(ElevatorPosition.HOME);
+        setPositionMotionMagic(TargetAction.HM);
         homing = false;
         homingDelay.update(Timer.getFPGATimestamp(), false);
       }
-    }
-  }
-
-  public static enum ElevatorPosition {
-    HOME(1),
-    HANDOFF(2.5),
-    L1(10),
-    L2(20),
-    L3(37.5),
-    L4(64),
-    LOWER_ALGAE(25),
-    UPPER_ALGAE(27),
-    TRAVEL(5);
-
-    private final double positionRotations;
-
-    private ElevatorPosition(double positionRotations) {
-      this.positionRotations = positionRotations;
-    }
-
-    public double getPositionRotations() {
-      return positionRotations;
     }
   }
 

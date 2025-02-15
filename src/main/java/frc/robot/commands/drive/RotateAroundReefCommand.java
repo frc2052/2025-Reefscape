@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.RobotState;
+import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
 import frc.robot.commands.drive.alignment.AlignWithSpecificReefCommand;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AimingCalculator;
@@ -34,7 +35,7 @@ public class RotateAroundReefCommand extends AlignWithSpecificReefCommand {
 
   /** Creates a new RotateAroundReefCommand. */
   public RotateAroundReefCommand(
-      Supplier<AlignLocation> scoringLocation, int tagID, Supplier<Distance> radiusSupplier) {
+      Supplier<ReefSubSide> scoringLocation, int tagID, Supplier<Distance> radiusSupplier) {
     super(
         scoringLocation,
         getXSupplier(),

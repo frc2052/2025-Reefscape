@@ -5,12 +5,12 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.RobotState;
+import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import frc.robot.util.Ports;
 import org.littletonrobotics.junction.Logger;
 
@@ -37,7 +38,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private ArmSubsystem() {
-    goalPosition = ArmPosition.HANDOFF.getAngle();
+    goalPosition = TargetAction.HP.coralArmAngle;
 
     pivotMotor = new TalonFX(Ports.ARM_TALONFX_ID);
 
@@ -58,15 +59,14 @@ public class ArmSubsystem extends SubsystemBase {
 
   private void setPivotAngle(Angle angle) {
     if (angle == goalPosition && isAtDesiredPosition()) {
-      System.out.println("Arm at goal position");
       return;
     }
 
     pivotMotor.setControl(new PositionVoltage(angle));
   }
 
-  public void setArmPosition(ArmPosition position) {
-    this.goalPosition = clampPosition(position.getAngle());
+  public void setArmPosition(TargetAction position) {
+    this.goalPosition = clampPosition(position.getCoralArmAngle());
     setPivotAngle(goalPosition);
   }
 
@@ -101,17 +101,20 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean isAtPosition(double tol, Angle goal) {
-    return pivotMotor.getPosition().getValueAsDouble() < goal.in(Degrees) + tol
-        && pivotMotor.getPosition().getValueAsDouble() > goal.in(Degrees) - tol;
+    return Math.abs(getPosition().in(Degrees) - goal.in(Degrees)) <= tol;
+  }
+
+  public Angle getPosition() {
+    return Rotations.of(pivotMotor.getPosition().getValueAsDouble());
   }
 
   @Override
   public void periodic() {
-    Logger.recordOutput(
-        "Arm Angle", Units.rotationsToDegrees(pivotMotor.getPosition().getValueAsDouble()));
+    Logger.recordOutput("Arm Angle", getPosition().in(Degrees));
     Logger.recordOutput("Arm Goal Angle", goalPosition.in(Degrees));
     Logger.recordOutput("Arm Motor Set Speed", pivotMotor.get());
     Logger.recordOutput("Arm Velocity", pivotMotor.getVelocity().getValueAsDouble());
+    Logger.recordOutput("Arm At Goal", isAtDesiredPosition(5));
   }
 
   /* SysId routine for characterizing arm. This is used to find PID gains for the arm motor. */
@@ -147,25 +150,5 @@ public class ArmSubsystem extends SubsystemBase {
    */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutineToApply.dynamic(direction);
-  }
-
-  public enum ArmPosition { // TODO: set angles for each position
-    HANDOFF(Degrees.of(110)),
-    TRAVEL(Degrees.of(180)),
-    L1(Degrees.of(110)),
-    MID_LEVEL(Degrees.of(260)), // for both L2 and L3
-    L4(Degrees.of(75)),
-    UPPER_ALGAE_DESCORE(Degrees.of(90)),
-    LOWER_ALGAE_DESCORE(Degrees.of(90));
-
-    private final Angle angle;
-
-    ArmPosition(Angle angle) {
-      this.angle = angle;
-    }
-
-    public Angle getAngle() {
-      return angle;
-    }
   }
 }
