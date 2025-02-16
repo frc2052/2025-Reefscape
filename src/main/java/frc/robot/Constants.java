@@ -2,6 +2,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -91,7 +92,8 @@ public class Constants {
             .withSoftwareLimitSwitch(SOFTWARE_LIMIT_SWITCH_CONFIG)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
             .withMotionMagic(MOTION_MAGIC_CONFIG)
-            .withSlot0(SLOT0_CONFIGS);
+            .withSlot0(SLOT0_CONFIGS)
+            .withAudio(new AudioConfigs().withBeepOnBoot(false));
   }
 
   public static class DriverConstants {
@@ -173,64 +175,79 @@ public class Constants {
         new TalonFXConfiguration()
             .withSlot0(SLOT0_CONFIGS)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-            .withFeedback(FEEDBACK_CONFIG);
+            .withFeedback(FEEDBACK_CONFIG)
+            .withAudio(new AudioConfigs().withBeepOnBoot(false));
   }
 
   public static class HandConstants {
     public static final boolean HAND_MOTOR_INVERTED = true;
     public static final double HAND_MOTOR_CURRENT_LIMIT = 40.0;
-    public static final double HAND_MOTOR_SPEED = 0.75;
+    public static final double IN_HAND_MOTOR_SPEED = 0.5;
+    public static final double OUT_HAND_MOTOR_SPEED = 0.20;
   }
 
 
-  public static class AlgaeSubsystemConstants {
-    public static class Motors {
-      public static final double SCORING_INTAKE_SPEED = 0;
-      public static final double SCORING_SCORE_SPEED = 0;
+  public static class AlgaeArmConstants {
+    public static class PIVOT {
+      public static final boolean MOTOR_INVERTED = false;
+      public static final double TOLERANCE = 1.0;
 
-      public static final TalonFXConfiguration PIVOT_CONFIG = new TalonFXConfiguration()
-        .withMotorOutput(
-          new MotorOutputConfigs()
-            .withInverted(InvertedValue.Clockwise_Positive)
-            .withNeutralMode(NeutralModeValue.Brake)
-        );
+      public static final double P = 1.0;
+      public static final double I = 0.0;
+      public static final double D = 0.0;
 
-        public static final TalonFXConfiguration SCORING_CONFIG = new TalonFXConfiguration()
-        .withMotorOutput(
+
+      public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
           new MotorOutputConfigs()
-            .withInverted(InvertedValue.CounterClockwise_Positive)
-            .withNeutralMode(NeutralModeValue.Coast)
-        );
+              .withInverted(
+                  MOTOR_INVERTED
+                      ? InvertedValue.Clockwise_Positive
+                      : InvertedValue.CounterClockwise_Positive)
+              .withNeutralMode(NeutralModeValue.Brake);
+
+      public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
+          new SoftwareLimitSwitchConfigs()
+              .withForwardSoftLimitThreshold(Degrees.of(60)) // TODO: adjust as needed
+              .withForwardSoftLimitEnable(false)
+              .withReverseSoftLimitThreshold(Degrees.of(200))
+              .withReverseSoftLimitEnable(false);
+
+      public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
+        .withMotorOutput(MOTOR_OUTPUT_CONFIG)
+        .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS);
     }
 
-    public static class PIDs {
-      public static final double PIVOT_KP = 0.0;
-      public static final double PIVOT_KI = 0.0;
-      public static final double PIVOT_KD = 0.0;
+
+    public static class SCORER {
+      public static final double MOTOR_CURRENT_LIMIT = 60.0;
+      public static final double INTAKE_SPEED = 1.0;
+      public static final double SCORE_SPEED = -1.0;
+
+      public static final boolean MOTOR_INVERTED = false;
+
+      public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
+          new MotorOutputConfigs()
+              .withInverted(
+                  MOTOR_INVERTED
+                      ? InvertedValue.Clockwise_Positive
+                      : InvertedValue.CounterClockwise_Positive)
+              .withNeutralMode(NeutralModeValue.Brake); 
+
+      public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
+        .withMotorOutput(MOTOR_OUTPUT_CONFIG);
     }
   }
   
   public static final class ClimberConstants {
-    public static final int baseSpeed = 0;
-    public static final int fineSpeed = 0;
+    public static final double baseSpeed = 1.0;
+    public static final double fineSpeed = 0.25;
 
-    public static final class Motors {
-      public static final int LEAD_MOTOR_ID = 0;
-      public static final int FOLLOW_MOTOR_ID = 0;
-    }
-
-    public static final class Configs {
-      
-      public static final TalonFXConfiguration LEAD_MOTOR = new TalonFXConfiguration().withMotorOutput(
-        new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)
-        .withNeutralMode(NeutralModeValue.Brake)
-      ).withCurrentLimits(
-        new CurrentLimitsConfigs()
-      );
-
-      public static final boolean FOLLOW_MOTOR_OPPOSING_DIRECTION = false;
-
-    }
+    public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration().withMotorOutput(
+      new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)
+      .withNeutralMode(NeutralModeValue.Brake)
+    ).withCurrentLimits(
+      new CurrentLimitsConfigs()
+    );
   }
 
   public static class VisionConstants {

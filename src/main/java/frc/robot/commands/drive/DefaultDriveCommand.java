@@ -65,8 +65,8 @@ public class DefaultDriveCommand extends Command {
     this.rotationSupplier = rotationSupplier;
     this.fieldCentricSupplier = fieldCentricSupplier;
 
-    xLimiter = new SlewRateLimiter(2);
-    yLimiter = new SlewRateLimiter(2);
+    xLimiter = new SlewRateLimiter(3.5);
+    yLimiter = new SlewRateLimiter(3.5);
     rotationLimiter = new SlewRateLimiter(5);
 
     addRequirements(drivetrain);

@@ -4,14 +4,18 @@
 
 package frc.robot;
 
+import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.opencv.core.Mat;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
+  CvSource outputStream;
+  Mat mat;
 
   private final RobotContainer m_robotContainer;
 
@@ -26,10 +30,22 @@ public class Robot extends LoggedRobot {
     }
 
     Logger.start(); // Start logging
+
+    // create the output stream
+    // outputStream = CameraServer.putVideo("MyImage", 640, 480);
+    // // create a mat
+    // mat = new Mat(640, 480, 3);
+    // load your image into mat as a RGB image, using OpenCV
+    // mat =
+    //     Imgcodecs.imread(
+    //         Paths.get("..../src/main/java/com/team2052/lib/images/A1.jpg")
+    //             .toAbsolutePath()
+    //             .toString());
   }
 
   @Override
   public void robotPeriodic() {
+    // outputStream.putFrame(mat);
     CommandScheduler.getInstance().run();
   }
 

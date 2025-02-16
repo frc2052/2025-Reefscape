@@ -12,13 +12,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
+import frc.robot.commands.algae.AlgaeCommandFactory;
+import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.AlgaeSubsystem;
 import frc.robot.subsystems.SuperstructureSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -114,33 +116,34 @@ public class RobotContainer {
     //     .shoot()
     //     .onTrue(Commands.runOnce(SignalLogger::start))
     //     .onFalse(Commands.runOnce(SignalLogger::stop));
+    controlBoard.intakeCoral().whileTrue(HandCommandFactory.motorIn());
+    controlBoard.outtakeCoral().whileTrue(HandCommandFactory.motorOut());
 
-    // controlBoard
-    //     .sysIDQuasiForward()
-    //     .whileTrue(ArmSubsystem.getInstance().sysIdQuasistatic(Direction.kForward));
-    // controlBoard
-    //     .sysIDQuasiReverse()
-    //     .whileTrue(ArmSubsystem.getInstance().sysIdQuasistatic(Direction.kReverse));
-    // controlBoard
-    //     .sysIDDynamicForward()
-    //     .whileTrue(ArmSubsystem.getInstance().sysIdDynamic(Direction.kForward));
-    // controlBoard
-    //     .sysIDDynamicReverse()
-    //     .whileTrue(ArmSubsystem.getInstance().sysIdDynamic(Direction.kReverse));
-    controlBoard.intake().whileTrue(HandCommandFactory.motorIn());
-    controlBoard.outtake().whileTrue(HandCommandFactory.motorOut());
-    // controlBoard.shoot().onTrue(ArmSubsystem.getInstance().runPct(-0.25)).onFalse(ArmSubsystem.getInstance().runPct(0.0));
-    // controlBoard.reefAlignment().onTrue(ArmSubsystem.getInstance().runPct(0.25)).onFalse(ArmSubsystem.getInstance().runPct(0.0));
+    controlBoard.intakeAlgae().whileTrue(AlgaeCommandFactory.intake());
+    controlBoard.shootAlgae().whileTrue(AlgaeCommandFactory.score());
 
     controlBoard
         .manualUp()
-        .onTrue(ElevatorSubsystem.getInstance().manualUp())
-        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
-
+        .onTrue(AlgaeSubsystem.getInstance().runPivotPct(0.40))
+        .onFalse(AlgaeSubsystem.getInstance().runPivotPct(0.0));
     controlBoard
         .manualDown()
-        .onTrue(ElevatorSubsystem.getInstance().manualDown())
-        .onFalse(ElevatorSubsystem.getInstance().stopElevator());
+        .onTrue(AlgaeSubsystem.getInstance().runPivotPct(-0.40))
+        .onFalse(AlgaeSubsystem.getInstance().runPivotPct(0.0));
+
+    // controlBoard
+    //     .manualUp()
+    //     .onTrue(ElevatorSubsystem.getInstance().manualUp())
+    //     .onFalse(ElevatorSubsystem.getInstance().stopElevator());
+
+    // controlBoard
+    //     .manualDown()
+    //     .onTrue(ElevatorSubsystem.getInstance().manualDown())
+    //     .onFalse(ElevatorSubsystem.getInstance().stopElevator());
+
+    controlBoard.climbUp().whileTrue(ClimberCommandFactory.climberUp());
+
+    controlBoard.climbDown().whileTrue(ClimberCommandFactory.climberDown());
   }
 
   private void configurePOVBindings() {
@@ -148,42 +151,42 @@ public class RobotContainer {
 
     controlBoard
         .povUp()
-        .whileTrue(new DefaultDriveCommand(() -> 0.05, () -> 0.0, () -> 0.0, () -> false));
+        .whileTrue(new DefaultDriveCommand(() -> 0.2, () -> 0.0, () -> 0.0, () -> false));
     controlBoard
         .povUpRight()
-        .whileTrue(new DefaultDriveCommand(() -> 0.05, () -> -0.05, () -> 0.0, () -> false));
+        .whileTrue(new DefaultDriveCommand(() -> 0.2, () -> -0.2, () -> 0.0, () -> false));
 
     controlBoard
         .povRight()
-        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> -0.05, () -> 0.0, () -> false));
+        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> -0.2, () -> 0.0, () -> false));
 
     controlBoard
         .povDownRight()
-        .whileTrue(new DefaultDriveCommand(() -> -0.05, () -> -0.05, () -> 0.0, () -> false));
+        .whileTrue(new DefaultDriveCommand(() -> -0.2, () -> -0.2, () -> 0.0, () -> false));
 
     controlBoard
         .povDown()
-        .whileTrue(new DefaultDriveCommand(() -> -0.05, () -> 0.0, () -> 0.0, () -> false));
+        .whileTrue(new DefaultDriveCommand(() -> -0.2, () -> 0.0, () -> 0.0, () -> false));
 
     controlBoard
         .povDownLeft()
-        .whileTrue(new DefaultDriveCommand(() -> -0.05, () -> 0.05, () -> 0.0, () -> false));
+        .whileTrue(new DefaultDriveCommand(() -> -0.2, () -> 0.2, () -> 0.0, () -> false));
 
     controlBoard
         .povLeft()
-        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.05, () -> 0.0, () -> false));
+        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.2, () -> 0.0, () -> false));
 
     controlBoard
         .povUpLeft()
-        .whileTrue(new DefaultDriveCommand(() -> 0.05, () -> 0.05, () -> 0.0, () -> false));
+        .whileTrue(new DefaultDriveCommand(() -> 0.2, () -> 0.2, () -> 0.0, () -> false));
 
     controlBoard
         .povRotLeft()
-        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.0, () -> 0.05, () -> false));
+        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.0, () -> 0.3, () -> false));
 
     controlBoard
         .povRotRight()
-        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.0, () -> -0.05, () -> false));
+        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.0, () -> -0.3, () -> false));
 
     System.out.println("POV Bindings Configured");
   }
