@@ -30,9 +30,5 @@ public class AdvantageScopeSubsystem extends SubsystemBase {
     recordDrivetrainData();
   }
 
-  public static void recordDrivetrainData() {
-    String drivetrainFolder = "Drivetrain_";
-
-    // TODO: swerve array + Pose2d
-  }
+  public static void recordDrivetrainData() {}
 }
