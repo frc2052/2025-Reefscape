@@ -20,6 +20,7 @@ public class TagTracker {
   public TagTrackerConstants constants;
   private final RobotState robotState;
   private List<PhotonPipelineResult> latestResults;
+  private double weight = 1.0;
 
   public TagTracker(TagTrackerConstants camConstants, RobotState robotState) {
     this.constants = camConstants;
@@ -32,6 +33,26 @@ public class TagTracker {
 
   public String getName() {
     return photonCamera.getName();
+  }
+
+  public void setWeight(double weight) {
+    this.weight = weight;
+  }
+  public synchronized void pullData() {
+    latestResults = photonCamera.getAllUnreadResults();
+  }
+
+  public List<PoseEstimate> getPoseEstimates() {
+    List<PoseEstimate> estimates = new ArrayList<PoseEstimate>();
+    for (int i = 0; i < latestResults.size(); i++) {
+      PhotonPipelineResult result = latestResults.get(i);
+      Optional<PoseEstimate> estimate = resultToPoseEstimate(result);
+      if (estimate.isPresent()) {
+        estimates.add(estimate.get());
+      }
+    }
+
+    return estimates;
   }
 
   public Optional<PhotonPipelineResult> getClosestTagToCamera() {
@@ -53,30 +74,15 @@ public class TagTracker {
     return Optional.ofNullable(closestTarget);
   }
 
-  public List<MultiTagPoseEstimate> getAllResults(boolean overrideStdDevs) {
-    List<MultiTagPoseEstimate> estimates = new ArrayList<MultiTagPoseEstimate>();
-    latestResults = photonCamera.getAllUnreadResults();
-    for (int i = 0; i < latestResults.size(); i++) {
-      PhotonPipelineResult result = latestResults.get(i);
-      Optional<MultiTagPoseEstimate> estimate = resultToMultiTag(result, overrideStdDevs);
-      if (estimate.isPresent()) {
-        estimates.add(estimate.get());
-      }
-    }
-
-    return estimates;
-  }
-
-  public Optional<MultiTagPoseEstimate> resultToMultiTag(
-      PhotonPipelineResult result, boolean overrideStdDevs) {
-    Optional<EstimatedRobotPose> estimatedRobotPose = poseEstimator.update(result);
-    if (estimatedRobotPose.isPresent()) {
+  private Optional<PoseEstimate> resultToPoseEstimate(PhotonPipelineResult result) {
+    Optional<EstimatedRobotPose> photonData = poseEstimator.update(result);
+    if (photonData.isPresent()) {
       return Optional.of(
-          new MultiTagPoseEstimate(
+          new PoseEstimate(
               this.photonCamera.getName(),
-              estimatedRobotPose.get(),
-              robotState.getFieldToRobot(),
-              overrideStdDevs));
+              weight,
+              photonData.get(),
+              robotState.getFieldToRobot()));
     }
 
     return Optional.empty();

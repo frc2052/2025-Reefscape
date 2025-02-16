@@ -82,8 +82,8 @@ public class HandSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    Logger.recordOutput("Hand Motor Velocity", motor.getVelocity().getValueAsDouble());
-    Logger.recordOutput("Hand Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
+    Logger.recordOutput("Hand/Motor Velocity", motor.getVelocity().getValueAsDouble());
+    Logger.recordOutput("Hand/Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
 
     if (intaking) {
       if (coralDelay.update(

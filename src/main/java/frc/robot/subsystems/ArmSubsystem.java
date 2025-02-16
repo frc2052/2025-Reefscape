@@ -110,11 +110,11 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Logger.recordOutput("Arm Angle", getPosition().in(Degrees));
-    Logger.recordOutput("Arm Goal Angle", goalPosition.in(Degrees));
-    Logger.recordOutput("Arm Motor Set Speed", pivotMotor.get());
-    Logger.recordOutput("Arm Velocity", pivotMotor.getVelocity().getValueAsDouble());
-    Logger.recordOutput("Arm At Goal", isAtDesiredPosition(5));
+    Logger.recordOutput("Arm/Angle", getPosition().in(Degrees));
+    Logger.recordOutput("Arm/Goal Angle", goalPosition.in(Degrees));
+    Logger.recordOutput("Arm/Motor Set Speed", pivotMotor.get());
+    Logger.recordOutput("Arm/Velocity", pivotMotor.getVelocity().getValueAsDouble());
+    Logger.recordOutput("Arm/At Goal", isAtDesiredPosition(5));
   }
 
   /* SysId routine for characterizing arm. This is used to find PID gains for the arm motor. */

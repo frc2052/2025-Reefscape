@@ -5,14 +5,23 @@
 package frc.robot.subsystems.vision;
 
 import com.team2052.lib.helpers.MathHelpers;
-import com.team2052.lib.vision.MultiTagPoseEstimate;
+import com.team2052.lib.vision.PoseEstimate;
 import com.team2052.lib.vision.TagTracker;
 import com.team2052.lib.vision.VisionPoseAcceptor;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.VisionConstants.Camera0Constants;
+import frc.robot.Constants.VisionConstants.AlgaeReefCameraConstants;
+import frc.robot.Constants.VisionConstants.CoralReefCameraConstants;
+import frc.robot.Constants.VisionConstants.RearCameraConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
+import frc.robot.util.FieldConstants;
+
+import static edu.wpi.first.units.Units.Meters;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,13 +32,17 @@ import org.photonvision.targeting.PhotonPipelineResult;
 public class VisionSubsystem extends SubsystemBase {
   private DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
   private RobotState robotState = RobotState.getInstance();
-  List<MultiTagPoseEstimate> synchronizedVisionUpdates =
-      Collections.synchronizedList(new ArrayList<MultiTagPoseEstimate>());
+  List<PoseEstimate> synchronizedVisionUpdates =
+      Collections.synchronizedList(new ArrayList<PoseEstimate>());
 
   private List<TagTracker> localizationTagTrackers = new ArrayList<TagTracker>();
 
   private TagTracker reefTagTracker =
-      new TagTracker(Camera0Constants.TagTrackerConstants(), robotState);
+      new TagTracker(CoralReefCameraConstants.TagTrackerConstants(), robotState);
+  private TagTracker algaeTagTracker =
+      new TagTracker(AlgaeReefCameraConstants.TagTrackerConstants(), robotState);
+  private TagTracker rearTagTracker =
+      new TagTracker(RearCameraConstants.TagTrackerConstants(), robotState);
 
   private static VisionSubsystem INSTANCE;
 
@@ -52,17 +65,26 @@ public class VisionSubsystem extends SubsystemBase {
     return reefTagTracker.getClosestTagToCamera();
   }
 
+  public Optional<PhotonPipelineResult> getReefCamClosestTarget(Distance minDistance) {
+    if(reefTagTracker.getClosestTagToCamera().isPresent()) {
+      PhotonPipelineResult result = reefTagTracker.getClosestTagToCamera().get();
+      if (result.getBestTarget().getBestCameraToTarget().getTranslation().getNorm() < minDistance.in(Meters)) {
+        return reefTagTracker.getClosestTagToCamera();
+      }
+    }
+    return Optional.empty();
+  }
+
   private void updateTagTrackers() {
     localizationTagTrackers.parallelStream().forEach(this::pullCameraData);
   }
 
   private void pullCameraData(TagTracker tagTracker) {
-    synchronizedVisionUpdates.addAll(
-        tagTracker.getAllResults(
-            robotState.getIsReefTracking() && tagTracker == reefTagTracker ? true : false));
+    tagTracker.pullData();
+    synchronizedVisionUpdates.addAll(tagTracker.getPoseEstimates());
   }
 
-  private void updateEstimator(MultiTagPoseEstimate update) {
+  private void updateEstimator(PoseEstimate update) {
     if (VisionPoseAcceptor.shouldAccept(
         update,
         MathHelpers.chassisSpeedsNorm(drivetrain.getCurrentRobotChassisSpeeds()),
@@ -77,6 +99,20 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
+  public AprilTagFieldLayout getCameraLayout(TagTrackerType trackerType) {
+    switch (trackerType) {
+      case CORAL_REEF:
+        return reefTagTracker.constants.tagLayout;
+      case ALGAE_REEF:
+      return algaeTagTracker.constants.tagLayout;
+      case REAR:
+      return rearTagTracker.constants.tagLayout;
+      default:
+        return FieldConstants.DEFAULT_APRIL_TAG_LAYOUT_TYPE.layout;
+    }
+
+  }  
+
   @Override
   public void periodic() {
     synchronizedVisionUpdates.clear();
@@ -84,5 +120,11 @@ public class VisionSubsystem extends SubsystemBase {
     updateTagTrackers();
 
     synchronizedVisionUpdates.forEach(this::updateEstimator);
+  }
+
+  public enum TagTrackerType {
+    CORAL_REEF,
+    ALGAE_REEF,
+    REAR;
   }
 }

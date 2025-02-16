@@ -18,12 +18,10 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team2052.lib.vision.TagTracker.TagTrackerConstants;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -31,6 +29,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.*;
 import frc.robot.subsystems.drive.ctre.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
+import frc.robot.util.FieldConstants;
 import frc.robot.util.Ports;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
@@ -125,9 +124,9 @@ public class Constants {
     // Front-to-back distance between drivetrain wheels
     public static final Distance DRIVETRAIN_WHEELBASE = Inches.of(23.5);
 
-    public static final Mass DRIVETRAIN_MASS = Pounds.of(100); // TODO: weigh the robot
+    public static final Mass DRIVETRAIN_MASS = Pounds.of(107.1);
 
-    public static final Matrix<N3, N1> ODOMETRY_STDDEV = VecBuilder.fill(0.1, 0.1, 0.05);
+    public static final Matrix<N3, N1> ODOMETRY_STDDEV = new Matrix<>(VecBuilder.fill(0.003, 0.003, 0.002));
 
     public static final Angle HEADING_TOLERANCE = Degrees.of(3);
   }
@@ -235,30 +234,27 @@ public class Constants {
   }
 
   public static class VisionConstants {
-    public static final double XY_STDDEV = 0.3;
-    public static final double HEADING_STDDEV = 5.0;
-    public static final Matrix<N3, N1> VISION_STDDEV =
-        VecBuilder.fill(XY_STDDEV, XY_STDDEV, HEADING_STDDEV);
+    public static final double DEFAULT_XY_STDDEV = 0.1;
+    public static final double DEFAULT_HEADING_STDDEV = 0.1;
+    public static final Matrix<N3, N1> VISION_STDDEV =  new Matrix<>(VecBuilder.fill(DEFAULT_XY_STDDEV, DEFAULT_XY_STDDEV, DEFAULT_HEADING_STDDEV));
 
     public static final double MAX_POSE_AMBIGUITY = 0.15;
     public static final Distance FIELD_BORDER_MARGIN = Meters.of(0.5);
     public static final Distance MAX_VISION_CORRECTION = Meters.of(1);
 
-    public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =
-        AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
-
-    /* Front Left Camera */
-    public static final class Camera0Constants {
+    /* CORAL Reef Camera */
+    public static final class CoralReefCameraConstants {
+      public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =  FieldConstants.CORAL_REEF_CAMERA_LAYOUT_TYPE.layout;
       public static final String CAMERA_NAME = "KrawlerCam_000";
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
-      public static final Distance X_OFFSET = Inches.of(10.5);
-      public static final Distance Y_OFFSET = Inches.of(0.0);
-      public static final Distance Z_OFFSET = Inches.of(0.0);
+      public static final Distance X_OFFSET = Inches.of(9.868); // forward
+      public static final Distance Y_OFFSET = Inches.of(0.509); // left
+      public static final Distance Z_OFFSET = Inches.of(8.193); // up
 
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
-      public static final Angle THETA_Y_OFFSET = Degrees.of(-15); // pitch
+      public static final Angle THETA_Y_OFFSET = Degrees.of(-21.84); // pitch
       public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
 
       public static final Transform3d ROBOT_TO_CAMERA_METERS =
@@ -268,13 +264,41 @@ public class Constants {
 
       public static TagTrackerConstants TagTrackerConstants() {
         return new TagTrackerConstants(
-            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, VisionConstants.APRIL_TAG_FIELD_LAYOUT, STRATEGY);
+            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
       }
     }
 
-    /* Front Right Camera */
-    public static final class Camera1Constants {
+    /* ALGAE Reef Camera */
+    public static final class AlgaeReefCameraConstants {      
+      public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = FieldConstants.ALGAE_REEF_CAMERA_LAYOUT_TYPE.layout;
+
       public static final String CAMERA_NAME = "KrawlerCam_001";
+
+      public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
+
+      public static final Distance X_OFFSET = Inches.of(4.614); // forward
+      public static final Distance Y_OFFSET = Inches.of(9.995); // left
+      public static final Distance Z_OFFSET = Inches.of(8.418); // up
+
+      public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
+      public static final Angle THETA_Y_OFFSET = Degrees.of(-21.55352); // pitch
+      public static final Angle THETA_Z_OFFSET = Degrees.of(90); // yaw
+
+      public static final Transform3d ROBOT_TO_CAMERA_METERS =
+          new Transform3d(
+              new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
+              new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
+
+      public static TagTrackerConstants TagTrackerConstants() {
+        return new TagTrackerConstants(
+            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
+      }
+    }
+    /* Coral Station + Other Tags Camera */
+    public static final class RearCameraConstants {      
+      public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = FieldConstants.DEFAULT_APRIL_TAG_LAYOUT_TYPE.layout;
+
+      public static final String CAMERA_NAME = "KrawlerCam_002";
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
@@ -293,19 +317,12 @@ public class Constants {
 
       public static TagTrackerConstants TagTrackerConstants() {
         return new TagTrackerConstants(
-            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, VisionConstants.APRIL_TAG_FIELD_LAYOUT, STRATEGY);
+            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
       }
     }
   }
 
-  public static class FieldConstants {
-    public static final Distance FIELD_LENGTH = Centimeters.of(1755);
-    public static final Distance FIELD_WIDTH = Centimeters.of(805);
-    public static final Translation2d BLUE_REEF_CENTER = new Translation2d(Inches.of(177.06927), Inches.of(158.5));
-    public static final Translation2d RED_REEF_CENTER = new Translation2d(Inches.of(FIELD_LENGTH.in(Inches) - 177.06927), Inches.of(158.5));
-
-  }
-
+  
   public static final class DashboardConstants {
     public static final String DRIVE_MODE_KEY = "Drive Mode";
     public static final String AUTO_COMPILED_KEY = "Auto Compiled";

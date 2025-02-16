@@ -120,7 +120,7 @@ public class PositionSuperstructure {
     KL(6, 19, Degrees.of(300)),
     RCS(2, 12, Degrees.of(-306)),
     LCS(1, 13, Degrees.of(306)),
-    PRC(3, 16, Degrees.of(0)), // Processor (side of the feild, not where the teams human player is)
+    PRC(3, 16, Degrees.of(0)), // Processor (side of the field, not where the teams human player is)
     FBG(
         15,
         4,
@@ -139,12 +139,8 @@ public class PositionSuperstructure {
       this.lineupAngle = lineupAngle;
     }
 
-    public int getRedTagID() {
-      return redTagID;
-    }
-
-    public int getBlueTagID() {
-      return blueTagID;
+    public int getTagID() {
+      return RobotState.getInstance().isRedAlliance() ? redTagID : blueTagID;
     }
 
     public Angle getLineupAngle() {

@@ -9,13 +9,17 @@ import static edu.wpi.first.units.Units.Meters;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.team2052.lib.planners.AutoAlignPlanner;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
+import frc.robot.controlboard.PositionSuperstructure;
 import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AimingCalculator;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -34,6 +38,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
 
   private Pose2d goalPose;
   private Supplier<ReefSubSide> scoringLocation;
+  private boolean exclusive;
 
   private AutoAlignPlanner planner;
 
@@ -43,6 +48,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
 
   public AlignWithReefCommand(
       Supplier<ReefSubSide> scoringLocation,
+      boolean exclusive,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier rotationSupplier,
@@ -50,6 +56,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
     super(xSupplier, ySupplier, rotationSupplier, fieldCentric);
 
     this.scoringLocation = scoringLocation;
+    this.exclusive = exclusive;
     planner = new AutoAlignPlanner();
 
     addRequirements(drivetrain);
@@ -74,10 +81,16 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   public void execute() {
     Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
     if (tar.isPresent()) {
-      Logger.recordOutput("Target for Alignment", true);
       target = tar.get().getBestTarget();
+      if(exclusive && target.getFiducialId() != PositionSuperstructure.getInstance().getTargetReefSide().getTagID()) {
+        Logger.recordOutput("Target for Alignment", false);
+        target = null;
+        return;
+      }
+
+      Logger.recordOutput("Target for Alignment", true);
       Optional<Pose3d> tagPose =
-          VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(target.fiducialId);
+          vision.getCameraLayout(TagTrackerType.CORAL_REEF).getTagPose(target.fiducialId);
       if (tagPose.isPresent()) {
         goalPose =
             AimingCalculator.horizontalAjustment(
@@ -105,6 +118,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
   public ReefSubSide getScoringLocation() {
     return scoringLocation.get();
   }
+
 
   @Override
   public boolean isFinished() {
