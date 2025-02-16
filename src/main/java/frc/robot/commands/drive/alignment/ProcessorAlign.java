@@ -4,8 +4,9 @@
 
 package frc.robot.commands.drive.alignment;
 
-import frc.robot.RobotState;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.AlignOffset;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -16,10 +17,9 @@ public class ProcessorAlign extends AlignWithFieldElementCommand {
 
   private final VisionSubsystem vision = VisionSubsystem.getInstance();
   private PhotonTrackedTarget camTarget;
-  private final RobotState robotState = RobotState.getInstance();
 
   public ProcessorAlign(
-      AllAlignOffsets offset,
+      AlignOffset offset,
       DoubleSupplier xVal,
       DoubleSupplier yVal,
       DoubleSupplier rotationVal,
@@ -28,7 +28,7 @@ public class ProcessorAlign extends AlignWithFieldElementCommand {
   }
 
   public FieldElement getElementBasedOnTagID() {
-    Optional<PhotonPipelineResult> tar = vision.getCoralStationTarget();
+    Optional<PhotonPipelineResult> tar = vision.getCameraClosestTarget(TagTrackerType.ALGAE_CAM);
     if (tar.isPresent()) {
       camTarget = tar.get().getBestTarget();
 
@@ -41,10 +41,9 @@ public class ProcessorAlign extends AlignWithFieldElementCommand {
       } else {
         return FieldElement.NO_ELEMENT;
       }
-    } else {
-      camTarget = null;
-      return FieldElement.NO_ELEMENT;
     }
+
+    return FieldElement.NO_ELEMENT;
   }
 
   @Override
@@ -54,13 +53,7 @@ public class ProcessorAlign extends AlignWithFieldElementCommand {
 
   @Override
   public void initialize() {
-    robotState.setReefTracking(false);
-    robotState.setProcessorTracking(true);
-    robotState.setStationTracking(false);
-  }
-
-  @Override
-  public void execute() {
-    super.execute();
+    VisionSubsystem.getInstance().setPrimaryFocus(TagTrackerType.ALGAE_CAM);
+    super.initialize();
   }
 }

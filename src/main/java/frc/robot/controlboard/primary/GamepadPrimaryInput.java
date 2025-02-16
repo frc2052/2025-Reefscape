@@ -4,7 +4,7 @@ import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.util.Ports;
+import frc.robot.util.io.Ports;
 
 public class GamepadPrimaryInput implements IPrimaryControlBoard {
   private final CommandXboxController controller;

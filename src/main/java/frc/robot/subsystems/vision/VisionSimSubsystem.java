@@ -9,9 +9,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.VisionConstants.CoralReefCameraConstants;
 import frc.robot.RobotState;
+import frc.robot.util.FieldConstants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +29,12 @@ public class VisionSimSubsystem extends SubsystemBase {
   private final PhotonCamera reefCam = new PhotonCamera("KrawlerCam_000");
   private final int resWidth = 1280;
   private final int resHeight = 800;
-  AprilTagFieldLayout fieldLayout = VisionConstants.APRIL_TAG_FIELD_LAYOUT;
+  private final AprilTagFieldLayout fieldLayout =
+      FieldConstants.DEFAULT_APRIL_TAG_LAYOUT_TYPE.layout;
 
-  VisionSystemSim visionSim;
-  PhotonCameraSim reefCameraSim;
-  RobotState state = RobotState.getInstance();
+  private final VisionSystemSim visionSim;
+  private final PhotonCameraSim reefCameraSim;
+  private final RobotState state = RobotState.getInstance();
 
   public static VisionSimSubsystem getInstance() {
     if (INSTANCE == null) {
@@ -58,8 +59,7 @@ public class VisionSimSubsystem extends SubsystemBase {
     reefCameraSim = new PhotonCameraSim(reefCam, reefCameraProperties);
     reefCameraSim.enableDrawWireframe(true);
 
-    visionSim.addCamera(
-        reefCameraSim, Constants.VisionConstants.Camera1Constants.ROBOT_TO_CAMERA_METERS);
+    visionSim.addCamera(reefCameraSim, CoralReefCameraConstants.ROBOT_TO_CAMERA_METERS);
   }
 
   @Override

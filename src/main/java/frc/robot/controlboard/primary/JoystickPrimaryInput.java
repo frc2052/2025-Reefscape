@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.util.Ports;
+import frc.robot.util.io.Ports;
 
 public class JoystickPrimaryInput implements IPrimaryControlBoard {
   private final Joystick translateStick;

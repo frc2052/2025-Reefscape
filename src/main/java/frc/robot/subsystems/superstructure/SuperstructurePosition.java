@@ -17,7 +17,7 @@ public class SuperstructurePosition {
     KL(6, 19, Degrees.of(300)),
     RCS(2, 12, Degrees.of(-306)),
     LCS(1, 13, Degrees.of(306)),
-    PRC(3, 16, Degrees.of(0)), // Processor (side of the field, not where the teams human player is)
+    PRC(3, 16, Degrees.of(0)), // Processor (side of the field, not where our alliance's human player is)
     FBG(
         15,
         4,
@@ -42,6 +42,10 @@ public class SuperstructurePosition {
 
     public Angle getLineupAngle() {
       return lineupAngle;
+    }
+
+    public boolean getIsReef() {
+      return this == AB || this == CD || this == EF || this == GH || this == IJ || this == KL;
     }
   }
 
@@ -97,14 +101,21 @@ public class SuperstructurePosition {
     NONE
   }
 
-  public enum ReefSubSide {
-    LEFT(new Transform2d(0.5, 0.25, new Rotation2d(0))),
-    CENTER(new Transform2d(0.5, 0.0, new Rotation2d(0))),
-    RIGHT(new Transform2d(0.5, -0.25, new Rotation2d(0)));
+  public enum AlignOffset {
+    LEFT_REEF_LOC(new Transform2d(0.5, 0.25, new Rotation2d(0))),
+    MIDDLE_REEF_LOC(new Transform2d(0.5, 0.0, new Rotation2d(0))),
+    RIGHT_REEF_LOC(new Transform2d(0.5, -0.25, new Rotation2d(0))),
+
+    ALGAE_REEF_LOC(new Transform2d(0.5, 0.0, new Rotation2d(90))),
+
+    PROCESSOR_MIDDLE_LOC(new Transform2d(0.5, -0.25, new Rotation2d(0))),
+
+    LEFT_CORAL_STATION_LOC(new Transform2d(0.5, -0.25, new Rotation2d(0))),
+    RIGHT_CORAL_STATION_LOC(new Transform2d(0.5, -0.25, new Rotation2d(0)));
 
     public Transform2d transform;
 
-    private ReefSubSide(Transform2d gt) {
+    private AlignOffset(Transform2d gt) {
       this.transform = gt;
     }
   }

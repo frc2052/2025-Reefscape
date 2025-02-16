@@ -31,7 +31,8 @@ import edu.wpi.first.units.measure.*;
 import frc.robot.subsystems.drive.ctre.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import frc.robot.util.FieldConstants;
-import frc.robot.util.Ports;
+import frc.robot.util.io.Ports;
+
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Constants {
@@ -315,30 +316,6 @@ public class Constants {
     public static final class RearCameraConstants {      
       public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = FieldConstants.DEFAULT_APRIL_TAG_LAYOUT_TYPE.layout;
 
-      public static final String CAMERA_NAME = "KrawlerCam_002";
-
-      public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
-
-      public static final Distance X_OFFSET = Inches.of(0.0);
-      public static final Distance Y_OFFSET = Inches.of(4);
-      public static final Distance Z_OFFSET = Inches.of(7);
-
-      public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
-      public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw TODO: need to change back to 180 for actual stuff
-
-      public static final Transform3d ROBOT_TO_CAMERA_METERS =
-          new Transform3d(
-              new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
-              new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
-
-      public static TagTrackerConstants TagTrackerConstants() {
-        return new TagTrackerConstants(
-            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, VisionConstants.APRIL_TAG_FIELD_LAYOUT, STRATEGY);
-      }
-    }
-
-    public static final class Camera2Constants { // TODO: adjust offset
       public static final String CAMERA_NAME = "KrawlerCam_002";
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;

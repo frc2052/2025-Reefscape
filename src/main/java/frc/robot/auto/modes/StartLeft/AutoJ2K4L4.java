@@ -3,10 +3,9 @@ package frc.robot.auto.modes.StartLeft;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.ReefSubSide;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.AlignOffset;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetFieldLocation;
-
 
 @AutoDescription(description = "21 Point Auto - One L2, Two L4")
 public class AutoJ2K4L4 extends AutoBase {
@@ -25,7 +24,9 @@ public class AutoJ2K4L4 extends AutoBase {
     addCommands(followPathCommand(startingPath));
     addCommands(toPosition(TargetAction.L2));
     addCommands(followPathCommand(Paths.J2_LL));
-    addCommands(reefSideVisionOrPathAlign(ReefSubSide.LEFT, Paths.LL_K4, TargetFieldLocation.KL));
+    addCommands(
+        coralReefSideVisionOrPathAlign(
+            AlignOffset.LEFT_REEF_LOC, Paths.LL_K4, TargetFieldLocation.KL));
     addCommands(followPathCommand(Paths.LL_K4));
     addCommands(toPosition(TargetAction.L4));
     addCommands(followPathCommand(Paths.K4_LL));

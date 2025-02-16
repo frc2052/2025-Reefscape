@@ -8,7 +8,7 @@ import frc.robot.controlboard.primary.IPrimaryControlBoard;
 import frc.robot.controlboard.primary.JoystickPrimaryInput;
 import frc.robot.controlboard.secondary.ControlPanelInput;
 import frc.robot.controlboard.secondary.ISecondaryControlBoard;
-import frc.robot.util.Ports;
+import frc.robot.util.io.Ports;
 
 public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoard {
   private final IPrimaryControlBoard primaryControlBoard;

@@ -9,11 +9,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
+import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand.FieldElement;
 import org.littletonrobotics.junction.Logger;
 
 public class AimingCalculator {
 
-  public static Pose2d scaleAll(Pose2d initial, Distance add, FieldElement fieldElem) {
+  public static Pose2d scaleFromFieldElement(Pose2d initial, Distance add, FieldElement fieldElem) {
     Translation2d fieldElementLoc = fieldElem.getFieldPosition();
 
     Logger.recordOutput(fieldElem.getDisplayName() + " location", fieldElementLoc);

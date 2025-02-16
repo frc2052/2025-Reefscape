@@ -11,15 +11,14 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.team2052.lib.planners.AutoAlignPlanner;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotState;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.AlignOffset;
 import frc.robot.util.AimingCalculator;
 import frc.robot.util.AimingCalculator.ElementFieldPosition;
+import frc.robot.util.FieldConstants;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -32,7 +31,7 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
   private final RobotState robotState = RobotState.getInstance();
 
   private Pose2d goalPose;
-  private Supplier<AllAlignOffsets> scoringLocation;
+  private Supplier<AlignOffset> scoringLocation;
   private AutoAlignPlanner planner;
 
   private SwerveRequest.ApplyFieldSpeeds drive =
@@ -40,7 +39,7 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
   public AlignWithFieldElementCommand(
-      Supplier<AllAlignOffsets> scoringLocation,
+      Supplier<AlignOffset> scoringLocation,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier rotationSupplier,
@@ -73,57 +72,49 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
     super.execute();
   }
 
-  public FieldElement getFieldElement() { // if not overriden, defaults to NO_ELEMENT
+  protected FieldElement getFieldElement() { // if not overriden, defaults to NO_ELEMENT
     return FieldElement.NO_ELEMENT;
   }
 
   // field element is passed in from individual alignment clases
   // either pass no_element (no target) or field element
-  public void setGoalPose(FieldElement element) { // overriden in individual classes
-
-    Logger.recordOutput("Target for Alignment: " + element.getDisplayName(), true);
-
+  protected void setGoalPose(FieldElement element) { // overriden in individual classes
+    Logger.recordOutput("Target for Alignment: ", element.getDisplayName());
     // individual commands did NOT see tag
     if (element.equals(FieldElement.NO_ELEMENT)) {
       goalPose = null;
-    }
-
-    // individual commands saw tag that IS NOT a reeef tag
-    else if (!FieldElement.checkIsReef(element)) { // we passed in element: NOT red or blue reef
+    } else if (!FieldElement.checkIsReef(element)) { // we passed in element: NOT red or blue reef
       Optional<Pose3d> tagPose =
-          VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(element.getTagID());
+          FieldConstants.DEFAULT_APRIL_TAG_LAYOUT_TYPE.layout.getTagPose(element.getTagID());
       goalPose =
           AimingCalculator.horizontalAjustment(
               Meters.of(scoringLocation.get().transform.getY()),
-              AimingCalculator.scaleFromReef(
+              AimingCalculator.scaleFromFieldElement(
                   tagPose.get().toPose2d(),
                   Meters.of(scoringLocation.get().transform.getX()),
-                  robotState.isRedAlliance()));
-      Logger.recordOutput("Tag Pose Present", true);
-    } else { // TODO: set up reef target for alignment intead of old command
-      Logger.recordOutput("Reef Target for Alignment: " + element.getDisplayName(), true);
-
+                  element));
+    } else { // red or blue reef
       if (getSpecificReefSideTag() != 0) { // only 0 from class default and specific command default
         goalPose = null;
 
       } else {
         Optional<Pose3d> tagPose =
-            VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(getSpecificReefSideTag());
+            FieldConstants.CORAL_REEF_CAMERA_LAYOUT_TYPE.layout.getTagPose(
+                getSpecificReefSideTag());
         if (tagPose.isPresent()) {
           goalPose =
               AimingCalculator.horizontalAjustment(
                   Meters.of(scoringLocation.get().transform.getY()),
-                  AimingCalculator.scaleAll(
+                  AimingCalculator.scaleFromFieldElement(
                       goalPose, Meters.of(scoringLocation.get().transform.getX()), element));
         } else {
-          Logger.recordOutput("Reef Tag Pose Present", false);
           goalPose = null;
         }
       }
     }
   }
 
-  public int getSpecificReefSideTag() {
+  protected int getSpecificReefSideTag() {
     return 0;
   }
 
@@ -208,23 +199,6 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
         return true;
       }
       return false;
-    }
-  }
-
-  public enum AllAlignOffsets { // TODO verify offsets
-    LEFT_REEF_LOC(new Transform2d(0.5, 0.25, new Rotation2d(0))),
-    MIDDLE_REEF_LOC(new Transform2d(0.5, 0.0, new Rotation2d(0))),
-    RIGHT_REEF_LOC(new Transform2d(0.5, -0.25, new Rotation2d(0))),
-
-    PROCESSOR_MIDDLE_LOC(new Transform2d(0.5, -0.25, new Rotation2d(0))),
-
-    LEFT_CORAL_LOC(new Transform2d(0.5, -0.25, new Rotation2d(0))),
-    RIGHT_CORAL_LOC(new Transform2d(0.5, -0.25, new Rotation2d(0)));
-
-    public Transform2d transform;
-
-    private AllAlignOffsets(Transform2d gt) {
-      this.transform = gt;
     }
   }
 }

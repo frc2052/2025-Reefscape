@@ -17,14 +17,18 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
-// import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
+import frc.robot.commands.drive.alignment.AlgaeReefAlign;
+import frc.robot.commands.drive.alignment.CoralReefAlign;
+import frc.robot.commands.drive.alignment.CoralStationAlign;
+import frc.robot.commands.drive.alignment.ProcessorAlign;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.ReefSubSide;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.AlignOffset;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetFieldLocation;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import java.util.List;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
@@ -79,110 +83,44 @@ public abstract class AutoBase extends SequentialCommandGroup {
     return new SnapToLocationAngleCommand(snapLocation, () -> 0, () -> 0, () -> 0, () -> true);
   }
 
-  protected Command reefSideVisionOrPathAlign(
-      ReefSubSide alignLocation, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
+  protected Command algaeReefSideVisionOrPathAlign(
+      PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
     return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
         .until(
             () ->
                 vision
-                    .getReefCamClosestTarget(Meters.of(1.5))
+                    .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
                     .isPresent()) // sees tag, goal pose won't be too far
-        .andThen(
-            new AlignWithReefCommand(() -> alignLocation, () -> 0, () -> 0, () -> 0, () -> true));
+        .andThen(new AlgaeReefAlign(true, () -> 0, () -> 0, () -> 0, () -> true));
+  }
+
+  protected Command coralReefSideVisionOrPathAlign(
+      AlignOffset offset, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
+    return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
+        .until(
+            () ->
+                vision
+                    .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
+                    .isPresent()) // sees tag, goal pose won't be too far
+        .andThen(new CoralReefAlign(offset, true, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   protected Command coralSideVisionOrPathAlign(
-      AllAlignOffsets offsets, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
+      AlignOffset offset, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
     return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
         .until(
             () ->
-                vision.getCoralStationTarget().isPresent()
-                    && getDistanceToAnyGoal(() -> offsets, ElementType.CORAL_STATION)
-                        < 3.0) // sees tag, goal pose won't be too far
-        .andThen(new CoralStationAlign(offsets, () -> 0, () -> 0, () -> 0, () -> true));
+                vision.getCameraClosestTarget(TagTrackerType.REAR_CAM, Meters.of(2.0)).isPresent())
+        .andThen(new CoralStationAlign(offset, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   protected Command processorSideVisionOrPathAlign(
-      AllAlignOffsets offsets, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
+      AlignOffset offset, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
     return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
         .until(
             () ->
-                vision.getReefCamClosestTarget().isPresent()
-                    && getDistanceToAnyGoal(() -> offsets, ElementType.PROCESSOR)
-                        < 3.0) // sees tag, goal pose won't be too far
-        .andThen(new ProcessorAlign(offsets, () -> 0, () -> 0, () -> 0, () -> true));
-  }
-
-  public enum ElementType {
-    CORAL_STATION("Coral Station"),
-    PROCESSOR("Processor"),
-    REEF_SIDE("Reef");
-
-    private String name;
-
-    public String getName() {
-      return name;
-    }
-
-    private ElementType(String n) {
-      name = n;
-    }
-  }
-
-  public double getDistanceToAnyGoal(Supplier<AllAlignOffsets> offsets, ElementType element) {
-    Pose2d goalPose;
-    // deciding what camera we get the target from
-    Optional<PhotonPipelineResult> target;
-    if (element == ElementType.REEF_SIDE) {
-      target = vision.getReefCamClosestTarget();
-    } else if (element == ElementType.PROCESSOR) {
-      target = vision.getAlgaeCamTarget();
-    } else {
-      target = vision.getCoralStationTarget();
-    }
-    // check if target sees tag
-    if (target.isPresent()) {
-      System.out.println(element.getName() + " TARGET SPOTTED IN AUTO");
-      Optional<Pose3d> tagPose =
-          VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(
-              target.get().getBestTarget().fiducialId);
-      if (tagPose.isPresent()) {
-        goalPose = tagPose.get().toPose2d().transformBy(offsets.get().transform);
-      } else {
-        return 50;
-      }
-    } else {
-      return 50;
-    }
-
-    Translation2d goalTranslation = new Translation2d(goalPose.getX(), goalPose.getY());
-    return goalTranslation.getDistance(
-        new Translation2d(
-            RobotState.getInstance().getFieldToRobot().getX(),
-            RobotState.getInstance().getFieldToRobot().getY()));
-  }
-
-  public double getDistanceToGoal(Supplier<ReefSubSide> scoringLoc) {
-    Pose2d goalPose;
-    Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
-    if (tar.isPresent()) {
-      System.out.println("SEES TARGET IN AUTOS");
-      Optional<Pose3d> tagPose =
-          VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(tar.get().getBestTarget().fiducialId);
-      if (tagPose.isPresent()) {
-        goalPose = tagPose.get().toPose2d().transformBy(scoringLoc.get().transform);
-      } else {
-        return 50; // any number greater than our bound to switch to vision
-      }
-    } else {
-      return 50;
-    }
-
-    Translation2d goalTranslation = new Translation2d(goalPose.getX(), goalPose.getY());
-    return goalTranslation.getDistance(
-        new Translation2d(
-            RobotState.getInstance().getFieldToRobot().getX(),
-            RobotState.getInstance().getFieldToRobot().getY()));
+                vision.getCameraClosestTarget(TagTrackerType.ALGAE_CAM, Meters.of(1.0)).isPresent())
+        .andThen(new ProcessorAlign(offset, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   protected Command toScoringPositionCommand(

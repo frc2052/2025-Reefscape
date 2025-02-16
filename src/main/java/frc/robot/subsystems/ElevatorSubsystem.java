@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.util.Ports;
+import frc.robot.util.io.Ports;
+
 import org.littletonrobotics.junction.Logger;
 
 public class ElevatorSubsystem extends SubsystemBase {

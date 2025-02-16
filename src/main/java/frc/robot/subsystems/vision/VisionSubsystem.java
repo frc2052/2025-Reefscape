@@ -53,32 +53,38 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   private VisionSubsystem() {
-    Collections.addAll(
-        localizationTagTrackers,
-        // new TagTracker(Camera1Constants.TagTrackerConstants(), robotState),
-        reefTagTracker,
-        algaeTagTracker);
+    Collections.addAll(localizationTagTrackers, reefTagTracker, algaeTagTracker, rearTagTracker);
   }
 
-  public Optional<PhotonPipelineResult> getReefCamClosestTarget() {
-    return reefTagTracker.getClosestTagToCamera();
+  public Optional<PhotonPipelineResult> getCameraClosestTarget(TagTrackerType trackerType) {
+    return getCameraClosestTarget(
+        trackerType, Distance.ofBaseUnits(Double.POSITIVE_INFINITY, Meters));
   }
 
-  public Optional<PhotonPipelineResult> getReefCamClosestTarget(Distance minDistance) {
-    if (reefTagTracker.getClosestTagToCamera().isPresent()) {
-      PhotonPipelineResult result = reefTagTracker.getClosestTagToCamera().get();
+  public Optional<PhotonPipelineResult> getCameraClosestTarget(
+      TagTrackerType trackerType, Distance maxDistance) {
+    switch (trackerType) {
+      case CORAL_REEF_CAM:
+        return maxDistance(reefTagTracker.getClosestTagToCamera(), maxDistance);
+      case ALGAE_CAM:
+        return maxDistance(algaeTagTracker.getClosestTagToCamera(), maxDistance);
+      case REAR_CAM:
+        return maxDistance(rearTagTracker.getClosestTagToCamera(), maxDistance);
+      default:
+        return Optional.empty();
+    }
+  }
+
+  private Optional<PhotonPipelineResult> maxDistance(
+      Optional<PhotonPipelineResult> photonResult, Distance maxDistance) {
+    if (photonResult.isPresent()) {
+      PhotonPipelineResult result = photonResult.get();
       if (result.getBestTarget().getBestCameraToTarget().getTranslation().getNorm()
-          < minDistance.in(Meters)) {
+          < maxDistance.in(Meters)) {
         return reefTagTracker.getClosestTagToCamera();
       }
     }
     return Optional.empty();
-  public Optional<PhotonPipelineResult> getAlgaeCamTarget() {
-    return algaeTagTracker.getClosestTagToCamera();
-  }
-
-  public Optional<PhotonPipelineResult> getCoralStationTarget() {
-    return coralStationTracker.getClosestTagToCamera();
   }
 
   private void updateTagTrackers() {
@@ -107,15 +113,38 @@ public class VisionSubsystem extends SubsystemBase {
 
   public AprilTagFieldLayout getCameraLayout(TagTrackerType trackerType) {
     switch (trackerType) {
-      case CORAL_REEF:
+      case CORAL_REEF_CAM:
         return reefTagTracker.constants.tagLayout;
-      case ALGAE_REEF:
+      case ALGAE_CAM:
         return algaeTagTracker.constants.tagLayout;
-      case REAR:
+      case REAR_CAM:
         return rearTagTracker.constants.tagLayout;
       default:
         return FieldConstants.DEFAULT_APRIL_TAG_LAYOUT_TYPE.layout;
     }
+  }
+
+  public void setPrimaryFocus(TagTrackerType trackerType) {
+    switch (trackerType) {
+      case CORAL_REEF_CAM:
+        reefTagTracker.setWeight(0.6);
+        algaeTagTracker.setWeight(1.2);
+        rearTagTracker.setWeight(1.2);
+      case ALGAE_CAM:
+        reefTagTracker.setWeight(1.2);
+        algaeTagTracker.setWeight(0.6);
+        rearTagTracker.setWeight(1.2);
+      case REAR_CAM:
+        reefTagTracker.setWeight(1.2);
+        algaeTagTracker.setWeight(1.2);
+        rearTagTracker.setWeight(0.6);
+    }
+  }
+
+  public void resetPrimaryFocus() {
+    reefTagTracker.setWeight(1.0);
+    algaeTagTracker.setWeight(1.0);
+    rearTagTracker.setWeight(1.0);
   }
 
   @Override
@@ -128,8 +157,8 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public enum TagTrackerType {
-    CORAL_REEF,
-    ALGAE_REEF,
-    REAR;
+    CORAL_REEF_CAM,
+    ALGAE_CAM,
+    REAR_CAM;
   }
 }

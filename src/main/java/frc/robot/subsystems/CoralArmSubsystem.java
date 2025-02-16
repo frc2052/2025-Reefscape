@@ -19,8 +19,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.CoralArmConstants;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.util.io.Ports;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
-import frc.robot.util.Ports;
+
 import org.littletonrobotics.junction.Logger;
 
 public class CoralArmSubsystem extends SubsystemBase {

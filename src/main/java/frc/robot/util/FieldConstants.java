@@ -32,9 +32,7 @@ public class FieldConstants {
           ? AprilTagLayoutType.RED_REEF
           : AprilTagLayoutType.BLUE_REEF;
   public static final AprilTagLayoutType ALGAE_REEF_CAMERA_LAYOUT_TYPE =
-      RobotState.getInstance().isRedAlliance()
-          ? AprilTagLayoutType.RED_REEF
-          : AprilTagLayoutType.BLUE_REEF;
+      AprilTagLayoutType.NO_BARGE;
 
   public enum AprilTagLayoutType {
     OFFICIAL("2025-official"),

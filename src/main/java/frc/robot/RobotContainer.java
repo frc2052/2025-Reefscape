@@ -15,6 +15,8 @@ import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.algae.AlgaeCommandFactory;
 import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
+import frc.robot.commands.drive.alignment.AlgaeReefAlign;
+import frc.robot.commands.drive.alignment.CoralReefAlign;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.controlboard.ControlBoard;
@@ -22,11 +24,10 @@ import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.subsystems.AlgaeSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.ActionType;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.ReefSubSide;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.AlignOffset;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetFieldLocation;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
-import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.vision.VisionSimSubsystem;
 import frc.robot.util.Telemetry;
 import frc.robot.util.io.Dashboard;
@@ -118,51 +119,72 @@ public class RobotContainer {
 
     controlBoard
         .alignLeft()
-        .onTrue(
-            new InstantCommand(
-                () -> SuperstructureSubsystem.getInstance().setReefSubSide(ReefSubSide.LEFT)))
         .whileTrue(
-            new AlignWithReefCommand(
-                () -> SuperstructureSubsystem.getInstance().getReefSubSide(),
-                false,
-                controlBoard::getThrottle,
-                // Sideways velocity supplier.
-                controlBoard::getStrafe,
-                // Rotation velocity supplier.
-                controlBoard::getRotation,
-                dashboard::isFieldCentric));
+            SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
+                    == ActionType.ALGAE
+                ? new AlgaeReefAlign(
+                    false,
+                    controlBoard::getThrottle,
+                    // Sideways velocity supplier.
+                    controlBoard::getStrafe,
+                    // Rotation velocity supplier.
+                    controlBoard::getRotation,
+                    dashboard::isFieldCentric)
+                : new CoralReefAlign(
+                    AlignOffset.LEFT_REEF_LOC,
+                    false,
+                    controlBoard::getThrottle,
+                    // Sideways velocity supplier.
+                    controlBoard::getStrafe,
+                    // Rotation velocity supplier.
+                    controlBoard::getRotation,
+                    dashboard::isFieldCentric));
 
     controlBoard
         .alignCenter()
-        .onTrue(
-            new InstantCommand(
-                () -> SuperstructureSubsystem.getInstance().setReefSubSide(ReefSubSide.CENTER)))
         .whileTrue(
-            new AlignWithReefCommand(
-                () -> SuperstructureSubsystem.getInstance().getReefSubSide(),
-                false,
-                controlBoard::getThrottle,
-                // Sideways velocity supplier.
-                controlBoard::getStrafe,
-                // Rotation velocity supplier.
-                controlBoard::getRotation,
-                dashboard::isFieldCentric));
+            SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
+                    == ActionType.ALGAE
+                ? new AlgaeReefAlign(
+                    false,
+                    controlBoard::getThrottle,
+                    // Sideways velocity supplier.
+                    controlBoard::getStrafe,
+                    // Rotation velocity supplier.
+                    controlBoard::getRotation,
+                    dashboard::isFieldCentric)
+                : new CoralReefAlign(
+                    AlignOffset.MIDDLE_REEF_LOC,
+                    false,
+                    controlBoard::getThrottle,
+                    // Sideways velocity supplier.
+                    controlBoard::getStrafe,
+                    // Rotation velocity supplier.
+                    controlBoard::getRotation,
+                    dashboard::isFieldCentric));
 
     controlBoard
         .alignRight()
-        .onTrue(
-            new InstantCommand(
-                () -> SuperstructureSubsystem.getInstance().setReefSubSide(ReefSubSide.RIGHT)))
         .whileTrue(
-            new AlignWithReefCommand(
-                () -> SuperstructureSubsystem.getInstance().getReefSubSide(),
-                false,
-                controlBoard::getThrottle,
-                // Sideways velocity supplier.
-                controlBoard::getStrafe,
-                // Rotation velocity supplier.
-                controlBoard::getRotation,
-                dashboard::isFieldCentric));
+            SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
+                    == ActionType.ALGAE
+                ? new AlgaeReefAlign(
+                    false,
+                    controlBoard::getThrottle,
+                    // Sideways velocity supplier.
+                    controlBoard::getStrafe,
+                    // Rotation velocity supplier.
+                    controlBoard::getRotation,
+                    dashboard::isFieldCentric)
+                : new CoralReefAlign(
+                    AlignOffset.RIGHT_REEF_LOC,
+                    false,
+                    controlBoard::getThrottle,
+                    // Sideways velocity supplier.
+                    controlBoard::getStrafe,
+                    // Rotation velocity supplier.
+                    controlBoard::getRotation,
+                    dashboard::isFieldCentric));
 
     /* Secondary Driver */
     controlBoard

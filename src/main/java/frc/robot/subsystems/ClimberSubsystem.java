@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
-import frc.robot.util.Ports;
+import frc.robot.util.io.Ports;
 
 public class ClimberSubsystem extends SubsystemBase {
 

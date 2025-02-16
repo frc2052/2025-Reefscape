@@ -3,7 +3,7 @@ package frc.robot.controlboard.secondary;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.util.Ports;
+import frc.robot.util.io.Ports;
 
 public class ControlPanelInput implements ISecondaryControlBoard {
   private final Joystick controlPanel;

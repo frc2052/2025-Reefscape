@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.drive.alignment;
+package frc.robot.commands.drive;
 
 import static edu.wpi.first.units.Units.Meters;
 
@@ -26,7 +26,7 @@ import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-public class AlignWithReefCommand extends DefaultDriveCommand {
+public class OLDAlignWithReefCommand extends DefaultDriveCommand {
   private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
   private final VisionSubsystem vision = VisionSubsystem.getInstance();
   private final RobotState robotState = RobotState.getInstance();
@@ -43,7 +43,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
       new SwerveRequest.ApplyFieldSpeeds()
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
-  public AlignWithReefCommand(
+  public OLDAlignWithReefCommand(
       Supplier<ReefSubSide> scoringLocation,
       boolean exclusive,
       DoubleSupplier xSupplier,
@@ -76,7 +76,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
 
   @Override
   public void execute() {
-    Optional<PhotonPipelineResult> tar = vision.getReefCamClosestTarget();
+    Optional<PhotonPipelineResult> tar = vision.getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM);
     if (tar.isPresent()) {
       target = tar.get().getBestTarget();
       if (exclusive
@@ -89,7 +89,7 @@ public class AlignWithReefCommand extends DefaultDriveCommand {
 
       Logger.recordOutput("Target for Alignment", true);
       Optional<Pose3d> tagPose =
-          vision.getCameraLayout(TagTrackerType.CORAL_REEF).getTagPose(target.fiducialId);
+          vision.getCameraLayout(TagTrackerType.CORAL_REEF_CAM).getTagPose(target.fiducialId);
       if (tagPose.isPresent()) {
         goalPose =
             AimingCalculator.horizontalAjustment(
