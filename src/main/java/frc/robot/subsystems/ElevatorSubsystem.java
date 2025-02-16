@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.controlboard.PositionSuperstructure.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.Ports;
 import org.littletonrobotics.junction.Logger;
 
@@ -104,12 +104,12 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean atPosition(TargetAction position) {
-    return Math.abs(position.ElevatorPositionRotations - getPosition())
+    return Math.abs(position.getElevatorPositionRotations() - getPosition())
         <= ElevatorConstants.TICKS_DEADZONE;
   }
 
   public boolean atPosition(double tol, TargetAction position) {
-    return Math.abs(position.ElevatorPositionRotations - getPosition()) <= tol;
+    return Math.abs(position.getElevatorPositionRotations() - getPosition()) <= tol;
   }
 
   public void zeroEncoder() {

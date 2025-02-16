@@ -96,28 +96,28 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
-  public Trigger outtakeCoral() {
+  public Trigger outtake() {
     return new JoystickButton(rotateStick, 1);
   }
 
   @Override
-  public Trigger intakeCoral() {
+  public Trigger intake() {
     return new JoystickButton(translateStick, 1);
   }
 
   @Override
-  public Trigger intakeAlgae() {
-    return new JoystickButton(translateStick, 2);
+  public Trigger alignLeft() {
+    return new JoystickButton(rotateStick, 3);
   }
 
   @Override
-  public Trigger shootAlgae() {
+  public Trigger alignCenter() {
     return new JoystickButton(rotateStick, 2);
   }
 
   @Override
-  public Trigger reefAlignment() {
-    return new JoystickButton(rotateStick, 3);
+  public Trigger alignRight() {
+    return new JoystickButton(rotateStick, 4);
   }
 
   @Override

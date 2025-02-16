@@ -1,19 +1,17 @@
 package com.team2052.lib.vision;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.littletonrobotics.junction.Logger;
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import java.util.ArrayList;
+import java.util.List;
+import org.littletonrobotics.junction.Logger;
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class PoseEstimate {
   private static final double xyStdDevCoefficient = 0.005;
@@ -23,34 +21,34 @@ public class PoseEstimate {
   public final Pose3d estimatedPose;
   public final PoseStrategy strategyUsed;
   public List<PhotonTrackedTarget> targetsUsed;
-    public final double timestampSeconds;
-    public final double poseDifference;
-    public final double cameraWeight;
-    public double highestAmbiguity = 0.0;
-    public double avgTagArea = 0.0;
-    public double avgTagDistance = 0.0;
-  
-    public PoseEstimate(
-        String cameraName,
-        double cameraWeight,
-        EstimatedRobotPose photonData,
-        Pose2d currentRobotPose) {
-      this.cameraName = cameraName;
-      this.estimatedPose = photonData.estimatedPose;
-      this.strategyUsed = photonData.strategy;
-      this.targetsUsed = photonData.targetsUsed;
-      this.timestampSeconds = photonData.timestampSeconds;
-      this.cameraWeight = cameraWeight;
-      if (targetsUsed != null) {
-        for (PhotonTrackedTarget target : targetsUsed) {
-          highestAmbiguity = Math.max(highestAmbiguity, target.getPoseAmbiguity());
-          avgTagDistance += target.getBestCameraToTarget().getTranslation().getNorm();
-          avgTagArea += target.getArea();
-        }
-        avgTagDistance /= targetsUsed.size();
-        avgTagArea /= targetsUsed.size();
-      } else {
-        targetsUsed = new ArrayList<PhotonTrackedTarget>();
+  public final double timestampSeconds;
+  public final double poseDifference;
+  public final double cameraWeight;
+  public double highestAmbiguity = 0.0;
+  public double avgTagArea = 0.0;
+  public double avgTagDistance = 0.0;
+
+  public PoseEstimate(
+      String cameraName,
+      double cameraWeight,
+      EstimatedRobotPose photonData,
+      Pose2d currentRobotPose) {
+    this.cameraName = cameraName;
+    this.estimatedPose = photonData.estimatedPose;
+    this.strategyUsed = photonData.strategy;
+    this.targetsUsed = photonData.targetsUsed;
+    this.timestampSeconds = photonData.timestampSeconds;
+    this.cameraWeight = cameraWeight;
+    if (targetsUsed != null) {
+      for (PhotonTrackedTarget target : targetsUsed) {
+        highestAmbiguity = Math.max(highestAmbiguity, target.getPoseAmbiguity());
+        avgTagDistance += target.getBestCameraToTarget().getTranslation().getNorm();
+        avgTagArea += target.getArea();
+      }
+      avgTagDistance /= targetsUsed.size();
+      avgTagArea /= targetsUsed.size();
+    } else {
+      targetsUsed = new ArrayList<PhotonTrackedTarget>();
     }
 
     // distance from current pose to vision estimated pose
@@ -68,10 +66,7 @@ public class PoseEstimate {
   private double calculateXYStdDevs() {
 
     double xyStdDev =
-        xyStdDevCoefficient
-            * Math.pow(avgTagDistance, 2.0)
-            / targetsUsed.size()
-            * cameraWeight;
+        xyStdDevCoefficient * Math.pow(avgTagDistance, 2.0) / targetsUsed.size() * cameraWeight;
     // double xyStds = VisionConstants.XY_STDDEV;
     // if (targetsUsed.size() > 0) {
     //   // multiple targets detected

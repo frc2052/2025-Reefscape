@@ -38,6 +38,7 @@ public class TagTracker {
   public void setWeight(double weight) {
     this.weight = weight;
   }
+
   public synchronized void pullData() {
     latestResults = photonCamera.getAllUnreadResults();
   }
@@ -79,10 +80,7 @@ public class TagTracker {
     if (photonData.isPresent()) {
       return Optional.of(
           new PoseEstimate(
-              this.photonCamera.getName(),
-              weight,
-              photonData.get(),
-              robotState.getFieldToRobot()));
+              this.photonCamera.getName(), weight, photonData.get(), robotState.getFieldToRobot()));
     }
 
     return Optional.empty();

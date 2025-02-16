@@ -14,15 +14,19 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.algae.AlgaeCommandFactory;
 import frc.robot.commands.climber.ClimberCommandFactory;
+import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.controlboard.ControlBoard;
-import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.subsystems.AlgaeSubsystem;
-import frc.robot.subsystems.SuperstructureSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.ActionType;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.ReefSubSide;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetFieldLocation;
+import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.Telemetry;
 import frc.robot.util.io.Dashboard;
@@ -88,6 +92,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    /* Primary Driver */
     configurePOVBindings();
 
     drivetrain.registerTelemetry(logger::telemeterize);
@@ -96,31 +101,153 @@ public class RobotContainer {
         .resetGyro()
         .onTrue(new InstantCommand(() -> drivetrain.resetRotation(new Rotation2d())));
 
-    // controlBoard
-    //     .reefAlignment() // 3
-    //     .whileTrue(
-    //         new AlignWithReefCommand(
-    //             () -> ReefSubSide.CENTER,
-    //             controlBoard::getThrottle,
-    //             // Sideways velocity supplier.
-    //             controlBoard::getStrafe,
-    //             // Rotation velocity supplier.
-    //             controlBoard::getRotation,
-    //             dashboard::isFieldCentric));
+    controlBoard
+        .intake()
+        .whileTrue(
+            SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
+                    == ActionType.ALGAE
+                ? AlgaeCommandFactory.intake()
+                : HandCommandFactory.motorIn());
+    controlBoard
+        .outtake()
+        .whileTrue(
+            SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
+                    == ActionType.ALGAE
+                ? AlgaeCommandFactory.score()
+                : HandCommandFactory.motorOut());
 
-    // controlBoard.sysIDQuasiForward().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-    // controlBoard.sysIDQuasiReverse().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-    // controlBoard.sysIDDynamicForward().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-    // controlBoard.sysIDDynamicReverse().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-    // controlBoard
-    //     .shoot()
-    //     .onTrue(Commands.runOnce(SignalLogger::start))
-    //     .onFalse(Commands.runOnce(SignalLogger::stop));
-    controlBoard.intakeCoral().whileTrue(HandCommandFactory.motorIn());
-    controlBoard.outtakeCoral().whileTrue(HandCommandFactory.motorOut());
+    controlBoard
+        .alignLeft()
+        .onTrue(
+            new InstantCommand(
+                () -> SuperstructureSubsystem.getInstance().setReefSubSide(ReefSubSide.LEFT)))
+        .whileTrue(
+            new AlignWithReefCommand(
+                () -> SuperstructureSubsystem.getInstance().getReefSubSide(),
+                false,
+                controlBoard::getThrottle,
+                // Sideways velocity supplier.
+                controlBoard::getStrafe,
+                // Rotation velocity supplier.
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
 
-    controlBoard.intakeAlgae().whileTrue(AlgaeCommandFactory.intake());
-    controlBoard.shootAlgae().whileTrue(AlgaeCommandFactory.score());
+    controlBoard
+        .alignCenter()
+        .onTrue(
+            new InstantCommand(
+                () -> SuperstructureSubsystem.getInstance().setReefSubSide(ReefSubSide.CENTER)))
+        .whileTrue(
+            new AlignWithReefCommand(
+                () -> SuperstructureSubsystem.getInstance().getReefSubSide(),
+                false,
+                controlBoard::getThrottle,
+                // Sideways velocity supplier.
+                controlBoard::getStrafe,
+                // Rotation velocity supplier.
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
+
+    controlBoard
+        .alignRight()
+        .onTrue(
+            new InstantCommand(
+                () -> SuperstructureSubsystem.getInstance().setReefSubSide(ReefSubSide.RIGHT)))
+        .whileTrue(
+            new AlignWithReefCommand(
+                () -> SuperstructureSubsystem.getInstance().getReefSubSide(),
+                false,
+                controlBoard::getThrottle,
+                // Sideways velocity supplier.
+                controlBoard::getStrafe,
+                // Rotation velocity supplier.
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
+
+    /* Secondary Driver */
+    controlBoard
+        .actTrigger()
+        .onTrue(
+            new InstantCommand(
+                () -> SuperstructureSubsystem.getInstance().confirmSelectedAction()));
+
+    controlBoard
+        .setGoalL1L()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    SuperstructureSubsystem.getInstance()
+                        .setSelectedTargetAction(TargetAction.L1L, false)));
+    controlBoard
+        .setGoalL1H()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    SuperstructureSubsystem.getInstance()
+                        .setSelectedTargetAction(TargetAction.L1H, false)));
+    controlBoard
+        .setGoalL2()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    SuperstructureSubsystem.getInstance()
+                        .setSelectedTargetAction(TargetAction.L2, false)));
+    controlBoard
+        .setGoalL3()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    SuperstructureSubsystem.getInstance()
+                        .setSelectedTargetAction(TargetAction.L3, false)));
+    controlBoard
+        .setGoalL4()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    SuperstructureSubsystem.getInstance()
+                        .setSelectedTargetAction(TargetAction.L4, false)));
+    controlBoard
+        .setGoalLowerAlgae()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    SuperstructureSubsystem.getInstance()
+                        .setSelectedTargetAction(TargetAction.LA, false)));
+    controlBoard
+        .setGoalUpperAlgae()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    SuperstructureSubsystem.getInstance()
+                        .setSelectedTargetAction(TargetAction.UA, false)));
+    controlBoard
+        .setGoalCoralStation()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    SuperstructureSubsystem.getInstance()
+                        .setSelectedTargetAction(TargetAction.HP, false)));
+    controlBoard
+        .setGoalAlgaeScoring()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    SuperstructureSubsystem.getInstance()
+                        .setSelectedTargetAction(TargetAction.AS, false)));
+    controlBoard
+        .setGoalTravel()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    SuperstructureSubsystem.getInstance()
+                        .setSelectedTargetAction(TargetAction.TR, false)));
+    controlBoard
+        .homeElevator()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    SuperstructureSubsystem.getInstance()
+                        .setSelectedTargetAction(TargetAction.HM, false)));
 
     controlBoard
         .manualUp()
@@ -131,6 +258,18 @@ public class RobotContainer {
         .onTrue(AlgaeSubsystem.getInstance().runPivotPct(-0.40))
         .onFalse(AlgaeSubsystem.getInstance().runPivotPct(0.0));
 
+    controlBoard.climbUp().whileTrue(ClimberCommandFactory.climberUp());
+    controlBoard.climbDown().whileTrue(ClimberCommandFactory.climberDown());
+
+    // controlBoard.sysIDQuasiForward().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+    // controlBoard.sysIDQuasiReverse().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+    // controlBoard.sysIDDynamicForward().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+    // controlBoard.sysIDDynamicReverse().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+    // controlBoard
+    //     .shoot()
+    //     .onTrue(Commands.runOnce(SignalLogger::start))
+    //     .onFalse(Commands.runOnce(SignalLogger::stop));
+
     // controlBoard
     //     .manualUp()
     //     .onTrue(ElevatorSubsystem.getInstance().manualUp())
@@ -140,10 +279,6 @@ public class RobotContainer {
     //     .manualDown()
     //     .onTrue(ElevatorSubsystem.getInstance().manualDown())
     //     .onFalse(ElevatorSubsystem.getInstance().stopElevator());
-
-    controlBoard.climbUp().whileTrue(ClimberCommandFactory.climberUp());
-
-    controlBoard.climbDown().whileTrue(ClimberCommandFactory.climberDown());
   }
 
   private void configurePOVBindings() {

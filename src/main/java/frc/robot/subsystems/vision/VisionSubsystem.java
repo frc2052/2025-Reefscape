@@ -4,11 +4,12 @@
 
 package frc.robot.subsystems.vision;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.vision.PoseEstimate;
 import com.team2052.lib.vision.TagTracker;
 import com.team2052.lib.vision.VisionPoseAcceptor;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -19,9 +20,6 @@ import frc.robot.Constants.VisionConstants.RearCameraConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.util.FieldConstants;
-
-import static edu.wpi.first.units.Units.Meters;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,9 +64,10 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public Optional<PhotonPipelineResult> getReefCamClosestTarget(Distance minDistance) {
-    if(reefTagTracker.getClosestTagToCamera().isPresent()) {
+    if (reefTagTracker.getClosestTagToCamera().isPresent()) {
       PhotonPipelineResult result = reefTagTracker.getClosestTagToCamera().get();
-      if (result.getBestTarget().getBestCameraToTarget().getTranslation().getNorm() < minDistance.in(Meters)) {
+      if (result.getBestTarget().getBestCameraToTarget().getTranslation().getNorm()
+          < minDistance.in(Meters)) {
         return reefTagTracker.getClosestTagToCamera();
       }
     }
@@ -104,14 +103,13 @@ public class VisionSubsystem extends SubsystemBase {
       case CORAL_REEF:
         return reefTagTracker.constants.tagLayout;
       case ALGAE_REEF:
-      return algaeTagTracker.constants.tagLayout;
+        return algaeTagTracker.constants.tagLayout;
       case REAR:
-      return rearTagTracker.constants.tagLayout;
+        return rearTagTracker.constants.tagLayout;
       default:
         return FieldConstants.DEFAULT_APRIL_TAG_LAYOUT_TYPE.layout;
     }
-
-  }  
+  }
 
   @Override
   public void periodic() {

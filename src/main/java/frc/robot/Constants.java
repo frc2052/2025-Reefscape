@@ -133,12 +133,12 @@ public class Constants {
     public static final Angle HEADING_TOLERANCE = Degrees.of(3);
   }
 
-  public static class ArmConstants {
+  public static class CoralArmConstants {
     public static final boolean ARM_MOTOR_INVERTED = true;
     public static final double DEG_TOL = 1.5;
 
-    public static final Angle MIN_CORAL_ANGLE = Degrees.of(30);
-    public static final Angle MAX_CORAL_ANGLE = Degrees.of(330);
+    public static final Angle MIN_CORAL_ARM_ANGLE = Degrees.of(30);
+    public static final Angle MAX_CORAL_ARM_ANGLE = Degrees.of(330);
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
@@ -152,7 +152,7 @@ public class Constants {
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
             .withInverted(
-                ArmConstants.ARM_MOTOR_INVERTED
+                CoralArmConstants.ARM_MOTOR_INVERTED
                     ? InvertedValue.Clockwise_Positive
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake); 

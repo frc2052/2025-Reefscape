@@ -4,6 +4,8 @@
 
 package frc.robot.auto.common;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -18,13 +20,11 @@ import frc.robot.RobotState;
 import frc.robot.commands.drive.AlignWithReefCommand;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
-import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
-import frc.robot.controlboard.PositionSuperstructure.TargetAction;
-import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.ReefSubSide;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetFieldLocation;
 import frc.robot.subsystems.vision.VisionSubsystem;
-import static edu.wpi.first.units.Units.Meters;
-
 import java.util.List;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
@@ -82,8 +82,14 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command reefSideVisionOrPathAlign(
       ReefSubSide alignLocation, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
     return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
-        .until(() -> vision.getReefCamClosestTarget(Meters.of(1.5)).isPresent()) // sees tag, goal pose won't be too far
-        .andThen(new AlignWithReefCommand(() -> alignLocation, true, () -> 0, () -> 0, () -> 0, () -> true));
+        .until(
+            () ->
+                vision
+                    .getReefCamClosestTarget(Meters.of(1.5))
+                    .isPresent()) // sees tag, goal pose won't be too far
+        .andThen(
+            new AlignWithReefCommand(
+                () -> alignLocation, true, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   protected Command toScoringPositionCommand(

@@ -17,15 +17,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.RobotState;
-import frc.robot.controlboard.PositionSuperstructure;
-import frc.robot.controlboard.PositionSuperstructure.TargetAction;
+import frc.robot.Constants.CoralArmConstants;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.Ports;
 import org.littletonrobotics.junction.Logger;
 
 public class CoralArmSubsystem extends SubsystemBase {
-  private final RobotState robotState = RobotState.getInstance();
   private final TalonFX pivotMotor;
   private Angle goalPosition;
 
@@ -39,11 +37,12 @@ public class CoralArmSubsystem extends SubsystemBase {
   }
 
   private CoralArmSubsystem() {
-    goalPosition = PositionSuperstructure.getInstance().getTargetAction().getCoralArmAngle();
+    goalPosition =
+        SuperstructureSubsystem.getInstance().getSelectedTargetAction().getCoralArmAngle();
 
     pivotMotor = new TalonFX(Ports.ARM_TALONFX_ID);
 
-    pivotMotor.getConfigurator().apply(ArmConstants.MOTOR_CONFIG);
+    pivotMotor.getConfigurator().apply(CoralArmConstants.MOTOR_CONFIG);
   }
 
   public Command runPct(double pct) {
@@ -72,14 +71,12 @@ public class CoralArmSubsystem extends SubsystemBase {
   }
 
   private Angle clampPosition(Angle pos) {
-    if (robotState.getHasCoral()) {
-      if (pos.in(Degrees) < ArmConstants.MIN_CORAL_ANGLE.in(Degrees)) {
-        System.out.println("DESIRED ANGLE BEYOND MIN LIMIT");
-        return ArmConstants.MIN_CORAL_ANGLE;
-      } else if (pos.in(Degrees) > ArmConstants.MAX_CORAL_ANGLE.in(Degrees)) {
-        System.out.println("DESIRED ANGLE BEYOND MAX LIMIT");
-        return ArmConstants.MAX_CORAL_ANGLE;
-      }
+    if (pos.in(Degrees) < CoralArmConstants.MIN_CORAL_ARM_ANGLE.in(Degrees)) {
+      System.out.println("DESIRED ANGLE BEYOND MIN LIMIT");
+      return CoralArmConstants.MIN_CORAL_ARM_ANGLE;
+    } else if (pos.in(Degrees) > CoralArmConstants.MAX_CORAL_ARM_ANGLE.in(Degrees)) {
+      System.out.println("DESIRED ANGLE BEYOND MAX LIMIT");
+      return CoralArmConstants.MAX_CORAL_ARM_ANGLE;
     }
 
     return pos;
@@ -94,7 +91,7 @@ public class CoralArmSubsystem extends SubsystemBase {
   }
 
   public boolean isAtDesiredPosition() {
-    return isAtDesiredPosition(ArmConstants.DEG_TOL);
+    return isAtDesiredPosition(CoralArmConstants.DEG_TOL);
   }
 
   public boolean isAtDesiredPosition(double tol) {

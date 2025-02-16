@@ -3,15 +3,11 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import org.littletonrobotics.junction.Logger;
 
 public class RobotState {
   private SwerveDriveState drivetrainState = new SwerveDriveState();
-
-  private boolean isReefTracking;
-  private boolean hasCoral;
 
   private static RobotState INSTANCE;
 
@@ -31,31 +27,6 @@ public class RobotState {
     }
 
     return MathHelpers.POSE_2D_ZERO;
-  }
-
-  public ChassisSpeeds getChassisSpeeds(boolean isFieldRelative) {
-    ChassisSpeeds chassisSpeeds = drivetrainState.Speeds;
-    if (isFieldRelative) {
-      return ChassisSpeeds.fromRobotRelativeSpeeds(chassisSpeeds, getFieldToRobot().getRotation());
-    } else {
-      return chassisSpeeds;
-    }
-  }
-
-  public void setReefTracking(boolean isReefTracking) {
-    this.isReefTracking = isReefTracking;
-  }
-
-  public boolean getIsReefTracking() {
-    return isReefTracking;
-  }
-
-  public void setHasCoral(boolean hasCoral) {
-    this.hasCoral = hasCoral;
-  }
-
-  public boolean getHasCoral() {
-    return hasCoral;
   }
 
   public void addDrivetrainState(SwerveDriveState drivetrainState) {

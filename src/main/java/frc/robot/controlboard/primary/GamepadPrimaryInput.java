@@ -93,28 +93,28 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
-  public Trigger outtakeCoral() {
+  public Trigger outtake() {
     return new Trigger(() -> false);
   }
 
   @Override
-  public Trigger intakeCoral() {
+  public Trigger intake() {
     return new Trigger(() -> false);
   }
 
   @Override
-  public Trigger intakeAlgae() {
+  public Trigger alignLeft() {
     return new Trigger(() -> false);
   }
 
   @Override
-  public Trigger shootAlgae() {
+  public Trigger alignCenter() {
     return new Trigger(() -> false);
   }
 
   @Override
-  public Trigger reefAlignment() {
-    return controller.button(1);
+  public Trigger alignRight() {
+    return new Trigger(() -> false);
   }
 
   @Override

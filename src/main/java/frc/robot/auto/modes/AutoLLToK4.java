@@ -7,8 +7,8 @@ package frc.robot.auto.modes;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
-import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.ReefSubSide;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetFieldLocation;
 
 @AutoDescription(description = "testing vision to reef side")
 public class AutoLLToK4 extends AutoBase {

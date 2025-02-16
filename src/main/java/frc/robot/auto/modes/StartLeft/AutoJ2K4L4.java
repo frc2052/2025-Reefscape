@@ -3,9 +3,9 @@ package frc.robot.auto.modes.StartLeft;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
-import frc.robot.controlboard.PositionSuperstructure.TargetAction;
-import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.ReefSubSide;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetFieldLocation;
 
 @AutoDescription(description = "21 Point Auto - One L2, Two L4")
 public class AutoJ2K4L4 extends AutoBase {
