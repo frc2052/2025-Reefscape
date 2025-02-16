@@ -151,6 +151,10 @@ public class AlignmentCalculator {
         return new Pose2d(elementTranslation, Rotation2d.fromDegrees(0));
       }
     }
+
+    public boolean getIsReef() {
+      return this == AB || this == CD || this == EF || this == GH || this == IJ || this == KL;
+    }
   }
 
   /* Align Offset is relative to the tag poses on the field element */

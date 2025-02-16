@@ -76,15 +76,42 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
     goalPose = null;
 
     if (desiredElement == DesiredElement.PROCESSOR) {
+      if (offset != AlignOffset.PROCESSOR_MIDDLE_LOC) {
+        invalidCombination();
+      }
       vision.setPrimaryFocus(TagTrackerType.ALGAE_CAM);
-    } else if (desiredElement == DesiredElement.REEF
-        || desiredElement == DesiredElement.SPECIFIC_REEF_FACE) {
+    } else if (desiredElement == DesiredElement.REEF) {
+      if (offset != AlignOffset.ALGAE_REEF_LOC
+          || offset != AlignOffset.LEFT_REEF_LOC
+          || offset != AlignOffset.MIDDLE_REEF_LOC
+          || offset != AlignOffset.RIGHT_REEF_LOC) {
+        invalidCombination();
+      }
       vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM);
     } else if (desiredElement == DesiredElement.CORALSTATION) {
+      if (offset != AlignOffset.LEFT_CORAL_STATION_LOC
+          || offset != AlignOffset.RIGHT_CORAL_STATION_LOC) {
+        invalidCombination();
+      }
       vision.setPrimaryFocus(TagTrackerType.REAR_CAM);
+    } else if (desiredElement == DesiredElement.SPECIFIC_REEF_FACE) {
+      if (!fieldLocation.getIsReef()) {
+        invalidCombination();
+      }
+      vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM);
     } else {
       vision.resetPrimaryFocus();
     }
+  }
+
+  private void invalidCombination() {
+    System.out.println(
+        "The desired element "
+            + desiredElement.toString()
+            + " and the field location "
+            + fieldLocation.toString()
+            + " do not match!");
+    end(false);
   }
 
   @Override
