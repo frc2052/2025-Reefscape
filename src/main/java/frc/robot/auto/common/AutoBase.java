@@ -19,16 +19,14 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
-import frc.robot.commands.drive.alignment.AlgaeReefAlign;
-import frc.robot.commands.drive.alignment.CoralReefAlign;
-import frc.robot.commands.drive.alignment.CoralStationAlign;
-import frc.robot.commands.drive.alignment.ProcessorAlign;
+import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand;
+import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand.DesiredElement;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.AlignOffset;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetFieldLocation;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
+import frc.robot.util.AlignmentCalculator.AlignOffset;
+import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import java.util.List;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
@@ -91,7 +89,14 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 vision
                     .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
                     .isPresent()) // sees tag, goal pose won't be too far
-        .andThen(new AlgaeReefAlign(true, () -> 0, () -> 0, () -> 0, () -> true));
+        .andThen(
+            new AlignWithFieldElementCommand(
+                DesiredElement.REEF,
+                AlignOffset.ALGAE_REEF_LOC,
+                () -> 0,
+                () -> 0,
+                () -> 0,
+                () -> true));
   }
 
   protected Command coralReefSideVisionOrPathAlign(
@@ -102,7 +107,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 vision
                     .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
                     .isPresent()) // sees tag, goal pose won't be too far
-        .andThen(new CoralReefAlign(offset, true, () -> 0, () -> 0, () -> 0, () -> true));
+        .andThen(
+            new AlignWithFieldElementCommand(
+                snaploc, offset, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   protected Command coralSideVisionOrPathAlign(
@@ -111,7 +118,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
         .until(
             () ->
                 vision.getCameraClosestTarget(TagTrackerType.REAR_CAM, Meters.of(2.0)).isPresent())
-        .andThen(new CoralStationAlign(offset, () -> 0, () -> 0, () -> 0, () -> true));
+        .andThen(
+            new AlignWithFieldElementCommand(
+                snaploc, offset, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   protected Command processorSideVisionOrPathAlign(
@@ -120,7 +129,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
         .until(
             () ->
                 vision.getCameraClosestTarget(TagTrackerType.ALGAE_CAM, Meters.of(1.0)).isPresent())
-        .andThen(new ProcessorAlign(offset, () -> 0, () -> 0, () -> 0, () -> true));
+        .andThen(
+            new AlignWithFieldElementCommand(
+                DesiredElement.PROCESSOR, offset, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   protected Command toScoringPositionCommand(

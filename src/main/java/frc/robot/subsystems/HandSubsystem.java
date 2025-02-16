@@ -16,9 +16,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.util.io.Ports;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
-
+import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
 public class HandSubsystem extends SubsystemBase {

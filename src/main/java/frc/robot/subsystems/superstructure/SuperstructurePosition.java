@@ -2,53 +2,9 @@ package frc.robot.subsystems.superstructure;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.units.measure.Angle;
-import frc.robot.RobotState;
 
 public class SuperstructurePosition {
-  public enum TargetFieldLocation {
-    AB(7, 18, Degrees.of(0)),
-    CD(8, 17, Degrees.of(60)),
-    EF(9, 22, Degrees.of(120)),
-    GH(10, 21, Degrees.of(180)),
-    IJ(11, 20, Degrees.of(240)),
-    KL(6, 19, Degrees.of(300)),
-    RCS(2, 12, Degrees.of(-306)),
-    LCS(1, 13, Degrees.of(306)),
-    PRC(3, 16, Degrees.of(0)), // Processor (side of the field, not where our alliance's human player is)
-    FBG(
-        15,
-        4,
-        Degrees.of(
-            -90)), // Far Side of Barge from teams driver station (so if on blue, the red tag will
-    // be on the near side)
-    NBG(14, 0, Degrees.of(90)); // Same as above but for the near side
-
-    public final int redTagID;
-    public final int blueTagID;
-    public final Angle lineupAngle;
-
-    private TargetFieldLocation(int redTagID, int blueTagID, Angle lineupAngle) {
-      this.redTagID = redTagID;
-      this.blueTagID = blueTagID;
-      this.lineupAngle = lineupAngle;
-    }
-
-    public int getTagID() {
-      return RobotState.getInstance().isRedAlliance() ? redTagID : blueTagID;
-    }
-
-    public Angle getLineupAngle() {
-      return lineupAngle;
-    }
-
-    public boolean getIsReef() {
-      return this == AB || this == CD || this == EF || this == GH || this == IJ || this == KL;
-    }
-  }
-
   public enum TargetAction {
     HM(1.0, Degrees.of(170.0), Degrees.of(90), ActionType.NONE), // Homing
     L1L(1.0, Degrees.of(255.0), Degrees.of(90), ActionType.CORAL),
@@ -99,24 +55,5 @@ public class SuperstructurePosition {
     STATION,
     PROCESS,
     NONE
-  }
-
-  public enum AlignOffset {
-    LEFT_REEF_LOC(new Transform2d(0.5, 0.25, new Rotation2d(0))),
-    MIDDLE_REEF_LOC(new Transform2d(0.5, 0.0, new Rotation2d(0))),
-    RIGHT_REEF_LOC(new Transform2d(0.5, -0.25, new Rotation2d(0))),
-
-    ALGAE_REEF_LOC(new Transform2d(0.5, 0.0, new Rotation2d(90))),
-
-    PROCESSOR_MIDDLE_LOC(new Transform2d(0.5, -0.25, new Rotation2d(0))),
-
-    LEFT_CORAL_STATION_LOC(new Transform2d(0.5, -0.25, new Rotation2d(0))),
-    RIGHT_CORAL_STATION_LOC(new Transform2d(0.5, -0.25, new Rotation2d(0)));
-
-    public Transform2d transform;
-
-    private AlignOffset(Transform2d gt) {
-      this.transform = gt;
-    }
   }
 }

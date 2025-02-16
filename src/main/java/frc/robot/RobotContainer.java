@@ -15,8 +15,8 @@ import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.algae.AlgaeCommandFactory;
 import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
-import frc.robot.commands.drive.alignment.AlgaeReefAlign;
-import frc.robot.commands.drive.alignment.CoralReefAlign;
+import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand;
+import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand.DesiredElement;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.controlboard.ControlBoard;
@@ -24,11 +24,11 @@ import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.subsystems.AlgaeSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.ActionType;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.AlignOffset;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetFieldLocation;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSimSubsystem;
+import frc.robot.util.AlignmentCalculator.AlignOffset;
+import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import frc.robot.util.Telemetry;
 import frc.robot.util.io.Dashboard;
 
@@ -122,17 +122,18 @@ public class RobotContainer {
         .whileTrue(
             SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
                     == ActionType.ALGAE
-                ? new AlgaeReefAlign(
-                    false,
+                ? new AlignWithFieldElementCommand(
+                    DesiredElement.REEF,
+                    AlignOffset.ALGAE_REEF_LOC,
                     controlBoard::getThrottle,
                     // Sideways velocity supplier.
                     controlBoard::getStrafe,
                     // Rotation velocity supplier.
                     controlBoard::getRotation,
                     dashboard::isFieldCentric)
-                : new CoralReefAlign(
+                : new AlignWithFieldElementCommand(
+                    DesiredElement.REEF,
                     AlignOffset.LEFT_REEF_LOC,
-                    false,
                     controlBoard::getThrottle,
                     // Sideways velocity supplier.
                     controlBoard::getStrafe,
@@ -145,17 +146,18 @@ public class RobotContainer {
         .whileTrue(
             SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
                     == ActionType.ALGAE
-                ? new AlgaeReefAlign(
-                    false,
+                ? new AlignWithFieldElementCommand(
+                    DesiredElement.REEF,
+                    AlignOffset.ALGAE_REEF_LOC,
                     controlBoard::getThrottle,
                     // Sideways velocity supplier.
                     controlBoard::getStrafe,
                     // Rotation velocity supplier.
                     controlBoard::getRotation,
                     dashboard::isFieldCentric)
-                : new CoralReefAlign(
+                : new AlignWithFieldElementCommand(
+                    DesiredElement.REEF,
                     AlignOffset.MIDDLE_REEF_LOC,
-                    false,
                     controlBoard::getThrottle,
                     // Sideways velocity supplier.
                     controlBoard::getStrafe,
@@ -168,17 +170,18 @@ public class RobotContainer {
         .whileTrue(
             SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
                     == ActionType.ALGAE
-                ? new AlgaeReefAlign(
-                    false,
+                ? new AlignWithFieldElementCommand(
+                    DesiredElement.REEF,
+                    AlignOffset.ALGAE_REEF_LOC,
                     controlBoard::getThrottle,
                     // Sideways velocity supplier.
                     controlBoard::getStrafe,
                     // Rotation velocity supplier.
                     controlBoard::getRotation,
                     dashboard::isFieldCentric)
-                : new CoralReefAlign(
+                : new AlignWithFieldElementCommand(
+                    DesiredElement.REEF,
                     AlignOffset.RIGHT_REEF_LOC,
-                    false,
                     controlBoard::getThrottle,
                     // Sideways velocity supplier.
                     controlBoard::getStrafe,

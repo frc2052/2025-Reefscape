@@ -6,9 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.AlgaeSubsystem;
 import frc.robot.subsystems.CoralArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.AlignOffset;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetFieldLocation;
 import org.littletonrobotics.junction.Logger;
 
 public class SuperstructureSubsystem extends SubsystemBase {
@@ -19,10 +17,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
   private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
   private CoralArmSubsystem coralArm = CoralArmSubsystem.getInstance();
 
-  private TargetFieldLocation targetReefSide = TargetFieldLocation.AB;
   private TargetAction selectedTargetAction = TargetAction.TR;
   private TargetAction currentAction = TargetAction.TR;
-  private AlignOffset alignOffset = AlignOffset.MIDDLE_REEF_LOC;
 
   private TargetAction previousAction;
   private boolean isChangingState;
@@ -76,11 +72,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
   }
 
-  public void setTargetReefSide(TargetFieldLocation target) {
-    targetReefSide = target;
-    revealCombination();
-  }
-
   public void setSelectedTargetAction(TargetAction target, boolean confirm) {
     selectedTargetAction = target;
     if (confirm) {
@@ -89,18 +80,9 @@ public class SuperstructureSubsystem extends SubsystemBase {
     revealCombination();
   }
 
-  public void setAlignmentOffset(AlignOffset target) {
-    alignOffset = target;
-    revealCombination();
-  }
-
   public void confirmSelectedAction() {
     currentAction = selectedTargetAction;
     revealCombination();
-  }
-
-  public TargetFieldLocation getTargetReefSide() {
-    return targetReefSide;
   }
 
   public TargetAction getSelectedTargetAction() {
@@ -111,18 +93,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
     return currentAction;
   }
 
-  public AlignOffset getAlignOffset() {
-    return alignOffset;
-  }
-
   public void revealCombination() {
-    System.out.println(
-        "Targeting : "
-            + getTargetReefSide().toString()
-            + " at "
-            + getAlignOffset().toString()
-            + " with action "
-            + getSelectedTargetAction().toString());
+    System.out.println("Goal : " + getSelectedTargetAction().toString());
   }
 
   @Override

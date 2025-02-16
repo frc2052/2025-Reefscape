@@ -7,8 +7,8 @@ package frc.robot.auto.modes;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.AlignOffset;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetFieldLocation;
+import frc.robot.util.AlignmentCalculator.AlignOffset;
+import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 
 @AutoDescription(description = "testing vision to reef side")
 public class AutoLLToK4 extends AutoBase {
