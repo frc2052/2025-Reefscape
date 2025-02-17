@@ -158,7 +158,7 @@ public class RobotContainer {
 
     controlBoard
         .povRight()
-        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> -0.2, () -> 0.0, () -> false));
+        .whileTrue(new moveAroundReef(getdistance(fieldLocation.Reef.getPose()),1,true));
 
     controlBoard
         .povDownRight()
@@ -174,7 +174,7 @@ public class RobotContainer {
 
     controlBoard
         .povLeft()
-        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.2, () -> 0.0, () -> false));
+        .whileTrue(new moveAroundReef(getdistance(fieldLocation.Reef.getPose()),1,false));// adjust the following values
 
     controlBoard
         .povUpLeft()
@@ -203,5 +203,15 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return autoFactory.getCompiledAuto();
+  }
+
+  private double getdistance(Transform2d reef, Pose2d robot){
+    if (fieldLocation == fieldLocation.Reef){
+        robot = robotState.getFieldToRobot();
+        private Translation2d robotTranslation = robotPose.getTranslation();
+        return robotTranslation.getDistance(reef);
+    }else{
+        return;
+    }
   }
 }

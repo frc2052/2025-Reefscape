@@ -6,16 +6,14 @@ import java.util.function.DoubleSupplier;
 
 public class CircleAroundObjectCommand extends CommandBase {
 
-  private final DefaultDriveCommand defaultDriveCommand;
-  private final DrivetrainSubsystem drivetrain;
+  private DefaultDriveCommand defaultDriveCommand;
+  private DrivetrainSubsystem drivetrain;
   private Timer timer;
 
-  private final double radius;
-  private final double angularSpeed;
+  private double radius;
+  private double angularSpeed;
 
-  public CircleAroundObjectCommand extends Command(
-      double radius,
-      double angularSpeed) {
+  public CircleAroundObjectCommand extends Command(double radius,double Speed,boolean isMovingRight) {
     this.radius = radius;
     this.angularSpeed = angularSpeed;
 
@@ -27,15 +25,23 @@ public class CircleAroundObjectCommand extends CommandBase {
 
   @Override
   public void execute() {
-    double xVelocity = radius * Math.cos(angularSpeed * time); 
-    double yVelocity = radius * Math.sin(angularSpeed * time);  
-    double heading = Math.atan2(robotState.getFieldToRobot().getY() - yVelocity, robotState.getFieldToRobot().getX() - xVelocity);
-    DoubleSupplier xVelocitySupplier = () -> xVelocity;
-    DoubleSupplier yVelocitySupplier = () -> yVelocity;
+    double xVelocity = radius * Math.cos(Speed * timer.getFPGATimeStamp()); 
+    double yVelocity = radius * Math.sin(Speed * timer.getFPGATimeStamp());  
+    double heading = Math.atan2(robotState.getFieldToRobot().getY() - signChanger(yVelocity), robotState.getFieldToRobot().getX() - xVelocity);
+    DoubleSupplier xVelocitySupplier = () -> signChanger(xVelocity);
+    DoubleSupplier yVelocitySupplier = () -> signChanger(yVelocity);
     DoubleSupplier rotationVelocitySupplier = () -> heading;
 
-    defaultDriveCommand(xVelocitySupplier, yVelocitySupplier, rotationVelocitySupplier);
+   defaultDriveCommand(xVelocitySupplier,yVelocitySupplier,rotationVelocitySupplier);
   }
+
+  private double signChanger (double x){
+    if (isMovingRight){
+      return -x;
+    }else{
+      return x;
+    }
+  } 
   
   @Override
   public void end(boolean interrupted) {
@@ -45,6 +51,6 @@ public class CircleAroundObjectCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return false; // Run until interrupted
+    return false;
   }
 }
