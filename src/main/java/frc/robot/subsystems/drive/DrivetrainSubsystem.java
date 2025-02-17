@@ -138,25 +138,26 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
     }
 
     robotState.addDrivetrainState(super.getState());
+    
     setFieldLocation();
   }
 
   private void setFieldLocation(){
-    Pose2d robotPose = robotState.getFieldToRobot();
-    Translation2d robotTranslation = robotPose.getTranslation(); // adjust the following values. 
+    private Pose2d robotPose = robotState.getFieldToRobot();
+    private Translation2d robotTranslation = robotPose.getTranslation(); // adjust the following values. 
     if (robotTranslation.getDistance(fieldLocation.HP.getPose()) <= 1){
-      robotState.setFieldLocation(fieldLocation fieldLocation.HP);
+      robotState.setFieldLocation(fieldLocation.HP);
 
     }else if (robotTranslation.getDistance(fieldLocation.Reef.getPose()) <= 1){
-      robotState.setFieldLocation(fieldLocation fieldLocation.Reef);
+      robotState.setFieldLocation(fieldLocation.Reef);
 
     }else if (robotTranslation.getDistance(fieldLocation.Barge.getPose()) <= 1){
-      robotState.setFieldLocation(fieldLocation fieldLocation.Barge);
+      robotState.setFieldLocation(fieldLocation.Barge);
 
     }else if (robotTranslation.getDistance(fieldLocation.Processor.getPose()) <= 1){
-      robotState.setFieldLocation(fieldLocation fieldLocation.Processor);
+      robotState.setFieldLocation(fieldLocation.Processor);
    }else {
-      robotState.setFieldLocation(fieldLocation fieldLocation.Travel);
+      robotState.setFieldLocation(fieldLocation.Travel);
    }
   
 

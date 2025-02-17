@@ -88,21 +88,27 @@ public class RobotState {
   }
 
   public enum fieldLocation {
-    HP(Translation2d()),
-    Reef(Translation2d()),
-    Barge(Translation2d()),
-    Processor(Translation2d()),
-    Travel (Translation2d(null,null));
+    HP(Translation2d(),Translation2d()),
+    Reef(Translation2d(),Translation2d()),
+    Barge(Translation2d(),Translation2d()),
+    Processor(Translation2d(),Translation2d()),
+    Travel (Translation2d(null,null),Translation2d(null,null));
 
-    public final Pose2d Pose; 
+    public final Pose2d bluePose; 
+    public final Pose2d redPose; 
 
-    private fieldLocation(Translation2d Pose){
-      this.Pose = Pose;
+    private fieldLocation(Translation2d bluePose,Translation2d redPose){
+      this.bluePose = bluePose;
+      this.redPose = redPose;
     }
 
     public Translation2d getPose(){
-      return Pose;
+      if (isRedAlliance){
+      return redPose;
+    }else {
+      return bluePose
     }
 
   }
+}
 }
