@@ -32,6 +32,7 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
   private Notifier simNotifier = null;
   private double lastSimTime;
 
+
   /* Keep track if we've ever applied the driver perspective before or not */
   private boolean hasAppliedOperatorPerspective = false;
 
@@ -137,6 +138,28 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
     }
 
     robotState.addDrivetrainState(super.getState());
+    setFieldLocation();
+  }
+
+  private void setFieldLocation(){
+    Pose2d robotPose = robotState.getFieldToRobot();
+    Translation2d robotTranslation = robotPose.getTranslation(); // adjust the following values. 
+    if (robotTranslation.getDistance(fieldLocation.HP.getPose()) <= 1){
+      robotState.setFieldLocation(fieldLocation fieldLocation.HP);
+
+    }else if (robotTranslation.getDistance(fieldLocation.Reef.getPose()) <= 1){
+      robotState.setFieldLocation(fieldLocation fieldLocation.Reef);
+
+    }else if (robotTranslation.getDistance(fieldLocation.Barge.getPose()) <= 1){
+      robotState.setFieldLocation(fieldLocation fieldLocation.Barge);
+
+    }else if (robotTranslation.getDistance(fieldLocation.Processor.getPose()) <= 1){
+      robotState.setFieldLocation(fieldLocation fieldLocation.Processor);
+   }else {
+      robotState.setFieldLocation(fieldLocation fieldLocation.Travel);
+   }
+  
+
   }
 
   private void startSimThread() {
@@ -155,6 +178,8 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
             });
 
     simNotifier.startPeriodic(kSimLoopPeriod);
+
+    
   }
 
   /* Swerve requests to apply during SysId characterization */

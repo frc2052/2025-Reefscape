@@ -1,6 +1,6 @@
 package frc.robot;
 
-import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
+import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -14,6 +14,7 @@ public class RobotState {
   private boolean hasCoral;
 
   private static RobotState INSTANCE;
+  
 
   public static RobotState getInstance() {
     if (INSTANCE == null) {
@@ -31,6 +32,10 @@ public class RobotState {
     }
 
     return MathHelpers.POSE_2D_ZERO;
+  }
+
+  public void setFieldLocation(fieldLocation location){
+    fieldLocation = location;
   }
 
   public ChassisSpeeds getChassisSpeeds(boolean isFieldRelative) {
@@ -80,5 +85,24 @@ public class RobotState {
     Logger.recordOutput("Swerve Module States", drivetrainState.ModuleStates);
     Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
     Logger.recordOutput("Current Pose", drivetrainState.Pose);
+  }
+
+  public enum fieldLocation {
+    HP(Translation2d()),
+    Reef(Translation2d()),
+    Barge(Translation2d()),
+    Processor(Translation2d()),
+    Travel (Translation2d(null,null));
+
+    public final Pose2d Pose; 
+
+    private fieldLocation(Translation2d Pose){
+      this.Pose = Pose;
+    }
+
+    public Translation2d getPose(){
+      return Pose;
+    }
+
   }
 }
