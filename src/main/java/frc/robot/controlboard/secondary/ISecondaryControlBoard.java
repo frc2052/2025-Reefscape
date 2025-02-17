@@ -15,18 +15,6 @@ public interface ISecondaryControlBoard {
 
   Trigger climbDown();
 
-  Trigger reefAB();
-
-  Trigger reefCD();
-
-  Trigger reefEF();
-
-  Trigger reefGH();
-
-  Trigger reefIJ();
-
-  Trigger reefKL();
-
   Trigger setGoalL1L();
 
   Trigger setGoalL1H();
@@ -45,11 +33,7 @@ public interface ISecondaryControlBoard {
 
   Trigger setGoalAlgaeScoring();
 
-  Trigger setGoalTravel();
-
   Trigger setSubReefLeft();
-
-  Trigger setSubReefCenter();
 
   Trigger setSubReefRight();
 }

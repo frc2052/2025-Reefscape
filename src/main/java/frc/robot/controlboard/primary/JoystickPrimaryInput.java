@@ -106,18 +106,13 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
-  public Trigger alignLeft() {
-    return new JoystickButton(rotateStick, 3);
-  }
-
-  @Override
-  public Trigger alignCenter() {
+  public Trigger alignWithElement() {
     return new JoystickButton(rotateStick, 2);
   }
 
   @Override
-  public Trigger alignRight() {
-    return new JoystickButton(rotateStick, 4);
+  public Trigger pointToReef() {
+    return new JoystickButton(rotateStick, 3);
   }
 
   @Override

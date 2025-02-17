@@ -76,6 +76,20 @@ public class AlignmentCalculator {
 
   //   return new Pose2d(relativePose.plus(pose.getTranslation()), pose.getRotation());
   // }
+  public static Rotation2d getRotationToReef(Translation2d robotTranslation, boolean isRedReef) {
+    Translation2d reefLocation;
+    if (isRedReef) {
+      reefLocation = FieldConstants.RED_REEF_CENTER;
+    } else {
+      reefLocation = FieldConstants.BLUE_REEF_CENTER;
+    }
+    // Calculate the differences in x and y coordinates
+    double deltaX = reefLocation.getX() - robotTranslation.getX();
+    double deltaY = reefLocation.getY() - robotTranslation.getY();
+
+    // Use Math.atan2 to calculate the angle in radians
+    return Rotation2d.fromRadians(Math.atan2(deltaY, deltaX));
+  }
 
   public static Pose2dPolar getPositionFromReef(Pose2d pose, boolean isRedReef) {
     Translation2d reefLocation;

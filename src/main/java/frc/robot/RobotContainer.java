@@ -15,6 +15,8 @@ import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.algae.AlgaeCommandFactory;
 import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
+import frc.robot.commands.drive.DriveWhilePointingAtReefCommand;
+import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand;
 import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand.DesiredElement;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
@@ -118,76 +120,52 @@ public class RobotContainer {
                 : HandCommandFactory.motorOut());
 
     controlBoard
-        .alignLeft()
+        .alignWithElement()
         .whileTrue(
-            SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
-                    == ActionType.ALGAE
-                ? new AlignWithFieldElementCommand(
-                    DesiredElement.REEF,
-                    AlignOffset.ALGAE_REEF_LOC,
-                    controlBoard::getThrottle,
-                    // Sideways velocity supplier.
-                    controlBoard::getStrafe,
-                    // Rotation velocity supplier.
-                    controlBoard::getRotation,
-                    dashboard::isFieldCentric)
-                : new AlignWithFieldElementCommand(
-                    DesiredElement.REEF,
-                    AlignOffset.LEFT_REEF_LOC,
-                    controlBoard::getThrottle,
-                    // Sideways velocity supplier.
-                    controlBoard::getStrafe,
-                    // Rotation velocity supplier.
-                    controlBoard::getRotation,
-                    dashboard::isFieldCentric));
+            new AlignWithFieldElementCommand(
+                DesiredElement.REEF,
+                robotState::getAlignOffset,
+                controlBoard::getThrottle,
+                // Sideways velocity supplier.
+                controlBoard::getStrafe,
+                // Rotation velocity supplier.
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
 
     controlBoard
-        .alignCenter()
+        .pointToReef()
         .whileTrue(
-            SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
-                    == ActionType.ALGAE
-                ? new AlignWithFieldElementCommand(
-                    DesiredElement.REEF,
-                    AlignOffset.ALGAE_REEF_LOC,
-                    controlBoard::getThrottle,
-                    // Sideways velocity supplier.
-                    controlBoard::getStrafe,
-                    // Rotation velocity supplier.
-                    controlBoard::getRotation,
-                    dashboard::isFieldCentric)
-                : new AlignWithFieldElementCommand(
-                    DesiredElement.REEF,
-                    AlignOffset.MIDDLE_REEF_LOC,
-                    controlBoard::getThrottle,
-                    // Sideways velocity supplier.
-                    controlBoard::getStrafe,
-                    // Rotation velocity supplier.
-                    controlBoard::getRotation,
-                    dashboard::isFieldCentric));
+            new DriveWhilePointingAtReefCommand(
+                controlBoard::getThrottle, controlBoard::getStrafe, dashboard::isFieldCentric));
 
     controlBoard
-        .alignRight()
+        .povRotLeft()
+        .onTrue(
+            new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.LEFT_CORAL_STATION_LOC)))
         .whileTrue(
-            SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
-                    == ActionType.ALGAE
-                ? new AlignWithFieldElementCommand(
-                    DesiredElement.REEF,
-                    AlignOffset.ALGAE_REEF_LOC,
-                    controlBoard::getThrottle,
-                    // Sideways velocity supplier.
-                    controlBoard::getStrafe,
-                    // Rotation velocity supplier.
-                    controlBoard::getRotation,
-                    dashboard::isFieldCentric)
-                : new AlignWithFieldElementCommand(
-                    DesiredElement.REEF,
-                    AlignOffset.RIGHT_REEF_LOC,
-                    controlBoard::getThrottle,
-                    // Sideways velocity supplier.
-                    controlBoard::getStrafe,
-                    // Rotation velocity supplier.
-                    controlBoard::getRotation,
-                    dashboard::isFieldCentric));
+            new SnapToLocationAngleCommand(
+                TargetFieldLocation.LCS,
+                controlBoard::getThrottle,
+                // Sideways velocity supplier.
+                controlBoard::getStrafe,
+                // Rotation velocity supplier.
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
+
+    controlBoard
+        .povRotRight()
+        .onTrue(
+            new InstantCommand(
+                () -> robotState.setAlignOffset(AlignOffset.RIGHT_CORAL_STATION_LOC)))
+        .whileTrue(
+            new SnapToLocationAngleCommand(
+                TargetFieldLocation.RCS,
+                controlBoard::getThrottle,
+                // Sideways velocity supplier.
+                controlBoard::getStrafe,
+                // Rotation velocity supplier.
+                controlBoard::getRotation,
+                dashboard::isFieldCentric));
 
     /* Secondary Driver */
     controlBoard
@@ -200,16 +178,22 @@ public class RobotContainer {
         .setGoalL1L()
         .onTrue(
             new InstantCommand(
-                () ->
-                    SuperstructureSubsystem.getInstance()
-                        .setSelectedTargetAction(TargetAction.L1L, false)));
+                () -> {
+                  SuperstructureSubsystem.getInstance()
+                      .setSelectedTargetAction(TargetAction.L1L, false);
+
+                  robotState.setAlignOffset(AlignOffset.MIDDLE_REEF_LOC);
+                }));
     controlBoard
         .setGoalL1H()
         .onTrue(
             new InstantCommand(
-                () ->
-                    SuperstructureSubsystem.getInstance()
-                        .setSelectedTargetAction(TargetAction.L1H, false)));
+                () -> {
+                  SuperstructureSubsystem.getInstance()
+                      .setSelectedTargetAction(TargetAction.L1H, false);
+
+                  robotState.setAlignOffset(AlignOffset.MIDDLE_REEF_LOC);
+                }));
     controlBoard
         .setGoalL2()
         .onTrue(
@@ -235,16 +219,22 @@ public class RobotContainer {
         .setGoalLowerAlgae()
         .onTrue(
             new InstantCommand(
-                () ->
-                    SuperstructureSubsystem.getInstance()
-                        .setSelectedTargetAction(TargetAction.LA, false)));
+                () -> {
+                  SuperstructureSubsystem.getInstance()
+                      .setSelectedTargetAction(TargetAction.LA, false);
+
+                  robotState.setAlignOffset(AlignOffset.MIDDLE_REEF_LOC);
+                }));
     controlBoard
         .setGoalUpperAlgae()
         .onTrue(
             new InstantCommand(
-                () ->
-                    SuperstructureSubsystem.getInstance()
-                        .setSelectedTargetAction(TargetAction.UA, false)));
+                () -> {
+                  SuperstructureSubsystem.getInstance()
+                      .setSelectedTargetAction(TargetAction.UA, false);
+
+                  robotState.setAlignOffset(AlignOffset.MIDDLE_REEF_LOC);
+                }));
     controlBoard
         .setGoalCoralStation()
         .onTrue(
@@ -260,19 +250,19 @@ public class RobotContainer {
                     SuperstructureSubsystem.getInstance()
                         .setSelectedTargetAction(TargetAction.AS, false)));
     controlBoard
-        .setGoalTravel()
-        .onTrue(
-            new InstantCommand(
-                () ->
-                    SuperstructureSubsystem.getInstance()
-                        .setSelectedTargetAction(TargetAction.TR, false)));
-    controlBoard
         .homeElevator()
         .onTrue(
             new InstantCommand(
                 () ->
                     SuperstructureSubsystem.getInstance()
                         .setSelectedTargetAction(TargetAction.HM, false)));
+
+    controlBoard
+        .setSubReefLeft()
+        .onTrue(new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.LEFT_REEF_LOC)));
+    controlBoard
+        .setSubReefRight()
+        .onTrue(new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.RIGHT_REEF_LOC)));
 
     controlBoard
         .manualUp()
@@ -339,14 +329,6 @@ public class RobotContainer {
     controlBoard
         .povUpLeft()
         .whileTrue(new DefaultDriveCommand(() -> 0.2, () -> 0.2, () -> 0.0, () -> false));
-
-    controlBoard
-        .povRotLeft()
-        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.0, () -> 0.3, () -> false));
-
-    controlBoard
-        .povRotRight()
-        .whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.0, () -> -0.3, () -> false));
 
     System.out.println("POV Bindings Configured");
   }

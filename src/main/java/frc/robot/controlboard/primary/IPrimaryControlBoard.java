@@ -35,11 +35,9 @@ public interface IPrimaryControlBoard {
 
   Trigger resetGyro();
 
-  Trigger alignLeft();
+  Trigger alignWithElement();
 
-  Trigger alignCenter();
-
-  Trigger alignRight();
+  Trigger pointToReef();
 
   Trigger outtake();
 

@@ -92,7 +92,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         .andThen(
             new AlignWithFieldElementCommand(
                 DesiredElement.REEF,
-                AlignOffset.ALGAE_REEF_LOC,
+                () -> AlignOffset.ALGAE_REEF_LOC,
                 () -> 0,
                 () -> 0,
                 () -> 0,
@@ -109,7 +109,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
                     .isPresent()) // sees tag, goal pose won't be too far
         .andThen(
             new AlignWithFieldElementCommand(
-                snaploc, offset, () -> 0, () -> 0, () -> 0, () -> true));
+                snaploc, () -> offset, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   protected Command coralSideVisionOrPathAlign(
@@ -120,7 +120,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 vision.getCameraClosestTarget(TagTrackerType.REAR_CAM, Meters.of(2.0)).isPresent())
         .andThen(
             new AlignWithFieldElementCommand(
-                snaploc, offset, () -> 0, () -> 0, () -> 0, () -> true));
+                snaploc, () -> offset, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   protected Command processorSideVisionOrPathAlign(
@@ -131,7 +131,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 vision.getCameraClosestTarget(TagTrackerType.ALGAE_CAM, Meters.of(1.0)).isPresent())
         .andThen(
             new AlignWithFieldElementCommand(
-                DesiredElement.PROCESSOR, offset, () -> 0, () -> 0, () -> 0, () -> true));
+                DesiredElement.PROCESSOR, () -> offset, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   protected Command toScoringPositionCommand(

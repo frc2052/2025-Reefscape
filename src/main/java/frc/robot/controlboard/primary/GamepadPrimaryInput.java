@@ -103,17 +103,12 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
-  public Trigger alignLeft() {
+  public Trigger alignWithElement() {
     return new Trigger(() -> false);
   }
 
   @Override
-  public Trigger alignCenter() {
-    return new Trigger(() -> false);
-  }
-
-  @Override
-  public Trigger alignRight() {
+  public Trigger pointToReef() {
     return new Trigger(() -> false);
   }
 

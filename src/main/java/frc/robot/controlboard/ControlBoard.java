@@ -118,18 +118,13 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger alignLeft() {
-    return primaryControlBoard.alignLeft();
+  public Trigger alignWithElement() {
+    return primaryControlBoard.alignWithElement();
   }
 
   @Override
-  public Trigger alignCenter() {
-    return primaryControlBoard.alignCenter();
-  }
-
-  @Override
-  public Trigger alignRight() {
-    return primaryControlBoard.alignRight();
+  public Trigger pointToReef() {
+    return primaryControlBoard.pointToReef();
   }
 
   @Override
@@ -185,36 +180,6 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger reefAB() {
-    return secondaryControlBoard.reefAB();
-  }
-
-  @Override
-  public Trigger reefCD() {
-    return secondaryControlBoard.reefCD();
-  }
-
-  @Override
-  public Trigger reefEF() {
-    return secondaryControlBoard.reefEF();
-  }
-
-  @Override
-  public Trigger reefGH() {
-    return secondaryControlBoard.reefGH();
-  }
-
-  @Override
-  public Trigger reefIJ() {
-    return secondaryControlBoard.reefIJ();
-  }
-
-  @Override
-  public Trigger reefKL() {
-    return secondaryControlBoard.reefKL();
-  }
-
-  @Override
   public Trigger setGoalL1L() {
     return secondaryControlBoard.setGoalL1L();
   }
@@ -255,11 +220,6 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger setSubReefCenter() {
-    return secondaryControlBoard.setSubReefCenter();
-  }
-
-  @Override
   public Trigger setSubReefRight() {
     return secondaryControlBoard.setSubReefRight();
   }
@@ -272,10 +232,5 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   @Override
   public Trigger setGoalAlgaeScoring() {
     return secondaryControlBoard.setGoalAlgaeScoring();
-  }
-
-  @Override
-  public Trigger setGoalTravel() {
-    return secondaryControlBoard.setGoalTravel();
   }
 }

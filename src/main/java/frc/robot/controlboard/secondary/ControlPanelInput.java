@@ -52,42 +52,6 @@ public class ControlPanelInput implements ISecondaryControlBoard {
   }
 
   @Override
-  public Trigger reefAB() {
-    return new Trigger(() -> false);
-    // return new JoystickButton(controlPanel, 3);
-  }
-
-  @Override
-  public Trigger reefCD() {
-    return new Trigger(() -> false);
-    // return new JoystickButton(controlPanel, 4);
-  }
-
-  @Override
-  public Trigger reefEF() {
-    return new Trigger(() -> false);
-    // return new JoystickButton(controlPanel, 10);
-  }
-
-  @Override
-  public Trigger reefGH() {
-    return new Trigger(() -> false);
-    // return new JoystickButton(controlPanel, 11);
-  }
-
-  @Override
-  public Trigger reefIJ() {
-    return new Trigger(() -> false);
-    // return new JoystickButton(controlPanel, 12);
-  }
-
-  @Override
-  public Trigger reefKL() {
-    return new Trigger(() -> false);
-    // return new JoystickButton(controlPanel, 5);
-  }
-
-  @Override
   public Trigger setGoalL1L() {
     return new JoystickButton(controlPanel, 10);
   }
@@ -128,11 +92,6 @@ public class ControlPanelInput implements ISecondaryControlBoard {
   }
 
   @Override
-  public Trigger setSubReefCenter() {
-    return new JoystickButton(controlPanel, 99);
-  }
-
-  @Override
   public Trigger setSubReefRight() {
     return new JoystickButton(controlPanel, 99);
   }
@@ -140,16 +99,10 @@ public class ControlPanelInput implements ISecondaryControlBoard {
   @Override
   public Trigger setGoalCoralStation() {
     return new JoystickButton(controlPanel, 11);
-    // return new Trigger(() -> controlPanel.getX() < -0.5);
   }
 
   @Override
   public Trigger setGoalAlgaeScoring() {
-    return new JoystickButton(controlPanel, 99);
-  }
-
-  @Override
-  public Trigger setGoalTravel() {
     return new JoystickButton(controlPanel, 99);
   }
 }

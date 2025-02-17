@@ -99,7 +99,8 @@ public class Constants {
   public static class DriverConstants {
     public static final boolean DEV_CONTROLS = false;
     public static final boolean FORCE_GAMEPAD = false;
-    public static final double JOYSTICK_DEADBAND = 0.075;
+    public static final double STEER_DEADBAND = 0.05;
+    public static final double JOYSTICK_DEADBAND = 0.025;
     public static final double GAMEPAD_DEADBAND = 0.025; // add deadband here if there is drift
   }
 
@@ -181,7 +182,7 @@ public class Constants {
 
   public static class HandConstants {
     public static final boolean HAND_MOTOR_INVERTED = true;
-    public static final double HAND_MOTOR_CURRENT_LIMIT = 40.0;
+    public static final double HAND_MOTOR_CURRENT_LIMIT = 20.0;
     public static final double IN_HAND_MOTOR_SPEED = 0.5;
     public static final double OUT_HAND_MOTOR_SPEED = 0.20;
   }
