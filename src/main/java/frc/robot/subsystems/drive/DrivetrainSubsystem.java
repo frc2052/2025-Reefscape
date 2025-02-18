@@ -11,7 +11,10 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team2052.lib.vision.MultiTagPoseEstimate;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,6 +28,7 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
 import frc.robot.RobotState;
+import frc.robot.RobotState.FieldLocation;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants.TunerSwerveDrivetrain;
 
 public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsystem {
@@ -143,21 +147,21 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
   }
 
   private void setFieldLocation(){
-    private Pose2d robotPose = robotState.getFieldToRobot();
-    private Translation2d robotTranslation = robotPose.getTranslation(); // adjust the following values. 
-    if (robotTranslation.getDistance(fieldLocation.HP.getPose()) <= 1){
-      robotState.setFieldLocation(fieldLocation.HP);
+    Pose2d robotPose = robotState.getFieldToRobot();
+    Translation2d robotTranslation = robotPose.getTranslation(); // adjust the following values. 
+    if (robotTranslation.getDistance(FieldLocation.HP.getPose()) <= 1){
+      robotState.setFieldLocation(FieldLocation.HP);
 
-    }else if (robotTranslation.getDistance(fieldLocation.Reef.getPose()) <= 1){
-      robotState.setFieldLocation(fieldLocation.Reef);
+    }else if (robotTranslation.getDistance(FieldLocation.REEF.getPose()) <= 1){
+      robotState.setFieldLocation(FieldLocation.REEF);
 
-    }else if (robotTranslation.getDistance(fieldLocation.Barge.getPose()) <= 1){
-      robotState.setFieldLocation(fieldLocation.Barge);
+    }else if (robotTranslation.getDistance(FieldLocation.BARGE.getPose()) <= 1){
+      robotState.setFieldLocation(FieldLocation.BARGE);
 
-    }else if (robotTranslation.getDistance(fieldLocation.Processor.getPose()) <= 1){
-      robotState.setFieldLocation(fieldLocation.Processor);
+    }else if (robotTranslation.getDistance(FieldLocation.PROCESSOR.getPose()) <= 1){
+      robotState.setFieldLocation(FieldLocation.PROCESSOR);
    }else {
-      robotState.setFieldLocation(fieldLocation.Travel);
+      robotState.setFieldLocation(FieldLocation.TRAVEL);
    }
   
 

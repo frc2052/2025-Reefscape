@@ -50,15 +50,8 @@ public class DefaultDriveCommand extends Command {
           .withDesaturateWheelSpeeds(true);
 
   /**
-   * @param xSupplier supplier for forward velocity.
-   * @param ySupplier supplier for sideways velocity.
-   * @param rotationSupplier supplier for angular velocity.
    */
-  public DefaultDriveCommand(
-      DoubleSupplier xSupplier,
-      DoubleSupplier ySupplier,
-      DoubleSupplier rotationSupplier,
-      BooleanSupplier fieldCentricSupplier) {
+  public DefaultDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier,DoubleSupplier rotationSupplier,BooleanSupplier fieldCentricSupplier) {
 
     this.xSupplier = xSupplier;
     this.ySupplier = ySupplier;

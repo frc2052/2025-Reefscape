@@ -1,14 +1,19 @@
 package frc.robot;
 
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
+import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
+import com.ctre.phoenix6.swerve.jni.SwerveJNI.DriveState;
 import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import org.littletonrobotics.junction.Logger;
 
 public class RobotState {
   private SwerveDriveState drivetrainState = new SwerveDriveState();
+  private FieldLocation loca;
 
   private boolean isReefTracking;
   private boolean hasCoral;
@@ -34,8 +39,11 @@ public class RobotState {
     return MathHelpers.POSE_2D_ZERO;
   }
 
-  public void setFieldLocation(fieldLocation location){
-    fieldLocation = location;
+  public void setFieldLocation(FieldLocation location){
+      loca = location;
+    }
+  public FieldLocation getFieldLocation(){
+    return loca;
   }
 
   public ChassisSpeeds getChassisSpeeds(boolean isFieldRelative) {
@@ -87,27 +95,21 @@ public class RobotState {
     Logger.recordOutput("Current Pose", drivetrainState.Pose);
   }
 
-  public enum fieldLocation {
-    HP(Translation2d(),Translation2d()),
-    Reef(Translation2d(),Translation2d()),
-    Barge(Translation2d(),Translation2d()),
-    Processor(Translation2d(),Translation2d()),
-    Travel (Translation2d(null,null),Translation2d(null,null));
+  public enum FieldLocation {
+    HP(new Translation2d(0,0)),// adjust these values. 
+    REEF(new Translation2d(0,0)),
+    BARGE(new Translation2d(0,0)),
+    PROCESSOR(new Translation2d(0,0)),
+    TRAVEL (new Translation2d(0,0));
 
-    public final Pose2d bluePose; 
-    public final Pose2d redPose; 
+    public final Translation2d pose; 
 
-    private fieldLocation(Translation2d bluePose,Translation2d redPose){
-      this.bluePose = bluePose;
-      this.redPose = redPose;
+    private FieldLocation(Translation2d pose){
+      this.pose = pose;
     }
 
     public Translation2d getPose(){
-      if (isRedAlliance){
-      return redPose;
-    }else {
-      return bluePose
-    }
+     return pose;
 
   }
 }

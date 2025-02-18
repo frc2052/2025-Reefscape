@@ -7,13 +7,19 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.RobotState.FieldLocation;
 import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.algae.AlgaeCommandFactory;
 import frc.robot.commands.climber.ClimberCommandFactory;
+import frc.robot.commands.drive.CircleAroundReefCommand;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.hand.HandCommandFactory;
@@ -158,7 +164,7 @@ public class RobotContainer {
 
     controlBoard
         .povRight()
-        .whileTrue(new moveAroundReef(getdistance(fieldLocation.Reef.getPose()),1,true));
+        .whileTrue(new CircleAroundReefCommand(getdistance(FieldLocation.REEF.getPose(),robotState.getFieldToRobot()),1,true,drivetrain));
 
     controlBoard
         .povDownRight()
@@ -174,7 +180,7 @@ public class RobotContainer {
 
     controlBoard
         .povLeft()
-        .whileTrue(new moveAroundReef(getdistance(fieldLocation.Reef.getPose()),1,false));// adjust the following values
+        .whileTrue(new CircleAroundReefCommand (getdistance(FieldLocation.REEF.getPose(),robotState.getFieldToRobot()),1,false,drivetrain));// adjust the following values
 
     controlBoard
         .povUpLeft()
@@ -205,13 +211,13 @@ public class RobotContainer {
     return autoFactory.getCompiledAuto();
   }
 
-  private double getdistance(Transform2d reef, Pose2d robot){
-    if (fieldLocation == fieldLocation.Reef){
+  private double getdistance(Translation2d reef, Pose2d robot){
+    if (robotState.getFieldLocation() == FieldLocation.REEF){
         robot = robotState.getFieldToRobot();
-        private Translation2d robotTranslation = robotPose.getTranslation();
+        Translation2d robotTranslation = robot.getTranslation();
         return robotTranslation.getDistance(reef);
     }else{
-        return;
+        return 0;
     }
   }
 }
