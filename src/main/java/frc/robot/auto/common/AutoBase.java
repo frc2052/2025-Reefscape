@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
@@ -21,12 +22,15 @@ import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand;
 import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand.DesiredElement;
+import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
+import frc.robot.util.io.Dashboard;
 import java.util.List;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
@@ -69,6 +73,10 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
   }
 
+  protected AlignOffset getStationAlignOffset() {
+    return Dashboard.getInstance().getStationAlignSide();
+  }
+
   private void setStartPose(Pose2d pathStartPose) {
     addCommands(new InstantCommand(() -> drivetrain.resetPose(pathStartPose)));
   }
@@ -99,7 +107,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 () -> true));
   }
 
-  protected Command coralReefSideVisionOrPathAlign(
+  protected Command reefVisionOrPathAlign(
       AlignOffset offset, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
     return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
         .until(
@@ -112,18 +120,18 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 snaploc, () -> offset, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
-  protected Command coralSideVisionOrPathAlign(
-      AlignOffset offset, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
+  protected Command stationVisionOrPathAlign(
+      PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
     return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
         .until(
             () ->
                 vision.getCameraClosestTarget(TagTrackerType.REAR_CAM, Meters.of(2.0)).isPresent())
         .andThen(
             new AlignWithFieldElementCommand(
-                snaploc, () -> offset, () -> 0, () -> 0, () -> 0, () -> true));
+                snaploc, () -> getStationAlignOffset(), () -> 0, () -> 0, () -> 0, () -> true));
   }
 
-  protected Command processorSideVisionOrPathAlign(
+  protected Command processorVisionOrPathAlign(
       AlignOffset offset, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
     return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
         .until(
@@ -134,18 +142,26 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 DesiredElement.PROCESSOR, () -> offset, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
-  protected Command toScoringPositionCommand(
-      // ReefScoringPosition scorePos
-      ) {
-    return null; // scorePos.getCommand();
-  }
-
   protected Command toPosition(TargetAction position) {
     return new SequentialCommandGroup(
         // ElevatorCommandFactory.setElevatorPosition(position),
         new WaitCommand(0.75),
         // ElevatorCommandFactory.setElevatorPosition(TargetAction.TR),
         new WaitCommand(0.5));
+  }
+
+  protected Command toPosAndScore(TargetAction position) {
+    return new SequentialCommandGroup(
+        new InstantCommand(
+            () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L1L)),
+        HandCommandFactory.motorOut().withTimeout(1.5),
+        new InstantCommand(
+            () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.TR)),
+        new WaitCommand(0.5));
+  }
+
+  protected Command HPIntake() {
+    return new ParallelRaceGroup(HandCommandFactory.motorIn(), new WaitCommand(1.5));
   }
 
   protected static PathPlannerPath getPathFromFile(String pathName) {

@@ -184,7 +184,7 @@ public class Constants {
     public static final boolean HAND_MOTOR_INVERTED = true;
     public static final double HAND_MOTOR_CURRENT_LIMIT = 20.0;
     public static final double IN_HAND_MOTOR_SPEED = 0.5;
-    public static final double OUT_HAND_MOTOR_SPEED = 0.20;
+    public static final double OUT_HAND_MOTOR_SPEED = 0.6;
   }
 
 
@@ -263,7 +263,7 @@ public class Constants {
     /* CORAL Reef Camera */
     public static final class CoralReefCameraConstants {
       public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =  FieldConstants.CORAL_REEF_CAMERA_LAYOUT_TYPE.layout;
-      public static final String CAMERA_NAME = "KrawlerCam_000";
+      public static final String CAMERA_NAME = "Arducam_OV2311_USB_Camera_001";
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
@@ -290,7 +290,7 @@ public class Constants {
     public static final class AlgaeReefCameraConstants {      
       public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = FieldConstants.ALGAE_REEF_CAMERA_LAYOUT_TYPE.layout;
 
-      public static final String CAMERA_NAME = "KrawlerCam_001";
+      public static final String CAMERA_NAME = "Arducam_OV9281_USB_Camera_002";
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 

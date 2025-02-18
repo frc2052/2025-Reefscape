@@ -23,7 +23,6 @@ public class AutoLLToK4 extends AutoBase {
   public void init() {
     System.out.println("START LL - K4");
     addCommands(
-        coralReefSideVisionOrPathAlign(
-            AlignOffset.LEFT_REEF_LOC, startPath, TargetFieldLocation.KL));
+        reefVisionOrPathAlign(AlignOffset.LEFT_REEF_LOC, startPath, TargetFieldLocation.KL));
   }
 }

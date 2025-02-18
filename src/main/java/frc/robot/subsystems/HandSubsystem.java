@@ -97,7 +97,9 @@ public class HandSubsystem extends SubsystemBase {
           MathHelpers.epsilonEquals(motor.getVelocity().getValueAsDouble(), 0.0, 1.0))) {
         System.out.println("coralllll");
         // stopMotor();
-        SuperstructureSubsystem.getInstance().setSelectedTargetAction(TargetAction.TR, true);
+        if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.HP) {
+          SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L1H);
+        }
         coralDelay.update(Timer.getFPGATimestamp(), false);
       }
     } else {

@@ -7,7 +7,6 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
@@ -28,7 +27,7 @@ import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.ActionType;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
-import frc.robot.subsystems.vision.VisionSimSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import frc.robot.util.Telemetry;
@@ -40,7 +39,7 @@ public class RobotContainer {
 
   public final RobotState robotState = RobotState.getInstance();
   public final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
-  public final VisionSimSubsystem vision = VisionSimSubsystem.getInstance();
+  public final VisionSubsystem vision = VisionSubsystem.getInstance();
   public final AdvantageScopeSubsystem advantageScope = AdvantageScopeSubsystem.getInstance();
   public final AutoFactory autoFactory = AutoFactory.getInstance();
   public final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
@@ -100,9 +99,8 @@ public class RobotContainer {
 
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    controlBoard
-        .resetGyro()
-        .onTrue(new InstantCommand(() -> drivetrain.resetRotation(new Rotation2d())));
+    controlBoard.resetGyro().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
+    // robotState.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg)));
 
     controlBoard
         .intake()

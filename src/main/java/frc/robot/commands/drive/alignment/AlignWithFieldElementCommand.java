@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -161,7 +160,8 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
             || camTarget.fiducialId == 13 && selectedOffset == AlignOffset.LEFT_CORAL_STATION_LOC) {
           goalPose = TargetFieldLocation.LCS.getWithOffset(selectedOffset);
         } else if (camTarget.fiducialId == 2
-            || camTarget.fiducialId == 12 && selectedOffset == AlignOffset.RIGHT_CORAL_STATION_LOC) {
+            || camTarget.fiducialId == 12
+                && selectedOffset == AlignOffset.RIGHT_CORAL_STATION_LOC) {
           goalPose = TargetFieldLocation.RCS.getWithOffset(selectedOffset);
         } else {
           goalPose = null;

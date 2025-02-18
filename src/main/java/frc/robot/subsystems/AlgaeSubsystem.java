@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeArmConstants;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
@@ -46,7 +45,7 @@ public class AlgaeSubsystem extends SubsystemBase {
     return INSTANCE;
   }
 
-  public AlgaeSubsystem() {
+  private AlgaeSubsystem() {
     pivotMotor = new TalonFX(Ports.ALGAE_PIVOT_ID);
     scoringMotor = new TalonFX(Ports.ALGAE_SCORING_ID);
     pivotEncoder = new AnalogEncoder(Ports.ALGAE_ENCODER_ID);
@@ -68,8 +67,7 @@ public class AlgaeSubsystem extends SubsystemBase {
         new PIDController(
             AlgaeArmConstants.PIVOT.P, AlgaeArmConstants.PIVOT.I, AlgaeArmConstants.PIVOT.D);
 
-    goalPosition =
-        SuperstructureSubsystem.getInstance().getSelectedTargetAction().getAlgaeArmPosition();
+    goalPosition = TargetAction.HP.getAlgaeArmPosition();
   }
 
   private void setPivotAngle(Angle angle) {

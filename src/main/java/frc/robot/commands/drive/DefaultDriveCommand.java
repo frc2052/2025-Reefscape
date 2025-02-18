@@ -9,11 +9,8 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.DriverConstants;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import java.util.Optional;
@@ -37,7 +34,7 @@ public class DefaultDriveCommand extends Command {
   protected final double maxSpeed =
       TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private final double maxAngularRate =
-      RotationsPerSecond.of(0.75)
+      RotationsPerSecond.of(0.6)
           .in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
   private Optional<Rotation2d> headingSetpoint = Optional.empty();
   private double joystickLastTouched = -1;
@@ -75,7 +72,7 @@ public class DefaultDriveCommand extends Command {
     this.rotationSupplier = rotationSupplier;
     this.fieldCentricSupplier = fieldCentricSupplier;
 
-    driveWithHeading.HeadingController.setPID(3.5, 0.0, 0.0);
+    driveWithHeading.HeadingController.setPID(2.5, 0.0, 0.0);
     driveWithHeading.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
 
     // xLimiter = new SlewRateLimiter(3.5);
@@ -122,33 +119,36 @@ public class DefaultDriveCommand extends Command {
 
   protected SwerveRequest getSwerveRequest() {
     if (getFieldCentric()) {
-      if (Math.abs(getRotation()) > DriverConstants.STEER_DEADBAND) {
-        joystickLastTouched = Timer.getFPGATimestamp();
-      }
+      // if (Math.abs(getRotation()) > DriverConstants.STEER_DEADBAND) {
+      //   joystickLastTouched = Timer.getFPGATimestamp();
+      // }
 
-      if (Math.abs(getRotation()) > DriverConstants.STEER_DEADBAND
-          || (MathHelpers.epsilonEquals(joystickLastTouched, Timer.getFPGATimestamp(), 0.25)
-              && Math.abs(drivetrain.getCurrentRobotChassisSpeeds().omegaRadiansPerSecond)
-                  > Math.toRadians(10))) {
-        headingSetpoint = Optional.empty();
-        Logger.recordOutput("DefaultDriveCommand/Mode", "NoHeading");
-        return driveNoHeading
-            .withVelocityX(getX() * maxSpeed)
-            .withVelocityY(getY() * maxSpeed)
-            .withRotationalRate(getRotation() * maxAngularRate);
-      } else {
-        if (headingSetpoint.isEmpty()) {
-          headingSetpoint = Optional.of(drivetrain.getState().Pose.getRotation());
-        }
-        Logger.recordOutput("DefaultDriveCommand/Mode", "Heading");
-        Logger.recordOutput(
-            "DefaultDriveCommand/HeadingSetpoint", headingSetpoint.get().getDegrees());
+      // if (Math.abs(getRotation()) > DriverConstants.STEER_DEADBAND
+      //     || (MathHelpers.epsilonEquals(joystickLastTouched, Timer.getFPGATimestamp(), 0.25)
+      //         && Math.abs(drivetrain.getCurrentRobotChassisSpeeds().omegaRadiansPerSecond)
+      //             > Math.toRadians(10))) {
+      headingSetpoint = Optional.empty();
+      Logger.recordOutput("DefaultDriveCommand/Mode", "NoHeading");
+      return driveNoHeading
+          .withVelocityX(getX() * maxSpeed)
+          .withVelocityY(getY() * maxSpeed)
+          .withRotationalRate(getRotation() * maxAngularRate);
+      // } else {
+      //   if (headingSetpoint.isEmpty()) {
+      //     headingSetpoint = Optional.of(drivetrain.getState().Pose.getRotation());
+      //     if (RobotState.getInstance().isRedAlliance()) {
+      //       headingSetpoint.get().rotateBy(Rotation2d.k180deg);
+      //     }
+      //   }
+      //   Logger.recordOutput("DefaultDriveCommand/Mode", "Heading");
+      //   Logger.recordOutput(
+      //       "DefaultDriveCommand/HeadingSetpoint", headingSetpoint.get().getDegrees());
 
-        return driveWithHeading
-            .withVelocityX(getX() * maxSpeed)
-            .withVelocityY(getY() * maxSpeed)
-            .withTargetDirection(headingSetpoint.get());
-      }
+      //   return driveWithHeading
+      //       .withVelocityX(getX() * maxSpeed)
+      //       .withVelocityY(getY() * maxSpeed)
+      //       .withTargetDirection(headingSetpoint.get());
+      // }
     } else {
       return robotCentricDrive
           .withVelocityX(getX())

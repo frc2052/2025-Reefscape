@@ -18,7 +18,7 @@ public class ClimberSubsystem extends SubsystemBase {
     return INSTANCE;
   }
 
-  public ClimberSubsystem() {
+  private ClimberSubsystem() {
     motor = new TalonFX(Ports.CLIMBER_ID, "Krawlivore");
 
     motor.getConfigurator().apply(ClimberConstants.MOTOR_CONFIG);

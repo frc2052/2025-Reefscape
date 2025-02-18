@@ -80,6 +80,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
     revealCombination();
   }
 
+  public void setCurrentAction(TargetAction target) {
+    currentAction = target;
+  }
+
   public void confirmSelectedAction() {
     currentAction = selectedTargetAction;
     revealCombination();
