@@ -132,15 +132,13 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
   }
 
   protected void setGoalPose() {
-
     Logger.recordOutput("Target for Alignment: ", desiredElement.toString());
+
     if (desiredElement == DesiredElement.PROCESSOR) {
       Optional<PhotonPipelineResult> tar = vision.getCameraClosestTarget(TagTrackerType.ALGAE_CAM);
 
       if (tar.isPresent()) {
         PhotonTrackedTarget camTarget = tar.get().getBestTarget();
-
-        System.out.println(this.getName() + " COMMAND SEES TAG: " + camTarget.fiducialId);
 
         if (camTarget.fiducialId == 3 || camTarget.fiducialId == 16) {
           goalPose = TargetFieldLocation.PRC.getWithOffset(selectedOffset);
@@ -153,8 +151,6 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
 
       if (tar.isPresent()) {
         PhotonTrackedTarget camTarget = tar.get().getBestTarget();
-
-        System.out.println(this.getName() + " COMMAND SEES TAG: " + camTarget.fiducialId);
 
         if (camTarget.fiducialId == 1
             || camTarget.fiducialId == 13 && selectedOffset == AlignOffset.LEFT_CORAL_STATION_LOC) {
@@ -173,36 +169,11 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
       if (tar.isPresent()) {
         PhotonTrackedTarget camTarget = tar.get().getBestTarget();
 
-        System.out.println(this.getName() + " COMMAND SEES TAG: " + camTarget.fiducialId);
-
-        switch (camTarget.fiducialId) {
-          case 18:
-          case 7:
-            goalPose = TargetFieldLocation.AB.getWithOffset(selectedOffset);
-            break;
-          case 17:
-          case 8:
-            goalPose = TargetFieldLocation.CD.getWithOffset(selectedOffset);
-            break;
-          case 22:
-          case 9:
-            goalPose = TargetFieldLocation.EF.getWithOffset(selectedOffset);
-            break;
-          case 21:
-          case 10:
-            goalPose = TargetFieldLocation.GH.getWithOffset(selectedOffset);
-            break;
-          case 20:
-          case 11:
-            goalPose = TargetFieldLocation.IJ.getWithOffset(selectedOffset);
-            break;
-          case 19:
-          case 6:
-            goalPose = TargetFieldLocation.KL.getWithOffset(selectedOffset);
-            break;
-          default:
-            goalPose = null;
-            break;
+        if (idToReefFace(camTarget.fiducialId) != null && idToReefFace(camTarget.fiducialId).getIsReef()) {
+          Logger.recordOutput("Align Command Face: ", idToReefFace(camTarget.fiducialId).toString());
+          goalPose = reefIdToBranchWithNudge(camTarget.fiducialId, fieldLocation, selectedOffset);
+        } else {
+          goalPose = null;
         }
       }
     } else if (desiredElement == DesiredElement.SPECIFIC_REEF_FACE) {
@@ -212,8 +183,8 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
       if (tar.isPresent()) {
         PhotonTrackedTarget camTarget = tar.get().getBestTarget();
 
-        if (camTarget.fiducialId == fieldLocation.getTagID()) {
-          goalPose = fieldLocation.getWithOffset(selectedOffset);
+        if (idToReefFace(camTarget.fiducialId) == fieldLocation) {
+          goalPose = reefIdToBranchWithNudge(camTarget.fiducialId, fieldLocation, selectedOffset);
         } else {
           goalPose = null;
         }
@@ -221,8 +192,45 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
     }
   }
 
-  protected int getSpecificReefSideTag() {
-    return 0;
+  private static Pose2d reefIdToBranchWithNudge(int id, TargetFieldLocation location, AlignOffset offset) {
+    if(offset == AlignOffset.LEFT_REEF_LOC) {
+      return location.getWithTransform(offset.transform.plus(location.getLeftBranchNudge()));
+    } else if (offset == AlignOffset.RIGHT_REEF_LOC) {
+      return location.getWithTransform(offset.transform.plus(location.getRightBranchNudge()));
+    }
+
+    return location.getWithOffset(offset);
+  }
+
+  public static TargetFieldLocation idToReefFace(int id) {
+    switch (id) {
+      case 18:
+        return TargetFieldLocation.AB;
+      case 7:
+        return TargetFieldLocation.AB;
+      case 17:
+        return TargetFieldLocation.CD;
+      case 8:
+        return TargetFieldLocation.CD;
+      case 22:
+        return TargetFieldLocation.EF;
+      case 9:
+        return TargetFieldLocation.EF;
+      case 21:
+        return TargetFieldLocation.GH;
+      case 10:
+        return TargetFieldLocation.GH;
+      case 20:
+        return TargetFieldLocation.IJ;
+      case 11:
+        return TargetFieldLocation.IJ;
+      case 19:
+        return TargetFieldLocation.KL;
+      case 6:
+        return TargetFieldLocation.KL;
+      default:
+        return null;
+    }
   }
 
   @Override

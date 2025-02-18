@@ -105,20 +105,20 @@ public class AlignmentCalculator {
   }
 
   public enum TargetFieldLocation {
-    AB(7, 18, Degrees.of(0), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER),
-    CD(8, 17, Degrees.of(60), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER),
-    EF(9, 22, Degrees.of(120), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER),
-    GH(10, 21, Degrees.of(180), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER),
-    IJ(11, 20, Degrees.of(240), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER),
-    KL(6, 19, Degrees.of(300), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER),
-    RCS(2, 12, Degrees.of(-306), new Translation2d(), new Translation2d()),
-    LCS(1, 13, Degrees.of(306), new Translation2d(), new Translation2d()),
+    AB(7, 18, Degrees.of(0), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER, new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
+    CD(8, 17, Degrees.of(60), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER, new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
+    EF(9, 22, Degrees.of(120), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER, new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
+    GH(10, 21, Degrees.of(180), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER, new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
+    IJ(11, 20, Degrees.of(240), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER, new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
+    KL(6, 19, Degrees.of(300), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER, new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
+    RCS(2, 12, Degrees.of(-306), new Translation2d(), new Translation2d(), new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
+    LCS(1, 13, Degrees.of(306), new Translation2d(), new Translation2d(), new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
     PRC(
         3,
         16,
         Degrees.of(0),
         new Translation2d(),
-        new Translation2d()); // Processor (side of the field, not where our alliance's human player
+        new Translation2d(), new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()); // Processor (side of the field, not where our alliance's human player
     // is)
 
     public final int redTagID;
@@ -126,18 +126,30 @@ public class AlignmentCalculator {
     public final Angle lineupAngle;
     private final Translation2d redElementTranslation;
     private final Translation2d blueElementTranslation;
+    private final Transform2d leftBranchNudgeBlue;
+    private final Transform2d rightBranchNudgeBlue;
+    private final Transform2d leftBranchNudgeRed;
+    private final Transform2d rightBranchNudgeRed;
 
     private TargetFieldLocation(
         int redTagID,
         int blueTagID,
         Angle lineupAngle,
         Translation2d redElementTranslation,
-        Translation2d blueElementTranslation) {
+        Translation2d blueElementTranslation,
+        Transform2d leftBranchNudgeBlue,
+        Transform2d rightBranchNudgeBlue,
+        Transform2d leftBranchNudgeRed,
+        Transform2d rightBranchNudgeRed) {
       this.redTagID = redTagID;
       this.blueTagID = blueTagID;
       this.lineupAngle = lineupAngle;
       this.redElementTranslation = redElementTranslation;
       this.blueElementTranslation = blueElementTranslation;
+      this.leftBranchNudgeBlue = leftBranchNudgeBlue;
+      this.rightBranchNudgeBlue = rightBranchNudgeBlue;
+      this.leftBranchNudgeRed = leftBranchNudgeRed;
+      this.rightBranchNudgeRed = rightBranchNudgeRed;
     }
 
     public int getTagID() {
@@ -148,6 +160,14 @@ public class AlignmentCalculator {
       return lineupAngle;
     }
 
+    public Transform2d getLeftBranchNudge() {
+      return RobotState.getInstance().isRedAlliance() ? leftBranchNudgeRed : leftBranchNudgeBlue;
+    }
+
+    public Transform2d getRightBranchNudge() {
+      return RobotState.getInstance().isRedAlliance() ? rightBranchNudgeRed : rightBranchNudgeBlue;
+    }
+
     public Translation2d getElementTranslation() {
       return RobotState.getInstance().isRedAlliance()
           ? redElementTranslation
@@ -155,12 +175,16 @@ public class AlignmentCalculator {
     }
 
     public Pose2d getWithOffset(AlignOffset offset) {
+      return getWithTransform(offset.transform);
+    }
+
+    public Pose2d getWithTransform(Transform2d transform) {
       Translation2d elementTranslation = getElementTranslation();
       Optional<Pose3d> tagPose =
           FieldConstants.DEFAULT_APRIL_TAG_LAYOUT_TYPE.layout.getTagPose(getTagID());
       if (tagPose.isPresent()) {
         return scaleFromFieldElement(
-            tagPose.get().toPose2d(), offset.transform.getTranslation(), elementTranslation);
+            tagPose.get().toPose2d(), transform.getTranslation(), elementTranslation);
       } else {
         return new Pose2d(elementTranslation, Rotation2d.fromDegrees(0));
       }
