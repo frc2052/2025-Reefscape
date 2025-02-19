@@ -8,7 +8,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import java.util.ArrayList;
 import java.util.List;
-import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -86,7 +85,6 @@ public class PoseEstimate {
     //     xyStds = 2.0;
     //   }
     // }
-    Logger.recordOutput(cameraName + "xy stds", xyStdDev);
 
     return xyStdDev;
   }

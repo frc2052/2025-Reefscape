@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 public class VisionSubsystem extends SubsystemBase {
@@ -103,11 +102,6 @@ public class VisionSubsystem extends SubsystemBase {
         robotState.getFieldToRobot(),
         DriverStation.isAutonomous())) {
       DrivetrainSubsystem.getInstance().addVisionUpdate(update);
-
-      Logger.recordOutput(update.cameraName + " update valid", true);
-    } else {
-
-      Logger.recordOutput(update.cameraName + " update valid", false);
     }
   }
 

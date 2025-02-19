@@ -33,7 +33,6 @@ import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import frc.robot.util.io.Dashboard;
 import java.util.List;
 import java.util.Optional;
-import org.littletonrobotics.junction.Logger;
 
 public abstract class AutoBase extends SequentialCommandGroup {
   private final RobotState robotState = RobotState.getInstance();
@@ -54,8 +53,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     setStartPose(startPose);
-    Logger.recordOutput("Red Alliance", this.robotState.isRedAlliance());
-    Logger.recordOutput("Auto Starting Pose", startPose);
+    RobotState.getInstance().setAutoStartPose(startPose);
   }
 
   public abstract void init(); // defined in each Auto class

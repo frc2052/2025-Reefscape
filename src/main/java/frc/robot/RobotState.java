@@ -10,7 +10,8 @@ import org.littletonrobotics.junction.Logger;
 public class RobotState {
   private SwerveDriveState drivetrainState = new SwerveDriveState();
   private AlignOffset selectedAlignOffset = AlignOffset.MIDDLE_REEF_LOC;
-
+  private Pose2d goalPose;
+  private Pose2d autoStartPose;
   private static RobotState INSTANCE;
 
   public static RobotState getInstance() {
@@ -43,6 +44,14 @@ public class RobotState {
     return selectedAlignOffset;
   }
 
+  public void setGoalAlignment(Pose2d goalPose) {
+    this.goalPose = goalPose;
+  }
+
+  public void setAutoStartPose(Pose2d startPose) {
+    this.autoStartPose = startPose;
+  }
+
   /**
    * Returns true if the robot is on red alliance.
    *
@@ -61,5 +70,7 @@ public class RobotState {
     Logger.recordOutput("Swerve Module States", drivetrainState.ModuleStates);
     Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
     Logger.recordOutput("Current Pose", drivetrainState.Pose);
+    Logger.recordOutput("Auto Start Pose", autoStartPose);
+    Logger.recordOutput("Goal Align Pose", goalPose);
   }
 }

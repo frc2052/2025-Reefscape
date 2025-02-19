@@ -16,7 +16,6 @@ import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import org.littletonrobotics.junction.Logger;
 
 public class DefaultDriveCommand extends Command {
 
@@ -39,14 +38,15 @@ public class DefaultDriveCommand extends Command {
   private Optional<Rotation2d> headingSetpoint = Optional.empty();
   private double joystickLastTouched = -1;
 
-  protected SwerveRequest.FieldCentric driveNoHeading =
+  protected final SwerveRequest.FieldCentric driveNoHeading =
       new SwerveRequest.FieldCentric()
           .withDeadband(maxSpeed * 0.05) // Add a 5% deadband in open loop
           .withRotationalDeadband(maxAngularRate * 0.05)
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
-  protected SwerveRequest.FieldCentricFacingAngle driveWithHeading =
-      new SwerveRequest.FieldCentricFacingAngle()
-          .withDeadband(maxSpeed * 0.05)
+
+  protected final SwerveRequest.ApplyFieldSpeeds driveChassisSpeeds =
+      new SwerveRequest.ApplyFieldSpeeds()
+          .withDesaturateWheelSpeeds(true)
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
   protected final SwerveRequest.RobotCentric robotCentricDrive =
@@ -56,6 +56,10 @@ public class DefaultDriveCommand extends Command {
           .withDriveRequestType(DriveRequestType.Velocity)
           .withDesaturateWheelSpeeds(true);
 
+  protected SwerveRequest.FieldCentricFacingAngle driveWithHeading =
+      new SwerveRequest.FieldCentricFacingAngle()
+          .withDeadband(maxSpeed * 0.05)
+          .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
   /**
    * @param xSupplier supplier for forward velocity.
    * @param ySupplier supplier for sideways velocity.
@@ -128,7 +132,6 @@ public class DefaultDriveCommand extends Command {
       //         && Math.abs(drivetrain.getCurrentRobotChassisSpeeds().omegaRadiansPerSecond)
       //             > Math.toRadians(10))) {
       headingSetpoint = Optional.empty();
-      Logger.recordOutput("DefaultDriveCommand/Mode", "NoHeading");
       return driveNoHeading
           .withVelocityX(getX() * maxSpeed)
           .withVelocityY(getY() * maxSpeed)

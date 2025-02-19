@@ -4,7 +4,6 @@
 
 package frc.robot.commands.drive.alignment;
 
-import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.team2052.lib.planners.AutoAlignPlanner;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,7 +18,6 @@ import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -34,10 +32,6 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
   private AutoAlignPlanner planner;
   private DesiredElement desiredElement;
   private TargetFieldLocation fieldLocation;
-
-  private SwerveRequest.ApplyFieldSpeeds drive =
-      new SwerveRequest.ApplyFieldSpeeds()
-          .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
   public AlignWithFieldElementCommand(
       TargetFieldLocation fieldLocation,
@@ -83,7 +77,7 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
         "The desired element "
             + desiredElement.toString()
             + " and the field location "
-            + fieldLocation.toString()
+            + offsetSupplier.get().toString()
             + " do not match!");
     end(false);
   }
@@ -91,7 +85,10 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
   @Override
   public SwerveRequest getSwerveRequest() {
     if (goalPose != null) {
-      return drive.withSpeeds(planner.calculate(robotState.getFieldToRobot(), goalPose));
+      robotState.setGoalAlignment(goalPose);
+      // return super.getSwerveRequest();
+      return super.driveChassisSpeeds.withSpeeds(
+          planner.calculate(robotState.getFieldToRobot(), goalPose));
     } else {
       return super.getSwerveRequest();
     }
@@ -99,7 +96,7 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
 
   @Override
   public void execute() {
-    AlignOffset selectedOffset = offsetSupplier.get();
+    selectedOffset = offsetSupplier.get();
     if (desiredElement == DesiredElement.PROCESSOR) {
       if (selectedOffset != AlignOffset.PROCESSOR_MIDDLE_LOC) {
         invalidCombination();
@@ -107,15 +104,15 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
       vision.setPrimaryFocus(TagTrackerType.ALGAE_CAM);
     } else if (desiredElement == DesiredElement.REEF) {
       if (selectedOffset != AlignOffset.ALGAE_REEF_LOC
-          || selectedOffset != AlignOffset.LEFT_REEF_LOC
-          || selectedOffset != AlignOffset.MIDDLE_REEF_LOC
-          || selectedOffset != AlignOffset.RIGHT_REEF_LOC) {
+          && selectedOffset != AlignOffset.LEFT_REEF_LOC
+          && selectedOffset != AlignOffset.MIDDLE_REEF_LOC
+          && selectedOffset != AlignOffset.RIGHT_REEF_LOC) {
         invalidCombination();
       }
       vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM);
     } else if (desiredElement == DesiredElement.CORALSTATION) {
       if (selectedOffset != AlignOffset.LEFT_CORAL_STATION_LOC
-          || selectedOffset != AlignOffset.RIGHT_CORAL_STATION_LOC) {
+          && selectedOffset != AlignOffset.RIGHT_CORAL_STATION_LOC) {
         invalidCombination();
       }
       vision.setPrimaryFocus(TagTrackerType.REAR_CAM);
@@ -132,8 +129,6 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
   }
 
   protected void setGoalPose() {
-    Logger.recordOutput("Target for Alignment: ", desiredElement.toString());
-
     if (desiredElement == DesiredElement.PROCESSOR) {
       Optional<PhotonPipelineResult> tar = vision.getCameraClosestTarget(TagTrackerType.ALGAE_CAM);
 
@@ -168,10 +163,8 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
           vision.getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM);
       if (tar.isPresent()) {
         PhotonTrackedTarget camTarget = tar.get().getBestTarget();
-
-        if (idToReefFace(camTarget.fiducialId) != null && idToReefFace(camTarget.fiducialId).getIsReef()) {
-          Logger.recordOutput("Align Command Face: ", idToReefFace(camTarget.fiducialId).toString());
-          goalPose = reefIdToBranchWithNudge(camTarget.fiducialId, fieldLocation, selectedOffset);
+        if (idToReefFace(camTarget.fiducialId) != null) {
+          goalPose = reefIdToBranchWithNudge(idToReefFace(camTarget.fiducialId), selectedOffset);
         } else {
           goalPose = null;
         }
@@ -184,7 +177,7 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
         PhotonTrackedTarget camTarget = tar.get().getBestTarget();
 
         if (idToReefFace(camTarget.fiducialId) == fieldLocation) {
-          goalPose = reefIdToBranchWithNudge(camTarget.fiducialId, fieldLocation, selectedOffset);
+          goalPose = reefIdToBranchWithNudge(fieldLocation, selectedOffset);
         } else {
           goalPose = null;
         }
@@ -192,11 +185,11 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
     }
   }
 
-  private static Pose2d reefIdToBranchWithNudge(int id, TargetFieldLocation location, AlignOffset offset) {
-    if(offset == AlignOffset.LEFT_REEF_LOC) {
-      return location.getWithTransform(offset.transform.plus(location.getLeftBranchNudge()));
+  private static Pose2d reefIdToBranchWithNudge(TargetFieldLocation location, AlignOffset offset) {
+    if (offset == AlignOffset.LEFT_REEF_LOC) {
+      return location.getWithTransform(offset.getTransform().plus(location.getLeftBranchNudge()));
     } else if (offset == AlignOffset.RIGHT_REEF_LOC) {
-      return location.getWithTransform(offset.transform.plus(location.getRightBranchNudge()));
+      return location.getWithTransform(offset.getTransform().plus(location.getRightBranchNudge()));
     }
 
     return location.getWithOffset(offset);

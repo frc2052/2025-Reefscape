@@ -17,7 +17,8 @@ public class SuperstructurePosition {
     HP(1.0, Degrees.of(113), Degrees.of(90), ActionType.STATION), // Coral Station
     AS(55.0, Degrees.of(180.0), Degrees.of(135), ActionType.NONE), // Algae Scoring NET
     AP(55.0, Degrees.of(180.0), Degrees.of(135), ActionType.PROCESS), // Algae Scoring Processor
-    TR(5.0, Degrees.of(180.0), Degrees.of(90), ActionType.NONE); // Travel
+    TR(5.0, Degrees.of(180.0), Degrees.of(90), ActionType.NONE), // Travel
+    CL(13.0, Degrees.of(170.0), Degrees.of(90.0), ActionType.NONE); // Climb
 
     private final double elevatorPosition;
     private final Angle coralArmAngle;

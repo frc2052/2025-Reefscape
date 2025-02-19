@@ -99,8 +99,8 @@ public class Constants {
   public static class DriverConstants {
     public static final boolean DEV_CONTROLS = false;
     public static final boolean FORCE_GAMEPAD = false;
-    public static final double STEER_DEADBAND = 0.05;
-    public static final double JOYSTICK_DEADBAND = 0.025;
+    public static final double STEER_DEADBAND = 0.075;
+    public static final double JOYSTICK_DEADBAND = 0.075;
     public static final double GAMEPAD_DEADBAND = 0.025; // add deadband here if there is drift
   }
 

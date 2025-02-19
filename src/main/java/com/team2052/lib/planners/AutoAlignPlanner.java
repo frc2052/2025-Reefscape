@@ -16,10 +16,10 @@ public class AutoAlignPlanner {
   private OptionalDouble startTime;
 
   public AutoAlignPlanner() {
-    startTime = OptionalDouble.of(Timer.getFPGATimestamp());
-    xController = new PIDFFController(3, 0.0, 0, 0.0, 0, 0.0, 0.0, 0.0);
-    yController = new PIDFFController(4, 0.0, 0, 0.1, 0, 0.0, 0.0, 0.0);
-    thetaController = new PIDFFController(3.0, 0.0, 0.5, 0.0, 0.0, 0.0, 2.0, 2.0);
+    startTime = OptionalDouble.of(Timer.getFPGATimestamp()); // x 3 y 4 r 3
+    xController = new PIDFFController(0.1, 0.0, 0, 0.0, 0, 0.0, 0.1, 0.25);
+    yController = new PIDFFController(1, 0.0, 0, 0.0, 0, 0.0, 0.1, 0.25);
+    thetaController = new PIDFFController(3.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.25, 0.25);
 
     xController.setTolerance(0.08, 0.05);
     yController.setTolerance(0.02, 0.05);
@@ -38,9 +38,11 @@ public class AutoAlignPlanner {
 
     ChassisSpeeds calculatedSpeeds;
 
-    boolean xWithinTol = xController.atSetpoint();
-    boolean yWithinTol = yController.atSetpoint();
-    boolean thetaWithinTol = thetaController.atSetpoint();
+    boolean xWithinTol = true; // xController.atSetpoint();
+    boolean yWithinTol = true; // yController.atSetpoint();
+    boolean thetaWithinTol = true; // thetaController.atSetpoint();
+
+    // System.out.println("X " + xOutput + );
 
     calculatedSpeeds =
         new ChassisSpeeds(
@@ -64,5 +66,8 @@ public class AutoAlignPlanner {
 
   public void resetPlanner() {
     autoAlignComplete = false;
+    xController = new PIDFFController(3, 0.0, 0, 0.0, 0, 0.0, 1.0, 0.5);
+    yController = new PIDFFController(4, 0.0, 0, 0.0, 0, 0.0, 1.0, 0.5);
+    thetaController = new PIDFFController(3.0, 0.0, 0.5, 0.0, 0.0, 0.0, 2.0, 2.0);
   }
 }

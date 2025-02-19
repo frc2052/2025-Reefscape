@@ -122,7 +122,8 @@ public class RobotContainer {
         .whileTrue(
             new AlignWithFieldElementCommand(
                 DesiredElement.REEF,
-                robotState::getAlignOffset,
+                () -> AlignOffset.LEFT_REEF_LOC,
+                // robotState::getAlignOffset,
                 controlBoard::getThrottle,
                 // Sideways velocity supplier.
                 controlBoard::getStrafe,
@@ -178,7 +179,7 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   SuperstructureSubsystem.getInstance()
-                      .setSelectedTargetAction(TargetAction.L1L, false);
+                      .setSelectedTargetAction(TargetAction.CL, false);
 
                   robotState.setAlignOffset(AlignOffset.MIDDLE_REEF_LOC);
                 }));

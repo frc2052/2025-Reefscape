@@ -107,9 +107,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
     Logger.recordOutput("Superstructure/Current = Selected", target == getSelectedTargetAction());
     Logger.recordOutput("Target Superstructure Changing State", isChangingState);
 
+    pushChangedValueToShuffleboard(selectedTargetAction);
+
     if (target != previousAction) {
       Logger.recordOutput("Target Superstructure State Has Changed", true);
-      pushChangedValueToShuffleboard(target);
       isChangingState = true;
     } else {
       Logger.recordOutput("Target Superstructure State Has Changed", false);

@@ -105,20 +105,96 @@ public class AlignmentCalculator {
   }
 
   public enum TargetFieldLocation {
-    AB(7, 18, Degrees.of(0), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER, new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
-    CD(8, 17, Degrees.of(60), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER, new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
-    EF(9, 22, Degrees.of(120), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER, new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
-    GH(10, 21, Degrees.of(180), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER, new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
-    IJ(11, 20, Degrees.of(240), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER, new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
-    KL(6, 19, Degrees.of(300), FieldConstants.RED_REEF_CENTER, FieldConstants.BLUE_REEF_CENTER, new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
-    RCS(2, 12, Degrees.of(-306), new Translation2d(), new Translation2d(), new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
-    LCS(1, 13, Degrees.of(306), new Translation2d(), new Translation2d(), new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()),
+    AB(
+        7,
+        18,
+        Degrees.of(0),
+        FieldConstants.RED_REEF_CENTER,
+        FieldConstants.BLUE_REEF_CENTER,
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d()),
+    CD(
+        8,
+        17,
+        Degrees.of(60),
+        FieldConstants.RED_REEF_CENTER,
+        FieldConstants.BLUE_REEF_CENTER,
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d()),
+    EF(
+        9,
+        22,
+        Degrees.of(120),
+        FieldConstants.RED_REEF_CENTER,
+        FieldConstants.BLUE_REEF_CENTER,
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d()),
+    GH(
+        10,
+        21,
+        Degrees.of(180),
+        FieldConstants.RED_REEF_CENTER,
+        FieldConstants.BLUE_REEF_CENTER,
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d()),
+    IJ(
+        11,
+        20,
+        Degrees.of(240),
+        FieldConstants.RED_REEF_CENTER,
+        FieldConstants.BLUE_REEF_CENTER,
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d()),
+    KL(
+        6,
+        19,
+        Degrees.of(300),
+        FieldConstants.RED_REEF_CENTER,
+        FieldConstants.BLUE_REEF_CENTER,
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d()),
+    RCS(
+        2,
+        12,
+        Degrees.of(-306),
+        new Translation2d(),
+        new Translation2d(),
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d()),
+    LCS(
+        1,
+        13,
+        Degrees.of(306),
+        new Translation2d(),
+        new Translation2d(),
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d()),
     PRC(
         3,
         16,
         Degrees.of(0),
         new Translation2d(),
-        new Translation2d(), new Transform2d(), new Transform2d(), new Transform2d(), new Transform2d()); // Processor (side of the field, not where our alliance's human player
+        new Translation2d(),
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d(),
+        new Transform2d()); // Processor (side of the field, not where our alliance's human player
     // is)
 
     public final int redTagID;
@@ -175,7 +251,7 @@ public class AlignmentCalculator {
     }
 
     public Pose2d getWithOffset(AlignOffset offset) {
-      return getWithTransform(offset.transform);
+      return getWithTransform(offset.getTransform());
     }
 
     public Pose2d getWithTransform(Transform2d transform) {
@@ -208,10 +284,14 @@ public class AlignmentCalculator {
     LEFT_CORAL_STATION_LOC(new Transform2d(0.5, -0.25, new Rotation2d(Math.PI))),
     RIGHT_CORAL_STATION_LOC(new Transform2d(0.5, -0.25, new Rotation2d(Math.PI)));
 
-    public Transform2d transform;
+    public final Transform2d transform;
 
     private AlignOffset(Transform2d gt) {
       this.transform = gt;
+    }
+
+    public Transform2d getTransform() {
+      return transform;
     }
   }
 }
