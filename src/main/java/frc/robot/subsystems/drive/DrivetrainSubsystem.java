@@ -167,6 +167,11 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
 
   }
 
+  private void setTargetAction(){
+    PositionSuperstructure.getInstance().setTargetAction(TargetAction.TR);
+
+  }
+
   private void startSimThread() {
     lastSimTime = Utils.getCurrentTimeSeconds();
 

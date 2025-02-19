@@ -130,5 +130,25 @@ public class SuperstructureSubsystem extends SubsystemBase {
     // }
 
     previousAction = target;
+    setTargetAction();
+  }
+
+
+  private void setTargetAction(){
+    if(FieldLocation.getPose() == FieldLocation.HP){
+      PositionSuperstructure.getInstance().setTargetAction(TargetAction.HP);
+    }else if(FieldLocation.getPose() == FieldLocation.REEF){
+      PositionSuperstructure.getInstance().setTargetAction(TargetAction.L3);
+    } else if(FieldLocation.getPose() == FieldLocation.PROCESSOR){
+      PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM);
+    } else if(FieldLocation.getPose() == FieldLocation.BARGE){
+      if (AlgaeSubsystem.getHasAlgae()){
+        PositionSuperstructure.getInstance().setTargetAction(TargetAction.AS);
+      }else{
+        PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM);
+      }
+    } else{
+      PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM);
+    }
   }
 }

@@ -125,6 +125,10 @@ public class AlgaeSubsystem extends SubsystemBase {
     isIntaking = false;
   }
 
+  public boolean getHasAlgae(){
+    return hasAlgae;
+  }
+
   @Override
   public void periodic() {
     Logger.recordOutput("Algae Arm Angle", Units.radiansToDegrees(pivotEncoder.get()));

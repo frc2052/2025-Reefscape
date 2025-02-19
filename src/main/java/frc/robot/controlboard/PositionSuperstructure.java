@@ -149,7 +149,7 @@ public class PositionSuperstructure {
     }
 
     public Angle getLineupAngle() {
-      return lineupAngle;
+      return lineupAngle; 
     }
   }
 
