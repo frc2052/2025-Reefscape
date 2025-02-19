@@ -105,7 +105,7 @@ public class LedSubsystem extends SubsystemBase {
         // } else if (RobotState.getInstance().getIsShamperAtGoalAngle()){
         //     // currentStatusMode = LEDStatusMode.A;
         // } else {
-  
+
         // }
 
       }

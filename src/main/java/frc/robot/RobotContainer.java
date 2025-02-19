@@ -16,8 +16,7 @@ import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.DriveWhilePointingAtReefCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
-import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand;
-import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand.DesiredElement;
+import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.controlboard.ControlBoard;
@@ -125,18 +124,7 @@ public class RobotContainer {
 
     controlBoard
         .alignWithElement()
-        .whileTrue(
-            new AlignWithFieldElementCommand(
-                DesiredElement.REEF,
-                () -> AlignOffset.LEFT_REEF_LOC,
-                // robotState::getAlignOffset,
-                controlBoard::getThrottle,
-                // Sideways velocity supplier.
-                controlBoard::getStrafe,
-                // Rotation velocity supplier.
-                controlBoard::getRotation,
-                dashboard::isFieldCentric));
-
+        .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(robotState.getAlignOffset()));
     controlBoard
         .pointToReef()
         .whileTrue(
