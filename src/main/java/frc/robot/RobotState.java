@@ -22,7 +22,7 @@ public class RobotState {
   private static RobotState INSTANCE;
   private TargetFieldLocation seenReefFace;
   private Pose2d goalAlignPose;
-  private Timer poseAlignTimer;
+  private Timer poseAlignTimer = new Timer();
 
   public static RobotState getInstance() {
     if (INSTANCE == null) {
@@ -65,19 +65,19 @@ public class RobotState {
                 AlignmentCommandFactory.idToReefFace(camTarget.fiducialId), getAlignOffset());
       } else {
         if (poseAlignTimer.get() > 1.0) {
-          goalAlignPose = Pose2d.kZero;
+          goalAlignPose = null;
         }
       }
     } else {
       if (poseAlignTimer.get() > 1.0) {
-        goalAlignPose = Pose2d.kZero;
+        goalAlignPose = null;
       }
     }
   }
 
   public boolean getHasAlignPose() {
     System.out.println("NO ALIGN POSE*********************");
-    return goalAlignPose != Pose2d.kZero;
+    return goalAlignPose != null;
   }
 
   public Pose2d getAlignPose() {
