@@ -2,6 +2,7 @@ package frc.robot.commands.drive.alignment;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.RobotState;
 import frc.robot.commands.drive.DefaultDriveCommand;
@@ -13,6 +14,8 @@ import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import frc.robot.util.io.Dashboard;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -25,31 +28,27 @@ public class AlignmentCommandFactory {
     if (offset != AlignOffset.LEFT_REEF_LOC
         && offset != AlignOffset.MIDDLE_REEF_LOC
         && offset != AlignOffset.RIGHT_REEF_LOC) {
-      return invalidCombination(DesiredElement.REEF, offset);
+      invalidCombination(DesiredElement.REEF, offset);
     }
 
-    vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM);
-    
-    Optional<PhotonPipelineResult> tar = vision.getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM);
+    Supplier<Pose2d> targetSupplier = () -> robotState.getAlignPose();
+    BooleanSupplier shouldAlign = () -> robotState.getHasAlignPose();
 
-    if (tar.isPresent()) {
-      PhotonTrackedTarget camTarget = tar.get().getBestTarget();
-      if (idToReefFace(camTarget.fiducialId) != null) {
-        return new DriveToPose(
-            () -> reefIdToBranchWithNudge(idToReefFace(camTarget.fiducialId), offset),
-            robotState::getFieldToRobot,
-            controlBoard::getThrottle,
-            controlBoard::getStrafe,
-            controlBoard::getRotation);
-      } else {
-        return getDefaultDriveCommand();
-      }
-    } else {
-      return getDefaultDriveCommand();
-    }
+    return Commands.runOnce(() -> vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM), vision)
+        .andThen(
+            Commands.either(
+                new DriveToPose(
+                    targetSupplier,
+                    robotState::getFieldToRobot,
+                    controlBoard::getThrottle,
+                    controlBoard::getStrafe,
+                    controlBoard::getRotation),
+                getDefaultDriveCommand(),
+                shouldAlign));
   }
 
-  public static Command getSpecificReefAlignmentCommand(AlignOffset offset, TargetFieldLocation fieldLocation) {
+  public static Command getSpecificReefAlignmentCommand(
+      AlignOffset offset, TargetFieldLocation fieldLocation) {
     if (offset != AlignOffset.LEFT_REEF_LOC
         && offset != AlignOffset.MIDDLE_REEF_LOC
         && offset != AlignOffset.RIGHT_REEF_LOC) {
@@ -58,7 +57,8 @@ public class AlignmentCommandFactory {
 
     vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM);
 
-    Optional<PhotonPipelineResult> tar = vision.getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM);
+    Optional<PhotonPipelineResult> tar =
+        vision.getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM);
 
     if (tar.isPresent()) {
       PhotonTrackedTarget camTarget = tar.get().getBestTarget();
@@ -86,7 +86,7 @@ public class AlignmentCommandFactory {
         Dashboard.getInstance()::isFieldCentric);
   }
 
-  private static Pose2d reefIdToBranchWithNudge(TargetFieldLocation location, AlignOffset offset) {
+  public static Pose2d reefIdToBranchWithNudge(TargetFieldLocation location, AlignOffset offset) {
     if (offset == AlignOffset.LEFT_REEF_LOC) {
       return location.getWithTransform(offset.getTransform().plus(location.getLeftBranchNudge()));
     } else if (offset == AlignOffset.RIGHT_REEF_LOC) {
@@ -123,6 +123,7 @@ public class AlignmentCommandFactory {
       case 6:
         return TargetFieldLocation.KL;
       default:
+        System.out.println("NULL ID*****************************");
         return null;
     }
   }

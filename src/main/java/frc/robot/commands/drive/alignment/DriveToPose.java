@@ -27,7 +27,7 @@ public class DriveToPose extends Command {
   private final double driveD = 0.0;
   private final double turnP = 4.0;
   private final double turnD = 0.0;
-  private final double driveMaxSpeed = 1.0; // 3.8;
+  private final double driveMaxSpeed = 3.8;
   private final double driveMaxAcceleration = 3.0;
   private final double turnMaxSpeed = Units.degreesToRadians(360.0);
   private final double turnMaxAcceleration = 8.0;

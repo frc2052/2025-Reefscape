@@ -148,6 +148,7 @@ public class VisionSubsystem extends SubsystemBase {
     updateTagTrackers();
 
     synchronizedVisionUpdates.forEach(this::updateEstimator);
+    robotState.seenReefFace(getCameraClosestTarget(robotState.getPrimaryCameraFocus()));
   }
 
   public enum TagTrackerType {

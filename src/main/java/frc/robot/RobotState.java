@@ -4,8 +4,15 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
+import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
+import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
+import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class RobotState {
   private SwerveDriveState drivetrainState = new SwerveDriveState();
@@ -13,6 +20,9 @@ public class RobotState {
   private Pose2d goalPose;
   private Pose2d autoStartPose;
   private static RobotState INSTANCE;
+  private TargetFieldLocation seenReefFace;
+  private Pose2d goalAlignPose;
+  private Timer poseAlignTimer;
 
   public static RobotState getInstance() {
     if (INSTANCE == null) {
@@ -41,7 +51,41 @@ public class RobotState {
   }
 
   public AlignOffset getAlignOffset() {
-    return selectedAlignOffset;
+    return AlignOffset.LEFT_REEF_LOC;
+    // return selectedAlignOffset;
+  }
+
+  public void seenReefFace(Optional<PhotonPipelineResult> result) {
+    if (result.isPresent()) {
+      poseAlignTimer.restart();
+      PhotonTrackedTarget camTarget = result.get().getBestTarget();
+      if (AlignmentCommandFactory.idToReefFace(camTarget.fiducialId).getIsReef()) {
+        goalAlignPose =
+            AlignmentCommandFactory.reefIdToBranchWithNudge(
+                AlignmentCommandFactory.idToReefFace(camTarget.fiducialId), getAlignOffset());
+      } else {
+        if (poseAlignTimer.get() > 1.0) {
+          goalAlignPose = Pose2d.kZero;
+        }
+      }
+    } else {
+      if (poseAlignTimer.get() > 1.0) {
+        goalAlignPose = Pose2d.kZero;
+      }
+    }
+  }
+
+  public boolean getHasAlignPose() {
+    System.out.println("NO ALIGN POSE*********************");
+    return goalAlignPose != Pose2d.kZero;
+  }
+
+  public Pose2d getAlignPose() {
+    return goalAlignPose;
+  }
+
+  public TagTrackerType getPrimaryCameraFocus() {
+    return TagTrackerType.CORAL_REEF_CAM;
   }
 
   public void setGoalAlignment(Pose2d goalPose) {
