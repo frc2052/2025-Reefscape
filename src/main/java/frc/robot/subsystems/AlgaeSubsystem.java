@@ -126,9 +126,9 @@ public class AlgaeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Logger.recordOutput("Algae Arm Angle", Units.radiansToDegrees(pivotEncoder.get()));
-    Logger.recordOutput("Algae Arm Goal Angle", goalPosition.in(Degrees));
-    Logger.recordOutput("Algae Arm At Goal", isAtPosition(goalPosition));
+    Logger.recordOutput("Algae Arm/Angle", Units.radiansToDegrees(pivotEncoder.get()));
+    Logger.recordOutput("Algae Arm/Goal Angle", goalPosition.in(Degrees));
+    Logger.recordOutput("Algae Arm/At Goal", isAtPosition(goalPosition));
 
     // if (isIntaking) {
     //   if (intakingDelay.update(

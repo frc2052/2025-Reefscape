@@ -221,8 +221,8 @@ public class Constants {
 
     public static class SCORER {
       public static final double MOTOR_CURRENT_LIMIT = 60.0;
-      public static final double INTAKE_SPEED = 1.0;
-      public static final double SCORE_SPEED = -1.0;
+      public static final double INTAKE_SPEED = -1.0;
+      public static final double SCORE_SPEED = 1.0;
 
       public static final boolean MOTOR_INVERTED = false;
 

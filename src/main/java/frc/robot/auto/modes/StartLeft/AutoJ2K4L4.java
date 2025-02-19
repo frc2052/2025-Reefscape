@@ -24,10 +24,12 @@ public class AutoJ2K4L4 extends AutoBase {
     addCommands(followPathCommand(startingPath));
     addCommands(toPosAndScore(TargetAction.L2));
     addCommands(stationVisionOrPathAlign(Paths.J2_LL, TargetFieldLocation.LCS));
+    addCommands(HPIntake());
     addCommands(
         reefVisionOrPathAlign(AlignOffset.LEFT_REEF_LOC, Paths.LL_K4, TargetFieldLocation.KL));
     addCommands(toPosAndScore(TargetAction.L4));
     addCommands(stationVisionOrPathAlign(Paths.K4_LL, TargetFieldLocation.KL));
+    addCommands(HPIntake());
     addCommands(
         reefVisionOrPathAlign(AlignOffset.LEFT_REEF_LOC, Paths.LL_K4, TargetFieldLocation.KL));
     addCommands(toPosAndScore(TargetAction.L4));

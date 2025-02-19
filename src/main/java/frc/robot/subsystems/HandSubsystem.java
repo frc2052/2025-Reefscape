@@ -25,6 +25,7 @@ public class HandSubsystem extends SubsystemBase {
   private static HandSubsystem INSTANCE;
 
   private boolean intaking;
+  private boolean hasCoral = false;
   private DelayedBoolean coralDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.1);
 
   public static HandSubsystem getInstance() {
@@ -76,6 +77,7 @@ public class HandSubsystem extends SubsystemBase {
   }
 
   public void motorOut() {
+    hasCoral = false;
     coralDelay.update(Timer.getFPGATimestamp(), false);
     setMotor(Constants.HandConstants.OUT_HAND_MOTOR_SPEED);
   }
@@ -83,6 +85,14 @@ public class HandSubsystem extends SubsystemBase {
   public void motorIn() {
     intaking = true;
     setMotor(-Constants.HandConstants.IN_HAND_MOTOR_SPEED);
+  }
+
+  public double motorVelocity() {
+    return motor.getVelocity().getValueAsDouble();
+  }
+
+  public boolean getHasCoral() {
+    return hasCoral;
   }
 
   @Override
@@ -95,6 +105,7 @@ public class HandSubsystem extends SubsystemBase {
       if (coralDelay.update(
           Timer.getFPGATimestamp(),
           MathHelpers.epsilonEquals(motor.getVelocity().getValueAsDouble(), 0.0, 1.0))) {
+        hasCoral = true;
         System.out.println("coralllll");
         // stopMotor();
         if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.HP) {

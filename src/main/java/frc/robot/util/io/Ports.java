@@ -29,6 +29,12 @@ public class Ports {
 
   public static final int ALGAE_ENCODER_ID = 0;
 
+  public static final int LED_CHANNEL_1_PIN = 5;
+  public static final int LED_CHANNEL_2_PIN = 6;
+  public static final int LED_CHANNEL_3_PIN = 7;
+  public static final int LED_CHANNEL_4_PIN = 8;
+  public static final int LED_CHANNEL_5_PIN = 9;
+
   /*
    *  USB
    */

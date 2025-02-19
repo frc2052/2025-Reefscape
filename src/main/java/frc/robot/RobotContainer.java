@@ -23,8 +23,8 @@ import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.subsystems.AlgaeSubsystem;
+import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.ActionType;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -43,6 +43,7 @@ public class RobotContainer {
   public final AdvantageScopeSubsystem advantageScope = AdvantageScopeSubsystem.getInstance();
   public final AutoFactory autoFactory = AutoFactory.getInstance();
   public final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
+  public final LedSubsystem leds = LedSubsystem.getInstance();
 
   private final Telemetry logger =
       new Telemetry(DrivetrainConstants.DRIVE_MAX_SPEED.in(MetersPerSecond));
@@ -105,17 +106,22 @@ public class RobotContainer {
     controlBoard
         .intake()
         .whileTrue(
-            SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
-                    == ActionType.ALGAE
+            true
+                // SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
+                //         == ActionType.ALGAE
                 ? AlgaeCommandFactory.intake()
                 : HandCommandFactory.motorIn());
     controlBoard
         .outtake()
         .whileTrue(
-            SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
-                    == ActionType.ALGAE
+            true
+                // SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
+                //         == ActionType.ALGAE
                 ? AlgaeCommandFactory.score()
-                : HandCommandFactory.motorOut());
+                : HandCommandFactory.motorOut())
+        .onFalse(
+            new InstantCommand(
+                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
 
     controlBoard
         .alignWithElement()

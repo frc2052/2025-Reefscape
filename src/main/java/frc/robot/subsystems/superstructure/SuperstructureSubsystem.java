@@ -74,6 +74,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
   public void setSelectedTargetAction(TargetAction target, boolean confirm) {
     selectedTargetAction = target;
+    pushChangedValueToShuffleboard(selectedTargetAction);
     if (confirm) {
       confirmSelectedAction();
     }
@@ -106,8 +107,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
     TargetAction target = getCurrentAction();
     Logger.recordOutput("Superstructure/Current = Selected", target == getSelectedTargetAction());
     Logger.recordOutput("Target Superstructure Changing State", isChangingState);
-
-    pushChangedValueToShuffleboard(selectedTargetAction);
 
     if (target != previousAction) {
       Logger.recordOutput("Target Superstructure State Has Changed", true);
