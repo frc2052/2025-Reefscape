@@ -135,13 +135,13 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
 
   private void setTargetAction(){
-    if(FieldLocation.getPose() == FieldLocation.HP){
+    if(RobotState.getFieldLocation() == FieldLocation.HP){
       PositionSuperstructure.getInstance().setTargetAction(TargetAction.HP);
-    }else if(FieldLocation.getPose() == FieldLocation.REEF){
+    }else if(RobotState.getFieldLocation()  == FieldLocation.REEF){
       PositionSuperstructure.getInstance().setTargetAction(TargetAction.L3);
-    } else if(FieldLocation.getPose() == FieldLocation.PROCESSOR){
+    } else if(RobotState.getFieldLocation()  == FieldLocation.PROCESSOR){
       PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM);
-    } else if(FieldLocation.getPose() == FieldLocation.BARGE){
+    } else if(RobotState.getFieldLocation()  == FieldLocation.BARGE){
       if (AlgaeSubsystem.getHasAlgae()){
         PositionSuperstructure.getInstance().setTargetAction(TargetAction.AS);
       }else{
