@@ -275,7 +275,7 @@ public class AlignmentCalculator {
   public enum AlignOffset {
     LEFT_REEF_LOC(new Transform2d(Meters.of(0.5), Inches.of(7), new Rotation2d(Math.PI))),
     MIDDLE_REEF_LOC(new Transform2d(0.55, 0.0, new Rotation2d(Math.PI))),
-    RIGHT_REEF_LOC(new Transform2d(Meters.of(0.5), Inches.of(7), new Rotation2d(Math.PI))),
+    RIGHT_REEF_LOC(new Transform2d(Meters.of(0.5), Inches.of(-7), new Rotation2d(Math.PI))),
 
     ALGAE_REEF_LOC(new Transform2d(0.5, 0.0, new Rotation2d(Math.PI / 2))),
 
