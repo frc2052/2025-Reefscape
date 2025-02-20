@@ -136,7 +136,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
   }
 
 
-  private void setTargetAction(){
+  private void setTargetAction(){ // todo: these following lines of code requires more fine tuning, which we can do if we pursue with this aproach. 
     if(RobotState.getFieldLocation() == FieldLocation.HP){
       PositionSuperstructure.getInstance().setTargetAction(TargetAction.HP);
     }else if(RobotState.getFieldLocation()  == FieldLocation.REEF){
