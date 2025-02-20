@@ -7,43 +7,91 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SL K4"
+            "pathName": "SL K"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "K4 LL"
+            "pathName": "K LL"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Station Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LL L4"
+            "pathName": "LL L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Descore Algae"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "L4 LL"
+            "pathName": "L LL"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Station Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LL K3"
+            "pathName": "LL K"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "K3 LL"
+            "pathName": "K LL"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Station Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LL L3"
+            "pathName": "LL L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L3"
           }
         }
       ]

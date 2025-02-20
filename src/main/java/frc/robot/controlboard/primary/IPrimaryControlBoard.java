@@ -29,14 +29,25 @@ public interface IPrimaryControlBoard {
 
   Trigger povUpLeft();
 
+  Trigger povRotLeft();
+
+  Trigger povRotRight();
+
   Trigger resetGyro();
 
-  // Real Controls
+  Trigger alignWithElement();
+
+  Trigger pointToReef();
+
+  Trigger outtake();
+
   Trigger intake();
 
-  Trigger shoot();
+  Trigger sysIDQuasiForward();
 
-  Trigger reefAlignment();
+  Trigger sysIDQuasiReverse();
 
-  Trigger aimToAmp();
+  Trigger sysIDDynamicForward();
+
+  Trigger sysIDDynamicReverse();
 }

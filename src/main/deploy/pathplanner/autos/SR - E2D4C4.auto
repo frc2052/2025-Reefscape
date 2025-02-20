@@ -7,31 +7,61 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SR E2"
+            "pathName": "SR E"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "E2 RL"
+            "pathName": "E RL"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Station Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RL D4"
+            "pathName": "RL D"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "D4 RL"
+            "pathName": "D RL"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Station Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RL C4"
+            "pathName": "RL C"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
           }
         }
       ]

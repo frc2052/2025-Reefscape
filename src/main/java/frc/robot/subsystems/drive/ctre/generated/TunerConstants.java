@@ -5,13 +5,13 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -32,25 +32,11 @@ public class TunerConstants {
   // The steer motor uses any SwerveModule.SteerRequestType control request with the
   // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
   private static final Slot0Configs steerGains =
-      new Slot0Configs()
-          .withKP(40) // 41.748)
-          .withKI(0)
-          .withKD(0.15) // 1.2402
-          .withKS(0) // .17608)
-          .withKV(0) // 3.5936)
-          .withKA(0) // .068574)
-          .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign);
+      new Slot0Configs().withKP(41).withKI(0).withKD(0.07).withKS(0).withKV(0.0).withKA(0);
   // When using closed-loop control, the drive motor uses the control
   // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
   private static final Slot0Configs driveGains =
-      new Slot0Configs()
-          .withKP(0.072957)
-          .withKI(0)
-          .withKD(0)
-          .withKS(0.15316)
-          .withKV(0.11982)
-          .withKA(0.0043826)
-          .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign);
+      new Slot0Configs().withKP(0.3).withKI(0).withKD(0.0).withKS(0.0).withKV(0.075).withKA(0.06);
 
   // The closed-loop output type to use for the steer motors;
   // This affects the PID/FF gains for the steer motors
@@ -65,23 +51,28 @@ public class TunerConstants {
 
   // The stator current at which the wheels start to slip;
   // This needs to be tuned to your individual robot
-  private static final Current kSlipCurrent = Amps.of(60.0);
+  private static final Current kSlipCurrent = Amps.of(80.0);
 
   // Initial configs for the drive and steer motors and the CANcoder; these cannot be null.
   // Some configs will be overwritten; check the `with*InitialConfigs()` API documentation.
   private static final TalonFXConfiguration driveInitialConfigs =
       new TalonFXConfiguration()
           .withAudio(new AudioConfigs().withBeepOnBoot(false).withAllowMusicDurDisable(true))
-          .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(Amps.of(30)));
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withSupplyCurrentLimit(Amps.of(80))
+                  .withSupplyCurrentLimitEnable(true))
+          .withClosedLoopRamps(
+              new ClosedLoopRampsConfigs()
+                  .withDutyCycleClosedLoopRampPeriod(0.01)
+                  .withTorqueClosedLoopRampPeriod(0.01)
+                  .withVoltageClosedLoopRampPeriod(0.01));
   private static final TalonFXConfiguration steerInitialConfigs =
       new TalonFXConfiguration()
           .withCurrentLimits(
               new CurrentLimitsConfigs()
-                  // Swerve azimuth does not require much torque output, so we can set a relatively
-                  // low
-                  // stator current limit to help avoid brownouts without impacting performance.
-                  .withStatorCurrentLimit(Amps.of(30))
-                  .withStatorCurrentLimitEnable(true));
+                  .withStatorCurrentLimit(Amps.of(50))
+                  .withStatorCurrentLimitEnable(false));
   private static final CANcoderConfiguration cancoderInitialConfigs = new CANcoderConfiguration();
   // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
   private static final Pigeon2Configuration pigeonConfigs = null;

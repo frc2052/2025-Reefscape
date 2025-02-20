@@ -2,13 +2,13 @@ package frc.robot.util.io;
 
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.DoubleTopic;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.common.AutoFactory.Auto;
+import frc.robot.util.AlignmentCalculator.AlignOffset;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class Dashboard {
@@ -20,6 +20,12 @@ public class Dashboard {
 
   private final LoggedDashboardChooser<Double> waitSecondsChooser =
       new LoggedDashboardChooser<Double>("Wait Seconds");
+
+  private final LoggedDashboardChooser<Boolean> bump =
+      new LoggedDashboardChooser<Boolean>("Bump Needed");
+
+  // private final LoggedDashboardChooser<Boolean> stationSideChooser =
+  //     new LoggedDashboardChooser<Boolean>("Auto Station Side");
 
   private final NetworkTableInstance networkTables = NetworkTableInstance.getDefault();
   private final NetworkTable debugTable = networkTables.getTable("debug network tables tab");
@@ -50,6 +56,12 @@ public class Dashboard {
     }
     waitSecondsChooser.addDefaultOption("None Chosen", 0.0);
     waitSecondsChooser.addOption("1 Second", 1.0);
+
+    bump.addDefaultOption("No Bump Needed", false);
+    bump.addOption("Bump Needed", true);
+
+    // stationSideChooser.addDefaultOption("Right Side", true);
+    // stationSideChooser.addOption("Left Side", false);
   }
 
   public <V> void putData(String key, V value) {
@@ -78,6 +90,18 @@ public class Dashboard {
 
   public double getWaitSeconds() {
     return waitTimeSubscriber.get();
+  }
+
+  public AlignOffset getStationAlignSide() {
+    // if (stationSideChooser.get() == true) {
+    return AlignOffset.RIGHT_CORAL_STATION_LOC;
+    // } else {
+    //   return AlignOffset.LEFT_CORAL_STATION_LOC;
+    // }
+  }
+
+  public boolean getBumpNeeded() {
+    return bump.get();
   }
 
   // Enums for Dashboard elements:

@@ -4,6 +4,7 @@
 package frc.robot.auto.common;
 
 import frc.robot.Constants.DashboardConstants;
+import frc.robot.auto.modes.AutoLLToK4;
 import frc.robot.auto.modes.StartLeft.AutoJ2K4L4;
 import frc.robot.auto.modes.StartLeft.AutoK4L4DAK3L3;
 import frc.robot.auto.modes.StartRight.AutoD4C4DAD3C3;
@@ -16,7 +17,10 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
   private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
-  private final Supplier<Double> waitSecondsEntrySupplier = () -> Dashboard.getInstance().getWaitSeconds();
+  private final Supplier<Double> waitSecondsEntrySupplier =
+      () -> Dashboard.getInstance().getWaitSeconds();
+  private final Supplier<Boolean> bumpNeededSupplier =
+      () -> Dashboard.getInstance().getBumpNeeded();
 
   private Auto currentAuto;
   private AutoBase compiledAuto;
@@ -45,7 +49,8 @@ public class AutoFactory {
     return INSTANCE;
   }
 
-  private AutoFactory() {};
+  private AutoFactory() {}
+  ;
 
   public boolean recompileNeeded() {
     return autoSupplier.get() != currentAuto || waitSecondsEntrySupplier.get() != savedWaitSeconds;
@@ -83,10 +88,15 @@ public class AutoFactory {
     return savedWaitSeconds;
   }
 
+  public boolean getBumpNeeded() {
+    return bumpNeededSupplier.get();
+  }
+
   public static enum Auto {
     // ordered Start Left, Start Right
 
     NO_AUTO(null),
+    LL_K4_VISION_TEST(AutoLLToK4.class),
 
     AUTO_J2_K4_L4(AutoJ2K4L4.class),
     AUTO_E2_D4_C4(AutoE2D4C4.class),

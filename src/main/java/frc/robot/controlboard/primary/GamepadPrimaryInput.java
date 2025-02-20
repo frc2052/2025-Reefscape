@@ -4,7 +4,7 @@ import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.util.Ports;
+import frc.robot.util.io.Ports;
 
 public class GamepadPrimaryInput implements IPrimaryControlBoard {
   private final CommandXboxController controller;
@@ -78,27 +78,57 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
+  public Trigger povRotLeft() {
+    return controller.povLeft();
+  }
+
+  @Override
+  public Trigger povRotRight() {
+    return controller.povRight();
+  }
+
+  @Override
   public Trigger resetGyro() {
     return controller.back().and(controller.start().negate());
   }
 
   @Override
+  public Trigger outtake() {
+    return new Trigger(() -> false);
+  }
+
+  @Override
   public Trigger intake() {
-    return controller.leftTrigger(0.125);
+    return new Trigger(() -> false);
   }
 
   @Override
-  public Trigger shoot() {
-    return controller.rightTrigger(0.125);
+  public Trigger alignWithElement() {
+    return new Trigger(() -> false);
   }
 
   @Override
-  public Trigger reefAlignment() {
-    return controller.button(1);
+  public Trigger pointToReef() {
+    return new Trigger(() -> false);
   }
 
   @Override
-  public Trigger aimToAmp() {
-    return controller.button(2);
+  public Trigger sysIDQuasiForward() {
+    return new Trigger(() -> false);
+  }
+
+  @Override
+  public Trigger sysIDQuasiReverse() {
+    return new Trigger(() -> false);
+  }
+
+  @Override
+  public Trigger sysIDDynamicForward() {
+    return new Trigger(() -> false);
+  }
+
+  @Override
+  public Trigger sysIDDynamicReverse() {
+    return new Trigger(() -> false);
   }
 }

@@ -3,8 +3,9 @@ package frc.robot.auto.modes.StartLeft;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.commands.drive.AlignWithTagCommand.AlignLocation;
-import frc.robot.commands.drive.SnapToLocationAngleCommand.SnapLocation;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.util.AlignmentCalculator.AlignOffset;
+import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 
 @AutoDescription(description = "21 Point Auto - One L2, Two L4")
 public class AutoJ2K4L4 extends AutoBase {
@@ -20,18 +21,17 @@ public class AutoJ2K4L4 extends AutoBase {
   public void init() {
     addCommands(delaySelectedTime());
 
-    // just paths
     addCommands(followPathCommand(startingPath));
-    addCommands(followPathCommand(Paths.J2_LL));
-    addCommands(followPathCommand(Paths.LL_K4));
-    addCommands(followPathCommand(Paths.K4_LL));
-    addCommands(followPathCommand(Paths.LL_L4));
-
-    // test align
-    // addCommands(followPathCommand(startingPath));
-    // addCommands(followPathCommand(Paths.J2_LL));
-    // addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.LL_K4, SnapLocation.ReefKL));
-    // addCommands(followPathCommand(Paths.K4_LL));
-    // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.LL_L4, SnapLocation.ReefKL));
+    addCommands(toPosAndScore(TargetAction.L2));
+    addCommands(stationVisionOrPathAlign(Paths.J2_LL, TargetFieldLocation.LCS));
+    addCommands(HPIntake());
+    addCommands(
+        reefVisionOrPathAlign(AlignOffset.LEFT_REEF_LOC, Paths.LL_K4, TargetFieldLocation.KL));
+    addCommands(toPosAndScore(TargetAction.L4));
+    addCommands(stationVisionOrPathAlign(Paths.K4_LL, TargetFieldLocation.KL));
+    addCommands(HPIntake());
+    addCommands(
+        reefVisionOrPathAlign(AlignOffset.LEFT_REEF_LOC, Paths.LL_K4, TargetFieldLocation.KL));
+    addCommands(toPosAndScore(TargetAction.L4));
   }
 }

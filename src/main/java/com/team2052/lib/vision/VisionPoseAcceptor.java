@@ -4,13 +4,13 @@ import static edu.wpi.first.units.Units.Meters;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.util.FieldConstants;
 
 public class VisionPoseAcceptor {
 
   public static boolean shouldAccept(
-      MultiTagPoseEstimate visionUpdate, double robotVelocity, Pose2d robotPose, boolean isInAuto) {
+      PoseEstimate visionUpdate, double robotVelocity, Pose2d robotPose, boolean isInAuto) {
 
     if (visionUpdate == null) {
       return false;

@@ -8,7 +8,7 @@ import frc.robot.controlboard.primary.IPrimaryControlBoard;
 import frc.robot.controlboard.primary.JoystickPrimaryInput;
 import frc.robot.controlboard.secondary.ControlPanelInput;
 import frc.robot.controlboard.secondary.ISecondaryControlBoard;
-import frc.robot.util.Ports;
+import frc.robot.util.io.Ports;
 
 public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoard {
   private final IPrimaryControlBoard primaryControlBoard;
@@ -93,18 +93,23 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
+  public Trigger povRotLeft() {
+    return primaryControlBoard.povRotLeft();
+  }
+
+  @Override
+  public Trigger povRotRight() {
+    return primaryControlBoard.povRotRight();
+  }
+
+  @Override
   public Trigger resetGyro() {
     return primaryControlBoard.resetGyro();
   }
 
   @Override
-  public Trigger reefAlignment() {
-    return primaryControlBoard.reefAlignment();
-  }
-
-  @Override
-  public Trigger aimToAmp() {
-    return primaryControlBoard.aimToAmp();
+  public Trigger outtake() {
+    return primaryControlBoard.outtake();
   }
 
   @Override
@@ -113,14 +118,119 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger shoot() {
-    return primaryControlBoard.shoot();
+  public Trigger alignWithElement() {
+    return primaryControlBoard.alignWithElement();
+  }
+
+  @Override
+  public Trigger pointToReef() {
+    return primaryControlBoard.pointToReef();
+  }
+
+  @Override
+  public Trigger sysIDQuasiForward() {
+    return primaryControlBoard.sysIDQuasiForward();
+  }
+
+  @Override
+  public Trigger sysIDQuasiReverse() {
+    return primaryControlBoard.sysIDQuasiReverse();
+  }
+
+  @Override
+  public Trigger sysIDDynamicForward() {
+    return primaryControlBoard.sysIDDynamicForward();
+  }
+
+  @Override
+  public Trigger sysIDDynamicReverse() {
+    return primaryControlBoard.sysIDDynamicReverse();
   }
 
   /* Secondary */
 
   @Override
-  public Trigger climb() {
-    return secondaryControlBoard.climb();
+  public Trigger homeElevator() {
+    return secondaryControlBoard.homeElevator();
+  }
+
+  @Override
+  public Trigger actTrigger() {
+    return secondaryControlBoard.actTrigger();
+  }
+
+  @Override
+  public Trigger manualUp() {
+    return secondaryControlBoard.manualUp();
+  }
+
+  @Override
+  public Trigger manualDown() {
+    return secondaryControlBoard.manualDown();
+  }
+
+  @Override
+  public Trigger climbUp() {
+    return secondaryControlBoard.climbUp();
+  }
+
+  @Override
+  public Trigger climbDown() {
+    return secondaryControlBoard.climbDown();
+  }
+
+  @Override
+  public Trigger setGoalL1L() {
+    return secondaryControlBoard.setGoalL1L();
+  }
+
+  @Override
+  public Trigger setGoalL1H() {
+    return secondaryControlBoard.setGoalL1H();
+  }
+
+  @Override
+  public Trigger setGoalL2() {
+    return secondaryControlBoard.setGoalL2();
+  }
+
+  @Override
+  public Trigger setGoalL3() {
+    return secondaryControlBoard.setGoalL3();
+  }
+
+  @Override
+  public Trigger setGoalL4() {
+    return secondaryControlBoard.setGoalL4();
+  }
+
+  @Override
+  public Trigger setGoalUpperAlgae() {
+    return secondaryControlBoard.setGoalUpperAlgae();
+  }
+
+  @Override
+  public Trigger setGoalLowerAlgae() {
+    return secondaryControlBoard.setGoalLowerAlgae();
+  }
+
+  @Override
+  public Trigger setSubReefLeft() {
+    return secondaryControlBoard.setSubReefLeft();
+  }
+
+  @Override
+  public Trigger setSubReefRight() {
+    return secondaryControlBoard.setSubReefRight();
+  }
+
+  @Override
+  public Trigger setGoalCoralStation() {
+    return secondaryControlBoard.setGoalCoralStation();
+  }
+
+  @Override
+  public Trigger setGoalAlgaeScoring() {
+    return secondaryControlBoard.setGoalAlgaeScoring();
   }
 }

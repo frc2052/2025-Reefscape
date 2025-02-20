@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import org.littletonrobotics.junction.Logger;
 
 public class Telemetry {
   private final double MaxSpeed;
@@ -90,7 +89,6 @@ public class Telemetry {
   public void telemeterize(SwerveDriveState state) {
     /* Telemeterize the pose */
     Pose2d pose = state.Pose;
-    Logger.recordOutput("Robot Pose", pose);
 
     /* Telemeterize the robot's general speeds */
     double currentTime = Utils.getCurrentTimeSeconds();

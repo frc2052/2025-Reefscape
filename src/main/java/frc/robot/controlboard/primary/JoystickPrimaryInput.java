@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.util.Ports;
+import frc.robot.util.io.Ports;
 
 public class JoystickPrimaryInput implements IPrimaryControlBoard {
   private final Joystick translateStick;
@@ -42,42 +42,52 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
 
   @Override
   public Trigger povUp() {
-    return new Trigger(rotateStick.povUp(povLooper)::getAsBoolean);
+    return new Trigger(translateStick.povUp(povLooper));
   }
 
   @Override
   public Trigger povUpRight() {
-    return new Trigger(rotateStick.povUpRight(povLooper)::getAsBoolean);
+    return new Trigger(translateStick.povUpRight(povLooper));
   }
 
   @Override
   public Trigger povRight() {
-    return new Trigger(rotateStick.povRight(povLooper)::getAsBoolean);
+    return new Trigger(translateStick.povRight(povLooper));
   }
 
   @Override
   public Trigger povDownRight() {
-    return new Trigger(rotateStick.povDownRight(povLooper)::getAsBoolean);
+    return new Trigger(translateStick.povDownRight(povLooper));
   }
 
   @Override
   public Trigger povDown() {
-    return new Trigger(rotateStick.povDown(povLooper)::getAsBoolean);
+    return new Trigger(translateStick.povDown(povLooper));
   }
 
   @Override
   public Trigger povDownLeft() {
-    return new Trigger(rotateStick.povDownLeft(povLooper)::getAsBoolean);
+    return new Trigger(translateStick.povDownLeft(povLooper));
   }
 
   @Override
   public Trigger povLeft() {
-    return new Trigger(rotateStick.povLeft(povLooper)::getAsBoolean);
+    return new Trigger(translateStick.povLeft(povLooper));
   }
 
   @Override
   public Trigger povUpLeft() {
-    return new Trigger(rotateStick.povUpLeft(povLooper)::getAsBoolean);
+    return new Trigger(translateStick.povUpLeft(povLooper));
+  }
+
+  @Override
+  public Trigger povRotLeft() {
+    return new Trigger(rotateStick.povLeft(povLooper));
+  }
+
+  @Override
+  public Trigger povRotRight() {
+    return new Trigger(rotateStick.povRight(povLooper));
   }
 
   @Override
@@ -86,22 +96,42 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
+  public Trigger outtake() {
+    return new JoystickButton(rotateStick, 1);
+  }
+
+  @Override
   public Trigger intake() {
     return new JoystickButton(translateStick, 1);
   }
 
   @Override
-  public Trigger shoot() {
-    return new JoystickButton(rotateStick, 1);
-  }
-
-  @Override
-  public Trigger reefAlignment() {
+  public Trigger alignWithElement() {
     return new JoystickButton(rotateStick, 3);
   }
 
   @Override
-  public Trigger aimToAmp() {
-    return new JoystickButton(rotateStick, 4);
+  public Trigger pointToReef() {
+    return new JoystickButton(rotateStick, 2);
+  }
+
+  @Override
+  public Trigger sysIDQuasiForward() {
+    return new JoystickButton(translateStick, 7);
+  }
+
+  @Override
+  public Trigger sysIDQuasiReverse() {
+    return new JoystickButton(translateStick, 6);
+  }
+
+  @Override
+  public Trigger sysIDDynamicForward() {
+    return new JoystickButton(translateStick, 5);
+  }
+
+  @Override
+  public Trigger sysIDDynamicReverse() {
+    return new JoystickButton(translateStick, 10);
   }
 }
