@@ -105,7 +105,7 @@ public class RobotContainer {
     controlBoard
         .intake()
         .whileTrue(
-            true
+            false
                 // SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
                 //         == ActionType.ALGAE
                 ? AlgaeCommandFactory.intake()
@@ -113,7 +113,7 @@ public class RobotContainer {
     controlBoard
         .outtake()
         .whileTrue(
-            true
+            false
                 // SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
                 //         == ActionType.ALGAE
                 ? AlgaeCommandFactory.score()

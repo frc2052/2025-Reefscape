@@ -91,17 +91,17 @@ public class PoseEstimate {
 
   private double calculateHeadingStdDev() {
 
-    double headingStdDev =
-        targetsUsed.size() > 2
-            ? thetaStdDevCoefficient
-                * Math.pow(avgTagDistance, 2.0)
-                / targetsUsed.size()
-                * cameraWeight
-            : Double.POSITIVE_INFINITY;
-    // double headingStd = VisionConstants.HEADING_STDDEV;
-    // if (highestAmbiguity < 0.05) {
-    //   headingStd = 0.7;
-    // }
+    // double headingStdDev =
+    //     targetsUsed.size() > 2
+    //         ? thetaStdDevCoefficient
+    //             * Math.pow(avgTagDistance, 2.0)
+    //             / targetsUsed.size()
+    //             * cameraWeight
+    //         : Double.POSITIVE_INFINITY;
+    double headingStdDev = 1.0;
+    if (highestAmbiguity < 0.05) {
+      headingStdDev = 0.05;
+    }
     return headingStdDev;
   }
 }

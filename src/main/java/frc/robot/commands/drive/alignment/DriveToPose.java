@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveToPose extends Command {
-  private final double driveP = 1.75;
+  private final double driveP = 2;
   private final double driveD = 0.0;
   private final double turnP = 4.0;
   private final double turnD = 0.0;
