@@ -1,12 +1,5 @@
 package frc.robot.commands.drive.alignment;
 
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
-
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -20,6 +13,8 @@ import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import frc.robot.util.io.Dashboard;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 public class AlignmentCommandFactory {
   private static final VisionSubsystem vision = VisionSubsystem.getInstance();
@@ -54,30 +49,23 @@ public class AlignmentCommandFactory {
     if (offset != AlignOffset.LEFT_REEF_LOC
         && offset != AlignOffset.MIDDLE_REEF_LOC
         && offset != AlignOffset.RIGHT_REEF_LOC) {
-      return invalidCombination(DesiredElement.REEF, offset);
+      invalidCombination(DesiredElement.REEF, offset);
     }
 
-    vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM);
+    Supplier<Pose2d> targetSupplier = () -> robotState.getAlignPose();
+    BooleanSupplier shouldAlign = () -> robotState.getHasAlignPose();
 
-    Optional<PhotonPipelineResult> tar =
-        vision.getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM);
-
-    if (tar.isPresent()) {
-      PhotonTrackedTarget camTarget = tar.get().getBestTarget();
-
-      if (idToReefFace(camTarget.fiducialId) == fieldLocation) {
-        return new DriveToPose(
-            () -> reefIdToBranchWithNudge(idToReefFace(camTarget.fiducialId), offset),
-            robotState::getFieldToRobot,
-            controlBoard::getThrottle,
-            controlBoard::getStrafe,
-            controlBoard::getRotation);
-      } else {
-        return getDefaultDriveCommand();
-      }
-    } else {
-      return getDefaultDriveCommand();
-    }
+    return Commands.runOnce(() -> vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM), vision)
+        .andThen(
+            Commands.either(
+                new DriveToPose(
+                    targetSupplier,
+                    robotState::getFieldToRobot,
+                    controlBoard::getThrottle,
+                    controlBoard::getStrafe,
+                    controlBoard::getRotation),
+                getDefaultDriveCommand(),
+                shouldAlign));
   }
 
   private static Command getDefaultDriveCommand() {

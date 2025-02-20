@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 2.2481068955736427,
-        "y": 1.7102738378617623
+        "y": 1.7102738378617621
       },
       "isLocked": false,
       "linkedName": "Right Load"
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 1.0,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

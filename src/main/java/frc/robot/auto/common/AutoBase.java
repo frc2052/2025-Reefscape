@@ -4,16 +4,13 @@
 
 package frc.robot.auto.common;
 
-import java.util.List;
-import java.util.Optional;
+import static edu.wpi.first.units.Units.Meters;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import static edu.wpi.first.units.Units.Meters;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -39,6 +36,8 @@ import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import frc.robot.util.io.Dashboard;
+import java.util.List;
+import java.util.Optional;
 
 public abstract class AutoBase extends SequentialCommandGroup {
   private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -73,6 +72,10 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
   protected Command followPathCommand(PathPlannerPath path) {
     return AutoBuilder.followPath(path);
+  }
+
+  protected Command followPathSnap(PathPlannerPath path, TargetFieldLocation snapLoc) {
+    return new SequentialCommandGroup(followPathCommand(path), snapToReefAngle(snapLoc));
   }
 
   protected static PathPlannerPath getPathFromFile(String pathName) {
@@ -140,34 +143,35 @@ public abstract class AutoBase extends SequentialCommandGroup {
   }
 
   protected Command safeReefAlignment(
-      PathPlannerPath backupPath, AlignOffset branchSide, TargetFieldLocation snapSide) {
-    return new SequentialCommandGroup(followPathCommand(backupPath), snapToReefAngle(snapSide))
-        .until(
-            () ->
-                vision
-                    .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
-                    .isPresent())
+      PathPlannerPath startPath, AlignOffset branchSide, TargetFieldLocation loc) {
+    return new SequentialCommandGroup(
+            followPathCommand(startPath).until(vision::getCoralCameraHasTarget))
         .andThen(AlignmentCommandFactory.getReefAlignmentCommand(branchSide));
   }
 
   protected Command combinedReefChassisElevatorAlign(
-    PathPlannerPath backupPath, AlignOffset branchSide, TargetFieldLocation snapSide, TargetAction level) {
-      return new ParallelCommandGroup(
-        new SequentialCommandGroup(
-          followPathCommand(backupPath), 
-          snapToReefAngle(snapSide))
-          .until(() -> vision
-                      .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5)).isPresent())
-          .andThen(AlignmentCommandFactory.getReefAlignmentCommand(branchSide)),
-          new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(level))
-                      );       
+      PathPlannerPath backupPath,
+      AlignOffset branchSide,
+      TargetFieldLocation snapSide,
+      TargetAction level) {
+    return new ParallelCommandGroup(
+        new SequentialCommandGroup(followPathCommand(backupPath), snapToReefAngle(snapSide))
+            .until(
+                () ->
+                    vision
+                        .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
+                        .isPresent())
+            .andThen(AlignmentCommandFactory.getReefAlignmentCommand(branchSide)),
+        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(level)));
   }
 
   protected Command stationVisionOrPathAlign(
       PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
     return new SequentialCommandGroup(
-      new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)),
-      followPathCommand(altAlignPath), snapToReefAngle(snaploc))
+            new InstantCommand(
+                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)),
+            followPathCommand(altAlignPath),
+            snapToReefAngle(snaploc))
         .until(
             () ->
                 vision.getCameraClosestTarget(TagTrackerType.REAR_CAM, Meters.of(2.0)).isPresent())
@@ -196,8 +200,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
         new WaitCommand(1.5));
   }
 
-  protected Command elevatorToPos(TargetAction position){
-    return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position));
+  protected Command elevatorToPos(TargetAction position) {
+    return new InstantCommand(
+        () -> SuperstructureSubsystem.getInstance().setCurrentAction(position));
   }
 
   protected Command toPosAndScore(TargetAction position) {
@@ -212,24 +217,26 @@ public abstract class AutoBase extends SequentialCommandGroup {
             () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.TR)));
   }
 
-  protected Command descoreScoreNetAlgae(PathPlannerPath toPositionPath, TargetAction algaeLevel, PathPlannerPath score){
+  protected Command descoreScoreNetAlgae(
+      PathPlannerPath toPositionPath, TargetAction algaeLevel, PathPlannerPath score) {
     return new SequentialCommandGroup(
-      // descore
-      new ParallelDeadlineGroup(
-        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)),
-        followPathCommand(toPositionPath)
-      ),
+        // descore
+        new ParallelDeadlineGroup(
+            new InstantCommand(
+                () -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)),
+            followPathCommand(toPositionPath)),
 
-      // score
-      new ParallelDeadlineGroup(
-        followPathCommand(score),
-        new SequentialCommandGroup(
-          new WaitCommand(1.0),
-          new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
-        ),
-        AlgaeCommandFactory.intake().withTimeout(1.5))
-      .andThen(AlgaeCommandFactory.score().withTimeout(1.0))
-    );
+        // score
+        new ParallelDeadlineGroup(
+                followPathCommand(score),
+                new SequentialCommandGroup(
+                    new WaitCommand(1.0),
+                    new InstantCommand(
+                        () ->
+                            SuperstructureSubsystem.getInstance()
+                                .setCurrentAction(TargetAction.L4))),
+                AlgaeCommandFactory.intake().withTimeout(1.5))
+            .andThen(AlgaeCommandFactory.score().withTimeout(1.0)));
   }
 
   public static final class Paths {
@@ -290,9 +297,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     public static final PathPlannerPath NET_EF = getPathFromFile("Net EF");
     public static final PathPlannerPath EF_NET = getPathFromFile("EF Net");
-    
-    public static final PathPlannerPath NET_SCORE_LEFT_STATION = getPathFromFile("Net Left Station");
-    public static final PathPlannerPath NET_SCORE_RIGHT_STATION = getPathFromFile("Net Right Station");
+
+    public static final PathPlannerPath NET_SCORE_LEFT_STATION =
+        getPathFromFile("Net Left Station");
+    public static final PathPlannerPath NET_SCORE_RIGHT_STATION =
+        getPathFromFile("Net Right Station");
 
     public static final PathPlannerPath KL_SCORE_TO_DESCORE = getPathFromFile("KL Descore Algae");
     public static final PathPlannerPath CD_SCORE_TO_DESCORE = getPathFromFile("CD Descore Algae");

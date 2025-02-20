@@ -60,7 +60,7 @@ public class TunerConstants {
           .withAudio(new AudioConfigs().withBeepOnBoot(false).withAllowMusicDurDisable(true))
           .withCurrentLimits(
               new CurrentLimitsConfigs()
-                  .withSupplyCurrentLimit(Amps.of(80))
+                  .withSupplyCurrentLimit(Amps.of(60))
                   .withSupplyCurrentLimitEnable(true))
           .withClosedLoopRamps(
               new ClosedLoopRampsConfigs()

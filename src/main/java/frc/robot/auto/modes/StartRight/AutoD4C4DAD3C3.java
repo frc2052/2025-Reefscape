@@ -1,7 +1,6 @@
 package frc.robot.auto.modes.StartRight;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
@@ -23,12 +22,15 @@ public class AutoD4C4DAD3C3 extends AutoBase {
     addCommands(delaySelectedTime());
     addCommands(getBumpCommand());
 
-    addCommands(safeReefAlignment(startingPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.CD));
+    addCommands(
+        safeReefAlignment(startingPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.CD));
     addCommands(toPosAndScore(TargetAction.L4));
     addCommands(stationVisionOrPathAlign(Paths.D4_RL, TargetFieldLocation.RCS));
     addCommands(safeReefAlignment(Paths.RL_C4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
     addCommands(toPosAndScore(TargetAction.L4));
-    addCommands(descoreScoreNetAlgae(Paths.CD_SCORE_TO_DESCORE, TargetAction.UA, Paths.CD_NET)); // CD is upper algae
+    addCommands(
+        descoreScoreNetAlgae(
+            Paths.CD_SCORE_TO_DESCORE, TargetAction.UA, Paths.CD_NET)); // CD is upper algae
     addCommands(stationVisionOrPathAlign(Paths.NET_SCORE_RIGHT_STATION, TargetFieldLocation.RCS));
     addCommands(HPIntake());
     addCommands(safeReefAlignment(Paths.RL_D3, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.CD));
