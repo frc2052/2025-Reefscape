@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5350014888415244,
-        "y": 2.639328924272819
+        "x": 7.591455255681819,
+        "y": 4.905408380681817
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.535001488841525,
-        "y": 2.639328924272819
+        "x": 6.7550049715909095,
+        "y": 4.732484374999999
       },
       "isLocked": false,
-      "linkedName": "CD Algae"
+      "linkedName": "Left Net Score"
     },
     {
       "anchor": {
-        "x": 7.605991391782407,
-        "y": 1.8380367476851847
+        "x": 5.842911352040816,
+        "y": 4.170690369897958
       },
       "prevControl": {
-        "x": 6.605991391782407,
-        "y": 1.8380367476851844
+        "x": 7.337345880681818,
+        "y": 5.01393252840909
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Net Score"
+      "linkedName": "GH Algae"
     }
   ],
   "rotationTargets": [],
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.19189309894713
   },
   "reversed": false,
-  "folder": null,
+  "folder": "New Folder",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

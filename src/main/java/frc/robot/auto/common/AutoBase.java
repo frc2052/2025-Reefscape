@@ -4,7 +4,8 @@
 
 package frc.robot.auto.common;
 
-import static edu.wpi.first.units.Units.Meters;
+import java.util.List;
+import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -12,6 +13,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import static edu.wpi.first.units.Units.Meters;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -20,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
+import frc.robot.commands.algae.AlgaeCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand;
@@ -35,16 +38,6 @@ import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import frc.robot.util.io.Dashboard;
-
-import java.util.List;
-import java.util.Optional;
-
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.Constants;
-import frc.robot.commands.algae.AlgaeCommandFactory;
-import frc.robot.subsystems.AlgaeSubsystem;
-import frc.robot.subsystems.superstructure.SuperstructurePosition;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 
 public abstract class AutoBase extends SequentialCommandGroup {
   private final RobotState robotState = RobotState.getInstance();
@@ -198,16 +191,17 @@ public abstract class AutoBase extends SequentialCommandGroup {
             () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.TR)));
   }
 
-  protected Command descoreAlgae(PathPlannerPath turn, TargetAction algaeLevel, PathPlannerPath score){
+  // arm needs to come up fast enough to not break anything
+  protected Command descoreScoreNetAlgae(PathPlannerPath toPositionPath, TargetAction algaeLevel, PathPlannerPath score){
     return new SequentialCommandGroup(
       new ParallelDeadlineGroup(
         new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)),
-        followPathCommand(turn)
+        followPathCommand(toPositionPath)
       ),
       AlgaeCommandFactory.intake().withTimeout(1.5),
       new ParallelDeadlineGroup(
-        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4)), 
-        followPathCommand(score)),
+        followPathCommand(score),
+        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))),
       AlgaeCommandFactory.score().withTimeout(1.0)
     );
   }
@@ -287,15 +281,27 @@ public abstract class AutoBase extends SequentialCommandGroup {
     public static final PathPlannerPath LL_L4 = getPathFromFile("LL L");
     public static final PathPlannerPath SL_K4 = getPathFromFile("SL K");
 
-    // net pos
-    public static final PathPlannerPath LEFT_NET_SCORE = getPathFromFile("KL ALgae Score");
-    public static final PathPlannerPath RIGHT_NET_SCORE = getPathFromFile("CD Algae Score");
+    // algae score and descore
+    public static final PathPlannerPath KL_NET = getPathFromFile("KL Net");
+    public static final PathPlannerPath NET_KL = getPathFromFile("Net KL");
 
-    public static final PathPlannerPath LEFT_NET_TO_STATION = getPathFromFile("Left Score to Station");
-    public static final PathPlannerPath RIGHT_NET_TO_STATION = getPathFromFile("Right Score to Station");
+    public static final PathPlannerPath CD_NET = getPathFromFile("CD Net");
+    public static final PathPlannerPath NET_CD = getPathFromFile("Net CD");
 
-    // TODO: adjust both descore paths
+    public static final PathPlannerPath GH_NET = getPathFromFile("GH Net");
+    public static final PathPlannerPath NET_GH = getPathFromFile("Net GH");
+
+    public static final PathPlannerPath NET_IJ = getPathFromFile("Net IJ");
+    public static final PathPlannerPath IJ_NET = getPathFromFile("IJ Net");
+
+    public static final PathPlannerPath NET_EF = getPathFromFile("Net EF");
+    public static final PathPlannerPath EF_NET = getPathFromFile("EF Net");
+    
+    public static final PathPlannerPath NET_SCORE_LEFT_STATION = getPathFromFile("Net Left Station");
+    public static final PathPlannerPath NET_SCORE_RIGHT_STATION = getPathFromFile("Net Right Station");
+
     public static final PathPlannerPath KL_SCORE_TO_DESCORE = getPathFromFile("KL Descore Algae");
     public static final PathPlannerPath CD_SCORE_TO_DESCORE = getPathFromFile("CD Descore Algae");
+    public static final PathPlannerPath GH_SCORE_TO_DESCORE = getPathFromFile("GH Descore Algae");
   }
 }

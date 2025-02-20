@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.760453125,
-        "y": 2.8722840909090905
+        "x": 7.591455255681819,
+        "y": 4.905408380681817
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.213368601160143,
-        "y": 2.275986523920218
+        "x": 6.800874289772727,
+        "y": 5.077667613636363
       },
       "isLocked": false,
-      "linkedName": "C"
+      "linkedName": "Left Net Score"
     },
     {
       "anchor": {
-        "x": 1.3738798466435174,
-        "y": 0.8994524016203695
+        "x": 5.148830965909091,
+        "y": 5.2590674715909085
       },
       "prevControl": {
-        "x": 2.138903103275112,
-        "y": 1.7192648014201326
+        "x": 7.246853693181819,
+        "y": 4.984100852272727
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Load"
+      "linkedName": "IJ Algae"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 55.58450456918794
+    "rotation": 153.61436232010124
   },
   "reversed": false,
-  "folder": null,
+  "folder": "New Folder",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 57.95437258883014
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

@@ -1,6 +1,7 @@
 package frc.robot.auto.modes.StartLeft;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
@@ -18,7 +19,7 @@ public class AutoJ2K4L4 extends AutoBase {
   }
 
   @Override
-  public void init() { // yep
+  public void init() {
     addCommands(delaySelectedTime());
     addCommands(getBumpCommand());
 

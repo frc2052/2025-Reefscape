@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.760453125,
-        "y": 2.8722840909090905
+        "x": 3.833,
+        "y": 5.173
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.213368601160143,
-        "y": 2.275986523920218
+        "x": 5.069390625,
+        "y": 6.506098011363636
       },
       "isLocked": false,
-      "linkedName": "C"
+      "linkedName": "KL Algae"
     },
     {
       "anchor": {
-        "x": 1.3738798466435174,
-        "y": 0.8994524016203695
+        "x": 7.591455255681819,
+        "y": 4.905408380681817
       },
       "prevControl": {
-        "x": 2.138903103275112,
-        "y": 1.7192648014201326
+        "x": 6.591455255681819,
+        "y": 4.905408380681817
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Load"
+      "linkedName": "Left Net Score"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 55.58450456918794
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 57.95437258883014
+    "rotation": -151.05828457773245
   },
   "useDefaultConstraints": true
 }

@@ -19,7 +19,7 @@ public class AutoK4L4DAK3L3 extends AutoBase {
   }
 
   @Override
-  public void init() { // algae
+  public void init() { 
     addCommands(delaySelectedTime());
     addCommands(getBumpCommand());
 
@@ -27,8 +27,8 @@ public class AutoK4L4DAK3L3 extends AutoBase {
     addCommands(toPosAndScore(TargetAction.L4));
     addCommands(stationVisionOrPathAlign(Paths.K4_LL, TargetFieldLocation.LCS));
     addCommands(safeReefAlignment(Paths.LL_L4, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.KL));
-    addCommands(descoreAlgae(Paths.KL_SCORE_TO_DESCORE, TargetAction.UA, Paths.LEFT_NET_SCORE)); // KL is upper algae
-    addCommands(stationVisionOrPathAlign(Paths.LEFT_NET_TO_STATION, TargetFieldLocation.LCS));
+    addCommands(descoreScoreNetAlgae(Paths.KL_SCORE_TO_DESCORE, TargetAction.UA, Paths.KL_NET)); // KL is upper algae
+    addCommands(stationVisionOrPathAlign(Paths.NET_SCORE_LEFT_STATION, TargetFieldLocation.LCS));
     addCommands(safeReefAlignment(Paths.LL_K3, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
     addCommands(toPosAndScore(TargetAction.L3));
     addCommands(stationVisionOrPathAlign(Paths.K3_LL, TargetFieldLocation.LCS));

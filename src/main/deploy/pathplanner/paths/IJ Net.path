@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.833,
-        "y": 5.173
+        "x": 5.148830965909091,
+        "y": 5.2590674715909085
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.833,
-        "y": 5.173
+        "x": 6.307779119318181,
+        "y": 4.9936569602272725
       },
       "isLocked": false,
-      "linkedName": "KL Algae"
+      "linkedName": "IJ Algae"
     },
     {
       "anchor": {
-        "x": 7.587360519057171,
-        "y": 5.417615933738716
+        "x": 7.591455255681819,
+        "y": 4.905408380681817
       },
       "prevControl": {
-        "x": 6.587360519057171,
-        "y": 5.417615933738716
+        "x": 6.591455255681819,
+        "y": 4.905408380681817
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,10 +45,10 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "New Folder",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -151.05828457773245
+    "rotation": 153.61436232010124
   },
   "useDefaultConstraints": true
 }
