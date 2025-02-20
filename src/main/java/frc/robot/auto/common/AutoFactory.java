@@ -9,6 +9,7 @@ import frc.robot.auto.modes.StartLeft.AutoJ2K4L4;
 import frc.robot.auto.modes.StartLeft.AutoK4L4DAK3L3;
 import frc.robot.auto.modes.StartRight.AutoD4C4DAD3C3;
 import frc.robot.auto.modes.StartRight.AutoE2D4C4;
+import frc.robot.auto.modes.safety.DeadReckoning;
 import frc.robot.util.io.Dashboard;
 // select, compile, recompile autos before start of a match
 import java.util.function.Supplier;
@@ -102,7 +103,9 @@ public class AutoFactory {
     AUTO_E2_D4_C4(AutoE2D4C4.class),
 
     AUTO_K4_L4_DA_K3_L3(AutoK4L4DAK3L3.class),
-    AUTO_D4_C4_DA_D3_C3(AutoD4C4DAD3C3.class);
+    AUTO_D4_C4_DA_D3_C3(AutoD4C4DAD3C3.class),
+
+    DEAD_RECKONING(DeadReckoning.class);
 
     private final Class<? extends AutoBase> autoClass;
 

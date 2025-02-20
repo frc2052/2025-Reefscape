@@ -1,9 +1,12 @@
 package frc.robot.auto.modes.StartRight;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.util.AlignmentCalculator.AlignOffset;
+import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 
 @AutoDescription(description = "29 Point Auto - Two L4, Remove Algae, Two L3")
 public class AutoD4C4DAD3C3 extends AutoBase {
@@ -18,21 +21,19 @@ public class AutoD4C4DAD3C3 extends AutoBase {
   @Override
   public void init() {
     addCommands(delaySelectedTime());
+    addCommands(getBumpCommand());
 
-    addCommands(followPathCommand(startingPath));
+    addCommands(safeReefAlignment(startingPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.CD));
+    addCommands(toPosAndScore(TargetAction.L4));
+    addCommands(stationVisionOrPathAlign(Paths.D4_RL, TargetFieldLocation.RCS));
+    addCommands(safeReefAlignment(Paths.RL_C4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
     addCommands(toPosition(TargetAction.L4));
-    addCommands(followPathCommand(Paths.D4_RL));
-    addCommands(followPathCommand(Paths.RL_C4));
-    // addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.RL_C4, SnapLocation.ReefCD));
-    addCommands(toPosition(TargetAction.L4));
-    addCommands(followPathCommand(Paths.C4_RL));
-    addCommands(followPathCommand(Paths.RL_D3));
-    // addCommands(reefSideVisionOrPathAlign(AlignLocation.RIGHT, Paths.RL_D3,
-    // SnapLocation.ReefCD));
-    addCommands(toPosition(TargetAction.L3));
-    addCommands(followPathCommand(Paths.D3_RL));
-    addCommands(followPathCommand(Paths.RL_C3));
-    // addCommands(reefSideVisionOrPathAlign(AlignLocation.LEFT, Paths.RL_C3, SnapLocation.ReefCD));
-    addCommands(toPosition(TargetAction.L3));
+    addCommands(descoreAlgae(Paths.CD_SCORE_TO_DESCORE, TargetAction.UA, Paths.RIGHT_NET_SCORE)); // CD is upper algae
+    addCommands(stationVisionOrPathAlign(Paths.RIGHT_NET_TO_STATION, TargetFieldLocation.RCS));
+    addCommands(HPIntake());
+    addCommands(safeReefAlignment(Paths.RL_D3, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.CD));
+    addCommands(toPosAndScore(TargetAction.L4));
+    addCommands(stationVisionOrPathAlign(Paths.D3_RL, TargetFieldLocation.RCS));
+    addCommands(safeReefAlignment(Paths.RL_C3, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.CD));
   }
 }

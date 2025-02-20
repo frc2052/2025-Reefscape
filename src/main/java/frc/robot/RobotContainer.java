@@ -44,6 +44,8 @@ public class RobotContainer {
   public final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
   public final LedSubsystem leds = LedSubsystem.getInstance();
 
+  public static boolean deadReckoning = false;
+
   private final Telemetry logger =
       new Telemetry(DrivetrainConstants.DRIVE_MAX_SPEED.in(MetersPerSecond));
 
@@ -338,5 +340,13 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return autoFactory.getCompiledAuto();
+  }
+
+  public static boolean getDeadReckoning() {
+    return deadReckoning;
+  }
+
+  public static void setDeadReckoning(boolean isDeadReckoning) {
+    deadReckoning = isDeadReckoning;
   }
 }

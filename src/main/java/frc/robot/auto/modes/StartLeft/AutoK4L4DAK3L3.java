@@ -1,6 +1,7 @@
 package frc.robot.auto.modes.StartLeft;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
@@ -18,26 +19,19 @@ public class AutoK4L4DAK3L3 extends AutoBase {
   }
 
   @Override
-  public void init() {
+  public void init() { // algae
     addCommands(delaySelectedTime());
+    addCommands(getBumpCommand());
 
-    addCommands(
-        reefVisionOrPathAlign(AlignOffset.LEFT_REEF_LOC, startingPath, TargetFieldLocation.KL));
+    addCommands(safeReefAlignment(startingPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
     addCommands(toPosAndScore(TargetAction.L4));
-
-    addCommands(stationVisionOrPathAlign(Paths.K4_LL, TargetFieldLocation.KL));
-    addCommands(HPIntake());
-    addCommands(
-        reefVisionOrPathAlign(
-            AlignOffset.RIGHT_CORAL_STATION_LOC, Paths.LL_L4, TargetFieldLocation.KL));
-    addCommands(toPosAndScore(TargetAction.L4));
-    addCommands(
-        reefVisionOrPathAlign(AlignOffset.LEFT_REEF_LOC, Paths.LL_K3, TargetFieldLocation.KL));
+    addCommands(stationVisionOrPathAlign(Paths.K4_LL, TargetFieldLocation.LCS));
+    addCommands(safeReefAlignment(Paths.LL_L4, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.KL));
+    addCommands(descoreAlgae(Paths.KL_SCORE_TO_DESCORE, TargetAction.UA, Paths.LEFT_NET_SCORE)); // KL is upper algae
+    addCommands(stationVisionOrPathAlign(Paths.LEFT_NET_TO_STATION, TargetFieldLocation.LCS));
+    addCommands(safeReefAlignment(Paths.LL_K3, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
     addCommands(toPosAndScore(TargetAction.L3));
-    addCommands(stationVisionOrPathAlign(Paths.K3_LL, TargetFieldLocation.KL));
-    addCommands(HPIntake());
-    addCommands(
-        reefVisionOrPathAlign(AlignOffset.LEFT_REEF_LOC, Paths.LL_L3, TargetFieldLocation.KL));
-    addCommands(toPosAndScore(TargetAction.L3));
+    addCommands(stationVisionOrPathAlign(Paths.K3_LL, TargetFieldLocation.LCS));
+    addCommands(safeReefAlignment(Paths.LL_L3, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.KL));
   }
 }

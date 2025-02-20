@@ -29,8 +29,9 @@ public class AlignmentCommandFactory {
     }
 
     vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM);
-    
-    Optional<PhotonPipelineResult> tar = vision.getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM);
+
+    Optional<PhotonPipelineResult> tar =
+        vision.getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM);
 
     if (tar.isPresent()) {
       PhotonTrackedTarget camTarget = tar.get().getBestTarget();
@@ -49,7 +50,8 @@ public class AlignmentCommandFactory {
     }
   }
 
-  public static Command getSpecificReefAlignmentCommand(AlignOffset offset, TargetFieldLocation fieldLocation) {
+  public static Command getSpecificReefAlignmentCommand(
+      AlignOffset offset, TargetFieldLocation fieldLocation) {
     if (offset != AlignOffset.LEFT_REEF_LOC
         && offset != AlignOffset.MIDDLE_REEF_LOC
         && offset != AlignOffset.RIGHT_REEF_LOC) {
@@ -58,7 +60,8 @@ public class AlignmentCommandFactory {
 
     vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM);
 
-    Optional<PhotonPipelineResult> tar = vision.getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM);
+    Optional<PhotonPipelineResult> tar =
+        vision.getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM);
 
     if (tar.isPresent()) {
       PhotonTrackedTarget camTarget = tar.get().getBestTarget();

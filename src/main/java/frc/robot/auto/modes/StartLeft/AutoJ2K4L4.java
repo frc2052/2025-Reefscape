@@ -18,20 +18,19 @@ public class AutoJ2K4L4 extends AutoBase {
   }
 
   @Override
-  public void init() {
+  public void init() { // yep
     addCommands(delaySelectedTime());
+    addCommands(getBumpCommand());
 
-    addCommands(followPathCommand(startingPath));
+    addCommands(safeReefAlignment(startingPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.IJ));
     addCommands(toPosAndScore(TargetAction.L2));
-    addCommands(stationVisionOrPathAlign(Paths.J2_LL, TargetFieldLocation.LCS));
+    addCommands(stationVisionOrPathAlign(Paths.J2_LL, TargetFieldLocation.KL));
     addCommands(HPIntake());
-    addCommands(
-        reefVisionOrPathAlign(AlignOffset.LEFT_REEF_LOC, Paths.LL_K4, TargetFieldLocation.KL));
+    addCommands(safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
     addCommands(toPosAndScore(TargetAction.L4));
     addCommands(stationVisionOrPathAlign(Paths.K4_LL, TargetFieldLocation.KL));
     addCommands(HPIntake());
-    addCommands(
-        reefVisionOrPathAlign(AlignOffset.LEFT_REEF_LOC, Paths.LL_K4, TargetFieldLocation.KL));
+    addCommands(safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
     addCommands(toPosAndScore(TargetAction.L4));
   }
 }
