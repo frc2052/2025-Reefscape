@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
 import frc.robot.auto.common.AutoFactory.Auto;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.io.Dashboard;
 import frc.robot.util.io.Ports;
 
@@ -73,7 +75,7 @@ public class LedSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    int code = 5;
+    int code = 0;
     if (!disableLEDs) {
 
       // disabled
@@ -115,6 +117,17 @@ public class LedSubsystem extends SubsystemBase {
       if (DriverStation.isTeleopEnabled()) {
         // example implementation
 
+        if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.HP) {
+          currentStatusMode = LEDStatusMode.DONE_CLIMBING;
+          // } else if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L4)
+          // {
+          //   currentStatusMode = LEDStatusMode.DONE_CLIMBING;
+          // } else if (Math.abs(ClimberSubsystem.getInstance().getSpeed()) > 0) {
+          //   currentStatusMode = LEDStatusMode.CLIMBING;
+        } else if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L1H) {
+          currentStatusMode = LEDStatusMode.SPARKLE;
+        }
+
         // shooting
         // if(RobotState.getInstance().getShooting()){
         //     if(!RobotState.getInstance().getNoteHeldDetected()){
@@ -152,21 +165,21 @@ public class LedSubsystem extends SubsystemBase {
         // }
 
         // }
-
-        code = currentStatusMode.code;
-      } else {
-        // LEDs are disabled
-        code = 3;
       }
 
-      // Code for encoding the code to binary on the digitalOutput pins
-      Dashboard.getInstance().putData("Sending LED Code", code);
-      codeChannel1.set((code & 1) > 0); // 2^0
-      codeChannel2.set((code & 2) > 0); // 2^1
-      codeChannel3.set((code & 4) > 0); // 2^2
-      codeChannel4.set((code & 8) > 0); // 2^3
-      codeChannel5.set((code & 16) > 0); // 2^4
+      code = currentStatusMode.code;
+    } else {
+      // LEDs are disabled
+      code = 3;
     }
+
+    // Code for encoding the code to binary on the digitalOutput pins
+    Dashboard.getInstance().putData("Sending LED Code", code);
+    codeChannel1.set((code & 1) > 0); // 2^0
+    codeChannel2.set((code & 2) > 0); // 2^1
+    codeChannel3.set((code & 4) > 0); // 2^2
+    codeChannel4.set((code & 8) > 0); // 2^3
+    codeChannel5.set((code & 16) > 0); // 2^4
   }
 
   public void setLEDStatusMode(LEDStatusMode statusMode) {

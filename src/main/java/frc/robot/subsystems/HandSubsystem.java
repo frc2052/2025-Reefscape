@@ -117,4 +117,8 @@ public class HandSubsystem extends SubsystemBase {
       coralDelay.update(Timer.getFPGATimestamp(), false);
     }
   }
+
+  public boolean getIsIntaking() {
+    return intaking;
+  }
 }

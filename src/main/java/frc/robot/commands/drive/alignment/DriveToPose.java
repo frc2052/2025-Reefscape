@@ -23,11 +23,11 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveToPose extends Command {
-  private final double driveP = 0.75;
+  private final double driveP = 3.5;
   private final double driveD = 0.0;
   private final double turnP = 4.0;
   private final double turnD = 0.0;
-  private final double driveMaxSpeed = 1.0; // 3.8;
+  private final double driveMaxSpeed = 3.8;
   private final double driveMaxAcceleration = 3.0;
   private final double turnMaxSpeed = Units.degreesToRadians(360.0);
   private final double turnMaxAcceleration = 8.0;
@@ -38,8 +38,8 @@ public class DriveToPose extends Command {
   private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
   private final Supplier<Pose2d> target;
 
-  private final SwerveRequest.ApplyFieldSpeeds driveChassisSpeeds =
-      new SwerveRequest.ApplyFieldSpeeds()
+  private final SwerveRequest.ApplyRobotSpeeds driveChassisSpeeds =
+      new SwerveRequest.ApplyRobotSpeeds()
           .withDesaturateWheelSpeeds(true)
           .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
@@ -133,6 +133,11 @@ public class DriveToPose extends Command {
     // Get current pose and target pose
     Pose2d currentPose = robot.get();
     Pose2d targetPose = target.get();
+
+    if (targetPose == null) {
+      System.out.println("TARGET POSE IS NULL IN : " + this.getName());
+      return;
+    }
 
     // Calculate drive speed
     double currentDistance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
