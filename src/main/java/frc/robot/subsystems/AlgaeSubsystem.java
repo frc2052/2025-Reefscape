@@ -36,7 +36,7 @@ public class AlgaeSubsystem extends SubsystemBase {
   private PIDController controller;
 
   private boolean isIntaking = false;
-  private boolean hasAlgae = false;
+  private static boolean hasAlgae = false;
   private DelayedBoolean intakingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.05);
 
   public static AlgaeSubsystem getInstance() {
@@ -125,7 +125,7 @@ public class AlgaeSubsystem extends SubsystemBase {
     isIntaking = false;
   }
 
-  public boolean getHasAlgae(){
+  public static boolean getHasAlgae(){
     return hasAlgae;
   }
 

@@ -13,7 +13,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class RobotState {
   private SwerveDriveState drivetrainState = new SwerveDriveState();
-  private FieldLocation loca;
+  private static FieldLocation loca;
 
   private boolean isReefTracking;
   private boolean hasCoral;
@@ -42,7 +42,7 @@ public class RobotState {
   public void setFieldLocation(FieldLocation location){
       loca = location;
     }
-  public FieldLocation getFieldLocation(){
+  public static FieldLocation getFieldLocation(){
     return loca;
   }
 

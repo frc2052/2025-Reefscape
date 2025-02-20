@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotState;
+import frc.robot.RobotState.FieldLocation;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.controlboard.PositionSuperstructure;
 import frc.robot.controlboard.PositionSuperstructure.TargetAction;
