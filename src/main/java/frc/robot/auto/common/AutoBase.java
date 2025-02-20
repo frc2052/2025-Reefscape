@@ -139,19 +139,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 () -> true));
   }
 
-  protected Command reefVisionOrPathAlign(
-      AlignOffset offset, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
-    return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
-        .until(
-            () ->
-                vision
-                    .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
-                    .isPresent()) // sees tag, goal pose won't be too far
-        .andThen(
-            new AlignWithFieldElementCommand(
-                snaploc, () -> offset, () -> 0, () -> 0, () -> 0, () -> true));
-  }
-
   protected Command safeReefAlignment(
       PathPlannerPath backupPath, AlignOffset branchSide, TargetFieldLocation snapSide) {
     return new SequentialCommandGroup(followPathCommand(backupPath), snapToReefAngle(snapSide))
@@ -178,7 +165,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
   protected Command stationVisionOrPathAlign(
       PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
-    return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)),
+      followPathCommand(altAlignPath), snapToReefAngle(snaploc))
         .until(
             () ->
                 vision.getCameraClosestTarget(TagTrackerType.REAR_CAM, Meters.of(2.0)).isPresent())
@@ -232,12 +221,14 @@ public abstract class AutoBase extends SequentialCommandGroup {
       ),
 
       // score
-      new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4)),
       new ParallelDeadlineGroup(
         followPathCommand(score),
-        AlgaeCommandFactory.intake().withTimeout(1.5)).andThen(
-        ).
-        andThen(AlgaeCommandFactory.score().withTimeout(1.0))
+        new SequentialCommandGroup(
+          new WaitCommand(1.0),
+          new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
+        ),
+        AlgaeCommandFactory.intake().withTimeout(1.5))
+      .andThen(AlgaeCommandFactory.score().withTimeout(1.0))
     );
   }
 

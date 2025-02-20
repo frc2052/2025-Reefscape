@@ -5,6 +5,7 @@
 package frc.robot.auto.modes;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
@@ -23,6 +24,6 @@ public class AutoLLToK4 extends AutoBase {
   public void init() {
     System.out.println("START LL - K4");
     addCommands(
-        reefVisionOrPathAlign(AlignOffset.LEFT_REEF_LOC, startPath, TargetFieldLocation.KL));
+        safeReefAlignment(startPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
   }
 }
