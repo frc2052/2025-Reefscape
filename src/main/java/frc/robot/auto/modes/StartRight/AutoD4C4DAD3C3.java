@@ -27,7 +27,7 @@ public class AutoD4C4DAD3C3 extends AutoBase {
     addCommands(toPosAndScore(TargetAction.L4));
     addCommands(stationVisionOrPathAlign(Paths.D4_RL, TargetFieldLocation.RCS));
     addCommands(safeReefAlignment(Paths.RL_C4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
-    addCommands(toPosition(TargetAction.L4));
+    addCommands(toPosAndScore(TargetAction.L4));
     addCommands(descoreScoreNetAlgae(Paths.CD_SCORE_TO_DESCORE, TargetAction.UA, Paths.CD_NET)); // CD is upper algae
     addCommands(stationVisionOrPathAlign(Paths.NET_SCORE_RIGHT_STATION, TargetFieldLocation.RCS));
     addCommands(HPIntake());
