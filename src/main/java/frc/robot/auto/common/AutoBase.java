@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
@@ -143,26 +142,27 @@ public abstract class AutoBase extends SequentialCommandGroup {
   }
 
   protected Command safeReefAlignment(
-      PathPlannerPath startPath, AlignOffset branchSide, TargetFieldLocation loc) {
-    return new SequentialCommandGroup(
+      PathPlannerPath startPath, AlignOffset branchside, TargetFieldLocation fieldLoc) {
+    return new ParallelCommandGroup(
+            new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
+                .withTimeout(1.0)
+                .andThen(() -> HandSubsystem.getInstance().stopMotor()),
             followPathCommand(startPath).until(vision::getCoralCameraHasTarget))
-        .andThen(AlignmentCommandFactory.getReefAlignmentCommand(branchSide));
+        .andThen(AlignmentCommandFactory.getReefAlignmentCommand(branchside));
   }
 
   protected Command safeStationAlignment(PathPlannerPath altAlignPath) {
-    // get there while running intake
-    return new SequentialCommandGroup(
-
-    );
-
-    // new ParallelCommandGroup(
-    //         new SequentialCommandGroup(
-    //             new InstantCommand(
-    //                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)),
-    //             (HandCommandFactory.motorIn()).withTimeout(1.5)),
-    //         followPathCommand(altAlignPath))
-    //     .until(vision::getStationCameraHasTarget)
-    //     .andThen(); // TODO: ALignmentCommandFactory
+    return new ParallelCommandGroup(
+        new SequentialCommandGroup(
+            // pivot and intake start running
+            new InstantCommand(
+                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)),
+            new InstantCommand(() -> HandSubsystem.getInstance().motorIn())),
+        //
+        followPathCommand(altAlignPath)
+        // .until(vision::getStationCameraHasTarget)
+        // .andThen() // TODO: ALignmentCommandFactory
+        );
   }
 
   protected Command combinedReefChassisElevatorAlign(
@@ -195,10 +195,10 @@ public abstract class AutoBase extends SequentialCommandGroup {
   // game piece interactions
 
   protected Command HPIntake() {
-    return new ParallelRaceGroup(
-        new InstantCommand(() -> HandCommandFactory.motorIn())
-            .until(() -> HandSubsystem.getInstance().getHasCoral())
-            .withTimeout(2.0));
+    return new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
+        .until(() -> HandSubsystem.getInstance().getHasCoral())
+        .withTimeout(2.5)
+        .andThen(new InstantCommand(() -> HandSubsystem.getInstance().stopMotor()));
   }
 
   protected Command elevatorToPos(TargetAction position) {
@@ -209,7 +209,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command toPosAndScore(TargetAction position) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
-        new WaitCommand(1),
+        new WaitCommand(1.5),
         new ParallelDeadlineGroup(
             HandCommandFactory.motorOut()
                 .withTimeout(1.5)
@@ -270,6 +270,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // ij
     public static final PathPlannerPath J2_LL = getPathFromFile("J LL");
     public static final PathPlannerPath SL_J2 = getPathFromFile("SL J");
+    public static final PathPlannerPath SL_IJ = getPathFromFile("SL IJ");
+    public static final PathPlannerPath LL_IJ = getPathFromFile("LL IJ");
 
     // kl
     public static final PathPlannerPath K3_LL = getPathFromFile("K LL");
@@ -280,6 +282,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
     public static final PathPlannerPath LL_L3 = getPathFromFile("LL L");
     public static final PathPlannerPath LL_L4 = getPathFromFile("LL L");
     public static final PathPlannerPath SL_K4 = getPathFromFile("SL K");
+    public static final PathPlannerPath LL_KL = getPathFromFile("LL KL");
+    public static final PathPlannerPath KL_LL = getPathFromFile("KL LL");
 
     // algae score and descore
     public static final PathPlannerPath KL_NET = getPathFromFile("KL Net");

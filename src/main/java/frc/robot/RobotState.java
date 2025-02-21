@@ -91,10 +91,10 @@ public class RobotState {
   }
 
   public boolean desiredReefFaceIsSeen() {
-    if(seenReefFace == null || desiredReefFace == null) {
+    if (seenReefFace == null || desiredReefFace == null) {
       return false;
     }
-    
+
     return desiredReefFace.getTagID() == seenReefFace.getTagID();
   }
 

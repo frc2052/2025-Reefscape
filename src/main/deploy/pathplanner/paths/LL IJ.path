@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.591455255681819,
-        "y": 4.905408380681817
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 6.148755247988284,
-        "y": 5.696903242397647
-      },
-      "isLocked": false,
-      "linkedName": "Left Net Score"
-    },
-    {
-      "anchor": {
         "x": 1.04325,
         "y": 7.066999999999999
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.20225,
+        "y": 6.76475
+      },
+      "isLocked": false,
+      "linkedName": "Left Load"
+    },
+    {
+      "anchor": {
+        "x": 5.148,
+        "y": 5.18525
+      },
       "prevControl": {
-        "x": 1.91809090909091,
-        "y": 6.780399857954544
+        "x": 4.3875,
+        "y": 6.31625
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Load"
+      "linkedName": "IJ"
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -52.469065804696235
+    "rotation": -117.67207822275876
   },
   "reversed": false,
   "folder": null,

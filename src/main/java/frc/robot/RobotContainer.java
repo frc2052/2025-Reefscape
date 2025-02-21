@@ -22,7 +22,6 @@ import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.subsystems.AlgaeSubsystem;
-import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
@@ -42,7 +41,7 @@ public class RobotContainer {
   public final AdvantageScopeSubsystem advantageScope = AdvantageScopeSubsystem.getInstance();
   public final AutoFactory autoFactory = AutoFactory.getInstance();
   public final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
-  public final LedSubsystem leds = LedSubsystem.getInstance();
+  //   public final LedSubsystem leds = LedSubsystem.getInstance();
 
   public static boolean deadReckoning = false;
 

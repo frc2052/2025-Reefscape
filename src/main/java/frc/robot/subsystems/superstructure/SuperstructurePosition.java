@@ -7,11 +7,11 @@ import edu.wpi.first.units.measure.Angle;
 public class SuperstructurePosition {
   public enum TargetAction {
     HM(1.0, Degrees.of(170.0), Degrees.of(90), ActionType.NONE), // Homing
-    L1L(1.0, Degrees.of(255.0), Degrees.of(90), ActionType.CORAL),
+    // L1L(1.0, Degrees.of(255.0), Degrees.of(90), ActionType.CORAL),
     L1H(1.0, Degrees.of(240.0), Degrees.of(90), ActionType.CORAL),
-    L2(21.0, Degrees.of(287.0), Degrees.of(90), ActionType.CORAL),
+    L2(21.5, Degrees.of(287.0), Degrees.of(90), ActionType.CORAL),
     L3(38.5, Degrees.of(287.0), Degrees.of(90), ActionType.CORAL),
-    L4(63.0, Degrees.of(277.5), Degrees.of(90), ActionType.CORAL),
+    L4(63.0, Degrees.of(278), Degrees.of(90), ActionType.CORAL),
     LA(1.0, Degrees.of(170.0), Degrees.of(18), ActionType.ALGAE), // Lower Algae
     UA(27.0, Degrees.of(170.0), Degrees.of(90), ActionType.ALGAE), // Upper Algae
     HP(1.0, Degrees.of(113), Degrees.of(90), ActionType.STATION), // Coral Station

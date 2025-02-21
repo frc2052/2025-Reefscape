@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.591455255681819,
-        "y": 4.905408380681817
+        "x": 3.8220000000000005,
+        "y": 5.14625
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.148755247988284,
-        "y": 5.696903242397647
+        "x": 2.6422499999991356,
+        "y": 5.887250000002746
       },
       "isLocked": false,
-      "linkedName": "Left Net Score"
+      "linkedName": "KL"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 7.066999999999999
       },
       "prevControl": {
-        "x": 1.91809090909091,
-        "y": 6.780399857954544
+        "x": 2.6032499999991363,
+        "y": 5.858000000002746
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -52.469065804696235
+    "rotation": -53.790543182735576
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -58.0918930643469
   },
   "useDefaultConstraints": true
 }

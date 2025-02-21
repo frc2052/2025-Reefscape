@@ -77,6 +77,7 @@ public class HandSubsystem extends SubsystemBase {
   }
 
   public void motorOut() {
+    intaking = false;
     hasCoral = false;
     coralDelay.update(Timer.getFPGATimestamp(), false);
     setMotor(Constants.HandConstants.OUT_HAND_MOTOR_SPEED);
@@ -104,7 +105,7 @@ public class HandSubsystem extends SubsystemBase {
     if (intaking) {
       if (coralDelay.update(
           Timer.getFPGATimestamp(),
-          MathHelpers.epsilonEquals(motor.getVelocity().getValueAsDouble(), 0.0, 1.0))) {
+          MathHelpers.epsilonEquals(motor.getVelocity().getValueAsDouble(), 0.0, 0.1))) {
         hasCoral = true;
         System.out.println("coralllll");
         // stopMotor();
