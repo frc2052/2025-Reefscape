@@ -187,53 +187,50 @@ public class Constants {
     public static final double OUT_HAND_MOTOR_SPEED = 0.6;
   }
 
+  public static class AlgaePivotConstants {
+    public static final boolean MOTOR_INVERTED = true;
+    public static final double TOLERANCE = 1.0;
 
-  public static class AlgaeArmConstants {
-    public static class PIVOT {
-      public static final boolean MOTOR_INVERTED = true;
-      public static final double TOLERANCE = 1.0;
-
-      public static final Slot0Configs SLOT0_CONFIGS = 
-      new Slot0Configs()
-          .withKP(5.0)
-          .withKI(0.0)
-          .withKD(0.0)
-          .withKS(0.0)
-          .withKV(3.0)
-          .withKA(0.0);
+    public static final Slot0Configs SLOT0_CONFIGS = 
+    new Slot0Configs()
+        .withKP(5.0)
+        .withKI(0.0)
+        .withKD(0.0)
+        .withKS(0.0)
+        .withKV(3.0)
+        .withKA(0.0);
 
 
-      public static final FeedbackConfigs FEEDBACK_CONFIG =
-      new FeedbackConfigs()
-          .withFeedbackRemoteSensorID(Ports.ALGAE_ENCODER_ID)
-          .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-          .withRotorToSensorRatio(100)
-          .withSensorToMechanismRatio(1);
+    public static final FeedbackConfigs FEEDBACK_CONFIG =
+    new FeedbackConfigs()
+        .withFeedbackRemoteSensorID(Ports.ALGAE_ENCODER_ID)
+        .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
+        .withRotorToSensorRatio(100)
+        .withSensorToMechanismRatio(1);
 
-      public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
-          new MotorOutputConfigs()
-              .withInverted(
-                  MOTOR_INVERTED
-                      ? InvertedValue.Clockwise_Positive
-                      : InvertedValue.CounterClockwise_Positive)
-              .withNeutralMode(NeutralModeValue.Brake);
+    public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
+        new MotorOutputConfigs()
+            .withInverted(
+                MOTOR_INVERTED
+                    ? InvertedValue.Clockwise_Positive
+                    : InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake);
 
-      public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
-          new SoftwareLimitSwitchConfigs()
-              .withForwardSoftLimitThreshold(Degrees.of(60)) // TODO: adjust as needed
-              .withForwardSoftLimitEnable(false)
-              .withReverseSoftLimitThreshold(Degrees.of(200))
-              .withReverseSoftLimitEnable(false);
+    public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitThreshold(Degrees.of(60)) // TODO: adjust as needed
+            .withForwardSoftLimitEnable(false)
+            .withReverseSoftLimitThreshold(Degrees.of(200))
+            .withReverseSoftLimitEnable(false);
 
-      public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
-        .withSlot0(SLOT0_CONFIGS)
-        .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-        .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS)
-        .withFeedback(FEEDBACK_CONFIG);
-    }
+    public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
+      .withSlot0(SLOT0_CONFIGS)
+      .withMotorOutput(MOTOR_OUTPUT_CONFIG)
+      .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS)
+      .withFeedback(FEEDBACK_CONFIG);
+  }
 
-
-    public static class SCORER {
+  public static class AlgaeShooterConstants {
       public static final double MOTOR_CURRENT_LIMIT = 60.0;
       public static final double INTAKE_SPEED = 1.0;
       public static final double SCORE_SPEED = -1.0;
@@ -250,7 +247,6 @@ public class Constants {
 
       public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
         .withMotorOutput(MOTOR_OUTPUT_CONFIG);
-    }
   }
   
   public static final class ClimberConstants {

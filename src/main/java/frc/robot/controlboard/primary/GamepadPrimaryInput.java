@@ -103,6 +103,16 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
+  public Trigger outtakeAlgae() {
+    return new Trigger(() -> false);
+  }
+
+  @Override
+  public Trigger intakeAlgae() {
+    return new Trigger(() -> false);
+  }
+
+  @Override
   public Trigger alignWithElement() {
     return new Trigger(() -> false);
   }

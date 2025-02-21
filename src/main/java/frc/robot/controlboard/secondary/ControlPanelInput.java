@@ -52,7 +52,7 @@ public class ControlPanelInput implements ISecondaryControlBoard {
   }
 
   @Override
-  public Trigger setGoalL1L() {
+  public Trigger setGoalCL() {
     return new JoystickButton(controlPanel, 10);
   }
 

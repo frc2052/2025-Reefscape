@@ -7,58 +7,35 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.team2052.lib.util.DelayedBoolean;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.AlgaeArmConstants;
+import frc.robot.Constants.AlgaePivotConstants;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
-public class AlgaeSubsystem extends SubsystemBase {
-  private static AlgaeSubsystem INSTANCE;
+public class AlgaePivotSubsystem extends SubsystemBase {
+  private static AlgaePivotSubsystem INSTANCE;
 
   private final TalonFX pivotMotor;
-  private final TalonFX scoringMotor;
 
   private Angle goalPosition;
 
-  private PIDController controller;
-
-  private boolean isIntaking = false;
-  private boolean hasAlgae = false;
-  private DelayedBoolean intakingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.05);
-
-  public static AlgaeSubsystem getInstance() {
+  public static AlgaePivotSubsystem getInstance() {
     if (INSTANCE == null) {
-      INSTANCE = new AlgaeSubsystem();
+      INSTANCE = new AlgaePivotSubsystem();
     }
     return INSTANCE;
   }
 
-  private AlgaeSubsystem() {
+  private AlgaePivotSubsystem() {
     pivotMotor = new TalonFX(Ports.ALGAE_PIVOT_ID);
-    scoringMotor = new TalonFX(Ports.ALGAE_SCORING_ID);
 
-    pivotMotor.getConfigurator().apply(AlgaeArmConstants.PIVOT.MOTOR_CONFIG);
-
-    CurrentLimitsConfigs limitConfigs = new CurrentLimitsConfigs();
-
-    limitConfigs.SupplyCurrentLimit = AlgaeArmConstants.SCORER.MOTOR_CURRENT_LIMIT;
-    limitConfigs.SupplyCurrentLowerTime = (0.75);
-    limitConfigs.SupplyCurrentLowerLimit = (5.0);
-    limitConfigs.SupplyCurrentLimitEnable = false;
-
-    scoringMotor
-        .getConfigurator()
-        .apply(AlgaeArmConstants.SCORER.MOTOR_CONFIG.withCurrentLimits(limitConfigs));
+    pivotMotor.getConfigurator().apply(AlgaePivotConstants.MOTOR_CONFIG);
 
     goalPosition = TargetAction.HP.getAlgaeArmPivotPosition();
   }
@@ -84,17 +61,6 @@ public class AlgaeSubsystem extends SubsystemBase {
     pivotMotor.set(pct);
   }
 
-  public void intake() {
-    scoringMotor.set(AlgaeArmConstants.SCORER.INTAKE_SPEED);
-    isIntaking = true;
-  }
-
-  public void score() {
-    scoringMotor.set(AlgaeArmConstants.SCORER.SCORE_SPEED);
-    isIntaking = false;
-    hasAlgae = false;
-  }
-
   public Angle getPivotDesiredPosition() {
     return goalPosition;
   }
@@ -104,7 +70,7 @@ public class AlgaeSubsystem extends SubsystemBase {
   }
 
   public boolean isAtDesiredPosition() {
-    return isAtDesiredPosition(AlgaeArmConstants.PIVOT.TOLERANCE);
+    return isAtDesiredPosition(AlgaePivotConstants.TOLERANCE);
   }
 
   public boolean isAtDesiredPosition(double tol) {
@@ -117,11 +83,6 @@ public class AlgaeSubsystem extends SubsystemBase {
 
   public Angle getPivotPosition() {
     return Rotations.of(pivotMotor.getPosition().getValueAsDouble());
-  }
-
-  public void stopScoringMotor() {
-    scoringMotor.stopMotor();
-    isIntaking = false;
   }
 
   @Override

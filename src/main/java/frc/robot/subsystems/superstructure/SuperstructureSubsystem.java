@@ -3,7 +3,7 @@ package frc.robot.subsystems.superstructure;
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.AlgaeSubsystem;
+import frc.robot.subsystems.AlgaePivotSubsystem;
 import frc.robot.subsystems.CoralArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
@@ -13,7 +13,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
   private static SuperstructureSubsystem INSTANCE;
 
-  private AlgaeSubsystem algaeArm = AlgaeSubsystem.getInstance();
+  private AlgaePivotSubsystem algaePivot = AlgaePivotSubsystem.getInstance();
   private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
   private CoralArmSubsystem coralArm = CoralArmSubsystem.getInstance();
 
@@ -124,9 +124,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
       coralArm.setArmPosition(target);
       // algaeArm.setGoalPosition(target);
 
-      if (elevator.atPosition(target)
-          && coralArm.isAtPosition(5, target.getCoralArmAngle())
-          && algaeArm.isAtPosition(5, target.getAlgaeArmPivotPosition())) {
+      if (elevator.atPosition(target) && coralArm.isAtPosition(5, target.getCoralArmAngle())) {
+        // && algaePivot.isAtPosition(5, target.getAlgaeArmPivotPosition())) {
         isChangingState = false;
         Logger.recordOutput("Arrived at Target State", true);
       } else {

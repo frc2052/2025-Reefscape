@@ -235,7 +235,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
                             SuperstructureSubsystem.getInstance()
                                 .setCurrentAction(TargetAction.L4))),
                 AlgaeCommandFactory.intake().withTimeout(1.5))
-            .andThen(AlgaeCommandFactory.score().withTimeout(1.0)));
+            .andThen(AlgaeCommandFactory.outtake().withTimeout(1.0)));
   }
 
   public static final class Paths {

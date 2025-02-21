@@ -118,6 +118,16 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
+  public Trigger outtakeAlgae() {
+    return primaryControlBoard.outtakeAlgae();
+  }
+
+  @Override
+  public Trigger intakeAlgae() {
+    return primaryControlBoard.intakeAlgae();
+  }
+
+  @Override
   public Trigger alignWithElement() {
     return primaryControlBoard.alignWithElement();
   }
@@ -180,8 +190,8 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger setGoalL1L() {
-    return secondaryControlBoard.setGoalL1L();
+  public Trigger setGoalCL() {
+    return secondaryControlBoard.setGoalCL();
   }
 
   @Override

@@ -15,7 +15,7 @@ public interface ISecondaryControlBoard {
 
   Trigger climbDown();
 
-  Trigger setGoalL1L();
+  Trigger setGoalCL();
 
   Trigger setGoalL1H();
 

@@ -43,6 +43,10 @@ public interface IPrimaryControlBoard {
 
   Trigger intake();
 
+  Trigger outtakeAlgae();
+
+  Trigger intakeAlgae();
+
   Trigger sysIDQuasiForward();
 
   Trigger sysIDQuasiReverse();
