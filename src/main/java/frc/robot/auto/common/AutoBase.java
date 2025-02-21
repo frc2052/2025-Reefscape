@@ -4,16 +4,13 @@
 
 package frc.robot.auto.common;
 
-import java.util.List;
-import java.util.Optional;
+import static edu.wpi.first.units.Units.Meters;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import static edu.wpi.first.units.Units.Meters;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,8 +22,6 @@ import frc.robot.RobotState;
 import frc.robot.commands.algae.AlgaeCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
-import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand;
-import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand.DesiredElement;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.subsystems.HandSubsystem;
@@ -38,6 +33,8 @@ import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import frc.robot.util.io.Dashboard;
+import java.util.List;
+import java.util.Optional;
 
 public abstract class AutoBase extends SequentialCommandGroup {
   private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -131,25 +128,26 @@ public abstract class AutoBase extends SequentialCommandGroup {
             () ->
                 vision
                     .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
-                    .isPresent()) // sees tag, goal pose won't be too far
-        .andThen(
-            new AlignWithFieldElementCommand(
-                DesiredElement.REEF,
-                () -> AlignOffset.ALGAE_REEF_LOC,
-                () -> 0,
-                () -> 0,
-                () -> 0,
-                () -> true));
+                    .isPresent()); // sees tag, goal pose won't be too far
+    // .andThen(
+    //     new AlignWithFieldElementCommand(
+    //         DesiredElement.REEF,
+    //         () -> AlignOffset.ALGAE_REEF_LOC,
+    //         () -> 0,
+    //         () -> 0,
+    //         () -> 0,
+    //         () -> true));
   }
 
   protected Command safeReefAlignment(
       PathPlannerPath startPath, AlignOffset branchside, TargetFieldLocation fieldLoc) {
     return new ParallelCommandGroup(
-            new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
-                .withTimeout(1.0)
-                .andThen(() -> HandSubsystem.getInstance().stopMotor()),
-            followPathCommand(startPath).until(vision::getCoralCameraHasTarget)
-        .andThen(AlignmentCommandFactory.getReefAlignmentCommand(branchside)));
+        new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
+            .withTimeout(1.0)
+            .andThen(() -> HandSubsystem.getInstance().stopMotor()),
+        followPathCommand(startPath)
+            .until(vision::getCoralCameraHasTarget)
+            .andThen(AlignmentCommandFactory.getReefAlignmentCommand(branchside)));
   }
 
   protected Command safeStationAlignment(PathPlannerPath altAlignPath) {
@@ -187,10 +185,12 @@ public abstract class AutoBase extends SequentialCommandGroup {
     return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
         .until(
             () ->
-                vision.getCameraClosestTarget(TagTrackerType.ALGAE_CAM, Meters.of(1.0)).isPresent())
-        .andThen(
-            new AlignWithFieldElementCommand(
-                DesiredElement.PROCESSOR, () -> offset, () -> 0, () -> 0, () -> 0, () -> true));
+                vision
+                    .getCameraClosestTarget(TagTrackerType.ALGAE_CAM, Meters.of(1.0))
+                    .isPresent());
+    // .andThen(
+    //     new AlignWithFieldElementCommand(
+    //         DesiredElement.PROCESSOR, () -> offset, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   // game piece interactions

@@ -5,7 +5,6 @@
 package frc.robot.auto.modes.StartRight;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
@@ -16,16 +15,16 @@ import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 /** Add your docs here. */
 public class AutoE1D1C1 extends AutoBase {
 
-    private static final PathPlannerPath startingPath = Paths.SR_EF;
-    
-    public AutoE1D1C1(){
-        super(startingPath.getStartingHolonomicPose());
-    }
+  private static final PathPlannerPath startingPath = Paths.SR_EF;
 
-    @Override
-    public void init() {
-        addCommands(delaySelectedTime());
-        addCommands(getBumpCommand());
+  public AutoE1D1C1() {
+    super(startingPath.getStartingHolonomicPose());
+  }
+
+  @Override
+  public void init() {
+    addCommands(delaySelectedTime());
+    addCommands(getBumpCommand());
 
     addCommands(
         new InstantCommand(
@@ -43,5 +42,5 @@ public class AutoE1D1C1 extends AutoBase {
     addCommands(
         safeReefAlignment(Paths.RL_EF, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.EF));
     addCommands(toPosAndScore(TargetAction.L1H));
-    }
+  }
 }

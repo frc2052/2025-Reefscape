@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.RobotState;
 import frc.robot.commands.drive.DefaultDriveCommand;
-import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand.DesiredElement;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
@@ -126,5 +125,12 @@ public class AlignmentCommandFactory {
             + " and the field location "
             + offset.toString()
             + " do not match!");
+  }
+
+  public static enum DesiredElement {
+    PROCESSOR,
+    REEF,
+    CORALSTATION,
+    SPECIFIC_REEF_FACE;
   }
 }

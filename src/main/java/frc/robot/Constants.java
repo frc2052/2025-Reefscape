@@ -296,9 +296,9 @@ public class Constants {
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
-      public static final Distance X_OFFSET = Inches.of(9.868); // forward
-      public static final Distance Y_OFFSET = Inches.of(0.509); // left
-      public static final Distance Z_OFFSET = Inches.of(8.193); // up
+      public static final Distance X_OFFSET = Inches.of(9); // forward positive
+      public static final Distance Y_OFFSET = Inches.of(-0.5); // left positive
+      public static final Distance Z_OFFSET = Inches.of(7.875); // up positive
 
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
       public static final Angle THETA_Y_OFFSET = Degrees.of(-21.84); // pitch

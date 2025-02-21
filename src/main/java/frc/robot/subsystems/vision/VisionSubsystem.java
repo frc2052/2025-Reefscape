@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants.AlgaeReefCameraConstants;
 import frc.robot.Constants.VisionConstants.CoralReefCameraConstants;
-import frc.robot.Constants.VisionConstants.RearCameraConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.util.FieldConstants;
@@ -38,8 +37,8 @@ public class VisionSubsystem extends SubsystemBase {
       new TagTracker(CoralReefCameraConstants.TagTrackerConstants(), robotState);
   private TagTracker algaeTagTracker =
       new TagTracker(AlgaeReefCameraConstants.TagTrackerConstants(), robotState);
-  private TagTracker rearTagTracker =
-      new TagTracker(RearCameraConstants.TagTrackerConstants(), robotState);
+  // private TagTracker rearTagTracker =
+  //     new TagTracker(RearCameraConstants.TagTrackerConstants(), robotState);
 
   private static VisionSubsystem INSTANCE;
 
@@ -52,7 +51,7 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   private VisionSubsystem() {
-    Collections.addAll(localizationTagTrackers, reefTagTracker, algaeTagTracker, rearTagTracker);
+    Collections.addAll(localizationTagTrackers, reefTagTracker, algaeTagTracker);
   }
 
   public Optional<PhotonPipelineResult> getCameraClosestTarget(TagTrackerType trackerType) {
@@ -64,9 +63,9 @@ public class VisionSubsystem extends SubsystemBase {
     return getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5)).isPresent();
   }
 
-  public boolean getStationCameraHasTarget() {
-    return getCameraClosestTarget(TagTrackerType.REAR_CAM, Meters.of(1.5)).isPresent();
-  }
+  // public boolean getStationCameraHasTarget() {
+  //   return getCameraClosestTarget(TagTrackerType.REAR_CAM, Meters.of(1.5)).isPresent();
+  // }
 
   public Optional<PhotonPipelineResult> getCameraClosestTarget(
       TagTrackerType trackerType, Distance maxDistance) {
@@ -78,8 +77,8 @@ public class VisionSubsystem extends SubsystemBase {
         return maxDistance(reefTagTracker.getClosestTagToCamera(), maxDistance);
       case ALGAE_CAM:
         return maxDistance(algaeTagTracker.getClosestTagToCamera(), maxDistance);
-      case REAR_CAM:
-        return maxDistance(rearTagTracker.getClosestTagToCamera(), maxDistance);
+        // case REAR_CAM:
+        //   return maxDistance(rearTagTracker.getClosestTagToCamera(), maxDistance);
       default:
         return Optional.empty();
     }
@@ -122,8 +121,8 @@ public class VisionSubsystem extends SubsystemBase {
         return reefTagTracker.constants.tagLayout;
       case ALGAE_CAM:
         return algaeTagTracker.constants.tagLayout;
-      case REAR_CAM:
-        return rearTagTracker.constants.tagLayout;
+        // case REAR_CAM:
+        //   return rearTagTracker.constants.tagLayout;
       default:
         return FieldConstants.DEFAULT_APRIL_TAG_LAYOUT_TYPE.layout;
     }
@@ -134,22 +133,22 @@ public class VisionSubsystem extends SubsystemBase {
       case CORAL_REEF_CAM:
         reefTagTracker.setWeight(0.6);
         algaeTagTracker.setWeight(1.2);
-        rearTagTracker.setWeight(1.2);
+        // rearTagTracker.setWeight(1.2);
       case ALGAE_CAM:
         reefTagTracker.setWeight(1.2);
         algaeTagTracker.setWeight(0.6);
-        rearTagTracker.setWeight(1.2);
-      case REAR_CAM:
-        reefTagTracker.setWeight(1.2);
-        algaeTagTracker.setWeight(1.2);
-        rearTagTracker.setWeight(0.6);
+        // rearTagTracker.setWeight(1.2);
+        // case REAR_CAM:
+        //   reefTagTracker.setWeight(1.2);
+        //   algaeTagTracker.setWeight(1.2);
+        //   rearTagTracker.setWeight(0.6);
     }
   }
 
   public void resetPrimaryFocus() {
     reefTagTracker.setWeight(1.0);
     algaeTagTracker.setWeight(1.0);
-    rearTagTracker.setWeight(1.0);
+    // rearTagTracker.setWeight(1.0);
   }
 
   @Override
@@ -164,7 +163,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   public enum TagTrackerType {
     CORAL_REEF_CAM,
-    ALGAE_CAM,
-    REAR_CAM;
+    ALGAE_CAM;
+    // REAR_CAM;
   }
 }

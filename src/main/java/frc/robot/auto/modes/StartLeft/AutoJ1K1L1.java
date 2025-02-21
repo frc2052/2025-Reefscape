@@ -5,7 +5,6 @@
 package frc.robot.auto.modes.StartLeft;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
