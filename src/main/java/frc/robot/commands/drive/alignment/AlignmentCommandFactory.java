@@ -3,6 +3,7 @@ package frc.robot.commands.drive.alignment;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.RobotState;
 import frc.robot.commands.drive.DefaultDriveCommand;
@@ -52,10 +53,11 @@ public class AlignmentCommandFactory {
       invalidCombination(DesiredElement.REEF, offset);
     }
 
-    Supplier<Pose2d> targetSupplier = () -> robotState.getAlignPose();
-    BooleanSupplier shouldAlign = () -> robotState.getHasAlignPose();
+    Supplier<Pose2d> targetSupplier = robotState::getAlignPose;
+    BooleanSupplier seesDesiredFace = robotState::desiredReefFaceIsSeen;
 
     return Commands.runOnce(() -> vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM), vision)
+        .andThen(new InstantCommand(() -> robotState.setDesiredReefFace(fieldLocation)))
         .andThen(
             Commands.either(
                 new DriveToPose(
@@ -65,7 +67,7 @@ public class AlignmentCommandFactory {
                     controlBoard::getStrafe,
                     controlBoard::getRotation),
                 getDefaultDriveCommand(),
-                shouldAlign));
+                seesDesiredFace));
   }
 
   private static Command getDefaultDriveCommand() {
