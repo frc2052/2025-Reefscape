@@ -60,7 +60,7 @@ public class Constants {
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
             .withSupplyCurrentLimitEnable(true)
-            .withSupplyCurrentLimit(Amps.of(40))
+            .withSupplyCurrentLimit(Amps.of(80))
             .withSupplyCurrentLowerLimit(Amps.of(40))
             .withSupplyCurrentLowerTime(Seconds.of(0.1));
 
@@ -141,6 +141,15 @@ public class Constants {
     public static final Angle MIN_CORAL_ARM_ANGLE = Degrees.of(30);
     public static final Angle MAX_CORAL_ARM_ANGLE = Degrees.of(330);
 
+
+    public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
+        new CurrentLimitsConfigs()
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(Amps.of(70))
+            .withSupplyCurrentLowerLimit(Amps.of(30))
+            .withStatorCurrentLimit(Amps.of(100))
+            .withSupplyCurrentLowerTime(Seconds.of(0.2));
+            
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
             .withKP(75.0)
@@ -177,7 +186,8 @@ public class Constants {
             .withSlot0(SLOT0_CONFIGS)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
             .withFeedback(FEEDBACK_CONFIG)
-            .withAudio(new AudioConfigs().withBeepOnBoot(false));
+            .withAudio(new AudioConfigs().withBeepOnBoot(false))
+            .withCurrentLimits(CURRENT_LIMIT_CONFIG);
   }
 
   public static class HandConstants {
@@ -190,6 +200,14 @@ public class Constants {
   public static class AlgaePivotConstants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double TOLERANCE = 1.0;
+
+    public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
+        new CurrentLimitsConfigs()
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(Amps.of(70))
+            .withSupplyCurrentLowerLimit(Amps.of(40))
+            .withStatorCurrentLimit(Amps.of(120))
+            .withSupplyCurrentLowerTime(Seconds.of(0.2));
 
     public static final Slot0Configs SLOT0_CONFIGS = 
     new Slot0Configs()
@@ -227,7 +245,8 @@ public class Constants {
       .withSlot0(SLOT0_CONFIGS)
       .withMotorOutput(MOTOR_OUTPUT_CONFIG)
       .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS)
-      .withFeedback(FEEDBACK_CONFIG);
+      .withFeedback(FEEDBACK_CONFIG)
+      .withCurrentLimits(CURRENT_LIMIT_CONFIG);
   }
 
   public static class AlgaeShooterConstants {
