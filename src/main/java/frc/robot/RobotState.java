@@ -1,11 +1,8 @@
 package frc.robot;
 
-import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
-import com.ctre.phoenix6.swerve.jni.SwerveJNI.DriveState;
 import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -19,7 +16,6 @@ public class RobotState {
   private boolean hasCoral;
 
   private static RobotState INSTANCE;
-  
 
   public static RobotState getInstance() {
     if (INSTANCE == null) {
@@ -39,10 +35,11 @@ public class RobotState {
     return MathHelpers.POSE_2D_ZERO;
   }
 
-  public void setFieldLocation(FieldLocation location){
-      loca = location;
-    }
-  public static FieldLocation getFieldLocation(){
+  public void setFieldLocation(FieldLocation location) {
+    loca = location;
+  }
+
+  public static FieldLocation getFieldLocation() {
     return loca;
   }
 
@@ -96,21 +93,20 @@ public class RobotState {
   }
 
   public enum FieldLocation {
-    HP(new Translation2d(0,0)),// adjust these values. 
-    REEF(new Translation2d(0,0)),
-    BARGE(new Translation2d(0,0)),
-    PROCESSOR(new Translation2d(0,0)),
-    TRAVEL (new Translation2d(0,0));
+    HP(new Translation2d(0, 0)), // adjust these values.
+    REEF(new Translation2d(0, 0)),
+    BARGE(new Translation2d(0, 0)),
+    PROCESSOR(new Translation2d(0, 0)),
+    TRAVEL(new Translation2d(0, 0));
 
-    public final Translation2d pose; 
+    public final Translation2d pose;
 
-    private FieldLocation(Translation2d pose){
+    private FieldLocation(Translation2d pose) {
       this.pose = pose;
     }
 
-    public Translation2d getPose(){
-     return pose;
-
+    public Translation2d getPose() {
+      return pose;
+    }
   }
-}
 }

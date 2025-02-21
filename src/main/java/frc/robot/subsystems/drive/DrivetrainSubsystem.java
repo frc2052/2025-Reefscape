@@ -11,7 +11,6 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team2052.lib.vision.MultiTagPoseEstimate;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -37,7 +36,6 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
   private static final double kSimLoopPeriod = 0.005; // 5 ms
   private Notifier simNotifier = null;
   private double lastSimTime;
-
 
   /* Keep track if we've ever applied the driver perspective before or not */
   private boolean hasAppliedOperatorPerspective = false;
@@ -144,34 +142,31 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
     }
 
     robotState.addDrivetrainState(super.getState());
-    
+
     setFieldLocation();
   }
 
-  private void setFieldLocation(){
+  private void setFieldLocation() {
     Pose2d robotPose = robotState.getFieldToRobot();
-    Translation2d robotTranslation = robotPose.getTranslation(); // adjust the following values. 
-    if (robotTranslation.getDistance(FieldLocation.HP.getPose()) <= 1){
+    Translation2d robotTranslation = robotPose.getTranslation(); // adjust the following values.
+    if (robotTranslation.getDistance(FieldLocation.HP.getPose()) <= 1) {
       robotState.setFieldLocation(FieldLocation.HP);
 
-    }else if (robotTranslation.getDistance(FieldLocation.REEF.getPose()) <= 1){
+    } else if (robotTranslation.getDistance(FieldLocation.REEF.getPose()) <= 1) {
       robotState.setFieldLocation(FieldLocation.REEF);
 
-    }else if (robotTranslation.getDistance(FieldLocation.BARGE.getPose()) <= 1){
+    } else if (robotTranslation.getDistance(FieldLocation.BARGE.getPose()) <= 1) {
       robotState.setFieldLocation(FieldLocation.BARGE);
 
-    }else if (robotTranslation.getDistance(FieldLocation.PROCESSOR.getPose()) <= 1){
+    } else if (robotTranslation.getDistance(FieldLocation.PROCESSOR.getPose()) <= 1) {
       robotState.setFieldLocation(FieldLocation.PROCESSOR);
-   }else {
+    } else {
       robotState.setFieldLocation(FieldLocation.TRAVEL);
-   }
-  
-
+    }
   }
 
-  private void setTargetAction(){
+  private void setTargetAction() {
     PositionSuperstructure.getInstance().setTargetAction(TargetAction.TR);
-
   }
 
   private void startSimThread() {
@@ -190,8 +185,6 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
             });
 
     simNotifier.startPeriodic(kSimLoopPeriod);
-
-    
   }
 
   /* Swerve requests to apply during SysId characterization */

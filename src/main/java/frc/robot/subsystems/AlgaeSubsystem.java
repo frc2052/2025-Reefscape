@@ -125,7 +125,7 @@ public class AlgaeSubsystem extends SubsystemBase {
     isIntaking = false;
   }
 
-  public static boolean getHasAlgae(){
+  public static boolean getHasAlgae() {
     return hasAlgae;
   }
 

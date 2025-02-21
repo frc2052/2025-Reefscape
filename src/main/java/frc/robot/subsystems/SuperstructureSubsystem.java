@@ -127,7 +127,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     //     isChangingState = false;
     //     Logger.recordOutput("Arrived at Target State", true);
     //   } else {
-    //     Logger.recordOutput("Arrived at Target State", false);
+    //     Logger.recoxxxxxrdOutput("Arrived at Target State", false);
     //   }
     // }
 
@@ -135,21 +135,22 @@ public class SuperstructureSubsystem extends SubsystemBase {
     setTargetAction();
   }
 
-
-  private void setTargetAction(){ // todo: these following lines of code requires more fine tuning, which we can do if we pursue with this aproach. 
-    if(RobotState.getFieldLocation() == FieldLocation.HP){
+  private void
+      setTargetAction() { // todo: these following lines of code requires more fine tuning, which we
+    // can do if we pursue with this aproach.
+    if (RobotState.getFieldLocation() == FieldLocation.HP) {
       PositionSuperstructure.getInstance().setTargetAction(TargetAction.HP);
-    }else if(RobotState.getFieldLocation()  == FieldLocation.REEF){
+    } else if (RobotState.getFieldLocation() == FieldLocation.REEF) {
       PositionSuperstructure.getInstance().setTargetAction(TargetAction.L3);
-    } else if(RobotState.getFieldLocation()  == FieldLocation.PROCESSOR){
+    } else if (RobotState.getFieldLocation() == FieldLocation.PROCESSOR) {
       PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM);
-    } else if(RobotState.getFieldLocation()  == FieldLocation.BARGE){
-      if (AlgaeSubsystem.getHasAlgae()){
+    } else if (RobotState.getFieldLocation() == FieldLocation.BARGE) {
+      if (AlgaeSubsystem.getHasAlgae()) {
         PositionSuperstructure.getInstance().setTargetAction(TargetAction.AS);
-      }else{
+      } else {
         PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM);
       }
-    } else{
+    } else {
       PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM);
     }
   }

@@ -49,9 +49,12 @@ public class DefaultDriveCommand extends Command {
           .withDriveRequestType(DriveRequestType.Velocity)
           .withDesaturateWheelSpeeds(true);
 
-  /**
-   */
-  public DefaultDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier,DoubleSupplier rotationSupplier,BooleanSupplier fieldCentricSupplier) {
+  /** */
+  public DefaultDriveCommand(
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier,
+      DoubleSupplier rotationSupplier,
+      BooleanSupplier fieldCentricSupplier) {
 
     this.xSupplier = xSupplier;
     this.ySupplier = ySupplier;
