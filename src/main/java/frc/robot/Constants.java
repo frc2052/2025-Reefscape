@@ -190,13 +190,25 @@ public class Constants {
 
   public static class AlgaeArmConstants {
     public static class PIVOT {
-      public static final boolean MOTOR_INVERTED = false;
+      public static final boolean MOTOR_INVERTED = true;
       public static final double TOLERANCE = 1.0;
 
-      public static final double P = 1.0;
-      public static final double I = 0.0;
-      public static final double D = 0.0;
+      public static final Slot0Configs SLOT0_CONFIGS = 
+      new Slot0Configs()
+          .withKP(5.0)
+          .withKI(0.0)
+          .withKD(0.0)
+          .withKS(0.0)
+          .withKV(3.0)
+          .withKA(0.0);
 
+
+      public static final FeedbackConfigs FEEDBACK_CONFIG =
+      new FeedbackConfigs()
+          .withFeedbackRemoteSensorID(Ports.ALGAE_ENCODER_ID)
+          .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
+          .withRotorToSensorRatio(100)
+          .withSensorToMechanismRatio(1);
 
       public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
           new MotorOutputConfigs()
@@ -214,15 +226,17 @@ public class Constants {
               .withReverseSoftLimitEnable(false);
 
       public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
+        .withSlot0(SLOT0_CONFIGS)
         .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-        .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS);
+        .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS)
+        .withFeedback(FEEDBACK_CONFIG);
     }
 
 
     public static class SCORER {
       public static final double MOTOR_CURRENT_LIMIT = 60.0;
-      public static final double INTAKE_SPEED = -1.0;
-      public static final double SCORE_SPEED = 1.0;
+      public static final double INTAKE_SPEED = 1.0;
+      public static final double SCORE_SPEED = -1.0;
 
       public static final boolean MOTOR_INVERTED = false;
 

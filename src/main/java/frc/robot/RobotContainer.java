@@ -106,7 +106,7 @@ public class RobotContainer {
     controlBoard
         .intake()
         .whileTrue(
-            false
+            true
                 // SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
                 //         == ActionType.ALGAE
                 ? AlgaeCommandFactory.intake()
@@ -114,14 +114,14 @@ public class RobotContainer {
     controlBoard
         .outtake()
         .whileTrue(
-            false
+            true
                 // SuperstructureSubsystem.getInstance().getCurrentAction().getActionType()
                 //         == ActionType.ALGAE
                 ? AlgaeCommandFactory.score()
-                : HandCommandFactory.motorOut())
-        .onFalse(
-            new InstantCommand(
-                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
+                : HandCommandFactory.motorOut());
+    // .onFalse(
+    //     new InstantCommand(
+    //         () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
 
     controlBoard
         .alignWithElement()
@@ -211,6 +211,9 @@ public class RobotContainer {
                         .setSelectedTargetAction(TargetAction.L4, false)));
     controlBoard
         .setGoalLowerAlgae()
+        // .onTrue(
+        //     new InstantCommand(() ->
+        // AlgaeSubsystem.getInstance().setPivotAngle(Degrees.of(195))));
         .onTrue(
             new InstantCommand(
                 () -> {
@@ -221,6 +224,9 @@ public class RobotContainer {
                 }));
     controlBoard
         .setGoalUpperAlgae()
+        // .onTrue(
+        //     new InstantCommand(() ->
+        // AlgaeSubsystem.getInstance().setPivotAngle(Degrees.of(250))));
         .onTrue(
             new InstantCommand(
                 () -> {

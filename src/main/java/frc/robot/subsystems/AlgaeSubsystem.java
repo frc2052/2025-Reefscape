@@ -5,14 +5,14 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team2052.lib.util.DelayedBoolean;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -27,8 +27,6 @@ public class AlgaeSubsystem extends SubsystemBase {
 
   private final TalonFX pivotMotor;
   private final TalonFX scoringMotor;
-
-  private final AnalogEncoder pivotEncoder;
 
   private Angle goalPosition;
 
@@ -48,7 +46,6 @@ public class AlgaeSubsystem extends SubsystemBase {
   private AlgaeSubsystem() {
     pivotMotor = new TalonFX(Ports.ALGAE_PIVOT_ID);
     scoringMotor = new TalonFX(Ports.ALGAE_SCORING_ID);
-    pivotEncoder = new AnalogEncoder(Ports.ALGAE_ENCODER_ID);
 
     pivotMotor.getConfigurator().apply(AlgaeArmConstants.PIVOT.MOTOR_CONFIG);
 
@@ -63,28 +60,20 @@ public class AlgaeSubsystem extends SubsystemBase {
         .getConfigurator()
         .apply(AlgaeArmConstants.SCORER.MOTOR_CONFIG.withCurrentLimits(limitConfigs));
 
-    controller =
-        new PIDController(
-            AlgaeArmConstants.PIVOT.P, AlgaeArmConstants.PIVOT.I, AlgaeArmConstants.PIVOT.D);
-
-    goalPosition = TargetAction.HP.getAlgaeArmPosition();
+    goalPosition = TargetAction.HP.getAlgaeArmPivotPosition();
   }
 
-  private void setPivotAngle(Angle angle) {
-    if (angle == goalPosition && isAtPosition(AlgaeArmConstants.PIVOT.TOLERANCE, goalPosition)) {
+  public void setPivotAngle(Angle angle) {
+    if (angle == goalPosition && isAtDesiredPosition()) {
       return;
     }
 
-    if (hasAlgae && angle.in(Degrees) < 90) {
-      return;
-    }
-
-    // pivotMotor.set(controller.calculate(pivotEncoder.get(), angle.in(Rotations)));
+    pivotMotor.setControl(new PositionVoltage(angle));
   }
 
   public void setGoalPosition(TargetAction position) {
-    this.goalPosition = position.getAlgaeArmPosition();
-    setPivotAngle(goalPosition);
+    this.goalPosition = position.getAlgaeArmPivotPosition();
+    // setPivotAngle(goalPosition);
   }
 
   public Command runPivotPct(double pct) {
@@ -93,7 +82,6 @@ public class AlgaeSubsystem extends SubsystemBase {
 
   private void setPivotSpeed(double pct) {
     pivotMotor.set(pct);
-    // pivotMotor.setControl(new TorqueCurrentFOC(pct * 40)); // percent of 40 amps
   }
 
   public void intake() {
@@ -107,16 +95,28 @@ public class AlgaeSubsystem extends SubsystemBase {
     hasAlgae = false;
   }
 
-  public boolean isAtPosition(Angle goal) {
-    return pivotMotor.getPosition().getValueAsDouble()
-            < goal.in(Degrees) + AlgaeArmConstants.PIVOT.TOLERANCE
-        && pivotMotor.getPosition().getValueAsDouble()
-            > goal.in(Degrees) - AlgaeArmConstants.PIVOT.TOLERANCE;
+  public Angle getPivotDesiredPosition() {
+    return goalPosition;
+  }
+
+  public Angle getPivotAngle() {
+    return pivotMotor.getPosition().getValue();
+  }
+
+  public boolean isAtDesiredPosition() {
+    return isAtDesiredPosition(AlgaeArmConstants.PIVOT.TOLERANCE);
+  }
+
+  public boolean isAtDesiredPosition(double tol) {
+    return isAtPosition(tol, goalPosition);
   }
 
   public boolean isAtPosition(double tol, Angle goal) {
-    return pivotMotor.getPosition().getValueAsDouble() < goal.in(Degrees) + tol
-        && pivotMotor.getPosition().getValueAsDouble() > goal.in(Degrees) - tol;
+    return Math.abs(getPivotPosition().in(Degrees) - goal.in(Degrees)) <= tol;
+  }
+
+  public Angle getPivotPosition() {
+    return Rotations.of(pivotMotor.getPosition().getValueAsDouble());
   }
 
   public void stopScoringMotor() {
@@ -126,9 +126,9 @@ public class AlgaeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Logger.recordOutput("Algae Arm/Angle", Units.radiansToDegrees(pivotEncoder.get()));
+    Logger.recordOutput("Algae Arm/Angle", getPivotPosition().in(Degrees));
     Logger.recordOutput("Algae Arm/Goal Angle", goalPosition.in(Degrees));
-    Logger.recordOutput("Algae Arm/At Goal", isAtPosition(goalPosition));
+    Logger.recordOutput("Algae Arm/At Goal", isAtDesiredPosition());
 
     // if (isIntaking) {
     //   if (intakingDelay.update(

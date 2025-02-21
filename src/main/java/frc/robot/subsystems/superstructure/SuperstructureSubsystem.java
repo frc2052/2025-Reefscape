@@ -122,11 +122,11 @@ public class SuperstructureSubsystem extends SubsystemBase {
         elevator.setPositionMotionMagic(target);
       }
       coralArm.setArmPosition(target);
-      algaeArm.setGoalPosition(target);
+      // algaeArm.setGoalPosition(target);
 
       if (elevator.atPosition(target)
           && coralArm.isAtPosition(5, target.getCoralArmAngle())
-          && algaeArm.isAtPosition(5, target.getAlgaeArmPosition())) {
+          && algaeArm.isAtPosition(5, target.getAlgaeArmPivotPosition())) {
         isChangingState = false;
         Logger.recordOutput("Arrived at Target State", true);
       } else {

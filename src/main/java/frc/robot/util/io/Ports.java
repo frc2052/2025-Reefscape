@@ -14,6 +14,7 @@ public class Ports {
 
   public static final int ALGAE_PIVOT_ID = 4;
   public static final int ALGAE_SCORING_ID = 5;
+  public static final int ALGAE_ENCODER_ID = 6;
 
   /*
    *  Bus: Krawlivore
@@ -26,8 +27,6 @@ public class Ports {
   /*
    *  DIO
    */
-
-  public static final int ALGAE_ENCODER_ID = 0;
 
   public static final int LED_CHANNEL_1_PIN = 5;
   public static final int LED_CHANNEL_2_PIN = 6;
