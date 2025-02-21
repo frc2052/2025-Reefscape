@@ -4,13 +4,16 @@
 
 package frc.robot.auto.common;
 
-import static edu.wpi.first.units.Units.Meters;
+import java.util.List;
+import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import static edu.wpi.first.units.Units.Meters;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -35,8 +38,6 @@ import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import frc.robot.util.io.Dashboard;
-import java.util.List;
-import java.util.Optional;
 
 public abstract class AutoBase extends SequentialCommandGroup {
   private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -147,8 +148,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
             new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
                 .withTimeout(1.0)
                 .andThen(() -> HandSubsystem.getInstance().stopMotor()),
-            followPathCommand(startPath).until(vision::getCoralCameraHasTarget))
-        .andThen(AlignmentCommandFactory.getReefAlignmentCommand(branchside));
+            followPathCommand(startPath).until(vision::getCoralCameraHasTarget)
+        .andThen(AlignmentCommandFactory.getReefAlignmentCommand(branchside)));
   }
 
   protected Command safeStationAlignment(PathPlannerPath altAlignPath) {
@@ -262,6 +263,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // ef
     public static final PathPlannerPath E2_RL = getPathFromFile("E RL");
     public static final PathPlannerPath SR_E2 = getPathFromFile("SR E");
+    public static final PathPlannerPath SR_EF = getPathFromFile("SR EF");
+    public static final PathPlannerPath EF_RL = getPathFromFile("EF RL");
+    public static final PathPlannerPath RL_EF = getPathFromFile("RL REF");
 
     // gh
     public static final PathPlannerPath SC_H4 = getPathFromFile("SC H");

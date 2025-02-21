@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.auto.modes.StartLeft;
+package frc.robot.auto.modes.StartRight;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -14,34 +14,34 @@ import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 
 /** Add your docs here. */
-public class AutoJ1K1L1 extends AutoBase {
+public class AutoE1D1C1 extends AutoBase {
 
-  public static final PathPlannerPath startingPath = Paths.SL_IJ;
+    private static final PathPlannerPath startingPath = Paths.SR_EF;
+    
+    public AutoE1D1C1(){
+        super(startingPath.getStartingHolonomicPose());
+    }
 
-  public AutoJ1K1L1() {
-    super(startingPath.getStartingHolonomicPose());
-  }
-
-  @Override
-  public void init() {
-    addCommands(delaySelectedTime());
-    addCommands(getBumpCommand());
+    @Override
+    public void init() {
+        addCommands(delaySelectedTime());
+        addCommands(getBumpCommand());
 
     addCommands(
         new InstantCommand(
             () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
     addCommands(
-        safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.KL));
+        safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.EF));
     addCommands(toPosAndScore(TargetAction.L1H));
-    addCommands(safeStationAlignment(Paths.J2_LL));
+    addCommands(safeStationAlignment(Paths.EF_RL));
     addCommands(HPIntake());
     addCommands(
-        safeReefAlignment(Paths.LL_KL, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.KL));
+        safeReefAlignment(Paths.RL_EF, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.EF));
     addCommands(toPosAndScore(TargetAction.L1H));
-    addCommands(safeStationAlignment(Paths.KL_LL));
+    addCommands(safeStationAlignment(Paths.EF_RL));
     addCommands(HPIntake());
     addCommands(
-        safeReefAlignment(Paths.LL_KL, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.KL));
+        safeReefAlignment(Paths.RL_EF, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.EF));
     addCommands(toPosAndScore(TargetAction.L1H));
-  }
+    }
 }
