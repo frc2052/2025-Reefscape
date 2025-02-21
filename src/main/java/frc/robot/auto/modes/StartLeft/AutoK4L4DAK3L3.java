@@ -24,15 +24,15 @@ public class AutoK4L4DAK3L3 extends AutoBase {
 
     addCommands(safeReefAlignment(startingPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
     addCommands(toPosAndScore(TargetAction.L4));
-    addCommands(stationVisionOrPathAlign(Paths.K4_LL, TargetFieldLocation.LCS));
+    addCommands(safeStationAlignment(Paths.K4_LL));
     addCommands(safeReefAlignment(Paths.LL_L4, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.KL));
     addCommands(
         descoreScoreNetAlgae(
             Paths.KL_SCORE_TO_DESCORE, TargetAction.UA, Paths.KL_NET)); // KL is upper algae
-    addCommands(stationVisionOrPathAlign(Paths.NET_SCORE_LEFT_STATION, TargetFieldLocation.LCS));
+    addCommands(safeStationAlignment(Paths.NET_SCORE_LEFT_STATION));
     addCommands(safeReefAlignment(Paths.LL_K3, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
     addCommands(toPosAndScore(TargetAction.L3));
-    addCommands(stationVisionOrPathAlign(Paths.K3_LL, TargetFieldLocation.LCS));
+    addCommands(safeStationAlignment(Paths.K3_LL));
     addCommands(safeReefAlignment(Paths.LL_L3, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.KL));
   }
 }

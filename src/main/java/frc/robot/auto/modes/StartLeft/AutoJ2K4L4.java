@@ -1,9 +1,11 @@
 package frc.robot.auto.modes.StartLeft;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 
@@ -22,18 +24,18 @@ public class AutoJ2K4L4 extends AutoBase {
     // addCommands(delaySelectedTime());
     addCommands(getBumpCommand());
 
+    addCommands(
+        new InstantCommand(
+            () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
     addCommands(safeReefAlignment(startingPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
-    addCommands(elevatorToPos(TargetAction.L2));
-    // addCommands(toPosAndScore(TargetAction.L2));
-    // addCommands(stationVisionOrPathAlign(Paths.J2_LL, TargetFieldLocation.KL));
-    // addCommands(HPIntake());
-    // addCommands(safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC,
-    // TargetFieldLocation.KL));
+    addCommands(toPosAndScore(TargetAction.L2));
+    addCommands(safeStationAlignment(Paths.J2_LL));
+    addCommands(HPIntake());
+    addCommands(safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
     // addCommands(toPosAndScore(TargetAction.L4));
-    // addCommands(stationVisionOrPathAlign(Paths.K4_LL, TargetFieldLocation.KL));
+    addCommands(safeStationAlignment(Paths.K4_LL));
     // addCommands(HPIntake());
-    // addCommands(safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC,
-    // TargetFieldLocation.KL));
+    addCommands(safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
     // addCommands(toPosAndScore(TargetAction.L4));
   }
 }

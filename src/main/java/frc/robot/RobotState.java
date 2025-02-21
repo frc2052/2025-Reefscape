@@ -59,7 +59,8 @@ public class RobotState {
     if (result.isPresent()) {
       poseAlignTimer.restart();
       PhotonTrackedTarget camTarget = result.get().getBestTarget();
-      if (AlignmentCommandFactory.idToReefFace(camTarget.fiducialId).getIsReef()) {
+      if (AlignmentCommandFactory.idToReefFace(camTarget.fiducialId) != null
+          && AlignmentCommandFactory.idToReefFace(camTarget.fiducialId).getIsReef()) {
         goalAlignPose =
             AlignmentCommandFactory.reefIdToBranchWithNudge(
                 AlignmentCommandFactory.idToReefFace(camTarget.fiducialId), getAlignOffset());

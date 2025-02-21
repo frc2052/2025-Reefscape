@@ -64,6 +64,10 @@ public class VisionSubsystem extends SubsystemBase {
     return getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5)).isPresent();
   }
 
+  public boolean getStationCameraHasTarget() {
+    return getCameraClosestTarget(TagTrackerType.REAR_CAM, Meters.of(1.5)).isPresent();
+  }
+
   public Optional<PhotonPipelineResult> getCameraClosestTarget(
       TagTrackerType trackerType, Distance maxDistance) {
     switch (trackerType) {

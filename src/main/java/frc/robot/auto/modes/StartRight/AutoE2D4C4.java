@@ -24,11 +24,11 @@ public class AutoE2D4C4 extends AutoBase {
 
     addCommands(safeReefAlignment(startingPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.EF));
     addCommands(toPosAndScore(TargetAction.L2));
-    addCommands(stationVisionOrPathAlign(Paths.E2_RL, TargetFieldLocation.RCS));
+    addCommands(safeStationAlignment(Paths.E2_RL));
     addCommands(HPIntake());
     addCommands(safeReefAlignment(Paths.RL_D4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.CD));
     addCommands(toPosAndScore(TargetAction.L4));
-    addCommands(stationVisionOrPathAlign(Paths.D4_RL, TargetFieldLocation.RCS));
+    addCommands(safeStationAlignment(Paths.D4_RL));
     addCommands(HPIntake());
     addCommands(safeReefAlignment(Paths.RL_C4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.CD));
     addCommands(toPosAndScore(TargetAction.L4));

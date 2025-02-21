@@ -149,6 +149,22 @@ public abstract class AutoBase extends SequentialCommandGroup {
         .andThen(AlignmentCommandFactory.getReefAlignmentCommand(branchSide));
   }
 
+  protected Command safeStationAlignment(PathPlannerPath altAlignPath) {
+    // get there while running intake
+    return new SequentialCommandGroup(
+
+    );
+
+    // new ParallelCommandGroup(
+    //         new SequentialCommandGroup(
+    //             new InstantCommand(
+    //                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)),
+    //             (HandCommandFactory.motorIn()).withTimeout(1.5)),
+    //         followPathCommand(altAlignPath))
+    //     .until(vision::getStationCameraHasTarget)
+    //     .andThen(); // TODO: ALignmentCommandFactory
+  }
+
   protected Command combinedReefChassisElevatorAlign(
       PathPlannerPath backupPath,
       AlignOffset branchSide,
@@ -163,21 +179,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
                         .isPresent())
             .andThen(AlignmentCommandFactory.getReefAlignmentCommand(branchSide)),
         new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(level)));
-  }
-
-  protected Command stationVisionOrPathAlign(
-      PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
-    return new SequentialCommandGroup(
-            new InstantCommand(
-                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)),
-            followPathCommand(altAlignPath),
-            snapToReefAngle(snaploc))
-        .until(
-            () ->
-                vision.getCameraClosestTarget(TagTrackerType.REAR_CAM, Meters.of(2.0)).isPresent())
-        .andThen(
-            new AlignWithFieldElementCommand(
-                snaploc, () -> getStationAlignOffset(), () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   protected Command processorVisionOrPathAlign(
@@ -196,8 +197,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command HPIntake() {
     return new ParallelRaceGroup(
         new InstantCommand(() -> HandCommandFactory.motorIn())
-            .until(() -> HandSubsystem.getInstance().getHasCoral()),
-        new WaitCommand(1.5));
+            .until(() -> HandSubsystem.getInstance().getHasCoral())
+            .withTimeout(2.0));
   }
 
   protected Command elevatorToPos(TargetAction position) {
@@ -208,13 +209,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command toPosAndScore(TargetAction position) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
+        new WaitCommand(1),
         new ParallelDeadlineGroup(
             HandCommandFactory.motorOut()
                 .withTimeout(1.5)
-                .until(() -> HandSubsystem.getInstance().getHasCoral()),
-            new WaitCommand(1.5)),
-        new InstantCommand(
-            () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.TR)));
+                .until(() -> HandSubsystem.getInstance().getHasCoral())));
   }
 
   protected Command descoreScoreNetAlgae(

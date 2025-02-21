@@ -113,7 +113,6 @@ public class AlignmentCommandFactory {
       case 6:
         return TargetFieldLocation.KL;
       default:
-        System.out.println("NULL ID*****************************");
         return null;
     }
   }
