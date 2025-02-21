@@ -21,6 +21,7 @@ public class RobotState {
   private Pose2d autoStartPose;
   private static RobotState INSTANCE;
   private TargetFieldLocation seenReefFace;
+  private TargetFieldLocation desiredReefFace;
   private Pose2d goalAlignPose;
   private Timer poseAlignTimer = new Timer();
 
@@ -83,6 +84,18 @@ public class RobotState {
 
   public Pose2d getAlignPose() {
     return goalAlignPose;
+  }
+
+  public void setDesiredReefFace(TargetFieldLocation desiredReefFace) {
+    this.desiredReefFace = desiredReefFace;
+  }
+
+  public boolean desiredReefFaceIsSeen() {
+    if(seenReefFace == null || desiredReefFace == null) {
+      return false;
+    }
+    
+    return desiredReefFace.getTagID() == seenReefFace.getTagID();
   }
 
   public TagTrackerType getPrimaryCameraFocus() {
