@@ -109,6 +109,8 @@ public class VisionSubsystem extends SubsystemBase {
         robotState.getFieldToRobot(),
         DriverStation.isAutonomous())) {
       DrivetrainSubsystem.getInstance().addVisionUpdate(update);
+    } else {
+      System.out.println("=== REJECTED " + update.cameraName);
     }
   }
 
@@ -128,7 +130,7 @@ public class VisionSubsystem extends SubsystemBase {
   public void setPrimaryFocus(TagTrackerType trackerType) {
     switch (trackerType) {
       case CORAL_REEF_CAM:
-        reefTagTracker.setWeight(0.6);
+        reefTagTracker.setWeight(0.1);
         algaeTagTracker.setWeight(1.2);
         // rearTagTracker.setWeight(1.2);
       case ALGAE_CAM:

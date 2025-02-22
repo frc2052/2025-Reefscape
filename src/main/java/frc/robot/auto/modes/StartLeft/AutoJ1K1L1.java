@@ -41,14 +41,15 @@ public class AutoJ1K1L1 extends AutoBase {
                 safeReefAlignment(
                     startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.IJ))
             .alongWith(
-                elevatorToPos(TargetAction.L2).beforeStarting(waitUntilSlowAndCloseEnough())));
+                elevatorToPos(TargetAction.L1H).beforeStarting(waitUntilSlowAndCloseEnough())));
     addCommands(toPosAndScore(TargetAction.L1H));
     addCommands(safeStationAlignment(Paths.J2_LL));
     addCommands(HPIntake());
     addCommands(
         new SequentialCommandGroup(
             new InstantCommand(
-                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L1H)),
+                    () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L1H))
+                .beforeStarting(new WaitCommand(0.5)),
             followPathCommand(Paths.LL_KL_L1)));
     // addCommands(
     //     safeReefAlignment(Paths.LL_KL_L1, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.KL));
@@ -60,9 +61,11 @@ public class AutoJ1K1L1 extends AutoBase {
             new ParallelCommandGroup(
                 new WaitCommand(0.5),
                 new InstantCommand(
-                    () ->
-                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L1H))),
-            followPathCommand(Paths.LL_KL_L1)));
+                        () ->
+                            SuperstructureSubsystem.getInstance()
+                                .setCurrentAction(TargetAction.L1H))
+                    .beforeStarting(new WaitCommand(0.5)),
+                followPathCommand(Paths.LL_KL_L1))));
     // addCommands(safeReefAlignment(Paths.LL_KL_L1, AlignOffset.MIDDLE_REEF_LOC,
     // TargetFieldLocation.KL));
     addCommands(toPosAndScore(TargetAction.L1H));

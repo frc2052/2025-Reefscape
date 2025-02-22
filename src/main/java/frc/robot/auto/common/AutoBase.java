@@ -208,7 +208,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command HPIntake() {
     return new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
         .until(() -> HandSubsystem.getInstance().getHasCoral())
-        .withTimeout(3.5);
+        .withTimeout(3.7);
   }
 
   protected Command elevatorToPos(TargetAction position) {

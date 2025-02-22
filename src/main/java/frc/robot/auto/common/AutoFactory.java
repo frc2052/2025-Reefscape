@@ -4,6 +4,7 @@
 package frc.robot.auto.common;
 
 import frc.robot.Constants.DashboardConstants;
+import frc.robot.RobotState;
 import frc.robot.auto.modes.AutoLLToK4;
 import frc.robot.auto.modes.StartLeft.AutoJ1K1L1;
 import frc.robot.auto.modes.StartLeft.AutoJ2K4L4;
@@ -32,6 +33,8 @@ public class AutoFactory {
   private double selectedWaitSeconds;
   private double savedWaitSeconds;
 
+  private boolean isRedAlliance = RobotState.getInstance().isRedAlliance();
+
   private static LoggedNetworkBoolean autoCompiled =
       new LoggedNetworkBoolean(DashboardConstants.AUTO_COMPILED_KEY, false);
 
@@ -57,11 +60,13 @@ public class AutoFactory {
   ;
 
   public boolean recompileNeeded() {
-    return autoSupplier.get() != currentAuto || waitSecondsEntrySupplier.get() != savedWaitSeconds;
+    return autoSupplier.get() != currentAuto
+        || waitSecondsEntrySupplier.get() != savedWaitSeconds
+        || isRedAlliance == !RobotState.getInstance().isRedAlliance();
   }
 
   public void recompile() {
-
+    isRedAlliance = RobotState.getInstance().isRedAlliance();
     // update wait seconds
     waitSecondsSavedKey.set(false);
     selectedWaitSeconds = waitSecondsEntrySupplier.get().doubleValue();
