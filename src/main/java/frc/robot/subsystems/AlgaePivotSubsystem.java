@@ -41,18 +41,14 @@ public class AlgaePivotSubsystem extends SubsystemBase {
 
   private void updatePivot() {
     if (Math.abs(getPivotAngle().in(Degrees) - goalPosition.in(Degrees)) > 40) {
-      System.out.println("1");
       pivotMotor.set(Math.copySign(0.4, -(getPivotAngle().in(Degrees) - goalPosition.in(Degrees))));
     } else if (Math.abs(getPivotAngle().in(Degrees) - goalPosition.in(Degrees)) > 20) {
-      System.out.println("2");
       pivotMotor.set(
           Math.copySign(0.25, -(getPivotAngle().in(Degrees) - goalPosition.in(Degrees))));
     } else if (Math.abs(getPivotAngle().in(Degrees) - goalPosition.in(Degrees)) > 2) {
-      System.out.println("3");
       pivotMotor.set(
           Math.copySign(0.15, -(getPivotAngle().in(Degrees) - goalPosition.in(Degrees))));
     } else {
-      System.out.println("4");
       pivotMotor.set(0.0);
     }
   }
