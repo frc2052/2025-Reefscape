@@ -203,21 +203,11 @@ public class Constants {
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
-            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimitEnable(false)
             .withSupplyCurrentLimit(Amps.of(70))
             .withSupplyCurrentLowerLimit(Amps.of(40))
             .withStatorCurrentLimit(Amps.of(120))
             .withSupplyCurrentLowerTime(Seconds.of(0.2));
-
-    public static final Slot0Configs SLOT0_CONFIGS = 
-    new Slot0Configs()
-        .withKP(5.0)
-        .withKI(0.0)
-        .withKD(0.0)
-        .withKS(0.0)
-        .withKV(3.0)
-        .withKA(0.0);
-
 
     public static final FeedbackConfigs FEEDBACK_CONFIG =
     new FeedbackConfigs()
@@ -236,13 +226,12 @@ public class Constants {
 
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
         new SoftwareLimitSwitchConfigs()
-            .withForwardSoftLimitThreshold(Degrees.of(60)) // TODO: adjust as needed
-            .withForwardSoftLimitEnable(false)
-            .withReverseSoftLimitThreshold(Degrees.of(200))
-            .withReverseSoftLimitEnable(false);
+            .withForwardSoftLimitThreshold(Degrees.of(260)) // TODO: adjust as needed
+            .withForwardSoftLimitEnable(true)
+            .withReverseSoftLimitThreshold(Degrees.of(120))
+            .withReverseSoftLimitEnable(true);
 
     public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
-      .withSlot0(SLOT0_CONFIGS)
       .withMotorOutput(MOTOR_OUTPUT_CONFIG)
       .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS)
       .withFeedback(FEEDBACK_CONFIG)

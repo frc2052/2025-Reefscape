@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,15 +36,34 @@ public class AlgaePivotSubsystem extends SubsystemBase {
 
     pivotMotor.getConfigurator().apply(AlgaePivotConstants.MOTOR_CONFIG);
 
-    goalPosition = TargetAction.HP.getAlgaeArmPivotPosition();
+    goalPosition = Degrees.of(135);
+  }
+
+  private void updatePivot() {
+    if (Math.abs(getPivotAngle().in(Degrees) - goalPosition.in(Degrees)) > 40) {
+      System.out.println("1");
+      pivotMotor.set(Math.copySign(0.4, -(getPivotAngle().in(Degrees) - goalPosition.in(Degrees))));
+    } else if (Math.abs(getPivotAngle().in(Degrees) - goalPosition.in(Degrees)) > 20) {
+      System.out.println("2");
+      pivotMotor.set(
+          Math.copySign(0.25, -(getPivotAngle().in(Degrees) - goalPosition.in(Degrees))));
+    } else if (Math.abs(getPivotAngle().in(Degrees) - goalPosition.in(Degrees)) > 2) {
+      System.out.println("3");
+      pivotMotor.set(
+          Math.copySign(0.15, -(getPivotAngle().in(Degrees) - goalPosition.in(Degrees))));
+    } else {
+      System.out.println("4");
+      pivotMotor.set(0.0);
+    }
   }
 
   public void setPivotAngle(Angle angle) {
+    goalPosition = angle;
     if (angle == goalPosition && isAtDesiredPosition()) {
       return;
     }
 
-    pivotMotor.setControl(new PositionVoltage(angle));
+    // pivotMotor.setControl(new PositionTorqueCurrentFOC(angle).withFeedForward(Amps.of(19)));
   }
 
   public void setGoalPosition(TargetAction position) {
@@ -90,6 +108,8 @@ public class AlgaePivotSubsystem extends SubsystemBase {
     Logger.recordOutput("Algae Arm/Angle", getPivotPosition().in(Degrees));
     Logger.recordOutput("Algae Arm/Goal Angle", goalPosition.in(Degrees));
     Logger.recordOutput("Algae Arm/At Goal", isAtDesiredPosition());
+
+    updatePivot();
 
     // if (isIntaking) {
     //   if (intakingDelay.update(

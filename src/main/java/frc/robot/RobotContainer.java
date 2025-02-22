@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -194,9 +195,9 @@ public class RobotContainer {
                 () -> superstructure.setSelectedTargetAction(TargetAction.L4, false)));
     controlBoard
         .setGoalLowerAlgae()
-        // .onTrue(
-        //     new InstantCommand(() ->
-        // AlgaeSubsystem.getInstance().setPivotAngle(Degrees.of(195))));
+        .onTrue(
+            new InstantCommand(
+                () -> AlgaePivotSubsystem.getInstance().setPivotAngle(Degrees.of(180))))
         .onTrue(
             new InstantCommand(
                 () -> {
@@ -206,9 +207,9 @@ public class RobotContainer {
                 }));
     controlBoard
         .setGoalUpperAlgae()
-        // .onTrue(
-        //     new InstantCommand(() ->
-        // AlgaeSubsystem.getInstance().setPivotAngle(Degrees.of(250))));
+        .onTrue(
+            new InstantCommand(
+                () -> AlgaePivotSubsystem.getInstance().setPivotAngle(Degrees.of(180))))
         .onTrue(
             new InstantCommand(
                 () -> {
@@ -241,12 +242,14 @@ public class RobotContainer {
 
     controlBoard
         .manualUp()
-        .onTrue(algaePivot.runPivotPct(0.40))
-        .onFalse(algaePivot.runPivotPct(0.0));
+        .onTrue(
+            new InstantCommand(
+                () -> AlgaePivotSubsystem.getInstance().setPivotAngle(Degrees.of(250))));
     controlBoard
         .manualDown()
-        .onTrue(algaePivot.runPivotPct(-0.40))
-        .onFalse(algaePivot.runPivotPct(0.0));
+        .onTrue(
+            new InstantCommand(
+                () -> AlgaePivotSubsystem.getInstance().setPivotAngle(Degrees.of(135))));
 
     controlBoard.climbUp().whileTrue(ClimberCommandFactory.climberUp());
     controlBoard.climbDown().whileTrue(ClimberCommandFactory.climberDown());
