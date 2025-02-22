@@ -103,6 +103,16 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
+  public Trigger algaeManualUp() {
+    return primaryControlBoard.algaeManualUp();
+  }
+
+  @Override
+  public Trigger algaeManualDown() {
+    return primaryControlBoard.algaeManualDown();
+  }
+
+  @Override
   public Trigger resetGyro() {
     return primaryControlBoard.resetGyro();
   }
@@ -170,13 +180,13 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger manualUp() {
-    return secondaryControlBoard.manualUp();
+  public Trigger algaeScoreAngle() {
+    return secondaryControlBoard.algaeScoreAngle();
   }
 
   @Override
-  public Trigger manualDown() {
-    return secondaryControlBoard.manualDown();
+  public Trigger algaeLowAngle() {
+    return secondaryControlBoard.algaeLowAngle();
   }
 
   @Override
@@ -237,10 +247,5 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   @Override
   public Trigger setGoalCoralStation() {
     return secondaryControlBoard.setGoalCoralStation();
-  }
-
-  @Override
-  public Trigger setGoalAlgaeScoring() {
-    return secondaryControlBoard.setGoalAlgaeScoring();
   }
 }

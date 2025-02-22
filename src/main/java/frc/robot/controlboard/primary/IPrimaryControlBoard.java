@@ -33,6 +33,10 @@ public interface IPrimaryControlBoard {
 
   Trigger povRotRight();
 
+  Trigger algaeManualUp();
+
+  Trigger algaeManualDown();
+
   Trigger resetGyro();
 
   Trigger alignWithElement();

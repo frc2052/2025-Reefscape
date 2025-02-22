@@ -24,6 +24,7 @@ import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.subsystems.AlgaePivotSubsystem;
 import frc.robot.subsystems.AlgaeShooterSubsystem;
+import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
@@ -45,7 +46,7 @@ public class RobotContainer {
   public final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
   public final AlgaeShooterSubsystem algaeShooter = AlgaeShooterSubsystem.getInstance();
   public final AlgaePivotSubsystem algaePivot = AlgaePivotSubsystem.getInstance();
-  //   public final LedSubsystem leds = LedSubsystem.getInstance();
+  public final LedSubsystem leds = LedSubsystem.getInstance();
 
   public static boolean deadReckoning = false;
 
@@ -165,7 +166,7 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  superstructure.setSelectedTargetAction(TargetAction.CL, false);
+                  superstructure.setSelectedTargetAction(TargetAction.CL, true);
 
                   robotState.setAlignOffset(AlignOffset.MIDDLE_REEF_LOC);
                 }));
@@ -223,11 +224,6 @@ public class RobotContainer {
             new InstantCommand(
                 () -> superstructure.setSelectedTargetAction(TargetAction.HP, false)));
     controlBoard
-        .setGoalAlgaeScoring()
-        .onTrue(
-            new InstantCommand(
-                () -> superstructure.setSelectedTargetAction(TargetAction.AS, false)));
-    controlBoard
         .homeElevator()
         .onTrue(
             new InstantCommand(
@@ -241,15 +237,28 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.RIGHT_REEF_LOC)));
 
     controlBoard
-        .manualUp()
+        .algaeScoreAngle()
         .onTrue(
             new InstantCommand(
                 () -> AlgaePivotSubsystem.getInstance().setPivotAngle(Degrees.of(250))));
     controlBoard
-        .manualDown()
+        .algaeLowAngle()
         .onTrue(
             new InstantCommand(
                 () -> AlgaePivotSubsystem.getInstance().setPivotAngle(Degrees.of(135))));
+
+    controlBoard
+        .algaeManualUp()
+        .onTrue(
+            new InstantCommand(() -> AlgaePivotSubsystem.getInstance().setPivotSpeedManual(0.2)))
+        .onFalse(
+            new InstantCommand(() -> AlgaePivotSubsystem.getInstance().setPivotSpeedManual(0.0)));
+    controlBoard
+        .algaeManualDown()
+        .onTrue(
+            new InstantCommand(() -> AlgaePivotSubsystem.getInstance().setPivotSpeedManual(-0.2)))
+        .onFalse(
+            new InstantCommand(() -> AlgaePivotSubsystem.getInstance().setPivotSpeedManual(0.0)));
 
     controlBoard.climbUp().whileTrue(ClimberCommandFactory.climberUp());
     controlBoard.climbDown().whileTrue(ClimberCommandFactory.climberDown());

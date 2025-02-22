@@ -88,6 +88,16 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
+  public Trigger algaeManualUp() {
+    return new Trigger(() -> false);
+  }
+
+  @Override
+  public Trigger algaeManualDown() {
+    return new Trigger(() -> false);
+  }
+
+  @Override
   public Trigger resetGyro() {
     return controller.back().and(controller.start().negate());
   }

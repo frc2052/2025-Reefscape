@@ -18,6 +18,7 @@ public class LedSubsystem extends SubsystemBase {
   private static LedSubsystem INSTANCE;
 
   private final DigitalOutput codeChannel1, codeChannel2, codeChannel3, codeChannel4, codeChannel5;
+  private final RobotState state;
 
   private LEDStatusMode currentStatusMode;
 
@@ -34,6 +35,8 @@ public class LedSubsystem extends SubsystemBase {
     robotDisabled = true;
 
     currentStatusMode = LEDStatusMode.OFF;
+
+    state = RobotState.getInstance();
 
     // For manually inputing code to encode to DIO pins
     // SmartDashboard.putNumber("LED CODE", 0);
@@ -116,7 +119,7 @@ public class LedSubsystem extends SubsystemBase {
 
       if (DriverStation.isTeleopEnabled()) {
         // example implementation
-
+        // currentStatusMode = LEDStatusMode.HAS_ALGAE;
         if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.HP) {
           currentStatusMode = LEDStatusMode.DONE_CLIMBING;
           // } else if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L4)
@@ -126,6 +129,10 @@ public class LedSubsystem extends SubsystemBase {
           //   currentStatusMode = LEDStatusMode.CLIMBING;
         } else if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L1H) {
           currentStatusMode = LEDStatusMode.SPARKLE;
+        } else if (state.desiredReefFaceIsSeen()) {
+          currentStatusMode = LEDStatusMode.REQUEST_LOADING;
+          // } else if (state.getisAlignGoal()) {
+          //   currentStatusMode = LEDStatusMode.HAS_ALGAE;
         }
 
         // shooting

@@ -23,15 +23,15 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveToPose extends Command {
-  private final double driveP = 4.0;
+  private final double driveP = 2.5;
   private final double driveD = 0.0;
-  private final double turnP = 3.5;
+  private final double turnP = 2.5;
   private final double turnD = 0.0;
-  private final double driveMaxSpeed = 3.8;
+  private final double driveMaxSpeed = 3.0;
   private final double driveMaxAcceleration = 3.0;
-  private final double turnMaxSpeed = Units.degreesToRadians(540.0);
-  private final double turnMaxAcceleration = 8.0;
-  private final double driveTolerance = 0.04;
+  private final double turnMaxSpeed = Units.degreesToRadians(240.0);
+  private final double turnMaxAcceleration = 3.0;
+  private final double driveTolerance = 0.02;
   private final double turnTolerance = Units.degreesToRadians(0.5);
   private final double ffMinRadius = 0.1;
   private final double ffMaxRadius = 0.15;
@@ -216,6 +216,7 @@ public class DriveToPose extends Command {
               Rotation2d.fromRadians(turnController.getSetpoint().position))
         });
     Logger.recordOutput("DriveToPose/Goal", new Pose2d[] {targetPose});
+    RobotState.getInstance().setIsAlignGoal(atGoal());
   }
 
   @Override

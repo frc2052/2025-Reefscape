@@ -110,7 +110,7 @@ public class VisionSubsystem extends SubsystemBase {
         DriverStation.isAutonomous())) {
       DrivetrainSubsystem.getInstance().addVisionUpdate(update);
     } else {
-      System.out.println("=== REJECTED " + update.cameraName);
+      // System.out.println("=== REJECTED " + update.cameraName);
     }
   }
 

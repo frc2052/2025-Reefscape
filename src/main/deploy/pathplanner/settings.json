@@ -6,8 +6,8 @@
     "New Folder"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 2.5,
-  "defaultMaxAccel": 2.5,
+  "defaultMaxVel": 2.7,
+  "defaultMaxAccel": 2.7,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 540.0,
   "defaultNominalVoltage": 12.0,

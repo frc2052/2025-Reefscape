@@ -1,6 +1,7 @@
 package frc.robot.commands.drive.alignment;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -80,6 +81,16 @@ public class AlignmentCommandFactory {
   public static Pose2d reefIdToBranchWithNudge(TargetFieldLocation location, AlignOffset offset) {
     if (offset == AlignOffset.LEFT_REEF_LOC) {
       return location.getWithTransform(offset.getTransform().plus(location.getLeftBranchNudge()));
+    } else if (offset == AlignOffset.RIGHT_REEF_LOC) {
+      return location.getWithTransform(offset.getTransform().plus(location.getRightBranchNudge()));
+    }
+
+    return location.getWithOffset(offset);
+  }
+
+  public static Pose2d reefIdToBranchCustomNudge(TargetFieldLocation location, AlignOffset offset, Transform2d customNudge) {
+    if (offset == AlignOffset.LEFT_REEF_LOC) {
+      return location.getWithTransform(offset.getTransform().plus(location.getLeftBranchNudge()).plus(customNudge));
     } else if (offset == AlignOffset.RIGHT_REEF_LOC) {
       return location.getWithTransform(offset.getTransform().plus(location.getRightBranchNudge()));
     }

@@ -91,6 +91,16 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
+  public Trigger algaeManualUp() {
+    return new JoystickButton(translateStick, 12);
+  }
+
+  @Override
+  public Trigger algaeManualDown() {
+    return new JoystickButton(translateStick, 11);
+  }
+
+  @Override
   public Trigger resetGyro() {
     return new JoystickButton(translateStick, 8);
   }

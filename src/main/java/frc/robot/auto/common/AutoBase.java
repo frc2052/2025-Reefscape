@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
@@ -221,6 +220,17 @@ public abstract class AutoBase extends SequentialCommandGroup {
         () -> SuperstructureSubsystem.getInstance().setCurrentAction(position));
   }
 
+  protected Command score(TargetAction position) {
+    return new SequentialCommandGroup(
+        Commands.waitUntil(
+                () ->
+                    ElevatorSubsystem.getInstance().atPosition(2.0, position)
+                        && CoralArmSubsystem.getInstance().isAtDesiredPosition())
+            .andThen(HandCommandFactory.motorIn().withTimeout(0.2))
+            .andThen(new InstantCommand(() -> HandSubsystem.getInstance().stopMotor()))
+            .andThen(HandCommandFactory.motorOut().withTimeout(0.55)));
+  }
+
   protected Command toPosAndScore(TargetAction position) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
@@ -229,6 +239,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 () ->
                     ElevatorSubsystem.getInstance().atPosition(2.0, position)
                         && CoralArmSubsystem.getInstance().isAtDesiredPosition())
+            .andThen(HandCommandFactory.motorIn().withTimeout(0.2))
+            .andThen(new InstantCommand(() -> HandSubsystem.getInstance().stopMotor()))
             .andThen(HandCommandFactory.motorOut().withTimeout(0.55)));
   }
 
@@ -248,17 +260,31 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 && RobotState.getInstance().distanceToAlignPose() < 0.3);
   }
 
+  // protected Command descoreAlgae(PathPlannerPath toPosition,TargetAction algaeLevel){
+  //   return new SequentialCommandGroup(
+  //     new ParallelCommandGroup(
+  //       new InstantCommand(() ->
+  // SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)).withTimeout(1.0),
+  //       followPathCommand(toPosition)
+  //     ),
+  //     new InstantCommand(() -> AlgaeShooterSubsystem.getInstance().)
+  //   );
+  // }
+
+  protected Command scoreAlgae(PathPlannerPath score) {
+    return new SequentialCommandGroup(null);
+  }
+
   protected Command descoreScoreNetAlgae(
       PathPlannerPath toPositionPath, TargetAction algaeLevel, PathPlannerPath score) {
     return new SequentialCommandGroup(
         // descore
-        new ParallelDeadlineGroup(
-            new InstantCommand(
-                () -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)),
-            followPathCommand(toPositionPath)),
+        new InstantCommand(
+            () -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)),
+        followPathCommand(toPositionPath),
 
         // score
-        new ParallelDeadlineGroup(
+        new ParallelCommandGroup(
                 followPathCommand(score),
                 new SequentialCommandGroup(
                     new WaitCommand(1.0),

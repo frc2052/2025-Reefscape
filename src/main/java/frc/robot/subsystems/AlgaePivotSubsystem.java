@@ -19,6 +19,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class AlgaePivotSubsystem extends SubsystemBase {
   private static AlgaePivotSubsystem INSTANCE;
+  private boolean manualPctMode;
 
   private final TalonFX pivotMotor;
 
@@ -36,6 +37,7 @@ public class AlgaePivotSubsystem extends SubsystemBase {
 
     pivotMotor.getConfigurator().apply(AlgaePivotConstants.MOTOR_CONFIG);
 
+    manualPctMode = false;
     goalPosition = Degrees.of(135);
   }
 
@@ -54,6 +56,7 @@ public class AlgaePivotSubsystem extends SubsystemBase {
   }
 
   public void setPivotAngle(Angle angle) {
+    manualPctMode = false;
     goalPosition = angle;
     if (angle == goalPosition && isAtDesiredPosition()) {
       return;
@@ -68,10 +71,11 @@ public class AlgaePivotSubsystem extends SubsystemBase {
   }
 
   public Command runPivotPct(double pct) {
-    return Commands.runOnce(() -> setPivotSpeed(pct), this);
+    return Commands.runOnce(() -> setPivotSpeedManual(pct), this);
   }
 
-  private void setPivotSpeed(double pct) {
+  public void setPivotSpeedManual(double pct) {
+    manualPctMode = true;
     pivotMotor.set(pct);
   }
 
@@ -105,7 +109,9 @@ public class AlgaePivotSubsystem extends SubsystemBase {
     Logger.recordOutput("Algae Arm/Goal Angle", goalPosition.in(Degrees));
     Logger.recordOutput("Algae Arm/At Goal", isAtDesiredPosition());
 
-    updatePivot();
+    if (!manualPctMode) {
+      updatePivot();
+    }
 
     // if (isIntaking) {
     //   if (intakingDelay.update(

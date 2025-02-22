@@ -1,8 +1,11 @@
 package frc.robot;
 
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
+import com.fasterxml.jackson.databind.EnumNamingStrategies.CamelCaseStrategy;
 import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -11,7 +14,11 @@ import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import java.util.Optional;
+
+import javax.xml.crypto.dsig.Transform;
+
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.estimation.CameraTargetRelation;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -25,6 +32,10 @@ public class RobotState {
   private TargetFieldLocation desiredReefFace;
   private Pose2d goalAlignPose;
   private Timer poseAlignTimer = new Timer();
+  private boolean isAlignGoal;
+
+  private static boolean regularNudge = true;
+  private static Transform2d customNudgeAmt = new Transform2d(0, 0, new Rotation2d());
 
   public static RobotState getInstance() {
     if (INSTANCE == null) {
@@ -35,6 +46,25 @@ public class RobotState {
   }
 
   private RobotState() {}
+
+  public static boolean getRegularNudge(){
+    return regularNudge;
+  }
+
+  // have to set back to true each time we apply a custom offset
+  public static void setRegularNudge(boolean regular){
+    System.out.println("SET REGULAR NUDGE TO " + regular);
+    regularNudge = regular;
+  }
+
+  public static void setCustomNudge(Transform2d nudgeamt){
+    setRegularNudge(false);
+    customNudgeAmt = nudgeamt;
+  }
+
+  public static Transform2d getCustomNudge(){
+    return customNudgeAmt;
+  }
 
   public Pose2d getFieldToRobot() {
     if (drivetrainState.Pose != null) {
@@ -75,9 +105,11 @@ public class RobotState {
       PhotonTrackedTarget camTarget = result.get().getBestTarget();
       if (AlignmentCommandFactory.idToReefFace(camTarget.fiducialId) != null
           && AlignmentCommandFactory.idToReefFace(camTarget.fiducialId).getIsReef()) {
-        goalAlignPose =
-            AlignmentCommandFactory.reefIdToBranchWithNudge(
-                AlignmentCommandFactory.idToReefFace(camTarget.fiducialId), getAlignOffset());
+
+        goalAlignPose = 
+        getRegularNudge() == true ?
+          AlignmentCommandFactory.reefIdToBranchWithNudge(AlignmentCommandFactory.idToReefFace(camTarget.fiducialId), getAlignOffset()):
+          AlignmentCommandFactory.reefIdToBranchCustomNudg(AlignmentCommandFactory.idToReefFace(camTarget.fiducialId), getAlignOffset(), getCustomNudge());
       } else {
         if (poseAlignTimer.get() > 1.0) {
           goalAlignPose = null;
@@ -123,6 +155,13 @@ public class RobotState {
     this.autoStartPose = startPose;
   }
 
+  public boolean getisAlignGoal() {
+    return isAlignGoal;
+  }
+
+  public void setIsAlignGoal(boolean atGoal) {
+    isAlignGoal = atGoal;
+  }
   /**
    * Returns true if the robot is on red alliance.
    *
