@@ -88,12 +88,12 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
   @Override
   public Trigger setSubReefLeft() {
-    return new JoystickButton(controlPanel, 99);
+    return new Trigger(() -> controlPanel.getX() > 0.5);
   }
 
   @Override
   public Trigger setSubReefRight() {
-    return new JoystickButton(controlPanel, 99);
+    return new Trigger(() -> controlPanel.getX() < -0.5);
   }
 
   @Override

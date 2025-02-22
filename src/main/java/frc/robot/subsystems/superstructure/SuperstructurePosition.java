@@ -6,7 +6,7 @@ import edu.wpi.first.units.measure.Angle;
 
 public class SuperstructurePosition {
   public enum TargetAction {
-    HM(1.0, Degrees.of(170.0), Degrees.of(200), ActionType.NONE), // Homing
+    HM(0.5, Degrees.of(170.0), Degrees.of(200), ActionType.NONE), // Homing
     // L1L(1.0, Degrees.of(255.0), Degrees.of(90), ActionType.CORAL),
     L1H(1.0, Degrees.of(240.0), Degrees.of(200), ActionType.CORAL),
     L2(21.5, Degrees.of(287.0), Degrees.of(200), ActionType.CORAL),

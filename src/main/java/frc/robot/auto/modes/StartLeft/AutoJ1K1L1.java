@@ -6,13 +6,16 @@ package frc.robot.auto.modes.StartLeft;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.auto.common.AutoBase;
+import frc.robot.auto.common.AutoDescription;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 
 /** Add your docs here. */
+@AutoDescription(description = "L1")
 public class AutoJ1K1L1 extends AutoBase {
 
   public static final PathPlannerPath startingPath = Paths.SL_IJ;
@@ -23,24 +26,34 @@ public class AutoJ1K1L1 extends AutoBase {
 
   @Override
   public void init() {
-    addCommands(delaySelectedTime());
-    addCommands(getBumpCommand());
+    // addCommands(delaySelectedTime());
+    // addCommands(getBumpCommand());
 
     addCommands(
         new InstantCommand(
             () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
     addCommands(
-        safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.KL));
+        safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.IJ));
     addCommands(toPosAndScore(TargetAction.L1H));
     addCommands(safeStationAlignment(Paths.J2_LL));
     addCommands(HPIntake());
     addCommands(
-        safeReefAlignment(Paths.LL_KL, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.KL));
-    addCommands(toPosAndScore(TargetAction.L1H));
+        new SequentialCommandGroup(
+            new InstantCommand(
+                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L1H)),
+            followPathCommand(Paths.LL_KL_L1)));
+    // addCommands(
+    //     safeReefAlignment(Paths.LL_KL_L1, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.KL));
+    addCommands(scoreL1(TargetAction.L1H));
     addCommands(safeStationAlignment(Paths.KL_LL));
     addCommands(HPIntake());
     addCommands(
-        safeReefAlignment(Paths.LL_KL, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.KL));
-    addCommands(toPosAndScore(TargetAction.L1H));
+        new SequentialCommandGroup(
+            new InstantCommand(
+                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L1H)),
+            followPathCommand(Paths.LL_KL_L1)));
+    // addCommands(safeReefAlignment(Paths.LL_KL_L1, AlignOffset.MIDDLE_REEF_LOC,
+    // TargetFieldLocation.KL));
+    addCommands(scoreL1(TargetAction.L1H));
   }
 }

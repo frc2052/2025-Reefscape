@@ -15,8 +15,6 @@ import com.team2052.lib.util.DelayedBoolean;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
@@ -107,11 +105,12 @@ public class HandSubsystem extends SubsystemBase {
           Timer.getFPGATimestamp(),
           MathHelpers.epsilonEquals(motor.getVelocity().getValueAsDouble(), 0.0, 0.1))) {
         hasCoral = true;
-        System.out.println("coralllll");
+        // System.out.println("coralllll");
         // stopMotor();
-        if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.HP) {
-          SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L1H);
-        }
+        // if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.HP
+        //     && !DriverStation.isAutonomous()) {
+        //   SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L1H);
+        // }
         coralDelay.update(Timer.getFPGATimestamp(), false);
       }
     } else {

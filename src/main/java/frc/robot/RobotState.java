@@ -48,12 +48,12 @@ public class RobotState {
   }
 
   public void setAlignOffset(AlignOffset offset) {
+    System.out.println("NEW OFFSET " + offset.transform.getY());
     selectedAlignOffset = offset;
   }
 
   public AlignOffset getAlignOffset() {
-    return AlignOffset.LEFT_REEF_LOC;
-    // return selectedAlignOffset;
+    return selectedAlignOffset;
   }
 
   public void seenReefFace(Optional<PhotonPipelineResult> result) {

@@ -107,12 +107,12 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
 
   @Override
   public Trigger outtakeAlgae() {
-    return new JoystickButton(rotateStick, 3);
+    return new JoystickButton(rotateStick, 4);
   }
 
   @Override
   public Trigger intakeAlgae() {
-    return new JoystickButton(translateStick, 3);
+    return new JoystickButton(translateStick, 4);
   }
 
   @Override

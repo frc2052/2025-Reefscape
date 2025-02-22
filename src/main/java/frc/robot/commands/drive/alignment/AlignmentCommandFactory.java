@@ -21,17 +21,17 @@ public class AlignmentCommandFactory {
   private static final RobotState robotState = RobotState.getInstance();
   private static final ControlBoard controlBoard = ControlBoard.getInstance();
 
-  public static Command getReefAlignmentCommand(AlignOffset offset) {
-    if (offset != AlignOffset.LEFT_REEF_LOC
-        && offset != AlignOffset.MIDDLE_REEF_LOC
-        && offset != AlignOffset.RIGHT_REEF_LOC) {
-      invalidCombination(DesiredElement.REEF, offset);
+  public static Command getReefAlignmentCommand(Supplier<AlignOffset> offset) {
+    if (offset.get() != AlignOffset.LEFT_REEF_LOC
+        && offset.get() != AlignOffset.MIDDLE_REEF_LOC
+        && offset.get() != AlignOffset.RIGHT_REEF_LOC) {
+      invalidCombination(DesiredElement.REEF, offset.get());
     }
-
     Supplier<Pose2d> targetSupplier = () -> robotState.getAlignPose();
     BooleanSupplier shouldAlign = () -> robotState.getHasAlignPose();
 
     return Commands.runOnce(() -> vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM), vision)
+        .andThen(new InstantCommand(() -> robotState.setAlignOffset(offset.get())))
         .andThen(
             Commands.either(
                 new DriveToPose(

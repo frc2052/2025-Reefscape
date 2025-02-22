@@ -136,7 +136,7 @@ public class Constants {
 
   public static class CoralArmConstants {
     public static final boolean ARM_MOTOR_INVERTED = true;
-    public static final double DEG_TOL = 1.5;
+    public static final double DEG_TOL = 2.5;
 
     public static final Angle MIN_CORAL_ARM_ANGLE = Degrees.of(30);
     public static final Angle MAX_CORAL_ARM_ANGLE = Degrees.of(330);
@@ -192,9 +192,9 @@ public class Constants {
 
   public static class HandConstants {
     public static final boolean HAND_MOTOR_INVERTED = true;
-    public static final double HAND_MOTOR_CURRENT_LIMIT = 20.0;
+    public static final double HAND_MOTOR_CURRENT_LIMIT = 40.0;
     public static final double IN_HAND_MOTOR_SPEED = 0.5;
-    public static final double OUT_HAND_MOTOR_SPEED = 0.6;
+    public static final double OUT_HAND_MOTOR_SPEED = 0.7;
   }
 
   public static class AlgaePivotConstants {
@@ -302,7 +302,7 @@ public class Constants {
 
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
       public static final Angle THETA_Y_OFFSET = Degrees.of(-21.84); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(2); // yaw
+      public static final Angle THETA_Z_OFFSET = Degrees.of(3); // yaw
 
       public static final Transform3d ROBOT_TO_CAMERA_METERS =
           new Transform3d(

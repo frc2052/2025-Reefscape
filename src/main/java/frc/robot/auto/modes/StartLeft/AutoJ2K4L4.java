@@ -27,7 +27,9 @@ public class AutoJ2K4L4 extends AutoBase {
     addCommands(
         new InstantCommand(
             () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
-    addCommands(safeReefAlignment(startingPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
+    // paused too long after aligning
+    addCommands(
+        safeReefAlignment(startingPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.IJ));
     addCommands(toPosAndScore(TargetAction.L2));
     addCommands(safeStationAlignment(Paths.J2_LL));
     addCommands(HPIntake());
@@ -35,7 +37,7 @@ public class AutoJ2K4L4 extends AutoBase {
     addCommands(toPosAndScore(TargetAction.L4));
     addCommands(safeStationAlignment(Paths.K4_LL));
     addCommands(HPIntake());
-    addCommands(safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
+    addCommands(safeReefAlignment(Paths.LL_K4, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.KL));
     addCommands(toPosAndScore(TargetAction.L4));
   }
 }

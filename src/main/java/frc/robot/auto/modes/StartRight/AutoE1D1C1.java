@@ -7,6 +7,7 @@ package frc.robot.auto.modes.StartRight;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auto.common.AutoBase;
+import frc.robot.auto.common.AutoDescription;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
@@ -17,14 +18,15 @@ public class AutoE1D1C1 extends AutoBase {
 
   private static final PathPlannerPath startingPath = Paths.SR_EF;
 
+  @AutoDescription(description = "L1")
   public AutoE1D1C1() {
     super(startingPath.getStartingHolonomicPose());
   }
 
   @Override
   public void init() {
-    addCommands(delaySelectedTime());
-    addCommands(getBumpCommand());
+    // addCommands(delaySelectedTime());
+    // addCommands(getBumpCommand());
 
     addCommands(
         new InstantCommand(

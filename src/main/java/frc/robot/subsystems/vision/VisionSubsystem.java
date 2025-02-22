@@ -60,7 +60,7 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public boolean getCoralCameraHasTarget() {
-    return getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5)).isPresent();
+    return getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(2)).isPresent();
   }
 
   // public boolean getStationCameraHasTarget() {
@@ -71,9 +71,6 @@ public class VisionSubsystem extends SubsystemBase {
       TagTrackerType trackerType, Distance maxDistance) {
     switch (trackerType) {
       case CORAL_REEF_CAM:
-        if (maxDistance(reefTagTracker.getClosestTagToCamera(), maxDistance).isPresent()) {
-          System.out.println("====== SEES REEF TAG");
-        }
         return maxDistance(reefTagTracker.getClosestTagToCamera(), maxDistance);
       case ALGAE_CAM:
         return maxDistance(algaeTagTracker.getClosestTagToCamera(), maxDistance);

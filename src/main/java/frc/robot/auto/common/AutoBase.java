@@ -13,6 +13,7 @@ import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -24,6 +25,8 @@ import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.commands.hand.HandCommandFactory;
+import frc.robot.subsystems.CoralArmSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.HandSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
@@ -41,6 +44,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
   private final VisionSubsystem vision = VisionSubsystem.getInstance();
   private final AutoFactory autoFactory = AutoFactory.getInstance();
   private Pose2d startPose;
+
+  // left side blue l4 // good enough, L4 mmissing
+  // left side red l4
+  // left side blue l1 // adjusting
+  // left side red l1
 
   protected AutoBase(Optional<Pose2d> pathStartPose) {
     if (pathStartPose.isEmpty()) {
@@ -143,11 +151,12 @@ public abstract class AutoBase extends SequentialCommandGroup {
       PathPlannerPath startPath, AlignOffset branchside, TargetFieldLocation fieldLoc) {
     return new ParallelCommandGroup(
         new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
-            .withTimeout(1.0)
+            .andThen(new WaitCommand(1.0))
             .andThen(() -> HandSubsystem.getInstance().stopMotor()),
         followPathCommand(startPath)
             .until(vision::getCoralCameraHasTarget)
-            .andThen(AlignmentCommandFactory.getReefAlignmentCommand(branchside)));
+            .andThen(AlignmentCommandFactory.getReefAlignmentCommand(() -> branchside))
+            .withTimeout(2.5));
   }
 
   protected Command safeStationAlignment(PathPlannerPath altAlignPath) {
@@ -176,7 +185,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
                     vision
                         .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
                         .isPresent())
-            .andThen(AlignmentCommandFactory.getReefAlignmentCommand(branchSide)),
+            .andThen(AlignmentCommandFactory.getReefAlignmentCommand(() -> branchSide)),
         new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(level)));
   }
 
@@ -198,8 +207,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command HPIntake() {
     return new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
         .until(() -> HandSubsystem.getInstance().getHasCoral())
-        .withTimeout(2.5)
-        .andThen(new InstantCommand(() -> HandSubsystem.getInstance().stopMotor()));
+        .withTimeout(3.5);
   }
 
   protected Command elevatorToPos(TargetAction position) {
@@ -210,11 +218,20 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command toPosAndScore(TargetAction position) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
-        new WaitCommand(1.5),
-        new ParallelDeadlineGroup(
-            HandCommandFactory.motorOut()
-                .withTimeout(1.5)
-                .until(() -> HandSubsystem.getInstance().getHasCoral())));
+        Commands.waitUntil(
+                () ->
+                    ElevatorSubsystem.getInstance().atPosition(2.0, position)
+                        && CoralArmSubsystem.getInstance().isAtDesiredPosition())
+            .andThen(HandCommandFactory.motorOut().withTimeout(0.55)));
+  }
+
+  protected Command scoreL1(TargetAction position) {
+    return new SequentialCommandGroup(
+        Commands.waitUntil(
+                () ->
+                    ElevatorSubsystem.getInstance().atPosition(2.0, position)
+                        && CoralArmSubsystem.getInstance().isAtDesiredPosition())
+            .andThen(HandCommandFactory.motorOut().withTimeout(1.0)));
   }
 
   protected Command descoreScoreNetAlgae(
@@ -288,6 +305,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
     public static final PathPlannerPath SL_K4 = getPathFromFile("SL K");
     public static final PathPlannerPath LL_KL = getPathFromFile("LL KL");
     public static final PathPlannerPath KL_LL = getPathFromFile("KL LL");
+
+    public static final PathPlannerPath LL_KL_L1 = getPathFromFile("LL KL L1");
 
     // algae score and descore
     public static final PathPlannerPath KL_NET = getPathFromFile("KL Net");

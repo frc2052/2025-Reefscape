@@ -106,17 +106,19 @@ public class RobotContainer {
     controlBoard.resetGyro().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
 
     controlBoard.intake().whileTrue(HandCommandFactory.motorIn());
-    controlBoard.outtake().whileTrue(HandCommandFactory.motorOut());
-    // .onFalse(
-    //     new InstantCommand(
-    //         () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
+    controlBoard
+        .outtake()
+        .whileTrue(HandCommandFactory.motorOut())
+        .onFalse(
+            new InstantCommand(
+                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
 
     controlBoard.intakeAlgae().whileTrue(AlgaeCommandFactory.intake());
     controlBoard.outtakeAlgae().whileTrue(AlgaeCommandFactory.outtake());
 
     controlBoard
         .alignWithElement()
-        .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(robotState.getAlignOffset()));
+        .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(robotState::getAlignOffset));
     controlBoard
         .pointToReef()
         .whileTrue(
