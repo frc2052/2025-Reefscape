@@ -19,9 +19,10 @@ public class AutoK4L4DAK3L3 extends AutoBase {
 
   @Override
   public void init() {
-    addCommands(delaySelectedTime());
-    addCommands(getBumpCommand());
+    // addCommands(delaySelectedTime());
+    // addCommands(getBumpCommand());
 
+    addCommands(startHP());
     addCommands(safeReefAlignment(startingPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
     addCommands(toPosAndScore(TargetAction.L4));
     addCommands(safeStationAlignment(Paths.K4_LL));

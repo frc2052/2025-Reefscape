@@ -1,11 +1,9 @@
 package frc.robot.auto.modes.StartLeft;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 
@@ -22,12 +20,9 @@ public class AutoJ2K4L4 extends AutoBase {
   @Override
   public void init() {
     // addCommands(delaySelectedTime());
-    addCommands(getBumpCommand());
+    // addCommands(getBumpCommand());
 
-    addCommands(
-        new InstantCommand(
-            () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
-    // paused too long after aligning
+    addCommands(startHP());
     addCommands(
         safeReefAlignment(startingPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.IJ)
             .alongWith(

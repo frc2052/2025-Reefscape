@@ -129,11 +129,15 @@ public class AutoFactory {
     public AutoBase getInstance() {
       if (autoClass != null) {
         try {
+          // TODO: does this fix the problem
 
           // AutoDescription autoDescription =
           // autoClass.getClass().getAnnotation(AutoDescription.class);
           // if (autoClass.isAnnotationPresent(AutoDescription.class)) {
-          autoDescription.set(autoClass.getAnnotation(AutoDescription.class).description());
+          autoDescription.set(
+              autoClass.isAnnotationPresent(AutoDescription.class)
+                  ? autoClass.getAnnotation(AutoDescription.class).description()
+                  : "No Description");
           // } else {
           //     autoDescription.set("No description");
           // }

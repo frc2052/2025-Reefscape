@@ -19,9 +19,10 @@ public class AutoD4C4DAD3C3 extends AutoBase {
 
   @Override
   public void init() {
-    addCommands(delaySelectedTime());
-    addCommands(getBumpCommand());
+    // addCommands(delaySelectedTime());
+    // addCommands(getBumpCommand());
 
+    addCommands(startHP());
     addCommands(
         safeReefAlignment(startingPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.CD));
     addCommands(toPosAndScore(TargetAction.L4));

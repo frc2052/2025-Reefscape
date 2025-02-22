@@ -84,6 +84,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
     return new SequentialCommandGroup(followPathCommand(path), snapToReefAngle(snapLoc));
   }
 
+  protected Command startHP() {
+    return new InstantCommand(
+        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP));
+  }
+
   protected static PathPlannerPath getPathFromFile(String pathName) {
     try {
       PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
@@ -285,6 +290,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
     public static final PathPlannerPath SR_D4 = getPathFromFile("SR D");
     public static final PathPlannerPath RL_D3 = getPathFromFile("RL D");
     public static final PathPlannerPath D3_RL = getPathFromFile("D RL");
+    public static final PathPlannerPath RL_CD_L1 = getPathFromFile("RL CD L1");
+    public static final PathPlannerPath CD_RL = getPathFromFile("CD RL");
 
     // ef
     public static final PathPlannerPath E2_RL = getPathFromFile("E RL");

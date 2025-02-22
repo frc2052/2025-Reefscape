@@ -17,7 +17,7 @@ import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 
 /** Add your docs here. */
-@AutoDescription(description = "L1")
+@AutoDescription(description = "Left Side L1's")
 public class AutoJ1K1L1 extends AutoBase {
 
   public static final PathPlannerPath startingPath = Paths.SL_IJ;
@@ -31,9 +31,7 @@ public class AutoJ1K1L1 extends AutoBase {
     // addCommands(delaySelectedTime());
     // addCommands(getBumpCommand());
 
-    addCommands(
-        new InstantCommand(
-            () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
+    addCommands(startHP());
     addCommands(
         new SequentialCommandGroup(
                 new InstantCommand(
