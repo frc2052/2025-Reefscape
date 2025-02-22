@@ -4,7 +4,6 @@
 
 package frc.robot.auto.common;
 
-import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -12,7 +11,6 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import com.team2052.lib.helpers.MathHelpers;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -239,7 +237,10 @@ public abstract class AutoBase extends SequentialCommandGroup {
   }
 
   protected Command waitUntilSlowAndCloseEnough() {
-    return Commands.waitUntil(() -> MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()) < 0.5 && RobotState.getInstance().distanceToAlignPose().isNear(Inches.of(6), 0.1));
+    return Commands.waitUntil(
+        () ->
+            MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()) < 0.5
+                && RobotState.getInstance().distanceToAlignPose() < 0.3);
   }
 
   protected Command descoreScoreNetAlgae(

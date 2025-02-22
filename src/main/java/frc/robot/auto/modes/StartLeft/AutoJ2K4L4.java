@@ -1,8 +1,6 @@
 package frc.robot.auto.modes.StartLeft;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
@@ -31,7 +29,9 @@ public class AutoJ2K4L4 extends AutoBase {
             () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
     // paused too long after aligning
     addCommands(
-        safeReefAlignment(startingPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.IJ).alongWith(toPosAndScore(TargetAction.L2).beforeStarting(waitUntilSlowAndCloseEnough())));
+        safeReefAlignment(startingPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.IJ)
+            .alongWith(
+                elevatorToPos(TargetAction.L2).beforeStarting(waitUntilSlowAndCloseEnough())));
     addCommands(toPosAndScore(TargetAction.L2));
     addCommands(safeStationAlignment(Paths.J2_LL));
     addCommands(HPIntake());
