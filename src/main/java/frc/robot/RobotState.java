@@ -3,12 +3,17 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
+
+import static edu.wpi.first.units.Units.Meters;
+
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -46,6 +51,15 @@ public class RobotState {
   public void addDrivetrainState(SwerveDriveState drivetrainState) {
     this.drivetrainState = drivetrainState;
   }
+
+  public ChassisSpeeds getChassisSpeeds() {
+    return drivetrainState.Speeds;
+  }
+
+  public Distance distanceToAlignPose() {
+    return Meters.of(getAlignPose().getTranslation().getDistance(getFieldToRobot().getTranslation()));
+  }
+
 
   public void setAlignOffset(AlignOffset offset) {
     System.out.println("NEW OFFSET " + offset.transform.getY());
