@@ -218,6 +218,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command toPosAndScore(TargetAction position) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
+        new InstantCommand(() -> HandSubsystem.getInstance().stopMotor()),
         Commands.waitUntil(
                 () ->
                     ElevatorSubsystem.getInstance().atPosition(2.0, position)
