@@ -293,14 +293,14 @@ public class Constants {
       public static final Angle THETA_Y_OFFSET = Degrees.of(-21.84); // pitch
       public static final Angle THETA_Z_OFFSET = Degrees.of(3); // yaw
 
-      public static final Transform3d ROBOT_TO_CAMERA_METERS =
+      public static final Transform3d ROBOT_TO_CAMERA =
           new Transform3d(
               new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
               new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
 
       public static TagTrackerConstants TagTrackerConstants() {
         return new TagTrackerConstants(
-            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
+            CAMERA_NAME, ROBOT_TO_CAMERA, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
       }
     }
 

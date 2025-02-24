@@ -253,11 +253,31 @@ public abstract class AutoBase extends SequentialCommandGroup {
             .andThen(HandCommandFactory.motorOut().withTimeout(1.0)));
   }
 
-  protected Command waitUntilSlowAndCloseEnough() {
-    return Commands.waitUntil(
+  protected Command prepareForScoreWhenReady(TargetAction action) {
+    final double maxSpeed;
+    final double maxDist;
+    TargetAction prepAction = TargetAction.TR;
+    if (action == TargetAction.L1H) {
+      maxSpeed = 2.0;
+      maxDist = 1.0;
+      prepAction = action;
+    } else if (action == TargetAction.L2 || action == TargetAction.L3) {
+      maxSpeed = 1.0;
+      maxDist = 0.75;
+      prepAction = TargetAction.L2;
+    } else if(action == TargetAction.L4){
+      maxSpeed = 0.75;
+      maxDist = 0.5;
+      prepAction = TargetAction.L3;
+    } else {
+      maxSpeed = 0;
+      maxDist = 0.1;
+    }
+
+    return elevatorToPos(prepAction).beforeStarting(Commands.waitUntil(
         () ->
-            MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()) < 0.5
-                && RobotState.getInstance().distanceToAlignPose() < 0.3);
+            (MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()) < maxSpeed)
+                && RobotState.getInstance().distanceToAlignPose() < maxDist));
   }
 
   // protected Command descoreAlgae(PathPlannerPath toPosition,TargetAction algaeLevel){

@@ -88,9 +88,11 @@ public class AlignmentCommandFactory {
     return location.getWithOffset(offset);
   }
 
-  public static Pose2d reefIdToBranchCustomNudge(TargetFieldLocation location, AlignOffset offset, Transform2d customNudge) {
+  public static Pose2d reefIdToBranchCustomNudge(
+      TargetFieldLocation location, AlignOffset offset, Transform2d customNudge) {
     if (offset == AlignOffset.LEFT_REEF_LOC) {
-      return location.getWithTransform(offset.getTransform().plus(location.getLeftBranchNudge()).plus(customNudge));
+      return location.getWithTransform(
+          offset.getTransform().plus(location.getLeftBranchNudge()).plus(customNudge));
     } else if (offset == AlignOffset.RIGHT_REEF_LOC) {
       return location.getWithTransform(offset.getTransform().plus(location.getRightBranchNudge()));
     }

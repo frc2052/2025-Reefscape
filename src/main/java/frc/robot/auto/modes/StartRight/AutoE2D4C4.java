@@ -25,16 +25,15 @@ public class AutoE2D4C4 extends AutoBase {
     addCommands(startHP());
     addCommands(
         safeReefAlignment(startingPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.EF)
-            .alongWith(
-                elevatorToPos(TargetAction.L2).beforeStarting(waitUntilSlowAndCloseEnough())));
+            .alongWith(prepareForScoreWhenReady(TargetAction.L2)));
     addCommands(toPosAndScore(TargetAction.L2));
     addCommands(safeStationAlignment(Paths.E2_RL));
     addCommands(HPIntake());
-    addCommands(safeReefAlignment(Paths.RL_D4, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.CD));
-    addCommands(toPosAndScore(TargetAction.L4));
+    addCommands(safeReefAlignment(Paths.RL_D4, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.CD)
+    .alongWith(prepareForScoreWhenReady(TargetAction.L2)));
     addCommands(safeStationAlignment(Paths.D4_RL));
     addCommands(HPIntake());
-    addCommands(safeReefAlignment(Paths.RL_C4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.CD));
-    addCommands(toPosAndScore(TargetAction.L4));
+    addCommands(safeReefAlignment(Paths.RL_C4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.CD)
+    .alongWith(prepareForScoreWhenReady(TargetAction.L2)));
   }
 }

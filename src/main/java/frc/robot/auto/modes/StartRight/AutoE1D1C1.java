@@ -33,39 +33,20 @@ public class AutoE1D1C1 extends AutoBase {
 
     addCommands(startHP());
     addCommands(
-        new SequentialCommandGroup(
-                new InstantCommand(
-                    () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L1H)),
                 safeReefAlignment(
-                    startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.EF))
-            .alongWith(
-                elevatorToPos(TargetAction.L1H).beforeStarting(waitUntilSlowAndCloseEnough())));
+                    startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.EF)
+                    .alongWith(prepareForScoreWhenReady(TargetAction.L1H)));
     addCommands(toPosAndScore(TargetAction.L1H));
     addCommands(safeStationAlignment(Paths.E2_RL));
     addCommands(HPIntake());
     addCommands(
-        new SequentialCommandGroup(
-            new InstantCommand(
-                    () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L1H))
-                .beforeStarting(new WaitCommand(0.5)),
-            followPathCommand(Paths.RL_CD_L1)));
-    // addCommands(
-    // safeReefAlignment(Paths.RL_CD_L1, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.KL));
+            followPathCommand(Paths.RL_CD_L1)
+            .alongWith(prepareForScoreWhenReady(TargetAction.L1H)));
     addCommands(toPosAndScore(TargetAction.L1H));
     addCommands(safeStationAlignment(Paths.CD_RL));
     addCommands(HPIntake());
-    addCommands(
-        new SequentialCommandGroup(
-            new ParallelCommandGroup(
-                new WaitCommand(0.5),
-                new InstantCommand(
-                        () ->
-                            SuperstructureSubsystem.getInstance()
-                                .setCurrentAction(TargetAction.L1H))
-                    .beforeStarting(new WaitCommand(0.5)),
-                followPathCommand(Paths.RL_CD_L1))));
-    // addCommands(safeReefAlignment(Paths.RL_CD_L1, AlignOffset.MIDDLE_REEF_LOC,
-    // TargetFieldLocation.KL));
+    addCommands(followPathCommand(Paths.RL_CD_L1)
+                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)));
     addCommands(toPosAndScore(TargetAction.L1H));
   }
 }

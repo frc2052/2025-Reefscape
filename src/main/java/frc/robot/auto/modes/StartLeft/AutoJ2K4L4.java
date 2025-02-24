@@ -1,8 +1,6 @@
 package frc.robot.auto.modes.StartLeft;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
@@ -27,22 +25,19 @@ public class AutoJ2K4L4 extends AutoBase {
 
     addCommands(
         safeReefAlignment(startingPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.IJ)
-            .alongWith(
-              elevatorToPos(TargetAction.L2).beforeStarting(waitUntilSlowAndCloseEnough())));
+            .alongWith(prepareForScoreWhenReady(TargetAction.L2)));
     addCommands(score(TargetAction.L2));
     addCommands(safeStationAlignment(Paths.J2_LL));
     addCommands(HPIntake());
     addCommands(
         safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL)
-            .alongWith(
-                elevatorToPos(TargetAction.L2).beforeStarting(waitUntilSlowAndCloseEnough())));
+        .alongWith(prepareForScoreWhenReady(TargetAction.L4)));
     addCommands(score(TargetAction.L4));
     addCommands(safeStationAlignment(Paths.K4_LL));
     addCommands(HPIntake());
     addCommands(
         safeReefAlignment(Paths.LL_K4, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.KL)
-            .alongWith(
-                elevatorToPos(TargetAction.L4).beforeStarting(waitUntilSlowAndCloseEnough())));
+        .alongWith(prepareForScoreWhenReady(TargetAction.L4)));
     addCommands(score(TargetAction.L4));
   }
 }

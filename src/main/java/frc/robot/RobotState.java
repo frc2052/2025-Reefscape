@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
-import com.fasterxml.jackson.databind.EnumNamingStrategies.CamelCaseStrategy;
 import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,11 +13,7 @@ import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import java.util.Optional;
-
-import javax.xml.crypto.dsig.Transform;
-
 import org.littletonrobotics.junction.Logger;
-import org.photonvision.estimation.CameraTargetRelation;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -47,22 +42,22 @@ public class RobotState {
 
   private RobotState() {}
 
-  public static boolean getRegularNudge(){
+  public static boolean getRegularNudge() {
     return regularNudge;
   }
 
   // have to set back to true each time we apply a custom offset
-  public static void setRegularNudge(boolean regular){
+  public static void setRegularNudge(boolean regular) {
     System.out.println("SET REGULAR NUDGE TO " + regular);
     regularNudge = regular;
   }
 
-  public static void setCustomNudge(Transform2d nudgeamt){
+  public static void setCustomNudge(Transform2d nudgeamt) {
     setRegularNudge(false);
     customNudgeAmt = nudgeamt;
   }
 
-  public static Transform2d getCustomNudge(){
+  public static Transform2d getCustomNudge() {
     return customNudgeAmt;
   }
 
@@ -106,10 +101,14 @@ public class RobotState {
       if (AlignmentCommandFactory.idToReefFace(camTarget.fiducialId) != null
           && AlignmentCommandFactory.idToReefFace(camTarget.fiducialId).getIsReef()) {
 
-        goalAlignPose = 
-        getRegularNudge() == true ?
-          AlignmentCommandFactory.reefIdToBranchWithNudge(AlignmentCommandFactory.idToReefFace(camTarget.fiducialId), getAlignOffset()):
-          AlignmentCommandFactory.reefIdToBranchCustomNudg(AlignmentCommandFactory.idToReefFace(camTarget.fiducialId), getAlignOffset(), getCustomNudge());
+        goalAlignPose =
+            getRegularNudge() == true
+                ? AlignmentCommandFactory.reefIdToBranchWithNudge(
+                    AlignmentCommandFactory.idToReefFace(camTarget.fiducialId), getAlignOffset())
+                : AlignmentCommandFactory.reefIdToBranchCustomNudge(
+                    AlignmentCommandFactory.idToReefFace(camTarget.fiducialId),
+                    getAlignOffset(),
+                    getCustomNudge());
       } else {
         if (poseAlignTimer.get() > 1.0) {
           goalAlignPose = null;
