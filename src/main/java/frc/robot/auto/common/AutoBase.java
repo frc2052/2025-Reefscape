@@ -114,7 +114,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
   protected Command getBumpCommand() {
     if (autoFactory.getBumpNeeded()) {
-      return new DefaultDriveCommand(() -> 0.5, () -> 0, () -> 0, () -> false)
+      return new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> false)
           .withDeadline(new WaitCommand(0.5));
     } else {
       return new InstantCommand();
@@ -219,12 +219,14 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
   protected Command score(TargetAction position) {
     return new SequentialCommandGroup(
-        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
+        // new InstantCommand(() ->
+        // SuperstructureSubsystem.getInstance().setCurrentAction(position)),
         Commands.waitUntil(
                 () ->
                     ElevatorSubsystem.getInstance().atPosition(2.0, position)
                         && CoralArmSubsystem.getInstance().isAtDesiredPosition())
-            .andThen(HandCommandFactory.motorOut().withTimeout(0.45))
+            .withTimeout(0.5) // TODO: timeout - raising elevator much earlier
+            .andThen(HandCommandFactory.motorOut().withTimeout(0.40))
             .andThen(
                 new InstantCommand(
                     () ->
@@ -274,7 +276,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         }
         case L4 -> {
           maxSpeed = 0.75;
-          maxDist = 1.7; // test farther distances
+          maxDist = 1.7; // TODO: test farther distances to raise elevator
           prepAction = TargetAction.L4;
         }
         default -> {
