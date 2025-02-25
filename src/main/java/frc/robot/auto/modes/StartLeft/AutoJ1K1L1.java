@@ -7,6 +7,7 @@ package frc.robot.auto.modes.StartLeft;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
+import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
@@ -22,27 +23,29 @@ public class AutoJ1K1L1 extends AutoBase {
   }
 
   @Override
-  public void init() {
-    // addCommands(delaySelectedTime());
-    // addCommands(getBumpCommand());
+  public void init() { // test!!
+    addCommands(delaySelectedTime());
+    addCommands(getBumpCommand());
 
     addCommands(startHP());
     addCommands(
-                safeReefAlignment(
-                    startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.IJ)
-            .alongWith(prepareForScoreWhenReady(TargetAction.L1H)));
+        safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.IJ)
+            .alongWith(prepareForScoreWhenReady(TargetAction.L1H))
+            .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
     addCommands(toPosAndScore(TargetAction.L1H));
     addCommands(safeStationAlignment(Paths.J2_LL));
     addCommands(HPIntake());
     addCommands(
-            followPathCommand(Paths.LL_KL_L1)
-            .alongWith(prepareForScoreWhenReady(TargetAction.L1H)));
+        followPathCommand(Paths.LL_KL_L1)
+        .alongWith(prepareForScoreWhenReady(TargetAction.L1H))
+        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
     addCommands(toPosAndScore(TargetAction.L1H));
     addCommands(safeStationAlignment(Paths.KL_LL));
     addCommands(HPIntake());
     addCommands(
-                followPathCommand(Paths.LL_KL_L1)
-                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)));
+        followPathCommand(Paths.LL_KL_L1)
+        .alongWith(prepareForScoreWhenReady(TargetAction.L1H))
+        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
     addCommands(toPosAndScore(TargetAction.L1H));
   }
 }

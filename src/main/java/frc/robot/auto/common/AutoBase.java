@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
@@ -113,7 +114,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
   protected Command getBumpCommand() {
     if (autoFactory.getBumpNeeded()) {
-      return new DefaultDriveCommand(() -> -0.3, () -> 0, () -> 0, () -> false)
+      return new DefaultDriveCommand(() -> 0.5, () -> 0, () -> 0, () -> false)
           .withDeadline(new WaitCommand(0.5));
     } else {
       return new InstantCommand();
@@ -161,16 +162,12 @@ public abstract class AutoBase extends SequentialCommandGroup {
         followPathCommand(startPath)
             .until(vision::getCoralCameraHasTarget)
             .andThen(AlignmentCommandFactory.getReefAlignmentCommand(() -> branchside))
-            .withTimeout(2.5));
+            .withTimeout(4.2));
   }
 
   protected Command safeStationAlignment(PathPlannerPath altAlignPath) {
     return new ParallelCommandGroup(
-        new SequentialCommandGroup(
-            // pivot and intake start running
-            new InstantCommand(
-                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)),
-            new InstantCommand(() -> HandSubsystem.getInstance().motorIn())),
+        new SequentialCommandGroup(new InstantCommand(() -> HandSubsystem.getInstance().motorIn())),
         //
         followPathCommand(altAlignPath)
         // .until(vision::getStationCameraHasTarget)
@@ -222,13 +219,16 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
   protected Command score(TargetAction position) {
     return new SequentialCommandGroup(
+        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
         Commands.waitUntil(
                 () ->
                     ElevatorSubsystem.getInstance().atPosition(2.0, position)
                         && CoralArmSubsystem.getInstance().isAtDesiredPosition())
-            .andThen(HandCommandFactory.motorIn().withTimeout(0.2))
-            .andThen(new InstantCommand(() -> HandSubsystem.getInstance().stopMotor()))
-            .andThen(HandCommandFactory.motorOut().withTimeout(0.55)));
+            .andThen(HandCommandFactory.motorOut().withTimeout(0.45))
+            .andThen(
+                new InstantCommand(
+                    () ->
+                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP))));
   }
 
   protected Command toPosAndScore(TargetAction position) {
@@ -258,26 +258,30 @@ public abstract class AutoBase extends SequentialCommandGroup {
     final double maxDist;
     TargetAction prepAction = TargetAction.TR;
     if (action == TargetAction.L1H) {
-      maxSpeed = 2.0;
-      maxDist = 1.0;
+      maxSpeed = 2.5;
+      maxDist = 1.5;
       prepAction = action;
     } else if (action == TargetAction.L2 || action == TargetAction.L3) {
-      maxSpeed = 1.0;
-      maxDist = 0.75;
+      maxSpeed = 1.5;
+      maxDist = 1.0;
       prepAction = TargetAction.L2;
-    } else if(action == TargetAction.L4){
+    } else if (action == TargetAction.L4) {
       maxSpeed = 0.75;
-      maxDist = 0.5;
-      prepAction = TargetAction.L3;
+      maxDist = 0.75;
+      prepAction = TargetAction.L4;
     } else {
       maxSpeed = 0;
       maxDist = 0.1;
     }
 
-    return elevatorToPos(prepAction).beforeStarting(Commands.waitUntil(
-        () ->
-            (MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()) < maxSpeed)
-                && RobotState.getInstance().distanceToAlignPose() < maxDist));
+    return elevatorToPos(prepAction)
+        .beforeStarting(
+            Commands.waitUntil(
+                () ->
+                    (MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds())
+                            < maxSpeed)
+                        && RobotState.getInstance().distanceToAlignPose() < maxDist))
+        .andThen(new PrintCommand("CLOSE ENOUGH**************"));
   }
 
   // protected Command descoreAlgae(PathPlannerPath toPosition,TargetAction algaeLevel){

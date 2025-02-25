@@ -8,6 +8,7 @@ import frc.robot.RobotState;
 import frc.robot.auto.modes.AutoLLToK4;
 import frc.robot.auto.modes.StartLeft.AutoJ1K1L1;
 import frc.robot.auto.modes.StartLeft.AutoJ2K4L4;
+import frc.robot.auto.modes.StartLeft.AutoJ4K4L4;
 import frc.robot.auto.modes.StartLeft.AutoK4L4DAK3L3;
 import frc.robot.auto.modes.StartRight.AutoD4C4DAD3C3;
 import frc.robot.auto.modes.StartRight.AutoE1D1C1;
@@ -113,6 +114,7 @@ public class AutoFactory {
     // start left
     AUTO_J1_K1_L1(AutoJ1K1L1.class),
     AUTO_J2_K4_L4(AutoJ2K4L4.class),
+    AUTO_J4_K4_L4(AutoJ4K4L4.class),
     AUTO_K4_L4_DA_K3_L3(AutoK4L4DAK3L3.class),
 
     // start right

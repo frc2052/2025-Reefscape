@@ -23,7 +23,7 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
   @Override
   public Trigger homeElevator() {
-    return new JoystickButton(controlPanel, 9);
+    return new JoystickButton(controlPanel, 11);
   }
 
   @Override
@@ -53,7 +53,7 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
   @Override
   public Trigger setGoalCL() {
-    return new JoystickButton(controlPanel, 11);
+    return new JoystickButton(controlPanel, 9);
   }
 
   @Override

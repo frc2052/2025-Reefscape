@@ -28,7 +28,6 @@ import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
-import frc.robot.subsystems.vision.VisionSimSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
@@ -42,7 +41,7 @@ public class RobotContainer {
   public final RobotState robotState = RobotState.getInstance();
   public final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
   public final VisionSubsystem vision = VisionSubsystem.getInstance();
-  public final VisionSimSubsystem visionSim = VisionSimSubsystem.getInstance();
+  //   public final VisionSimSubsystem visionSim = VisionSimSubsystem.getInstance();
   public final AdvantageScopeSubsystem advantageScope = AdvantageScopeSubsystem.getInstance();
   public final AutoFactory autoFactory = AutoFactory.getInstance();
   public final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
