@@ -60,7 +60,11 @@ public class LedSubsystem extends SubsystemBase {
     CLIMBING(8),
     DONE_CLIMBING(9),
     NO_AUTO(10),
-    SPARKLE(11);
+    SPARKLE(11),
+    RED_SPARKLE(12),
+    YELLOW_SPARKLE(13),
+    ORANGE_SPARKLE(14),
+    MAROON_SPARKLE(15);
 
     private final int code;
 
@@ -125,7 +129,13 @@ public class LedSubsystem extends SubsystemBase {
           // } else if (Math.abs(ClimberSubsystem.getInstance().getSpeed()) > 0) {
           //   currentStatusMode = LEDStatusMode.CLIMBING;
         } else if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L1H) {
-          currentStatusMode = LEDStatusMode.SPARKLE;
+          currentStatusMode = LEDStatusMode.RED_SPARKLE;
+        } else if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L2) {
+          currentStatusMode = LEDStatusMode.YELLOW_SPARKLE;
+        } else if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3) {
+          currentStatusMode = LEDStatusMode.ORANGE_SPARKLE;
+        } else if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L4) {
+          currentStatusMode = LEDStatusMode.MAROON_SPARKLE;
         }
 
         // shooting
