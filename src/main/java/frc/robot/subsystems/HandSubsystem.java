@@ -20,6 +20,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class HandSubsystem extends SubsystemBase {
   private final TalonFX motor;
+  // private final CANrange range;
   private static HandSubsystem INSTANCE;
 
   private boolean intaking;
@@ -35,8 +36,14 @@ public class HandSubsystem extends SubsystemBase {
   /** Creates a new HandSubsystem. */
   public HandSubsystem() {
     motor = new TalonFX(Ports.HAND_TALONFX_ID);
+    // range = new CANrange(Ports.HAND_CAN_RANGE);
 
+    // CANrangeConfiguration rangeConfig = new CANrangeConfiguration();
     TalonFXConfiguration config = new TalonFXConfiguration();
+
+    // rangeConfig.ToFParams.UpdateMode = UpdateModeValue.ShortRange100Hz;
+
+    // range.getConfigurator().apply(rangeConfig);
 
     InvertedValue inverted =
         Constants.HandConstants.HAND_MOTOR_INVERTED
@@ -50,7 +57,7 @@ public class HandSubsystem extends SubsystemBase {
     limitConfigs.SupplyCurrentLimit = Constants.HandConstants.HAND_MOTOR_CURRENT_LIMIT;
     limitConfigs.SupplyCurrentLowerTime = (0.15);
     limitConfigs.SupplyCurrentLowerLimit = (1.0);
-    limitConfigs.SupplyCurrentLimitEnable = true;
+    limitConfigs.SupplyCurrentLimitEnable = false;
 
     // limitConfigs.StatorCurrentLimit = Constants.HandConstants.HAND_MOTOR_CURRENT_LIMIT;
     // limitConfigs.StatorCurrentLimit = (0.2);
@@ -99,6 +106,7 @@ public class HandSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     Logger.recordOutput("Hand/Motor Velocity", motor.getVelocity().getValueAsDouble());
     Logger.recordOutput("Hand/Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
+    // Logger.recordOutput("Hand/ToF Distance", range.getDistance().getValueAsDouble());
 
     if (intaking) {
       if (coralDelay.update(
