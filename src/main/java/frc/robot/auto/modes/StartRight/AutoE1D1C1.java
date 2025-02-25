@@ -23,8 +23,8 @@ public class AutoE1D1C1 extends AutoBase {
 
   @Override
   public void init() {
-    // addCommands(delaySelectedTime());
-    // addCommands(getBumpCommand());
+    addCommands(delaySelectedTime());
+    addCommands(getBumpCommand());
 
     addCommands(startHP());
     addCommands(

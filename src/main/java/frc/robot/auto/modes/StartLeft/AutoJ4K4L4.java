@@ -38,9 +38,18 @@ public class AutoJ4K4L4 extends AutoBase {
     addCommands(safeStationAlignment(Paths.K4_LL));
     addCommands(HPIntake());
     addCommands(
-        safeReefAlignment(Paths.LL_K4, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.KL)
+        safeReefAlignment(Paths.LL_L4, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.KL)
             .alongWith(prepareForScoreWhenReady(TargetAction.L4))
             .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
     addCommands(score(TargetAction.L4));
+
+    // 4 coral auto addition - side A
+    // addCommands(safeStationAlignment(Paths.L4_LL));
+    // addCommands(HPIntake());
+    // addCommands(
+    //     safeReefAlignment(Paths.LL_AB, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.AB)
+    //         .alongWith(prepareForScoreWhenReady(TargetAction.L4))
+    //         .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
+    // addCommands(score(TargetAction.L4));
   }
 }

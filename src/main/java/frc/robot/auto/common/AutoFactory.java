@@ -13,6 +13,7 @@ import frc.robot.auto.modes.StartLeft.AutoK4L4DAK3L3;
 import frc.robot.auto.modes.StartRight.AutoD4C4DAD3C3;
 import frc.robot.auto.modes.StartRight.AutoE1D1C1;
 import frc.robot.auto.modes.StartRight.AutoE2D4C4;
+import frc.robot.auto.modes.safety.AutoH4;
 import frc.robot.auto.modes.safety.DeadReckoning;
 import frc.robot.auto.modes.startCenter.AutoH4LeftAlgaeRemoval;
 import frc.robot.auto.modes.startCenter.AutoH4RightAlgaeRemoval;
@@ -106,6 +107,7 @@ public class AutoFactory {
     DEAD_RECKONING(DeadReckoning.class),
     NO_AUTO(null),
     LL_K4_VISION_TEST(AutoLLToK4.class),
+    BACKUP_AUTO_H4_DA_NET(AutoH4.class),
 
     // start center
     AUTO_H4_LEFT_ALGAE_REMOVAL(AutoH4LeftAlgaeRemoval.class),

@@ -18,10 +18,9 @@ public class AutoJ2K4L4 extends AutoBase {
     super(startingPath.getStartingHolonomicPose());
   }
 
-  // TODO: test timing
   @Override
   public void init() {
-    // addCommands(delaySelectedTime());
+    addCommands(delaySelectedTime());
     addCommands(getBumpCommand());
 
     addCommands(

@@ -257,22 +257,31 @@ public abstract class AutoBase extends SequentialCommandGroup {
     final double maxSpeed;
     final double maxDist;
     TargetAction prepAction = TargetAction.TR;
-    if (action == TargetAction.L1H) {
-      maxSpeed = 2.5;
-      maxDist = 1.5;
-      prepAction = action;
-    } else if (action == TargetAction.L2 || action == TargetAction.L3) {
-      maxSpeed = 1.5;
-      maxDist = 1.0;
-      prepAction = TargetAction.L2;
-    } else if (action == TargetAction.L4) {
-      maxSpeed = 0.75;
-      maxDist = 0.75;
-      prepAction = TargetAction.L4;
-    } else {
+    if (action == null) {
       maxSpeed = 0;
       maxDist = 0.1;
-    }
+    } else
+      switch (action) {
+        case L1H -> {
+          maxSpeed = 2.5;
+          maxDist = 1.5;
+          prepAction = action;
+        }
+        case L2, L3 -> {
+          maxSpeed = 1.5;
+          maxDist = 1.0;
+          prepAction = TargetAction.L2;
+        }
+        case L4 -> {
+          maxSpeed = 0.75;
+          maxDist = 1.7; // test farther distances
+          prepAction = TargetAction.L4;
+        }
+        default -> {
+          maxSpeed = 0;
+          maxDist = 0.1;
+        }
+      }
 
     return elevatorToPos(prepAction)
         .beforeStarting(
@@ -294,10 +303,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
   //     new InstantCommand(() -> AlgaeShooterSubsystem.getInstance().)
   //   );
   // }
-
-  protected Command scoreAlgae(PathPlannerPath score) {
-    return new SequentialCommandGroup(null);
-  }
 
   protected Command descoreScoreNetAlgae(
       PathPlannerPath toPositionPath, TargetAction algaeLevel, PathPlannerPath score) {
@@ -330,6 +335,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // Letter + Number = Reef Scoring Position
 
     public static final PathPlannerPath LL_STOP = getPathFromFile("LL STOP");
+
+    public static final PathPlannerPath LL_AB = getPathFromFile("LL AB");
 
     // CD
     public static final PathPlannerPath RL_C4 = getPathFromFile("RL C");

@@ -40,5 +40,14 @@ public class AutoE4D4C4 extends AutoBase {
         safeReefAlignment(Paths.RL_C4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.CD)
             .alongWith(prepareForScoreWhenReady(TargetAction.L2))
             .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
+
+    // 4 coral auto addition - side B
+    // addCommands(safeStationAlignment(Paths.C4_RL));
+    // addCommands(HPIntake());
+    // addCommands(
+    //     safeReefAlignment(Paths.LL_AB, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.AB)
+    //         .alongWith(prepareForScoreWhenReady(TargetAction.L4))
+    //         .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
+    // addCommands(score(TargetAction.L4));
   }
 }

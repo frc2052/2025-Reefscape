@@ -21,6 +21,9 @@ public class AutoH4LeftAlgaeRemoval extends AutoBase {
 
   @Override
   public void init() {
+    addCommands(getBumpCommand());
+    addCommands(delaySelectedTime());
+
     addCommands(safeReefAlignment(startPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.GH));
     addCommands(toPosAndScore(TargetAction.L4));
     addCommands(descoreScoreNetAlgae(Paths.GH_SCORE_TO_DESCORE, TargetAction.LA, Paths.GH_NET));
