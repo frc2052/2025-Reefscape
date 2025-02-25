@@ -37,15 +37,15 @@ public class AutoJ1K1L1 extends AutoBase {
     addCommands(HPIntake());
     addCommands(
         followPathCommand(Paths.LL_KL_L1)
-        .alongWith(prepareForScoreWhenReady(TargetAction.L1H))
-        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
+            .alongWith(prepareForScoreWhenReady(TargetAction.L1H))
+            .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
     addCommands(toPosAndScore(TargetAction.L1H));
     addCommands(safeStationAlignment(Paths.KL_LL));
     addCommands(HPIntake());
     addCommands(
         followPathCommand(Paths.LL_KL_L1)
-        .alongWith(prepareForScoreWhenReady(TargetAction.L1H))
-        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
+            .alongWith(prepareForScoreWhenReady(TargetAction.L1H))
+            .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
     addCommands(toPosAndScore(TargetAction.L1H));
   }
 }

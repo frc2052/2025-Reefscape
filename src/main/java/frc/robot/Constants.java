@@ -193,7 +193,7 @@ public class Constants {
   public static class HandConstants {
     public static final boolean HAND_MOTOR_INVERTED = true;
     public static final double HAND_MOTOR_CURRENT_LIMIT = 40.0;
-    public static final double IN_HAND_MOTOR_SPEED = 0.5;
+    public static final double IN_HAND_MOTOR_SPEED = 0.33;
     public static final double OUT_HAND_MOTOR_SPEED = 0.35;
   }
 
@@ -228,7 +228,7 @@ public class Constants {
         new SoftwareLimitSwitchConfigs()
             .withForwardSoftLimitThreshold(Degrees.of(260)) // TODO: adjust as needed
             .withForwardSoftLimitEnable(true)
-            .withReverseSoftLimitThreshold(Degrees.of(120))
+            .withReverseSoftLimitThreshold(Degrees.of(115))
             .withReverseSoftLimitEnable(true);
 
     public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
