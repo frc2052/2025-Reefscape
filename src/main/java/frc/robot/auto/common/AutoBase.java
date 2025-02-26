@@ -4,14 +4,18 @@
 
 package frc.robot.auto.common;
 
-import static edu.wpi.first.units.Units.Meters;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import com.team2052.lib.helpers.MathHelpers;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import static edu.wpi.first.units.Units.Meters;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -37,9 +41,6 @@ import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import frc.robot.util.io.Dashboard;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
   private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -367,6 +368,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // gh
     public static final PathPlannerPath SC_H4 = getPathFromFile("SC H");
     public static final PathPlannerPath H4_PROCESS = getPathFromFile("H Processor");
+    public static final PathPlannerPath H_ALGAE_PREP = getPathFromFile("H Algae Prep");
 
     // ij
     public static final PathPlannerPath J2_LL = getPathFromFile("J LL");
