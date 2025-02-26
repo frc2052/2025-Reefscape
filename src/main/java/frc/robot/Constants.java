@@ -195,6 +195,7 @@ public class Constants {
     public static final double HAND_MOTOR_CURRENT_LIMIT = 40.0;
     public static final double IN_HAND_MOTOR_SPEED = 0.33;
     public static final double OUT_HAND_MOTOR_SPEED = 0.35;
+    public static final double HAND_RANGE_THRESHOLD = 0.4;
   }
 
   public static class AlgaePivotConstants {
