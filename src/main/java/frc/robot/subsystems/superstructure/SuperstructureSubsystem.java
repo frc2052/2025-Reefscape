@@ -131,6 +131,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
       } else {
         Logger.recordOutput("Arrived at Target State", false);
       }
+    } else {
+      // if (HandSubsystem.getInstance().getHasCoral()) {
+      //   setCurrentAction(TargetAction.TR);
+      // }
     }
 
     previousAction = target;

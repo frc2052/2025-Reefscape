@@ -3,17 +3,21 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.configs.AudioConfigs;
+import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.ProximityParamsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.ToFParamsConfigs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.UpdateModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -192,10 +196,30 @@ public class Constants {
 
   public static class HandConstants {
     public static final boolean HAND_MOTOR_INVERTED = true;
-    public static final double HAND_MOTOR_CURRENT_LIMIT = 40.0;
     public static final double IN_HAND_MOTOR_SPEED = 0.33;
     public static final double OUT_HAND_MOTOR_SPEED = 0.35;
-    public static final double HAND_RANGE_THRESHOLD = 0.4;
+    public static final double HAND_RANGE_CORAL_SEEN = 0.4;
+
+    public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()
+    .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
+    .withProximityParams(new ProximityParamsConfigs().withMinSignalStrengthForValidMeasurement(0.2).withProximityThreshold(0.4));
+
+    public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
+        new MotorOutputConfigs()
+            .withInverted(
+              HandConstants.HAND_MOTOR_INVERTED
+                    ? InvertedValue.Clockwise_Positive
+                    : InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake); 
+
+    public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIG = new CurrentLimitsConfigs()
+    .withSupplyCurrentLimit(20.0)
+    .withSupplyCurrentLimitEnable(true);
+    
+    public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
+    .withMotorOutput(MOTOR_OUTPUT_CONFIG)
+    .withCurrentLimits(CURRENT_LIMITS_CONFIG)
+    .withAudio(new AudioConfigs().withBeepOnBoot(false));
   }
 
   public static class AlgaePivotConstants {

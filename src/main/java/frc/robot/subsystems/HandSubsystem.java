@@ -4,17 +4,11 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.AudioConfigs;
-import com.ctre.phoenix6.configs.CANrangeConfiguration;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.UpdateModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.HandConstants;
 import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
@@ -29,38 +23,14 @@ public class HandSubsystem extends SubsystemBase {
     }
     return INSTANCE;
   }
-  /** Creates a new HandSubsystem. */
+
   public HandSubsystem() {
     motor = new TalonFX(Ports.HAND_TALONFX_ID);
     range = new CANrange(Ports.HAND_CAN_RANGE);
 
-    CANrangeConfiguration rangeConfig = new CANrangeConfiguration();
-    TalonFXConfiguration config = new TalonFXConfiguration();
+    range.getConfigurator().apply(HandConstants.CANRANGE_CONFIG);
 
-    rangeConfig.ToFParams.UpdateMode = UpdateModeValue.ShortRange100Hz;
-
-    range.getConfigurator().apply(rangeConfig);
-
-    InvertedValue inverted =
-        Constants.HandConstants.HAND_MOTOR_INVERTED
-            ? InvertedValue.Clockwise_Positive
-            : InvertedValue.CounterClockwise_Positive;
-
-    config.withMotorOutput(new MotorOutputConfigs().withInverted(inverted));
-
-    CurrentLimitsConfigs limitConfigs = new CurrentLimitsConfigs();
-
-    limitConfigs.SupplyCurrentLimit = Constants.HandConstants.HAND_MOTOR_CURRENT_LIMIT;
-    limitConfigs.SupplyCurrentLowerTime = (0.15);
-    limitConfigs.SupplyCurrentLowerLimit = (1.0);
-    limitConfigs.SupplyCurrentLimitEnable = false;
-
-    motor
-        .getConfigurator()
-        .apply(
-            config
-                .withCurrentLimits(limitConfigs)
-                .withAudio(new AudioConfigs().withBeepOnBoot(false)));
+    motor.getConfigurator().apply(HandConstants.MOTOR_CONFIG);
   }
 
   private void setMotor(double speed) {
@@ -84,7 +54,7 @@ public class HandSubsystem extends SubsystemBase {
   }
 
   public boolean getHasCoral() {
-    return range.getDistance().getValueAsDouble() < Constants.HandConstants.HAND_RANGE_THRESHOLD;
+    return range.getIsDetected().getValue();
   }
 
   @Override
