@@ -7,15 +7,15 @@ public interface ISecondaryControlBoard {
 
   Trigger actTrigger();
 
-  Trigger manualUp();
+  Trigger algaeScoreAngle();
 
-  Trigger manualDown();
+  Trigger algaeLowAngle();
 
   Trigger climbUp();
 
   Trigger climbDown();
 
-  Trigger setGoalL1L();
+  Trigger setGoalCL();
 
   Trigger setGoalL1H();
 
@@ -30,8 +30,6 @@ public interface ISecondaryControlBoard {
   Trigger setGoalLowerAlgae();
 
   Trigger setGoalCoralStation();
-
-  Trigger setGoalAlgaeScoring();
 
   Trigger setSubReefLeft();
 

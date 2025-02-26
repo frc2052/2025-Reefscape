@@ -140,6 +140,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     Logger.recordOutput("Elevator/Goal Position", goalPositionRotations);
     Logger.recordOutput("Elevator/At Goal Position", atPosition());
     Logger.recordOutput("Elevator/Motor Set Speed", frontMotor.get());
+    Logger.recordOutput("Elevator/Velocity", frontMotor.getVelocity().getValueAsDouble());
 
     // if being used in open loop (usually manual mode), disable the height limit
     // if (controlState == ControlState.OPEN_LOOP) {
@@ -168,9 +169,10 @@ public class ElevatorSubsystem extends SubsystemBase {
       setOpenLoop(ElevatorConstants.HOMING_SPEED);
       if (homingDelay.update(
           Timer.getFPGATimestamp(),
-          MathHelpers.epsilonEquals(frontMotor.getVelocity().getValueAsDouble(), 0.0, 0.03))) {
+          MathHelpers.epsilonEquals(frontMotor.getVelocity().getValueAsDouble(), 0.0, 0.5))) {
         zeroEncoder();
-        setPositionMotionMagic(TargetAction.HM);
+        System.out.println("Elevator Homed");
+        setPositionMotionMagic(TargetAction.HP);
         homing = false;
         homingDelay.update(Timer.getFPGATimestamp(), false);
       }

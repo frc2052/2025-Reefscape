@@ -1,40 +1,38 @@
 package frc.robot.commands.drive.alignment;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.RobotState;
 import frc.robot.commands.drive.DefaultDriveCommand;
-import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand.DesiredElement;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import frc.robot.util.io.Dashboard;
-import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class AlignmentCommandFactory {
   private static final VisionSubsystem vision = VisionSubsystem.getInstance();
   private static final RobotState robotState = RobotState.getInstance();
   private static final ControlBoard controlBoard = ControlBoard.getInstance();
 
-  public static Command getReefAlignmentCommand(AlignOffset offset) {
-    if (offset != AlignOffset.LEFT_REEF_LOC
-        && offset != AlignOffset.MIDDLE_REEF_LOC
-        && offset != AlignOffset.RIGHT_REEF_LOC) {
-      invalidCombination(DesiredElement.REEF, offset);
+  public static Command getReefAlignmentCommand(Supplier<AlignOffset> offset) {
+    if (offset.get() != AlignOffset.LEFT_REEF_LOC
+        && offset.get() != AlignOffset.MIDDLE_REEF_LOC
+        && offset.get() != AlignOffset.RIGHT_REEF_LOC) {
+      invalidCombination(DesiredElement.REEF, offset.get());
     }
-
     Supplier<Pose2d> targetSupplier = () -> robotState.getAlignPose();
     BooleanSupplier shouldAlign = () -> robotState.getHasAlignPose();
 
     return Commands.runOnce(() -> vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM), vision)
+        .andThen(new InstantCommand(() -> robotState.setAlignOffset(offset.get())))
         .andThen(
             Commands.either(
                 new DriveToPose(
@@ -48,34 +46,29 @@ public class AlignmentCommandFactory {
   }
 
   public static Command getSpecificReefAlignmentCommand(
-      AlignOffset offset, TargetFieldLocation fieldLocation) {
-    if (offset != AlignOffset.LEFT_REEF_LOC
-        && offset != AlignOffset.MIDDLE_REEF_LOC
-        && offset != AlignOffset.RIGHT_REEF_LOC) {
-      return invalidCombination(DesiredElement.REEF, offset);
+      Supplier<AlignOffset> offset, TargetFieldLocation fieldLocation) {
+    if (offset.get() != AlignOffset.LEFT_REEF_LOC
+        && offset.get() != AlignOffset.MIDDLE_REEF_LOC
+        && offset.get() != AlignOffset.RIGHT_REEF_LOC) {
+      invalidCombination(DesiredElement.REEF, offset.get());
     }
 
-    vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM);
+    Supplier<Pose2d> targetSupplier = robotState::getAlignPose;
+    BooleanSupplier seesDesiredFace = robotState::desiredReefFaceIsSeen;
 
-    Optional<PhotonPipelineResult> tar =
-        vision.getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM);
-
-    if (tar.isPresent()) {
-      PhotonTrackedTarget camTarget = tar.get().getBestTarget();
-
-      if (idToReefFace(camTarget.fiducialId) == fieldLocation) {
-        return new DriveToPose(
-            () -> reefIdToBranchWithNudge(idToReefFace(camTarget.fiducialId), offset),
-            robotState::getFieldToRobot,
-            controlBoard::getThrottle,
-            controlBoard::getStrafe,
-            controlBoard::getRotation);
-      } else {
-        return getDefaultDriveCommand();
-      }
-    } else {
-      return getDefaultDriveCommand();
-    }
+    return Commands.runOnce(() -> vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM), vision)
+        .andThen(new InstantCommand(() -> robotState.setDesiredReefFace(fieldLocation)))
+        .andThen(new InstantCommand(() -> robotState.setAlignOffset(offset.get())))
+        .andThen(
+            getDefaultDriveCommand()
+                .withDeadline(Commands.waitUntil(seesDesiredFace))
+                .andThen(
+                    new DriveToPose(
+                        targetSupplier,
+                        robotState::getFieldToRobot,
+                        controlBoard::getThrottle,
+                        controlBoard::getStrafe,
+                        controlBoard::getRotation)));
   }
 
   private static Command getDefaultDriveCommand() {
@@ -89,6 +82,18 @@ public class AlignmentCommandFactory {
   public static Pose2d reefIdToBranchWithNudge(TargetFieldLocation location, AlignOffset offset) {
     if (offset == AlignOffset.LEFT_REEF_LOC) {
       return location.getWithTransform(offset.getTransform().plus(location.getLeftBranchNudge()));
+    } else if (offset == AlignOffset.RIGHT_REEF_LOC) {
+      return location.getWithTransform(offset.getTransform().plus(location.getRightBranchNudge()));
+    }
+
+    return location.getWithOffset(offset);
+  }
+
+  public static Pose2d reefIdToBranchCustomNudge(
+      TargetFieldLocation location, AlignOffset offset, Transform2d customNudge) {
+    if (offset == AlignOffset.LEFT_REEF_LOC) {
+      return location.getWithTransform(
+          offset.getTransform().plus(location.getLeftBranchNudge()).plus(customNudge));
     } else if (offset == AlignOffset.RIGHT_REEF_LOC) {
       return location.getWithTransform(offset.getTransform().plus(location.getRightBranchNudge()));
     }
@@ -123,7 +128,6 @@ public class AlignmentCommandFactory {
       case 6:
         return TargetFieldLocation.KL;
       default:
-        System.out.println("NULL ID*****************************");
         return null;
     }
   }
@@ -135,5 +139,12 @@ public class AlignmentCommandFactory {
             + " and the field location "
             + offset.toString()
             + " do not match!");
+  }
+
+  public static enum DesiredElement {
+    PROCESSOR,
+    REEF,
+    CORALSTATION,
+    SPECIFIC_REEF_FACE;
   }
 }

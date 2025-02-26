@@ -33,6 +33,10 @@ public interface IPrimaryControlBoard {
 
   Trigger povRotRight();
 
+  Trigger algaeManualUp();
+
+  Trigger algaeManualDown();
+
   Trigger resetGyro();
 
   Trigger alignWithElement();
@@ -42,6 +46,10 @@ public interface IPrimaryControlBoard {
   Trigger outtake();
 
   Trigger intake();
+
+  Trigger outtakeAlgae();
+
+  Trigger intakeAlgae();
 
   Trigger sysIDQuasiForward();
 

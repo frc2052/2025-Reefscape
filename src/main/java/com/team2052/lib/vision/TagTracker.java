@@ -87,9 +87,16 @@ public class TagTracker {
     return Optional.empty();
   }
 
+  public Transform3d getRobotToTarget(PhotonTrackedTarget target) {
+    Transform3d cameraToTarget = target.getBestCameraToTarget();
+    Transform3d robotToTarget = cameraToTarget.plus(constants.cameraToRobot);
+    return robotToTarget;
+  }
+
   public static class TagTrackerConstants {
     public final String name;
     public final Transform3d robotToCamera;
+    public final Transform3d cameraToRobot;
     public final AprilTagFieldLayout tagLayout;
     public final PoseStrategy strategy;
 
@@ -100,6 +107,7 @@ public class TagTracker {
         PoseStrategy strategy) {
       this.name = name;
       this.robotToCamera = robotToCamera;
+      this.cameraToRobot = robotToCamera.inverse();
       this.tagLayout = tayLayout;
       this.strategy = strategy;
     }

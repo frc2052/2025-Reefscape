@@ -23,18 +23,18 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveToPose extends Command {
-  private final double driveP = 3.5;
+  private final double driveP = 0.9;
   private final double driveD = 0.0;
-  private final double turnP = 4.0;
+  private final double turnP = 1.0;
   private final double turnD = 0.0;
-  private final double driveMaxSpeed = 3.8;
-  private final double driveMaxAcceleration = 3.0;
+  private final double driveMaxSpeed = 3.0;
+  private final double driveMaxAcceleration = 2.0;
   private final double turnMaxSpeed = Units.degreesToRadians(360.0);
-  private final double turnMaxAcceleration = 8.0;
-  private final double driveTolerance = 0.01;
-  private final double turnTolerance = Units.degreesToRadians(1.0);
-  private final double ffMinRadius = 0.1;
-  private final double ffMaxRadius = 0.15;
+  private final double turnMaxAcceleration = 5.0;
+  private final double driveTolerance = 0.015;
+  private final double turnTolerance = Units.degreesToRadians(0.5);
+  private final double ffMinRadius = 0.05;
+  private final double ffMaxRadius = 0.1;
   private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
   private final Supplier<Pose2d> target;
 
@@ -56,6 +56,8 @@ public class DriveToPose extends Command {
   private DoubleSupplier xlinearFF = () -> 0.0;
   private DoubleSupplier ylinearFF = () -> 0.0;
   private DoubleSupplier omegaFF = () -> 0.0;
+
+  private Pose2d targetPose;
 
   public DriveToPose(Supplier<Pose2d> target) {
     this.target = target;
@@ -125,6 +127,7 @@ public class DriveToPose extends Command {
     turnController.reset(
         currentPose.getRotation().getRadians(), fieldVelocity.omegaRadiansPerSecond);
     lastSetpointTranslation = currentPose.getTranslation();
+    targetPose = null;
   }
 
   @Override
@@ -132,10 +135,12 @@ public class DriveToPose extends Command {
     running = true;
     // Get current pose and target pose
     Pose2d currentPose = robot.get();
-    Pose2d targetPose = target.get();
+    if (target.get() != null) {
+      targetPose = target.get();
+    }
 
     if (targetPose == null) {
-      System.out.println("TARGET POSE IS NULL IN : " + this.getName());
+      System.out.println(this.getName() + " has no target pose");
       return;
     }
 
@@ -211,6 +216,7 @@ public class DriveToPose extends Command {
               Rotation2d.fromRadians(turnController.getSetpoint().position))
         });
     Logger.recordOutput("DriveToPose/Goal", new Pose2d[] {targetPose});
+    RobotState.getInstance().setIsAlignGoal(atGoal());
   }
 
   @Override

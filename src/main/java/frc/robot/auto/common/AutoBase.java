@@ -10,20 +10,24 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
+import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
+import frc.robot.commands.algae.AlgaeCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
-import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand;
-import frc.robot.commands.drive.alignment.AlignWithFieldElementCommand.DesiredElement;
+import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.commands.hand.HandCommandFactory;
+import frc.robot.subsystems.CoralArmSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.HandSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
@@ -35,13 +39,18 @@ import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import frc.robot.util.io.Dashboard;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
-  private final RobotState robotState = RobotState.getInstance();
   private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
   private final VisionSubsystem vision = VisionSubsystem.getInstance();
   private final AutoFactory autoFactory = AutoFactory.getInstance();
   private Pose2d startPose;
+
+  // left side blue l4 // good enough, L4 mmissing
+  // left side red l4
+  // left side blue l1 // adjusting
+  // left side red l1
 
   protected AutoBase(Optional<Pose2d> pathStartPose) {
     if (pathStartPose.isEmpty()) {
@@ -60,113 +69,25 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
   public abstract void init(); // defined in each Auto class
 
-  protected Command delaySelectedTime() {
-    return new WaitCommand(autoFactory.getSavedWaitSeconds());
-  }
-
-  protected Command getBumpCommand() {
-    if (autoFactory.getBumpNeeded()) {
-      return new DefaultDriveCommand(() -> -0.3, () -> 0, () -> 0, () -> false)
-          .withDeadline(new WaitCommand(0.5));
-    } else {
-      return new InstantCommand();
-    }
-  }
-
-  protected AlignOffset getStationAlignOffset() {
-    return Dashboard.getInstance().getStationAlignSide();
-  }
-
   private void setStartPose(Pose2d pathStartPose) {
     addCommands(new InstantCommand(() -> drivetrain.resetPose(pathStartPose)));
+  }
+
+  protected Command manualZero() {
+    return new InstantCommand(() -> drivetrain.seedFieldCentric());
   }
 
   protected Command followPathCommand(PathPlannerPath path) {
     return AutoBuilder.followPath(path);
   }
 
-  protected Command snapToReefAngle(TargetFieldLocation snapLocation) {
-    return new SnapToLocationAngleCommand(snapLocation, () -> 0, () -> 0, () -> 0, () -> true);
+  protected Command followPathSnap(PathPlannerPath path, TargetFieldLocation snapLoc) {
+    return new SequentialCommandGroup(followPathCommand(path), snapToReefAngle(snapLoc));
   }
 
-  protected Command HPIntake() {
-    return new ParallelRaceGroup(
-        new InstantCommand(() -> HandCommandFactory.motorIn())
-            .until(() -> HandSubsystem.getInstance().getHasCoral()),
-        new WaitCommand(1.5));
-  }
-
-  protected Command algaeReefSideVisionOrPathAlign(
-      PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
-    return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
-        .until(
-            () ->
-                vision
-                    .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
-                    .isPresent()) // sees tag, goal pose won't be too far
-        .andThen(
-            new AlignWithFieldElementCommand(
-                DesiredElement.REEF,
-                () -> AlignOffset.ALGAE_REEF_LOC,
-                () -> 0,
-                () -> 0,
-                () -> 0,
-                () -> true));
-  }
-
-  protected Command reefVisionOrPathAlign(
-      AlignOffset offset, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
-    return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
-        .until(
-            () ->
-                vision
-                    .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
-                    .isPresent()) // sees tag, goal pose won't be too far
-        .andThen(
-            new AlignWithFieldElementCommand(
-                snaploc, () -> offset, () -> 0, () -> 0, () -> 0, () -> true));
-  }
-
-  protected Command stationVisionOrPathAlign(
-      PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
-    return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
-        .until(
-            () ->
-                vision.getCameraClosestTarget(TagTrackerType.REAR_CAM, Meters.of(2.0)).isPresent())
-        .andThen(
-            new AlignWithFieldElementCommand(
-                snaploc, () -> getStationAlignOffset(), () -> 0, () -> 0, () -> 0, () -> true));
-  }
-
-  protected Command processorVisionOrPathAlign(
-      AlignOffset offset, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
-    return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
-        .until(
-            () ->
-                vision.getCameraClosestTarget(TagTrackerType.ALGAE_CAM, Meters.of(1.0)).isPresent())
-        .andThen(
-            new AlignWithFieldElementCommand(
-                DesiredElement.PROCESSOR, () -> offset, () -> 0, () -> 0, () -> 0, () -> true));
-  }
-
-  protected Command toPosition(TargetAction position) {
-    return new SequentialCommandGroup(
-        // ElevatorCommandFactory.setElevatorPosition(position),
-        new WaitCommand(0.75),
-        // ElevatorCommandFactory.setElevatorPosition(TargetAction.TR),
-        new WaitCommand(0.5));
-  }
-
-  protected Command toPosAndScore(TargetAction position) {
-    return new SequentialCommandGroup(
-        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
-        new ParallelDeadlineGroup(
-            HandCommandFactory.motorOut()
-                .withTimeout(1.5)
-                .until(() -> HandSubsystem.getInstance().getHasCoral()),
-            new WaitCommand(1.5)),
-        new InstantCommand(
-            () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.TR)));
+  protected Command startHP() {
+    return new InstantCommand(
+        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP));
   }
 
   protected static PathPlannerPath getPathFromFile(String pathName) {
@@ -180,7 +101,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
   }
 
-  // test
   public static Optional<Pose2d> getStartPoseFromAutoFile(String autoName) {
     try {
       List<PathPlannerPath> pathList = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
@@ -193,7 +113,226 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
   }
 
-  public static final class Paths { // to avoid rewriting in every path
+  protected Command getBumpCommand() {
+    if (autoFactory.getBumpNeeded()) {
+      return new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> false)
+          .withDeadline(new WaitCommand(0.5));
+    } else {
+      return new InstantCommand();
+    }
+  }
+
+  protected Command delaySelectedTime() {
+    return new WaitCommand(autoFactory.getSavedWaitSeconds());
+  }
+
+  // alignment
+
+  protected AlignOffset getStationAlignOffset() {
+    return Dashboard.getInstance().getStationAlignSide();
+  }
+
+  protected Command snapToReefAngle(TargetFieldLocation snapLocation) {
+    return new SnapToLocationAngleCommand(snapLocation, () -> 0, () -> 0, () -> 0, () -> true);
+  }
+
+  protected Command algaeReefSideSafeAlign(
+      PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
+    return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
+        .until(
+            () ->
+                vision
+                    .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
+                    .isPresent()); // sees tag, goal pose won't be too far
+    // .andThen(
+    //     new AlignWithFieldElementCommand(
+    //         DesiredElement.REEF,
+    //         () -> AlignOffset.ALGAE_REEF_LOC,
+    //         () -> 0,
+    //         () -> 0,
+    //         () -> 0,
+    //         () -> true));
+  }
+
+  protected Command safeReefAlignment(
+      PathPlannerPath startPath, AlignOffset branchside, TargetFieldLocation fieldLoc) {
+    return new ParallelCommandGroup(
+        new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
+            .withTimeout(
+                (startPath.equals(Paths.SL_J2) || startPath.equals(Paths.SR_E2)) ? 0.0 : 0.35),
+        followPathCommand(startPath)
+            .until(vision::getCoralCameraHasTarget)
+            .andThen(
+                AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> branchside, fieldLoc))
+            .withTimeout(
+                startPath.equals(Paths.SR_E2)
+                        || startPath.equals(Paths.SL_J2)
+                        || startPath.equals(Paths.SC_H4)
+                    ? 3.9
+                    : 4.2));
+  }
+
+  protected Command safeStationAlignment(PathPlannerPath altAlignPath) {
+    return new SequentialCommandGroup(
+        followPathCommand(altAlignPath)
+            .alongWith(
+                new InstantCommand(
+                    () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)))
+            .alongWith(
+                new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
+                    .beforeStarting(new WaitCommand(1.0))));
+  }
+
+  protected Command combinedReefChassisElevatorAlign(
+      PathPlannerPath backupPath,
+      AlignOffset branchSide,
+      TargetFieldLocation snapSide,
+      TargetAction level) {
+    return new ParallelCommandGroup(
+        new SequentialCommandGroup(followPathCommand(backupPath), snapToReefAngle(snapSide))
+            .until(
+                () ->
+                    vision
+                        .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
+                        .isPresent())
+            .andThen(AlignmentCommandFactory.getReefAlignmentCommand(() -> branchSide)),
+        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(level)));
+  }
+
+  protected Command processorVisionOrPathAlign(
+      AlignOffset offset, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
+    return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
+        .until(
+            () ->
+                vision
+                    .getCameraClosestTarget(TagTrackerType.ALGAE_CAM, Meters.of(1.0))
+                    .isPresent());
+    // .andThen(
+    //     new AlignWithFieldElementCommand(
+    //         DesiredElement.PROCESSOR, () -> offset, () -> 0, () -> 0, () -> 0, () -> true));
+  }
+
+  // game piece interactions
+
+  protected Command HPIntake() {
+    return new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
+        .until(() -> HandSubsystem.getInstance().getHasCoral())
+        .withTimeout(3.5);
+  }
+
+  protected Command elevatorToPos(TargetAction position) {
+    return new InstantCommand(
+        () -> SuperstructureSubsystem.getInstance().setCurrentAction(position));
+  }
+
+  protected Command score(TargetAction position) {
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
+        Commands.waitUntil(
+                () ->
+                    ElevatorSubsystem.getInstance().atPosition(2.0, position)
+                        && CoralArmSubsystem.getInstance().isAtDesiredPosition())
+            .andThen(HandCommandFactory.motorOut().withTimeout(0.40)));
+    // .andThen( // do in path to station
+    //     new InstantCommand(
+    //         () ->
+    //             SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP))));
+  }
+
+  protected Command toPosAndScore(TargetAction position) {
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
+        new InstantCommand(() -> HandSubsystem.getInstance().stopMotor()),
+        Commands.waitUntil(
+                () ->
+                    ElevatorSubsystem.getInstance().atPosition(2.0, position)
+                        && CoralArmSubsystem.getInstance().isAtDesiredPosition())
+            .andThen(HandCommandFactory.motorIn().withTimeout(0.2))
+            .andThen(new InstantCommand(() -> HandSubsystem.getInstance().stopMotor()))
+            .andThen(HandCommandFactory.motorOut().withTimeout(0.55)));
+  }
+
+  protected Command scoreL1(TargetAction position) {
+    return new SequentialCommandGroup(
+        Commands.waitUntil(
+                () ->
+                    ElevatorSubsystem.getInstance().atPosition(2.0, position)
+                        && CoralArmSubsystem.getInstance().isAtDesiredPosition())
+            .andThen(HandCommandFactory.motorOut().withTimeout(1.0)));
+  }
+
+  protected Command prepareForScoreWhenReady(TargetAction action) {
+    final double maxSpeed;
+    final double maxDist;
+    TargetAction prepAction = TargetAction.TR;
+    if (action == null) {
+      maxSpeed = 0;
+      maxDist = 0.1;
+    } else
+      switch (action) {
+        case L1H -> {
+          maxSpeed = 2.5;
+          maxDist = 1.5;
+          prepAction = action;
+        }
+        case L2, L3 -> {
+          maxSpeed = 1.5;
+          maxDist = 1.0;
+          prepAction = TargetAction.L2;
+        }
+        case L4 -> {
+          maxSpeed = 0.75;
+          maxDist = 0.75; // TODO: test farther distances to raise elevator
+          prepAction = TargetAction.L4;
+        }
+        default -> {
+          maxSpeed = 0;
+          maxDist = 0.1;
+        }
+      }
+
+    BooleanSupplier speedCheck =
+        () ->
+            (MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()) < maxSpeed);
+    BooleanSupplier distanceCheck = () -> RobotState.getInstance().distanceToAlignPose() < maxDist;
+    return elevatorToPos(prepAction)
+        .beforeStarting(Commands.waitUntil(distanceCheck))
+        .andThen(new PrintCommand("CLOSE ENOUGH**************"));
+  }
+
+  // protected Command descoreAlgae(PathPlannerPath toPosition,TargetAction algaeLevel){
+  //   return new SequentialCommandGroup(
+  //     new ParallelCommandGroup(
+  //       new InstantCommand(() ->
+  // SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)).withTimeout(1.0),
+  //       followPathCommand(toPosition)
+  //     ),
+  //     new InstantCommand(() -> AlgaeShooterSubsystem.getInstance().)
+  //   );
+  // }
+
+  protected Command descoreScoreNetAlgae(
+      PathPlannerPath toPositionPath, TargetAction algaeLevel, PathPlannerPath score) {
+    return new SequentialCommandGroup(
+        // descore
+        new InstantCommand(
+            () -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)),
+        followPathCommand(toPositionPath),
+
+        // score
+        new ParallelCommandGroup(
+                followPathCommand(score),
+                new SequentialCommandGroup(
+                    new WaitCommand(1.0),
+                    new InstantCommand(
+                        () ->
+                            SuperstructureSubsystem.getInstance()
+                                .setCurrentAction(TargetAction.L4))),
+                AlgaeCommandFactory.intake().withTimeout(1.5))
+            .andThen(AlgaeCommandFactory.outtake().withTimeout(1.0)));
+  }
+
+  public static final class Paths {
 
     // SL = Start Left
     // SR = Start Right
@@ -202,13 +341,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // DA = Descore (Remove) Algae From Reef
     // Letter + Number = Reef Scoring Position
 
-    // ex:
-    // public final static PathPlannerPath AB_BARGECS = getPathFromFile("AB - Barge Coral Station");
-    // public static final PathPlannerPath TEST_PATH_SL_EF = getPathFromFile("Test Auto - SL-EF");
-
-    // each letter to each loading station
-
     public static final PathPlannerPath LL_STOP = getPathFromFile("LL STOP");
+
+    public static final PathPlannerPath LL_AB = getPathFromFile("LL AB");
 
     // CD
     public static final PathPlannerPath RL_C4 = getPathFromFile("RL C");
@@ -219,20 +354,28 @@ public abstract class AutoBase extends SequentialCommandGroup {
     public static final PathPlannerPath SR_D4 = getPathFromFile("SR D");
     public static final PathPlannerPath RL_D3 = getPathFromFile("RL D");
     public static final PathPlannerPath D3_RL = getPathFromFile("D RL");
+    public static final PathPlannerPath RL_CD_L1 = getPathFromFile("RL CD L1");
+    public static final PathPlannerPath CD_RL = getPathFromFile("CD RL");
 
     // ef
     public static final PathPlannerPath E2_RL = getPathFromFile("E RL");
     public static final PathPlannerPath SR_E2 = getPathFromFile("SR E");
-    // public static final PathPlannerPath PROCESS_EF = getPathFromFile("Processor EF");
-    // public static final PathPlannerPath EF_PROCESS = getPathFromFile("EF Processor");
+    public static final PathPlannerPath SR_EF = getPathFromFile("SR EF");
+    public static final PathPlannerPath EF_RL = getPathFromFile("EF RL");
+    public static final PathPlannerPath RL_EF = getPathFromFile("RL EF");
 
     // gh
     public static final PathPlannerPath SC_H4 = getPathFromFile("SC H");
     public static final PathPlannerPath H4_PROCESS = getPathFromFile("H Processor");
+    public static final PathPlannerPath H_ALGAE_PREP = getPathFromFile("H Algae Prep");
+    public static final PathPlannerPath SC_GH = getPathFromFile("SC G");
+    public static final PathPlannerPath G_AlGAE_PREP = getPathFromFile("G Algae Prep");
 
     // ij
     public static final PathPlannerPath J2_LL = getPathFromFile("J LL");
     public static final PathPlannerPath SL_J2 = getPathFromFile("SL J");
+    public static final PathPlannerPath SL_IJ = getPathFromFile("SL IJ");
+    public static final PathPlannerPath LL_IJ = getPathFromFile("LL IJ");
 
     // kl
     public static final PathPlannerPath K3_LL = getPathFromFile("K LL");
@@ -243,5 +386,34 @@ public abstract class AutoBase extends SequentialCommandGroup {
     public static final PathPlannerPath LL_L3 = getPathFromFile("LL L");
     public static final PathPlannerPath LL_L4 = getPathFromFile("LL L");
     public static final PathPlannerPath SL_K4 = getPathFromFile("SL K");
+    public static final PathPlannerPath LL_KL = getPathFromFile("LL KL");
+    public static final PathPlannerPath KL_LL = getPathFromFile("KL LL");
+
+    public static final PathPlannerPath LL_KL_L1 = getPathFromFile("LL KL L1");
+
+    // algae score and descore
+    public static final PathPlannerPath KL_NET = getPathFromFile("KL Net");
+    public static final PathPlannerPath NET_KL = getPathFromFile("Net KL");
+
+    public static final PathPlannerPath CD_NET = getPathFromFile("CD Net");
+    public static final PathPlannerPath NET_CD = getPathFromFile("Net CD");
+
+    public static final PathPlannerPath GH_NET = getPathFromFile("GH Net");
+    public static final PathPlannerPath NET_GH = getPathFromFile("Net GH");
+
+    public static final PathPlannerPath NET_IJ = getPathFromFile("Net IJ");
+    public static final PathPlannerPath IJ_NET = getPathFromFile("IJ Net");
+
+    public static final PathPlannerPath NET_EF = getPathFromFile("Net EF");
+    public static final PathPlannerPath EF_NET = getPathFromFile("EF Net");
+
+    public static final PathPlannerPath NET_SCORE_LEFT_STATION =
+        getPathFromFile("Net Left Station");
+    public static final PathPlannerPath NET_SCORE_RIGHT_STATION =
+        getPathFromFile("Net Right Station");
+
+    public static final PathPlannerPath KL_SCORE_TO_DESCORE = getPathFromFile("KL Descore Algae");
+    public static final PathPlannerPath CD_SCORE_TO_DESCORE = getPathFromFile("CD Descore Algae");
+    public static final PathPlannerPath GH_SCORE_TO_DESCORE = getPathFromFile("GH Descore Algae");
   }
 }

@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Test Path - SL-EF"
+            "pathName": "SR E2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Score L4"
+            "name": "score L4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "E2 RL"
           }
         }
       ]

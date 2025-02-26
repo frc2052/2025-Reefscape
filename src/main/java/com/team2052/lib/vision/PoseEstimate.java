@@ -13,8 +13,8 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class PoseEstimate {
-  private static final double xyStdDevCoefficient = 0.005;
-  public static final double thetaStdDevCoefficient = 0.01;
+  private static final double xyStdDevCoefficient = 0.02;
+  public static final double thetaStdDevCoefficient = 0.04;
 
   public final String cameraName;
   public final Pose3d estimatedPose;

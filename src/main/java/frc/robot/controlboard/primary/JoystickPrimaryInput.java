@@ -91,6 +91,16 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
+  public Trigger algaeManualUp() {
+    return new JoystickButton(translateStick, 12);
+  }
+
+  @Override
+  public Trigger algaeManualDown() {
+    return new JoystickButton(translateStick, 11);
+  }
+
+  @Override
   public Trigger resetGyro() {
     return new JoystickButton(translateStick, 8);
   }
@@ -103,6 +113,16 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
   @Override
   public Trigger intake() {
     return new JoystickButton(translateStick, 1);
+  }
+
+  @Override
+  public Trigger outtakeAlgae() {
+    return new JoystickButton(rotateStick, 4);
+  }
+
+  @Override
+  public Trigger intakeAlgae() {
+    return new JoystickButton(translateStick, 4);
   }
 
   @Override

@@ -21,9 +21,9 @@ public class FieldConstants {
       Meters.of(AprilTagLayoutType.OFFICIAL.layout.getFieldWidth());
 
   public static final Translation2d BLUE_REEF_CENTER =
-      new Translation2d(Inches.of(177.06927), Inches.of(158.5));
+      new Translation2d(Inches.of(176.495), Inches.of(158.751));
   public static final Translation2d RED_REEF_CENTER =
-      new Translation2d(Inches.of(FIELD_LENGTH.in(Inches) - 177.06927), Inches.of(158.5));
+      new Translation2d(Inches.of(513.880), Inches.of(158.749));
 
   public static final AprilTagLayoutType DEFAULT_APRIL_TAG_LAYOUT_TYPE =
       AprilTagLayoutType.NO_BARGE;

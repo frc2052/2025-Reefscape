@@ -115,7 +115,7 @@ public class AlignWithFieldElementCommand extends DefaultDriveCommand {
           && selectedOffset != AlignOffset.RIGHT_CORAL_STATION_LOC) {
         invalidCombination();
       }
-      vision.setPrimaryFocus(TagTrackerType.REAR_CAM);
+      // vision.setPrimaryFocus(TagTrackerType.REAR_CAM);
     } else if (desiredElement == DesiredElement.SPECIFIC_REEF_FACE) {
       if (!fieldLocation.getIsReef()) {
         invalidCombination();

@@ -3,7 +3,8 @@ package frc.robot.subsystems.superstructure;
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.AlgaeSubsystem;
+import frc.robot.RobotState;
+import frc.robot.subsystems.AlgaePivotSubsystem;
 import frc.robot.subsystems.CoralArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
@@ -13,7 +14,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
   private static SuperstructureSubsystem INSTANCE;
 
-  private AlgaeSubsystem algaeArm = AlgaeSubsystem.getInstance();
+  private AlgaePivotSubsystem algaePivot = AlgaePivotSubsystem.getInstance();
   private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
   private CoralArmSubsystem coralArm = CoralArmSubsystem.getInstance();
 
@@ -122,15 +123,31 @@ public class SuperstructureSubsystem extends SubsystemBase {
         elevator.setPositionMotionMagic(target);
       }
       coralArm.setArmPosition(target);
-      algaeArm.setGoalPosition(target);
+      // algaeArm.setGoalPosition(target);
 
-      if (elevator.atPosition(target)
-          && coralArm.isAtPosition(5, target.getCoralArmAngle())
-          && algaeArm.isAtPosition(5, target.getAlgaeArmPosition())) {
+      if (elevator.atPosition(target) && coralArm.isAtPosition(5, target.getCoralArmAngle())) {
+        // && algaePivot.isAtPosition(5, target.getAlgaeArmPivotPosition())) {
         isChangingState = false;
         Logger.recordOutput("Arrived at Target State", true);
       } else {
         Logger.recordOutput("Arrived at Target State", false);
+      }
+    } else {
+      if (RobotState.getInstance().getHasCoral()
+          && (getCurrentAction() == TargetAction.HP)
+          && !RobotState.getInstance().getIsIntaking()) {
+        if (getSelectedTargetAction() == TargetAction.L2
+            || getSelectedTargetAction() == TargetAction.L3
+            || getSelectedTargetAction() == TargetAction.L4) {
+          setCurrentAction(TargetAction.L2);
+        } else if (getSelectedTargetAction() == TargetAction.L1H
+            && (getCurrentAction() == TargetAction.HP)
+            && !RobotState.getInstance().getIsIntaking()) {
+          setCurrentAction(TargetAction.L1H);
+        } else if ((getCurrentAction() == TargetAction.HP)
+            && !RobotState.getInstance().getIsIntaking()) {
+          setCurrentAction(TargetAction.TR);
+        }
       }
     }
 

@@ -6,7 +6,9 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants.CoralReefCameraConstants;
@@ -35,6 +37,7 @@ public class VisionSimSubsystem extends SubsystemBase {
   private final VisionSystemSim visionSim;
   private final PhotonCameraSim reefCameraSim;
   private final RobotState state = RobotState.getInstance();
+  private Pose2d lastPose;
 
   public static VisionSimSubsystem getInstance() {
     if (INSTANCE == null) {
@@ -45,6 +48,7 @@ public class VisionSimSubsystem extends SubsystemBase {
   }
 
   public VisionSimSubsystem() {
+    lastPose = new Pose2d();
     visionSim = new VisionSystemSim("main");
     visionSim.addAprilTags(fieldLayout);
 
@@ -59,7 +63,7 @@ public class VisionSimSubsystem extends SubsystemBase {
     reefCameraSim = new PhotonCameraSim(reefCam, reefCameraProperties);
     reefCameraSim.enableDrawWireframe(true);
 
-    visionSim.addCamera(reefCameraSim, CoralReefCameraConstants.ROBOT_TO_CAMERA_METERS);
+    visionSim.addCamera(reefCameraSim, CoralReefCameraConstants.ROBOT_TO_CAMERA);
   }
 
   @Override
@@ -68,11 +72,33 @@ public class VisionSimSubsystem extends SubsystemBase {
     updateVisionSimWithPose(newOdometryPose);
     Logger.recordOutput("Vision Sim Sees Target", isSeeingTarget());
     Logger.recordOutput("Current Sim ID", getAllVisibleTagIDs());
+    if (getCurrentTagID() != 0) {
+      Logger.recordOutput(
+          "Current Sim offset from tag",
+          new Transform2d(lastPose, newOdometryPose).getTranslation());
+    }
+    if (getCurrentTag().bestCameraToTarget != null) {
+      Logger.recordOutput(
+          "Current Sim TRANSFORM ROBOT TO TARGET",
+          getCurrentTag()
+              .bestCameraToTarget
+              .plus(CoralReefCameraConstants.ROBOT_TO_CAMERA.inverse())
+              .getTranslation()
+              .toTranslation2d());
+    }
   }
 
   public void updateVisionSimWithPose(Pose2d pose) {
     visionSim.update(pose);
     Field2d debugField = visionSim.getDebugField();
+    if (getCurrentTagID() != 0) {
+      Optional<Pose3d> tagPose =
+          FieldConstants.DEFAULT_APRIL_TAG_LAYOUT_TYPE.layout.getTagPose(getCurrentTagID());
+      if (tagPose.isPresent()) {
+        lastPose = tagPose.get().toPose2d();
+      } else {
+      }
+    }
     debugField.getObject("EstimatedRobot").setPose(pose);
   }
 
@@ -93,6 +119,19 @@ public class VisionSimSubsystem extends SubsystemBase {
   public Optional<PhotonPipelineResult> getReefCamClosestTarget() {
     PhotonPipelineResult result = reefCam.getLatestResult();
     return Optional.ofNullable(result);
+  }
+
+  public PhotonTrackedTarget getCurrentTag() {
+    Optional<PhotonPipelineResult> optionalResult = getReefCamClosestTarget();
+    PhotonPipelineResult result = optionalResult.isPresent() ? optionalResult.get() : null;
+
+    if (result == null || !result.hasTargets()) {
+      return new PhotonTrackedTarget();
+    }
+
+    PhotonTrackedTarget target = result.getBestTarget();
+
+    return target;
   }
 
   public int getCurrentTagID() {

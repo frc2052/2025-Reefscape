@@ -26,6 +26,7 @@ public class Robot extends LoggedRobot {
     }
 
     Logger.start(); // Start logging
+    // CameraServer.startAutomaticCapture();
   }
 
   @Override
@@ -65,6 +66,8 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    RobotState.getInstance().reZeroAfterAuto();
   }
 
   @Override

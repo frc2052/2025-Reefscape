@@ -23,7 +23,7 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
   @Override
   public Trigger homeElevator() {
-    return new JoystickButton(controlPanel, 9);
+    return new JoystickButton(controlPanel, 11);
   }
 
   @Override
@@ -32,12 +32,12 @@ public class ControlPanelInput implements ISecondaryControlBoard {
   }
 
   @Override
-  public Trigger manualUp() {
+  public Trigger algaeScoreAngle() {
     return new JoystickButton(controlPanel, 3);
   }
 
   @Override
-  public Trigger manualDown() {
+  public Trigger algaeLowAngle() {
     return new JoystickButton(controlPanel, 4);
   }
 
@@ -52,8 +52,8 @@ public class ControlPanelInput implements ISecondaryControlBoard {
   }
 
   @Override
-  public Trigger setGoalL1L() {
-    return new JoystickButton(controlPanel, 10);
+  public Trigger setGoalCL() {
+    return new JoystickButton(controlPanel, 9);
   }
 
   @Override
@@ -88,21 +88,16 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
   @Override
   public Trigger setSubReefLeft() {
-    return new JoystickButton(controlPanel, 99);
+    return new Trigger(() -> controlPanel.getX() > 0.5);
   }
 
   @Override
   public Trigger setSubReefRight() {
-    return new JoystickButton(controlPanel, 99);
+    return new Trigger(() -> controlPanel.getX() < -0.5);
   }
 
   @Override
   public Trigger setGoalCoralStation() {
-    return new JoystickButton(controlPanel, 11);
-  }
-
-  @Override
-  public Trigger setGoalAlgaeScoring() {
-    return new JoystickButton(controlPanel, 99);
+    return new JoystickButton(controlPanel, 10);
   }
 }

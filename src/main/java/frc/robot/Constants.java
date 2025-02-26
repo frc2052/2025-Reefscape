@@ -3,17 +3,21 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.configs.AudioConfigs;
+import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.ProximityParamsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.ToFParamsConfigs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.UpdateModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -60,7 +64,7 @@ public class Constants {
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
             .withSupplyCurrentLimitEnable(true)
-            .withSupplyCurrentLimit(Amps.of(40))
+            .withSupplyCurrentLimit(Amps.of(80))
             .withSupplyCurrentLowerLimit(Amps.of(40))
             .withSupplyCurrentLowerTime(Seconds.of(0.1));
 
@@ -136,11 +140,20 @@ public class Constants {
 
   public static class CoralArmConstants {
     public static final boolean ARM_MOTOR_INVERTED = true;
-    public static final double DEG_TOL = 1.5;
+    public static final double DEG_TOL = 2.5;
 
     public static final Angle MIN_CORAL_ARM_ANGLE = Degrees.of(30);
     public static final Angle MAX_CORAL_ARM_ANGLE = Degrees.of(330);
 
+
+    public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
+        new CurrentLimitsConfigs()
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(Amps.of(70))
+            .withSupplyCurrentLowerLimit(Amps.of(30))
+            .withStatorCurrentLimit(Amps.of(100))
+            .withSupplyCurrentLowerTime(Seconds.of(0.2));
+            
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
             .withKP(75.0)
@@ -177,52 +190,83 @@ public class Constants {
             .withSlot0(SLOT0_CONFIGS)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
             .withFeedback(FEEDBACK_CONFIG)
-            .withAudio(new AudioConfigs().withBeepOnBoot(false));
+            .withAudio(new AudioConfigs().withBeepOnBoot(false))
+            .withCurrentLimits(CURRENT_LIMIT_CONFIG);
   }
 
   public static class HandConstants {
     public static final boolean HAND_MOTOR_INVERTED = true;
-    public static final double HAND_MOTOR_CURRENT_LIMIT = 20.0;
-    public static final double IN_HAND_MOTOR_SPEED = 0.5;
-    public static final double OUT_HAND_MOTOR_SPEED = 0.6;
+    public static final double IN_HAND_MOTOR_SPEED = 0.33;
+    public static final double OUT_HAND_MOTOR_SPEED = 0.35;
+    public static final double HAND_RANGE_CORAL_SEEN = 0.4;
+
+    public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()
+    .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
+    .withProximityParams(new ProximityParamsConfigs().withMinSignalStrengthForValidMeasurement(0.2).withProximityThreshold(0.4));
+
+    public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
+        new MotorOutputConfigs()
+            .withInverted(
+              HandConstants.HAND_MOTOR_INVERTED
+                    ? InvertedValue.Clockwise_Positive
+                    : InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake); 
+
+    public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIG = new CurrentLimitsConfigs()
+    .withSupplyCurrentLimit(20.0)
+    .withSupplyCurrentLimitEnable(true);
+    
+    public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
+    .withMotorOutput(MOTOR_OUTPUT_CONFIG)
+    .withCurrentLimits(CURRENT_LIMITS_CONFIG)
+    .withAudio(new AudioConfigs().withBeepOnBoot(false));
   }
 
+  public static class AlgaePivotConstants {
+    public static final boolean MOTOR_INVERTED = true;
+    public static final double TOLERANCE = 1.0;
 
-  public static class AlgaeArmConstants {
-    public static class PIVOT {
-      public static final boolean MOTOR_INVERTED = false;
-      public static final double TOLERANCE = 1.0;
+    public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
+        new CurrentLimitsConfigs()
+            .withSupplyCurrentLimitEnable(false)
+            .withSupplyCurrentLimit(Amps.of(70))
+            .withSupplyCurrentLowerLimit(Amps.of(40))
+            .withStatorCurrentLimit(Amps.of(120))
+            .withSupplyCurrentLowerTime(Seconds.of(0.2));
 
-      public static final double P = 1.0;
-      public static final double I = 0.0;
-      public static final double D = 0.0;
+    public static final FeedbackConfigs FEEDBACK_CONFIG =
+    new FeedbackConfigs()
+        .withFeedbackRemoteSensorID(Ports.ALGAE_ENCODER_ID)
+        .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
+        .withRotorToSensorRatio(100)
+        .withSensorToMechanismRatio(1);
 
+    public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
+        new MotorOutputConfigs()
+            .withInverted(
+                MOTOR_INVERTED
+                    ? InvertedValue.Clockwise_Positive
+                    : InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake);
 
-      public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
-          new MotorOutputConfigs()
-              .withInverted(
-                  MOTOR_INVERTED
-                      ? InvertedValue.Clockwise_Positive
-                      : InvertedValue.CounterClockwise_Positive)
-              .withNeutralMode(NeutralModeValue.Brake);
+    public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitThreshold(Degrees.of(260)) // TODO: adjust as needed
+            .withForwardSoftLimitEnable(true)
+            .withReverseSoftLimitThreshold(Degrees.of(115))
+            .withReverseSoftLimitEnable(true);
 
-      public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
-          new SoftwareLimitSwitchConfigs()
-              .withForwardSoftLimitThreshold(Degrees.of(60)) // TODO: adjust as needed
-              .withForwardSoftLimitEnable(false)
-              .withReverseSoftLimitThreshold(Degrees.of(200))
-              .withReverseSoftLimitEnable(false);
+    public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
+      .withMotorOutput(MOTOR_OUTPUT_CONFIG)
+      .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS)
+      .withFeedback(FEEDBACK_CONFIG)
+      .withCurrentLimits(CURRENT_LIMIT_CONFIG);
+  }
 
-      public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
-        .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-        .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS);
-    }
-
-
-    public static class SCORER {
+  public static class AlgaeShooterConstants {
       public static final double MOTOR_CURRENT_LIMIT = 60.0;
-      public static final double INTAKE_SPEED = -1.0;
-      public static final double SCORE_SPEED = 1.0;
+      public static final double INTAKE_SPEED = 1.0;
+      public static final double SCORE_SPEED = -1.0;
 
       public static final boolean MOTOR_INVERTED = false;
 
@@ -236,7 +280,6 @@ public class Constants {
 
       public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
         .withMotorOutput(MOTOR_OUTPUT_CONFIG);
-    }
   }
   
   public static final class ClimberConstants {
@@ -267,22 +310,22 @@ public class Constants {
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
-      public static final Distance X_OFFSET = Inches.of(9.868); // forward
-      public static final Distance Y_OFFSET = Inches.of(0.509); // left
-      public static final Distance Z_OFFSET = Inches.of(8.193); // up
+      public static final Distance X_OFFSET = Inches.of(9); // forward positive
+      public static final Distance Y_OFFSET = Inches.of(-0.5); // left positive
+      public static final Distance Z_OFFSET = Inches.of(7.875); // up positive
 
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
       public static final Angle THETA_Y_OFFSET = Degrees.of(-21.84); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(2); // yaw
+      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
 
-      public static final Transform3d ROBOT_TO_CAMERA_METERS =
+      public static final Transform3d ROBOT_TO_CAMERA =
           new Transform3d(
               new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
               new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
 
       public static TagTrackerConstants TagTrackerConstants() {
         return new TagTrackerConstants(
-            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
+            CAMERA_NAME, ROBOT_TO_CAMERA, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
       }
     }
 
