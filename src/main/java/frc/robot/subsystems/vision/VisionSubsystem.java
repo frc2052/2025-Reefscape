@@ -51,7 +51,7 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   private VisionSubsystem() {
-    Collections.addAll(localizationTagTrackers, reefTagTracker, algaeTagTracker);
+    Collections.addAll(localizationTagTrackers, reefTagTracker); // , algaeTagTracker);
   }
 
   public Optional<PhotonPipelineResult> getCameraClosestTarget(TagTrackerType trackerType) {
@@ -130,12 +130,12 @@ public class VisionSubsystem extends SubsystemBase {
   public void setPrimaryFocus(TagTrackerType trackerType) {
     switch (trackerType) {
       case CORAL_REEF_CAM:
-        reefTagTracker.setWeight(0.6);
+        reefTagTracker.setWeight(0.8);
         algaeTagTracker.setWeight(1.2);
         // rearTagTracker.setWeight(1.2);
       case ALGAE_CAM:
         reefTagTracker.setWeight(1.2);
-        algaeTagTracker.setWeight(0.6);
+        algaeTagTracker.setWeight(0.8);
         // rearTagTracker.setWeight(1.2);
         // case REAR_CAM:
         //   reefTagTracker.setWeight(1.2);

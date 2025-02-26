@@ -23,15 +23,15 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveToPose extends Command {
-  private final double driveP = 1.0;
-  private final double driveD = 0.05;
+  private final double driveP = 0.9;
+  private final double driveD = 0.0;
   private final double turnP = 1.0;
-  private final double turnD = 0.025;
+  private final double turnD = 0.0;
   private final double driveMaxSpeed = 3.0;
-  private final double driveMaxAcceleration = 1.0;
+  private final double driveMaxAcceleration = 2.0;
   private final double turnMaxSpeed = Units.degreesToRadians(360.0);
   private final double turnMaxAcceleration = 5.0;
-  private final double driveTolerance = 0.021;
+  private final double driveTolerance = 0.015;
   private final double turnTolerance = Units.degreesToRadians(0.5);
   private final double ffMinRadius = 0.05;
   private final double ffMaxRadius = 0.1;

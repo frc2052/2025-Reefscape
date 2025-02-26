@@ -31,6 +31,8 @@ public class RobotState {
   private Pose2d goalAlignPose;
   private Timer poseAlignTimer = new Timer();
   private boolean isAlignGoal;
+  private boolean hasCoral;
+  private boolean isIntaking;
 
   private static boolean regularNudge = true;
   private static Transform2d customNudgeAmt = new Transform2d(0, 0, new Rotation2d());
@@ -44,6 +46,22 @@ public class RobotState {
   }
 
   private RobotState() {}
+
+  public void setIsIntaking(boolean isIntaking) {
+    this.isIntaking = isIntaking;
+  }
+
+  public boolean getIsIntaking() {
+    return isIntaking;
+  }
+
+  public void setHasCoral(boolean hasCoral) {
+    this.hasCoral = hasCoral;
+  }
+
+  public boolean getHasCoral() {
+    return hasCoral;
+  }
 
   public static boolean getRegularNudge() {
     return regularNudge;

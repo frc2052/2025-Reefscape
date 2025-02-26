@@ -9,6 +9,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.HandConstants;
+import frc.robot.RobotState;
 import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
@@ -16,6 +17,7 @@ public class HandSubsystem extends SubsystemBase {
   private final TalonFX motor;
   private final CANrange range;
   private static HandSubsystem INSTANCE;
+  private boolean isIntaking = false;
 
   public static HandSubsystem getInstance() {
     if (INSTANCE == null) {
@@ -38,6 +40,7 @@ public class HandSubsystem extends SubsystemBase {
   }
 
   public void stopMotor() {
+    isIntaking = false;
     motor.stopMotor();
   }
 
@@ -46,6 +49,7 @@ public class HandSubsystem extends SubsystemBase {
   }
 
   public void motorIn() {
+    isIntaking = true;
     setMotor(-Constants.HandConstants.IN_HAND_MOTOR_SPEED);
   }
 
@@ -64,5 +68,7 @@ public class HandSubsystem extends SubsystemBase {
     Logger.recordOutput("Hand/Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
     Logger.recordOutput("Hand/Has Coral", getHasCoral());
     Logger.recordOutput("Hand/ToF Distance", range.getDistance().getValueAsDouble());
+    RobotState.getInstance().setHasCoral(getHasCoral());
+    RobotState.getInstance().setIsIntaking(isIntaking);
   }
 }

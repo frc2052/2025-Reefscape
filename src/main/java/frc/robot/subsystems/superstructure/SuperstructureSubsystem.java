@@ -3,6 +3,7 @@ package frc.robot.subsystems.superstructure;
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotState;
 import frc.robot.subsystems.AlgaePivotSubsystem;
 import frc.robot.subsystems.CoralArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -132,9 +133,22 @@ public class SuperstructureSubsystem extends SubsystemBase {
         Logger.recordOutput("Arrived at Target State", false);
       }
     } else {
-      // if (HandSubsystem.getInstance().getHasCoral()) {
-      //   setCurrentAction(TargetAction.TR);
-      // }
+      if (RobotState.getInstance().getHasCoral()
+          && (getCurrentAction() == TargetAction.HP)
+          && !RobotState.getInstance().getIsIntaking()) {
+        if (getSelectedTargetAction() == TargetAction.L2
+            || getSelectedTargetAction() == TargetAction.L3
+            || getSelectedTargetAction() == TargetAction.L4) {
+          setCurrentAction(TargetAction.L2);
+        } else if (getSelectedTargetAction() == TargetAction.L1H
+            && (getCurrentAction() == TargetAction.HP)
+            && !RobotState.getInstance().getIsIntaking()) {
+          setCurrentAction(TargetAction.L1H);
+        } else if ((getCurrentAction() == TargetAction.HP)
+            && !RobotState.getInstance().getIsIntaking()) {
+          setCurrentAction(TargetAction.TR);
+        }
+      }
     }
 
     previousAction = target;

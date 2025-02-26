@@ -58,7 +58,7 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
   @Override
   public Trigger setGoalL1H() {
-    return new JoystickButton(controlPanel, 10);
+    return new JoystickButton(controlPanel, 12);
   }
 
   @Override
@@ -98,6 +98,6 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
   @Override
   public Trigger setGoalCoralStation() {
-    return new JoystickButton(controlPanel, 12);
+    return new JoystickButton(controlPanel, 10);
   }
 }
