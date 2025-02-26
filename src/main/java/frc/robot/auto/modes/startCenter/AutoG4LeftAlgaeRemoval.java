@@ -11,11 +11,11 @@ import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 
 /** Add your docs here. */
-public class AutoH4LeftAlgaeRemoval extends AutoBase {
+public class AutoG4LeftAlgaeRemoval extends AutoBase {
 
-  public static final PathPlannerPath startPath = Paths.SC_H4;
+  public static final PathPlannerPath startPath = Paths.SC_GH;
 
-  public AutoH4LeftAlgaeRemoval() {
+  public AutoG4LeftAlgaeRemoval() {
     super(startPath.getStartingHolonomicPose());
   }
 
