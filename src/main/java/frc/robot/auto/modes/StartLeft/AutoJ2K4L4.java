@@ -1,9 +1,9 @@
 package frc.robot.auto.modes.StartLeft;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
+import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
@@ -23,22 +23,41 @@ public class AutoJ2K4L4 extends AutoBase {
     addCommands(delaySelectedTime());
     addCommands(getBumpCommand());
 
+    //
     addCommands(
         safeReefAlignment(startingPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.IJ)
-            .alongWith(prepareForScoreWhenReady(TargetAction.L2))
-            .andThen(new WaitCommand(0.25)));
-    addCommands(score(TargetAction.L2));
+            .alongWith(
+                prepareForScoreWhenReady(TargetAction.L2)
+                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+            .andThen(score(TargetAction.L2)));
+
+    //
     addCommands(safeStationAlignment(Paths.J2_LL));
     addCommands(HPIntake());
     addCommands(
         safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL)
-            .alongWith(prepareForScoreWhenReady(TargetAction.L4)));
-    addCommands(score(TargetAction.L4));
+            .alongWith(
+                prepareForScoreWhenReady(TargetAction.L4)
+                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+            .andThen(score(TargetAction.L4)));
+
+    //
     addCommands(safeStationAlignment(Paths.K4_LL));
     addCommands(HPIntake());
     addCommands(
-        safeReefAlignment(Paths.LL_K4, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.KL)
-            .alongWith(prepareForScoreWhenReady(TargetAction.L4)));
-    addCommands(score(TargetAction.L4));
+        safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL)
+            .alongWith(
+                prepareForScoreWhenReady(TargetAction.L4)
+                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+            .andThen(score(TargetAction.L4)));
+
+    // 4 coral auto addition - side A
+    // addCommands(safeStationAlignment(Paths.L4_LL));
+    // addCommands(HPIntake());
+    // addCommands(
+    //     safeReefAlignment(Paths.LL_AB, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.AB)
+    //         .alongWith(prepareForScoreWhenReady(TargetAction.L4))
+    //         .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
+    // addCommands(score(TargetAction.L4));
   }
 }

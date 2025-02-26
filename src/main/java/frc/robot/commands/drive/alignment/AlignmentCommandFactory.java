@@ -46,11 +46,11 @@ public class AlignmentCommandFactory {
   }
 
   public static Command getSpecificReefAlignmentCommand(
-      AlignOffset offset, TargetFieldLocation fieldLocation) {
-    if (offset != AlignOffset.LEFT_REEF_LOC
-        && offset != AlignOffset.MIDDLE_REEF_LOC
-        && offset != AlignOffset.RIGHT_REEF_LOC) {
-      invalidCombination(DesiredElement.REEF, offset);
+      Supplier<AlignOffset> offset, TargetFieldLocation fieldLocation) {
+    if (offset.get() != AlignOffset.LEFT_REEF_LOC
+        && offset.get() != AlignOffset.MIDDLE_REEF_LOC
+        && offset.get() != AlignOffset.RIGHT_REEF_LOC) {
+      invalidCombination(DesiredElement.REEF, offset.get());
     }
 
     Supplier<Pose2d> targetSupplier = robotState::getAlignPose;
@@ -58,16 +58,17 @@ public class AlignmentCommandFactory {
 
     return Commands.runOnce(() -> vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM), vision)
         .andThen(new InstantCommand(() -> robotState.setDesiredReefFace(fieldLocation)))
+        .andThen(new InstantCommand(() -> robotState.setAlignOffset(offset.get())))
         .andThen(
-            Commands.either(
-                new DriveToPose(
-                    targetSupplier,
-                    robotState::getFieldToRobot,
-                    controlBoard::getThrottle,
-                    controlBoard::getStrafe,
-                    controlBoard::getRotation),
-                getDefaultDriveCommand(),
-                seesDesiredFace));
+            getDefaultDriveCommand()
+                .withDeadline(Commands.waitUntil(seesDesiredFace))
+                .andThen(
+                    new DriveToPose(
+                        targetSupplier,
+                        robotState::getFieldToRobot,
+                        controlBoard::getThrottle,
+                        controlBoard::getStrafe,
+                        controlBoard::getRotation)));
   }
 
   private static Command getDefaultDriveCommand() {

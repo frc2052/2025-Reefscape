@@ -39,6 +39,7 @@ import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 import frc.robot.util.io.Dashboard;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
   private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -157,22 +158,29 @@ public abstract class AutoBase extends SequentialCommandGroup {
       PathPlannerPath startPath, AlignOffset branchside, TargetFieldLocation fieldLoc) {
     return new ParallelCommandGroup(
         new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
-            .andThen(new WaitCommand(1.0))
-            .andThen(() -> HandSubsystem.getInstance().stopMotor()),
+            .withTimeout(
+                (startPath.equals(Paths.SL_J2) || startPath.equals(Paths.SR_E2)) ? 0.0 : 0.35),
         followPathCommand(startPath)
             .until(vision::getCoralCameraHasTarget)
-            .andThen(AlignmentCommandFactory.getReefAlignmentCommand(() -> branchside))
-            .withTimeout(4.2));
+            .andThen(
+                AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> branchside, fieldLoc))
+            .withTimeout(
+                startPath.equals(Paths.SR_E2)
+                        || startPath.equals(Paths.SL_J2)
+                        || startPath.equals(Paths.SC_H4)
+                    ? 3.9
+                    : 4.2));
   }
 
   protected Command safeStationAlignment(PathPlannerPath altAlignPath) {
-    return new ParallelCommandGroup(
-        new SequentialCommandGroup(new InstantCommand(() -> HandSubsystem.getInstance().motorIn())),
-        //
+    return new SequentialCommandGroup(
         followPathCommand(altAlignPath)
-        // .until(vision::getStationCameraHasTarget)
-        // .andThen() // TODO: ALignmentCommandFactory
-        );
+            .alongWith(
+                new InstantCommand(
+                    () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)))
+            .alongWith(
+                new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
+                    .beforeStarting(new WaitCommand(1.0))));
   }
 
   protected Command combinedReefChassisElevatorAlign(
@@ -209,7 +217,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command HPIntake() {
     return new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
         .until(() -> HandSubsystem.getInstance().getHasCoral())
-        .withTimeout(3.7);
+        .withTimeout(3.5);
   }
 
   protected Command elevatorToPos(TargetAction position) {
@@ -219,18 +227,16 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
   protected Command score(TargetAction position) {
     return new SequentialCommandGroup(
-        // new InstantCommand(() ->
-        // SuperstructureSubsystem.getInstance().setCurrentAction(position)),
+        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
         Commands.waitUntil(
                 () ->
                     ElevatorSubsystem.getInstance().atPosition(2.0, position)
                         && CoralArmSubsystem.getInstance().isAtDesiredPosition())
-            .withTimeout(0.5) // TODO: timeout - raising elevator much earlier
-            .andThen(HandCommandFactory.motorOut().withTimeout(0.40))
-            .andThen(
-                new InstantCommand(
-                    () ->
-                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP))));
+            .andThen(HandCommandFactory.motorOut().withTimeout(0.40)));
+    // .andThen( // do in path to station
+    //     new InstantCommand(
+    //         () ->
+    //             SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP))));
   }
 
   protected Command toPosAndScore(TargetAction position) {
@@ -276,7 +282,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         }
         case L4 -> {
           maxSpeed = 0.75;
-          maxDist = 1.7; // TODO: test farther distances to raise elevator
+          maxDist = 0.75; // TODO: test farther distances to raise elevator
           prepAction = TargetAction.L4;
         }
         default -> {
@@ -285,13 +291,12 @@ public abstract class AutoBase extends SequentialCommandGroup {
         }
       }
 
+    BooleanSupplier speedCheck =
+        () ->
+            (MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()) < maxSpeed);
+    BooleanSupplier distanceCheck = () -> RobotState.getInstance().distanceToAlignPose() < maxDist;
     return elevatorToPos(prepAction)
-        .beforeStarting(
-            Commands.waitUntil(
-                () ->
-                    (MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds())
-                            < maxSpeed)
-                        && RobotState.getInstance().distanceToAlignPose() < maxDist))
+        .beforeStarting(Commands.waitUntil(distanceCheck))
         .andThen(new PrintCommand("CLOSE ENOUGH**************"));
   }
 
@@ -357,7 +362,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     public static final PathPlannerPath SR_E2 = getPathFromFile("SR E");
     public static final PathPlannerPath SR_EF = getPathFromFile("SR EF");
     public static final PathPlannerPath EF_RL = getPathFromFile("EF RL");
-    public static final PathPlannerPath RL_EF = getPathFromFile("RL REF");
+    public static final PathPlannerPath RL_EF = getPathFromFile("RL EF");
 
     // gh
     public static final PathPlannerPath SC_H4 = getPathFromFile("SC H");

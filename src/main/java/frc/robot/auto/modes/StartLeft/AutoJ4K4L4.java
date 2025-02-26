@@ -19,34 +19,37 @@ public class AutoJ4K4L4 extends AutoBase {
   }
 
   @Override
-  public void init() { // yay!! just need to cut down time
+  public void init() {
     addCommands(delaySelectedTime());
     addCommands(getBumpCommand());
 
     //
     addCommands(
         safeReefAlignment(startingPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.IJ)
-            .alongWith(prepareForScoreWhenReady(TargetAction.L4))
-            .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
-    addCommands(score(TargetAction.L4));
+            .alongWith(
+                prepareForScoreWhenReady(TargetAction.L4)
+                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+            .andThen(score(TargetAction.L4)));
 
     //
     addCommands(safeStationAlignment(Paths.J2_LL));
     addCommands(HPIntake());
     addCommands(
         safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL)
-            .alongWith(prepareForScoreWhenReady(TargetAction.L4))
-            .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
-    addCommands(score(TargetAction.L4));
+            .alongWith(
+                prepareForScoreWhenReady(TargetAction.L4)
+                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+            .andThen(score(TargetAction.L4)));
 
     //
     addCommands(safeStationAlignment(Paths.K4_LL));
     addCommands(HPIntake());
     addCommands(
-        safeReefAlignment(Paths.LL_L4, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.KL)
-            .alongWith(prepareForScoreWhenReady(TargetAction.L4))
-            .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
-    addCommands(score(TargetAction.L4));
+        safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL)
+            .alongWith(
+                prepareForScoreWhenReady(TargetAction.L4)
+                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+            .andThen(score(TargetAction.L4)));
 
     // 4 coral auto addition - side A
     // addCommands(safeStationAlignment(Paths.L4_LL));

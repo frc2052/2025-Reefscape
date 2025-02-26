@@ -27,25 +27,31 @@ public class AutoJ1K1L1 extends AutoBase {
     addCommands(getBumpCommand());
     addCommands(delaySelectedTime());
 
-    addCommands(startHP());
     addCommands(
         safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.IJ)
-            .alongWith(prepareForScoreWhenReady(TargetAction.L1H))
-            .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
-    addCommands(toPosAndScore(TargetAction.L1H));
+            .alongWith(
+              prepareForScoreWhenReady(TargetAction.L1H)
+                  .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+          .andThen(score(TargetAction.L1H)));
+
+    //
     addCommands(safeStationAlignment(Paths.J2_LL));
     addCommands(HPIntake());
     addCommands(
         followPathCommand(Paths.LL_KL_L1)
-            .alongWith(prepareForScoreWhenReady(TargetAction.L1H))
-            .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
-    addCommands(toPosAndScore(TargetAction.L1H));
+            .alongWith(
+              prepareForScoreWhenReady(TargetAction.L1H)
+                  .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+          .andThen(score(TargetAction.L1H)));
+
+    //
     addCommands(safeStationAlignment(Paths.KL_LL));
     addCommands(HPIntake());
     addCommands(
         followPathCommand(Paths.LL_KL_L1)
-            .alongWith(prepareForScoreWhenReady(TargetAction.L1H))
-            .andThen(HandCommandFactory.motorIn().withTimeout(0.05)));
-    addCommands(toPosAndScore(TargetAction.L1H));
+            .alongWith(
+              prepareForScoreWhenReady(TargetAction.L1H)
+                  .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+          .andThen(score(TargetAction.L1H)));
   }
 }

@@ -291,7 +291,7 @@ public class Constants {
 
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
       public static final Angle THETA_Y_OFFSET = Degrees.of(-21.84); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(3); // yaw
+      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
 
       public static final Transform3d ROBOT_TO_CAMERA =
           new Transform3d(

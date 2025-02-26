@@ -1,29 +1,24 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.team2052.lib.helpers.MathHelpers;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
+import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
-
-import static edu.wpi.first.units.Units.Degrees;
-
 import java.util.Optional;
-
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
-
-import frc.robot.subsystems.drive.DrivetrainSubsystem;
 
 public class RobotState {
   private SwerveDriveState drivetrainState = new SwerveDriveState();
@@ -108,6 +103,7 @@ public class RobotState {
       PhotonTrackedTarget camTarget = result.get().getBestTarget();
       if (AlignmentCommandFactory.idToReefFace(camTarget.fiducialId) != null
           && AlignmentCommandFactory.idToReefFace(camTarget.fiducialId).getIsReef()) {
+        seenReefFace = AlignmentCommandFactory.idToReefFace(camTarget.fiducialId);
 
         goalAlignPose =
             getRegularNudge() == true
@@ -120,11 +116,13 @@ public class RobotState {
       } else {
         if (poseAlignTimer.get() > 1.0) {
           goalAlignPose = null;
+          seenReefFace = null;
         }
       }
     } else {
       if (poseAlignTimer.get() > 1.0) {
         goalAlignPose = null;
+        seenReefFace = null;
       }
     }
   }
@@ -162,9 +160,13 @@ public class RobotState {
     this.autoStartPose = startPose;
   }
 
-  public void reZeroAfterAuto(){ // auto starts facing 180 of where it should
+  public void reZeroAfterAuto() { // auto starts facing 180 of where it should
     Pose2d endAutoPose = drivetrainState.Pose; // store @ teleopInit to reset pose later
-    Pose2d zeroingPose = new Pose2d(autoStartPose.getX(), autoStartPose.getY(), autoStartPose.getRotation().minus(new Rotation2d(Degrees.of(180))));
+    Pose2d zeroingPose =
+        new Pose2d(
+            autoStartPose.getX(),
+            autoStartPose.getY(),
+            autoStartPose.getRotation().minus(new Rotation2d(Degrees.of(180))));
     DrivetrainSubsystem.getInstance().resetPose(zeroingPose);
     DrivetrainSubsystem.getInstance().seedFieldCentric();
     DrivetrainSubsystem.getInstance().resetPose(endAutoPose);
