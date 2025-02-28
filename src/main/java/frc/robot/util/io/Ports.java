@@ -16,7 +16,7 @@ public class Ports {
   public static final int ALGAE_SCORING_ID = 5;
   public static final int ALGAE_ENCODER_ID = 6;
 
-  public static final int HAND_CAN_RANGE = 7;
+  // public static final int HAND_CAN_RANGE = 7;
 
   /*
    *  Bus: Krawlivore

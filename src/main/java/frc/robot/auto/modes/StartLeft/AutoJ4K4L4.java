@@ -8,7 +8,7 @@ import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 
-@AutoDescription(description = "21 Point Auto - One L2, Two L4")
+@AutoDescription(description = "LEFT One L2, Two L4")
 public class AutoJ4K4L4 extends AutoBase {
   // Start Right Equivalent: AutoE2D4C4
 

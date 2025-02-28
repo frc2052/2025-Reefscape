@@ -88,6 +88,9 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
   public void confirmSelectedAction() {
     currentAction = selectedTargetAction;
+    if (selectedTargetAction != TargetAction.HM) {
+      elevator.setWantHome(false);
+    }
     revealCombination();
   }
 

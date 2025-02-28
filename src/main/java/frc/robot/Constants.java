@@ -197,12 +197,13 @@ public class Constants {
   public static class HandConstants {
     public static final boolean HAND_MOTOR_INVERTED = true;
     public static final double IN_HAND_MOTOR_SPEED = 0.33;
+    public static final double SCORE_L1_MOTOR_SPEED = 0.225;
     public static final double OUT_HAND_MOTOR_SPEED = 0.35;
     public static final double HAND_RANGE_CORAL_SEEN = 0.4;
 
     public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()
     .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
-    .withProximityParams(new ProximityParamsConfigs().withMinSignalStrengthForValidMeasurement(0.2).withProximityThreshold(0.4));
+    .withProximityParams(new ProximityParamsConfigs().withMinSignalStrengthForValidMeasurement(0.2).withProximityThreshold(0.38));
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()

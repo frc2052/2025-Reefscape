@@ -273,9 +273,11 @@ public class AlignmentCalculator {
 
   /* Align Offset is relative to the tag poses on the field element */
   public enum AlignOffset {
-    LEFT_REEF_LOC(new Transform2d(Meters.of(0.44), Inches.of(9), new Rotation2d(Math.PI))),
+    LEFT_REEF_LOC(
+        new Transform2d(
+            Meters.of(0.42), Inches.of(11), new Rotation2d(Math.PI))), // R Auto misses right
     MIDDLE_REEF_LOC(new Transform2d(0.47, 0.0, new Rotation2d(Math.PI))),
-    RIGHT_REEF_LOC(new Transform2d(Meters.of(0.44), Inches.of(-5), new Rotation2d(Math.PI))),
+    RIGHT_REEF_LOC(new Transform2d(Meters.of(0.42), Inches.of(-7), new Rotation2d(Math.PI))),
 
     ALGAE_REEF_LOC(new Transform2d(0.5, 0.0, new Rotation2d(Math.PI / 2))),
 

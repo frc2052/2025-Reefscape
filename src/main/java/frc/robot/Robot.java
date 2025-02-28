@@ -66,8 +66,6 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-    RobotState.getInstance().reZeroAfterAuto();
   }
 
   @Override

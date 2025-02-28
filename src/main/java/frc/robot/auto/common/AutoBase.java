@@ -156,6 +156,20 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
   protected Command safeReefAlignment(
       PathPlannerPath startPath, AlignOffset branchside, TargetFieldLocation fieldLoc) {
+
+    double timeout;
+
+    if(
+      startPath.equals(Paths.SR_E2)
+              || startPath.equals(Paths.SL_J2)
+              || startPath.equals(Paths.SC_H4)){
+      timeout = 3.9;
+    } else if(startPath.equals(Paths.SR_EF) || startPath.equals(Paths.SL_IJ)){ // score L1
+      timeout = 3.0;
+    } else {
+      timeout = 4.1;
+    }
+    
     return new ParallelCommandGroup(
         new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
             .withTimeout(
@@ -164,12 +178,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
             .until(vision::getCoralCameraHasTarget)
             .andThen(
                 AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> branchside, fieldLoc))
-            .withTimeout(
-                startPath.equals(Paths.SR_E2)
-                        || startPath.equals(Paths.SL_J2)
-                        || startPath.equals(Paths.SC_H4)
-                    ? 3.9
-                    : 4.2));
+            .withTimeout(timeout));
   }
 
   protected Command safeStationAlignment(PathPlannerPath altAlignPath) {
@@ -360,6 +369,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // ef
     public static final PathPlannerPath E2_RL = getPathFromFile("E RL");
     public static final PathPlannerPath SR_E2 = getPathFromFile("SR E");
+    public static final PathPlannerPath SR_F = getPathFromFile("SR F");
     public static final PathPlannerPath SR_EF = getPathFromFile("SR EF");
     public static final PathPlannerPath EF_RL = getPathFromFile("EF RL");
     public static final PathPlannerPath RL_EF = getPathFromFile("RL EF");

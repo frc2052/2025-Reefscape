@@ -4,18 +4,19 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.HandConstants;
+import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.RobotState;
 import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
 public class HandSubsystem extends SubsystemBase {
   private final TalonFX motor;
-  private final CANrange range;
+  // private final CANrange range;
   private static HandSubsystem INSTANCE;
   private boolean isIntaking = false;
 
@@ -28,9 +29,9 @@ public class HandSubsystem extends SubsystemBase {
 
   public HandSubsystem() {
     motor = new TalonFX(Ports.HAND_TALONFX_ID);
-    range = new CANrange(Ports.HAND_CAN_RANGE);
+    // range = new CANrange(Ports.HAND_CAN_RANGE);
 
-    range.getConfigurator().apply(HandConstants.CANRANGE_CONFIG);
+    // range.getConfigurator().apply(HandConstants.CANRANGE_CONFIG);
 
     motor.getConfigurator().apply(HandConstants.MOTOR_CONFIG);
   }
@@ -45,7 +46,10 @@ public class HandSubsystem extends SubsystemBase {
   }
 
   public void motorOut() {
-    setMotor(Constants.HandConstants.OUT_HAND_MOTOR_SPEED);
+    setMotor(
+      SuperstructureSubsystem.getInstance().getCurrentAction().equals(TargetAction.L1H)?
+      Constants.HandConstants.SCORE_L1_MOTOR_SPEED : 
+      Constants.HandConstants.OUT_HAND_MOTOR_SPEED);
   }
 
   public void motorIn() {
@@ -58,7 +62,8 @@ public class HandSubsystem extends SubsystemBase {
   }
 
   public boolean getHasCoral() {
-    return range.getIsDetected().getValue();
+    // return range.getIsDetected().getValue();
+    return false;
   }
 
   @Override
@@ -66,8 +71,8 @@ public class HandSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     Logger.recordOutput("Hand/Motor Velocity", motor.getVelocity().getValueAsDouble());
     Logger.recordOutput("Hand/Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
-    Logger.recordOutput("Hand/Has Coral", getHasCoral());
-    Logger.recordOutput("Hand/ToF Distance", range.getDistance().getValueAsDouble());
+    // Logger.recordOutput("Hand/Has Coral", getHasCoral());
+    // Logger.recordOutput("Hand/ToF Distance", range.getDistance().getValueAsDouble());
     RobotState.getInstance().setHasCoral(getHasCoral());
     RobotState.getInstance().setIsIntaking(isIntaking);
   }
