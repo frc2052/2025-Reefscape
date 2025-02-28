@@ -15,7 +15,7 @@ import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 /** Add your docs here. */
 public class AutoE1D1C1 extends AutoBase {
 
-  private static final PathPlannerPath startingPath = Paths.SR_EF;
+  private static final PathPlannerPath startingPath = Paths.SR_EF_L1;
 
   @AutoDescription(description = "Right Side L1 Auto")
   public AutoE1D1C1() {

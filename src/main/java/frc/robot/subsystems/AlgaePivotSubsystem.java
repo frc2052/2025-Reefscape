@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaePivotConstants;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.io.Ports;
-import org.littletonrobotics.junction.Logger;
 
 public class AlgaePivotSubsystem extends SubsystemBase {
   private static AlgaePivotSubsystem INSTANCE;
@@ -105,21 +104,12 @@ public class AlgaePivotSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Logger.recordOutput("Algae Arm/Angle", getPivotPosition().in(Degrees));
-    Logger.recordOutput("Algae Arm/Goal Angle", goalPosition.in(Degrees));
-    Logger.recordOutput("Algae Arm/At Goal", isAtDesiredPosition());
+    // Logger.recordOutput("Algae Arm/Angle", getPivotPosition().in(Degrees));
+    // Logger.recordOutput("Algae Arm/Goal Angle", goalPosition.in(Degrees));
+    // Logger.recordOutput("Algae Arm/At Goal", isAtDesiredPosition());
 
     if (!manualPctMode) {
       updatePivot();
     }
-
-    // if (isIntaking) {
-    //   if (intakingDelay.update(
-    //       Timer.getFPGATimestamp(),
-    //       MathHelpers.epsilonEquals(pivotMotor.getVelocity().getValueAsDouble(), 0.0, 0.01))) {
-    //     stopScoringMotor();
-    //     hasAlgae = true;
-    //   }
-    // }
   }
 }

@@ -24,7 +24,7 @@ public class AutoE1D4C4 extends AutoBase {
     addCommands(getBumpCommand());
 
     addCommands(
-        safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.EF)
+        safeReefAlignment(startingPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.EF)
             .alongWith(
                 prepareForScoreWhenReady(TargetAction.L1H)
                     .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
@@ -43,12 +43,13 @@ public class AutoE1D4C4 extends AutoBase {
     //
     addCommands(safeStationAlignment(Paths.D4_RL));
     addCommands(HPIntake());
-    addCommands(
-        safeReefAlignment(Paths.RL_C4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.CD)
-            .alongWith(
-                prepareForScoreWhenReady(TargetAction.L4)
-                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-            .andThen(score(TargetAction.L4)));
+    addCommands(HandCommandFactory.motorIn().withTimeout(1.0));
+    // addCommands( // don't keep going
+    //     safeReefAlignment(Paths.RL_C4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.CD)
+    //         .alongWith(
+    //             prepareForScoreWhenReady(TargetAction.L4)
+    //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+    //         .andThen(score(TargetAction.L4)));
 
     // 4 coral auto addition - side B
     // addCommands(safeStationAlignment(Paths.C4_RL));

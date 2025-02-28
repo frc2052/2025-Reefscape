@@ -9,12 +9,12 @@ import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 
 @AutoDescription(description = "LEFT One L2, Two L4")
-public class AutoJ1K4L4 extends AutoBase {
+public class AutoMIDJ1K4L4 extends AutoBase {
   // Start Right Equivalent: AutoE2D4C4
 
   private static final PathPlannerPath startingPath = Paths.SL_IJ;
 
-  public AutoJ1K4L4() {
+  public AutoMIDJ1K4L4() {
     super(startingPath.getStartingHolonomicPose());
   }
 
@@ -44,12 +44,13 @@ public class AutoJ1K4L4 extends AutoBase {
     //
     addCommands(safeStationAlignment(Paths.K4_LL));
     addCommands(HPIntake());
-    addCommands(
-        safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL)
-            .alongWith(
-                prepareForScoreWhenReady(TargetAction.L4)
-                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-            .andThen(score(TargetAction.L4)));
+    addCommands(HandCommandFactory.motorIn().withTimeout(1.0));
+    // addCommands( // don't go  back to reef or start raising elevator
+    //     safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL)
+    //         .alongWith(
+    //             prepareForScoreWhenReady(TargetAction.L4)
+    //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+    //         .andThen(score(TargetAction.L4)));
 
     // 4 coral auto addition - side A
     // addCommands(safeStationAlignment(Paths.L4_LL));

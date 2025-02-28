@@ -108,9 +108,9 @@ public class CoralArmSubsystem extends SubsystemBase {
   public void periodic() {
     Logger.recordOutput("Coral Arm/Angle", getPosition().in(Degrees));
     Logger.recordOutput("Coral Arm/Goal Angle", goalPosition.in(Degrees));
-    Logger.recordOutput("Coral Arm/Motor Set Speed", pivotMotor.get());
-    Logger.recordOutput("Coral Arm/Velocity", pivotMotor.getVelocity().getValueAsDouble());
-    Logger.recordOutput("Coral Arm/At Goal", isAtDesiredPosition(5));
+    // Logger.recordOutput("Coral Arm/Motor Set Speed", pivotMotor.get());
+    // Logger.recordOutput("Coral Arm/Velocity", pivotMotor.getVelocity().getValueAsDouble());
+    // Logger.recordOutput("Coral Arm/At Goal", isAtDesiredPosition(5));
   }
 
   /* SysId routine for characterizing arm. This is used to find PID gains for the arm motor. */

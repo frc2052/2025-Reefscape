@@ -209,11 +209,10 @@ public class RobotState {
   }
 
   public void output() {
-    Logger.recordOutput("Swerve Module States", drivetrainState.ModuleStates);
-    Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
+    // Logger.recordOutput("Swerve Module States", drivetrainState.ModuleStates);
+    // Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
     Logger.recordOutput("Current Pose", drivetrainState.Pose);
     Logger.recordOutput("Auto Start Pose", autoStartPose);
     Logger.recordOutput("Goal Align Pose", goalPose);
-    Logger.recordOutput("Auto Start Pose", autoStartPose);
   }
 }

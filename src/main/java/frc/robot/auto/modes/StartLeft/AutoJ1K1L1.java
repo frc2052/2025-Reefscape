@@ -16,7 +16,7 @@ import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 @AutoDescription(description = "Left Side L1's")
 public class AutoJ1K1L1 extends AutoBase {
 
-  public static final PathPlannerPath startingPath = Paths.SL_IJ;
+  public static final PathPlannerPath startingPath = Paths.SL_IJ_L1;
 
   public AutoJ1K1L1() {
     super(startingPath.getStartingHolonomicPose());

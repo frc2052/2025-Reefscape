@@ -8,9 +8,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.HandConstants;
-import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.RobotState;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
@@ -47,9 +47,9 @@ public class HandSubsystem extends SubsystemBase {
 
   public void motorOut() {
     setMotor(
-      SuperstructureSubsystem.getInstance().getCurrentAction().equals(TargetAction.L1H)?
-      Constants.HandConstants.SCORE_L1_MOTOR_SPEED : 
-      Constants.HandConstants.OUT_HAND_MOTOR_SPEED);
+        SuperstructureSubsystem.getInstance().getCurrentAction().equals(TargetAction.L1H)
+            ? Constants.HandConstants.SCORE_L1_MOTOR_SPEED
+            : Constants.HandConstants.OUT_HAND_MOTOR_SPEED);
   }
 
   public void motorIn() {
