@@ -23,8 +23,17 @@ public class AutoE1D4C4 extends AutoBase {
     addCommands(delaySelectedTime());
     addCommands(getBumpCommand());
 
+    // alignment L1
+    // addCommands(
+    //     safeReefAlignment(startingPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.EF)
+    //         .alongWith(
+    //             prepareForScoreWhenReady(TargetAction.L1H)
+    //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+    //         .andThen(score(TargetAction.L1H)));
+
+    // paths L1
     addCommands(
-        safeReefAlignment(startingPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.EF)
+        followPathCommand(Paths.SR_EF_L1)
             .alongWith(
                 prepareForScoreWhenReady(TargetAction.L1H)
                     .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))

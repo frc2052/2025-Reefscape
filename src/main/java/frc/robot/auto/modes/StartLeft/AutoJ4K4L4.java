@@ -25,10 +25,11 @@ public class AutoJ4K4L4 extends AutoBase {
 
     //
     addCommands(
-        safeReefAlignment(startingPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.IJ)
+        safeReefAlignment(startingPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.IJ)
             .alongWith(
                 prepareForScoreWhenReady(TargetAction.L4)
                     .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+            // .andThen(new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> false))
             .andThen(score(TargetAction.L4)));
 
     //

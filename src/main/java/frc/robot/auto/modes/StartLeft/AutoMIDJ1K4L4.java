@@ -23,9 +23,17 @@ public class AutoMIDJ1K4L4 extends AutoBase {
     addCommands(delaySelectedTime());
     addCommands(getBumpCommand());
 
-    //
+    // alignment L1
+    // addCommands(
+    //     safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.IJ)
+    //         .alongWith(
+    //             prepareForScoreWhenReady(TargetAction.L1H)
+    //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+    //         .andThen(score(TargetAction.L1H)));
+
+    // path L1 (off side)
     addCommands(
-        safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.IJ)
+        followPathCommand(Paths.SL_IJ_L1)
             .alongWith(
                 prepareForScoreWhenReady(TargetAction.L1H)
                     .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))

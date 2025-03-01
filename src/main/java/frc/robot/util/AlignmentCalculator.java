@@ -275,9 +275,16 @@ public class AlignmentCalculator {
   public enum AlignOffset {
     LEFT_REEF_LOC(
         new Transform2d(
-            Meters.of(0.42), Inches.of(11), new Rotation2d(Math.PI))), // R Auto misses right
-    MIDDLE_REEF_LOC(new Transform2d(0.47, 0.0, new Rotation2d(Math.PI))),
-    RIGHT_REEF_LOC(new Transform2d(Meters.of(0.42), Inches.of(-7), new Rotation2d(Math.PI))),
+            Meters.of(0.37), Inches.of(11), new Rotation2d(Math.PI))), // R Auto misses right
+    MIDDLE_REEF_LOC(new Transform2d(0.37, 0.0, new Rotation2d(Math.PI))),
+    RIGHT_REEF_LOC(
+        new Transform2d(
+            Meters.of(0.32),
+            Inches.of(-5), // was -7
+            new Rotation2d(Math.PI))), // was .39 away -7 to the right
+
+    L1_LEFT_LOC(new Transform2d(Meters.of(0.42), Inches.of(15), new Rotation2d(Math.PI))),
+    L1_RIGHT_LOC(new Transform2d(Meters.of(0.42), Inches.of(-7), new Rotation2d(Math.PI))),
 
     ALGAE_REEF_LOC(new Transform2d(0.5, 0.0, new Rotation2d(Math.PI / 2))),
 

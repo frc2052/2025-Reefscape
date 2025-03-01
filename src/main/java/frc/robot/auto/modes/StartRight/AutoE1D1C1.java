@@ -9,8 +9,6 @@ import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 
 /** Add your docs here. */
 public class AutoE1D1C1 extends AutoBase {
@@ -27,9 +25,16 @@ public class AutoE1D1C1 extends AutoBase {
     addCommands(delaySelectedTime());
     addCommands(getBumpCommand());
 
-    addCommands(startHP());
+    // addCommands(startHP());
+    // addCommands(
+    //     safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.EF)
+    //         .alongWith(
+    //             prepareForScoreWhenReady(TargetAction.L1H)
+    //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+    //         .andThen(score(TargetAction.L1H)));
+
     addCommands(
-        safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.EF)
+        followPathCommand(startingPath)
             .alongWith(
                 prepareForScoreWhenReady(TargetAction.L1H)
                     .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))

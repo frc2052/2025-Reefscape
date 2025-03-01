@@ -25,7 +25,10 @@ public class AlignmentCommandFactory {
   public static Command getReefAlignmentCommand(Supplier<AlignOffset> offset) {
     if (offset.get() != AlignOffset.LEFT_REEF_LOC
         && offset.get() != AlignOffset.MIDDLE_REEF_LOC
-        && offset.get() != AlignOffset.RIGHT_REEF_LOC) {
+        && offset.get() != AlignOffset.RIGHT_REEF_LOC
+    // && offset.get() != AlignOffset.L1_LEFT_LOC
+    // && offset.get() != AlignOffset.L1_RIGHT_LOC
+    ) {
       invalidCombination(DesiredElement.REEF, offset.get());
     }
     Supplier<Pose2d> targetSupplier = () -> robotState.getAlignPose();
@@ -49,7 +52,10 @@ public class AlignmentCommandFactory {
       Supplier<AlignOffset> offset, TargetFieldLocation fieldLocation) {
     if (offset.get() != AlignOffset.LEFT_REEF_LOC
         && offset.get() != AlignOffset.MIDDLE_REEF_LOC
-        && offset.get() != AlignOffset.RIGHT_REEF_LOC) {
+        && offset.get() != AlignOffset.RIGHT_REEF_LOC
+    // && offset.get() != AlignOffset.L1_LEFT_LOC
+    // && offset.get() != AlignOffset.L1_RIGHT_LOC
+    ) {
       invalidCombination(DesiredElement.REEF, offset.get());
     }
 

@@ -14,7 +14,7 @@ public class SuperstructurePosition {
     L4(62.5, Degrees.of(280), Degrees.of(135), ActionType.CORAL),
     LA(6.0, Degrees.of(170.0), Degrees.of(135), ActionType.ALGAE), // Lower Algae
     UA(40.0, Degrees.of(170.0), Degrees.of(135), ActionType.ALGAE), // Upper Algae
-    HP(2.0, Degrees.of(113), Degrees.of(135), ActionType.STATION), // Coral Station
+    HP(1.5, Degrees.of(112), Degrees.of(135), ActionType.STATION), // Coral Station
     AS(55.0, Degrees.of(180.0), Degrees.of(135), ActionType.NONE), // Algae Scoring NET
     AP(55.0, Degrees.of(180.0), Degrees.of(135), ActionType.PROCESS), // Algae Scoring Processor
     TR(5.0, Degrees.of(180.0), Degrees.of(135), ActionType.NONE), // Travel
