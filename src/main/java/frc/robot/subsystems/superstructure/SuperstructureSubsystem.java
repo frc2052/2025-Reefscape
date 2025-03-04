@@ -88,6 +88,9 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
   public void confirmSelectedAction() {
     currentAction = selectedTargetAction;
+    if (selectedTargetAction != TargetAction.HM) {
+      elevator.setWantHome(false);
+    }
     revealCombination();
   }
 
@@ -110,10 +113,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
     Logger.recordOutput("Target Superstructure Changing State", isChangingState);
 
     if (target != previousAction) {
-      Logger.recordOutput("Target Superstructure State Has Changed", true);
+      // Logger.recordOutput("Target Superstructure State Has Changed", true);
       isChangingState = true;
     } else {
-      Logger.recordOutput("Target Superstructure State Has Changed", false);
+      // Logger.recordOutput("Target Superstructure State Has Changed", false);
     }
 
     if (isChangingState) {
@@ -128,9 +131,9 @@ public class SuperstructureSubsystem extends SubsystemBase {
       if (elevator.atPosition(target) && coralArm.isAtPosition(5, target.getCoralArmAngle())) {
         // && algaePivot.isAtPosition(5, target.getAlgaeArmPivotPosition())) {
         isChangingState = false;
-        Logger.recordOutput("Arrived at Target State", true);
+        // Logger.recordOutput("Arrived at Target State", true);
       } else {
-        Logger.recordOutput("Arrived at Target State", false);
+        // Logger.recordOutput("Arrived at Target State", false);
       }
     } else {
       if (RobotState.getInstance().getHasCoral()

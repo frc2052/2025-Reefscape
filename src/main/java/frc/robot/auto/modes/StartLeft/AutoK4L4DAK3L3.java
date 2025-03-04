@@ -7,7 +7,7 @@ import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
 
-@AutoDescription(description = "29 Point Auto - Two L4, Remove Algae, Two L3")
+@AutoDescription(description = "LEFT Two L4, Remove Algae, Two L3")
 public class AutoK4L4DAK3L3 extends AutoBase {
   // Start Right Equivalent: AutoSLK4L4DAK3L3
 

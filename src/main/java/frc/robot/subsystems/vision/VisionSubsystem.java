@@ -60,7 +60,7 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public boolean getCoralCameraHasTarget() {
-    return getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(2)).isPresent();
+    return getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5)).isPresent();
   }
 
   // public boolean getStationCameraHasTarget() {

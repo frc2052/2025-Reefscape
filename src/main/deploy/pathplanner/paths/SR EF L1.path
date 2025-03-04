@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.9822500000000005,
-        "y": 5.858
+        "x": 7.133,
+        "y": 2.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4765,
-        "y": 6.638
+        "x": 5.945901639344262,
+        "y": 2.0530225409836067
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "SR"
     },
     {
       "anchor": {
-        "x": 1.0189549180327868,
-        "y": 7.23171106557377
+        "x": 4.831045081967213,
+        "y": 2.6883709016393436
       },
       "prevControl": {
-        "x": 2.1499549180327877,
-        "y": 6.880711065573771
+        "x": 5.885963114754097,
+        "y": 2.0050717213114764
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Load"
+      "linkedName": "EF L1"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -52.59464336859145
+    "rotation": 119.47588900324573
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -121.36045687602295
+    "rotation": -177.9509732347649
   },
   "useDefaultConstraints": true
 }
