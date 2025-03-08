@@ -12,21 +12,21 @@ import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
 public class AutoH4RightAlgaeRemoval extends AutoBase {
-  public static final PathPlannerPath startPath = Paths.SC_H4;
+    public static final PathPlannerPath startPath = Paths.SC_H4;
 
-  public AutoH4RightAlgaeRemoval() {
-    super(startPath.getStartingHolonomicPose());
-  }
+    public AutoH4RightAlgaeRemoval() {
+        super(startPath.getStartingHolonomicPose());
+    }
 
-  @Override
-  public void init() {
-    addCommands(getBumpCommand());
-    addCommands(delaySelectedTime());
+    @Override
+    public void init() {
+        addCommands(getBumpCommand());
+        addCommands(delaySelectedTime());
 
-    addCommands(safeReefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.GH));
-    addCommands(toPosAndScore(TargetAction.L4));
-    addCommands(descoreScoreNetAlgae(Paths.GH_SCORE_TO_DESCORE, TargetAction.LA, Paths.GH_NET));
-    addCommands(descoreScoreNetAlgae(Paths.NET_EF, TargetAction.UA, Paths.EF_NET));
-    addCommands(descoreScoreNetAlgae(Paths.NET_CD, TargetAction.LA, Paths.CD_NET));
-  }
+        addCommands(safeReefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.GH));
+        addCommands(toPosAndScore(TargetAction.L4));
+        addCommands(descoreScoreNetAlgae(Paths.GH_SCORE_TO_DESCORE, TargetAction.LA, Paths.GH_NET));
+        addCommands(descoreScoreNetAlgae(Paths.NET_EF, TargetAction.UA, Paths.EF_NET));
+        addCommands(descoreScoreNetAlgae(Paths.NET_CD, TargetAction.LA, Paths.CD_NET));
+    }
 }

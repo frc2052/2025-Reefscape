@@ -7,44 +7,44 @@ import frc.robot.util.io.Ports;
 
 public class ClimberSubsystem extends SubsystemBase {
 
-  private final TalonFX motor;
+    private final TalonFX motor;
 
-  private static ClimberSubsystem INSTANCE;
+    private static ClimberSubsystem INSTANCE;
 
-  public static ClimberSubsystem getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new ClimberSubsystem();
+    public static ClimberSubsystem getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new ClimberSubsystem();
+        }
+        return INSTANCE;
     }
-    return INSTANCE;
-  }
 
-  private ClimberSubsystem() {
-    motor = new TalonFX(Ports.CLIMBER_ID, "Krawlivore");
+    private ClimberSubsystem() {
+        motor = new TalonFX(Ports.CLIMBER_ID, "Krawlivore");
 
-    motor.getConfigurator().apply(ClimberConstants.MOTOR_CONFIG);
-  }
-
-  public void moveUp(boolean fineControl) {
-    if (fineControl) {
-      motor.set(ClimberConstants.fineSpeed);
-    } else {
-      motor.set(ClimberConstants.baseSpeed);
+        motor.getConfigurator().apply(ClimberConstants.MOTOR_CONFIG);
     }
-  }
 
-  public void moveDown(boolean fineControl) {
-    if (fineControl) {
-      motor.set(-ClimberConstants.fineSpeed);
-    } else {
-      motor.set(-ClimberConstants.baseSpeed);
+    public void moveUp(boolean fineControl) {
+        if (fineControl) {
+            motor.set(ClimberConstants.fineSpeed);
+        } else {
+            motor.set(ClimberConstants.baseSpeed);
+        }
     }
-  }
 
-  public void stop() {
-    motor.stopMotor();
-  }
+    public void moveDown(boolean fineControl) {
+        if (fineControl) {
+            motor.set(-ClimberConstants.fineSpeed);
+        } else {
+            motor.set(-ClimberConstants.baseSpeed);
+        }
+    }
 
-  public double getSpeed() {
-    return motor.get();
-  }
+    public void stop() {
+        motor.stopMotor();
+    }
+
+    public double getSpeed() {
+        return motor.get();
+    }
 }

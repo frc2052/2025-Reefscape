@@ -14,33 +14,36 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class SnapToLocationAngleCommand extends SnapToAngleCommand {
-  FieldElementFace goalSnap;
+    FieldElementFace goalSnap;
 
-  public SnapToLocationAngleCommand(
-      FieldElementFace snapLocation,
-      DoubleSupplier xSupplier,
-      DoubleSupplier ySupplier,
-      DoubleSupplier rotationSupplier,
-      BooleanSupplier fieldCentricSupplier) {
-    super(
-        new Rotation2d(snapLocation.getLineupAngle().in(Radians)),
-        xSupplier,
-        ySupplier,
-        rotationSupplier,
-        fieldCentricSupplier);
+    public SnapToLocationAngleCommand(
+            FieldElementFace snapLocation,
+            DoubleSupplier xSupplier,
+            DoubleSupplier ySupplier,
+            DoubleSupplier rotationSupplier,
+            BooleanSupplier fieldCentricSupplier) {
+        super(
+                new Rotation2d(snapLocation.getLineupAngle().in(Radians)),
+                xSupplier,
+                ySupplier,
+                rotationSupplier,
+                fieldCentricSupplier);
 
-    goalSnap = snapLocation;
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    double currentRotation = RobotState.getInstance().getFieldToRobot().getRotation().getDegrees();
-    if (currentRotation + 5 > Units.radiansToDegrees(goalSnap.getLineupAngle().in(Radians))
-        && currentRotation - 5 < Units.radiansToDegrees(goalSnap.getLineupAngle().in(Radians))) {
-      return true;
-    } else {
-      return false;
+        goalSnap = snapLocation;
     }
-  }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        double currentRotation =
+                RobotState.getInstance().getFieldToRobot().getRotation().getDegrees();
+        if (currentRotation + 5
+                        > Units.radiansToDegrees(goalSnap.getLineupAngle().in(Radians))
+                && currentRotation - 5
+                        < Units.radiansToDegrees(goalSnap.getLineupAngle().in(Radians))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

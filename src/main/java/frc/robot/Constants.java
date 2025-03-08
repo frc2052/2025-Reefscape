@@ -39,7 +39,7 @@ import frc.robot.util.io.Ports;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Constants {
-  // spotless:off
+    // spotless:off
   public static final class ElevatorConstants {
     public static final boolean ELEVATOR_MOTORS_INVERTED = false;
 

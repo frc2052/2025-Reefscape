@@ -5,28 +5,28 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
 
 public class VisionSubsystem extends SubsystemBase {
-  private final VisionIO io;
-  private final RobotState robotState = RobotState.getInstance();
+    private final VisionIO io;
+    private final RobotState robotState = RobotState.getInstance();
 
-  private static VisionSubsystem INSTANCE;
+    private static VisionSubsystem INSTANCE;
 
-  public static VisionSubsystem getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new VisionSubsystem();
+    public static VisionSubsystem getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new VisionSubsystem();
+        }
+
+        return INSTANCE;
     }
 
-    return INSTANCE;
-  }
-
-  private VisionSubsystem() {
-    if (RobotBase.isSimulation()) {
-      io = new VisionIOSimPhoton();
-    } else {
-      io = new VisionIOLimelight();
+    private VisionSubsystem() {
+        if (RobotBase.isSimulation()) {
+            io = new VisionIOSimPhoton();
+        } else {
+            io = new VisionIOLimelight();
+        }
     }
-  }
 
-  public boolean hasReefTarget() {
-    return io.hasReefTarget();
-  }
+    public boolean hasReefTarget() {
+        return io.hasReefTarget();
+    }
 }

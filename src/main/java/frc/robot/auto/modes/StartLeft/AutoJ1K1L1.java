@@ -16,42 +16,36 @@ import frc.robot.util.AlignmentCalculator.FieldElementFace;
 @AutoDescription(description = "Left Side L1's")
 public class AutoJ1K1L1 extends AutoBase {
 
-  public static final PathPlannerPath startingPath = Paths.SL_IJ;
+    public static final PathPlannerPath startingPath = Paths.SL_IJ;
 
-  public AutoJ1K1L1() {
-    super(startingPath.getStartingHolonomicPose());
-  }
+    public AutoJ1K1L1() {
+        super(startingPath.getStartingHolonomicPose());
+    }
 
-  @Override
-  public void init() { // test
-    addCommands(getBumpCommand());
-    addCommands(delaySelectedTime());
+    @Override
+    public void init() { // test
+        addCommands(getBumpCommand());
+        addCommands(delaySelectedTime());
 
-    addCommands(
-        safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF, FieldElementFace.IJ)
-            .alongWith(
-                prepareForScoreWhenReady(TargetAction.L1H)
-                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-            .andThen(score(TargetAction.L1H)));
+        addCommands(safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF, FieldElementFace.IJ)
+                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
+                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+                .andThen(score(TargetAction.L1H)));
 
-    //
-    addCommands(safeStationAlignment(Paths.J2_LL));
-    addCommands(HPIntake());
-    addCommands(
-        followPathCommand(Paths.LL_KL_L1)
-            .alongWith(
-                prepareForScoreWhenReady(TargetAction.L1H)
-                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-            .andThen(score(TargetAction.L1H)));
+        //
+        addCommands(safeStationAlignment(Paths.J2_LL));
+        addCommands(HPIntake());
+        addCommands(followPathCommand(Paths.LL_KL_L1)
+                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
+                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+                .andThen(score(TargetAction.L1H)));
 
-    //
-    addCommands(safeStationAlignment(Paths.KL_LL));
-    addCommands(HPIntake());
-    addCommands(
-        followPathCommand(Paths.LL_KL_L1)
-            .alongWith(
-                prepareForScoreWhenReady(TargetAction.L1H)
-                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-            .andThen(score(TargetAction.L1H)));
-  }
+        //
+        addCommands(safeStationAlignment(Paths.KL_LL));
+        addCommands(HPIntake());
+        addCommands(followPathCommand(Paths.LL_KL_L1)
+                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
+                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+                .andThen(score(TargetAction.L1H)));
+    }
 }
