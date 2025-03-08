@@ -48,6 +48,10 @@ public class VisionIOLimelight implements VisionIO {
                 RightLimelightConstants.THETA_X_OFFSET.in(Degrees),
                 RightLimelightConstants.THETA_Y_OFFSET.in(Degrees),
                 RightLimelightConstants.THETA_Z_OFFSET.in(Degrees));
+
+        LimelightHelpers.SetIMUMode(LeftLimelightConstants.CAMERA_NAME, 0);
+        LimelightHelpers.SetIMUMode(RightLimelightConstants.CAMERA_NAME, 0);
+        // TODO: make sure MT1 and MT2 work before trying different imu modes
     }
 
     public void update() {
