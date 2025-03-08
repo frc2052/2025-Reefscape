@@ -6,7 +6,7 @@ import frc.robot.auto.common.AutoDescription;
 import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 @AutoDescription(description = "21 Point Auto - One L2, Two L4")
 public class AutoE4D4C4 extends AutoBase {
@@ -24,7 +24,7 @@ public class AutoE4D4C4 extends AutoBase {
     addCommands(getBumpCommand());
 
     addCommands(
-        safeReefAlignment(startingPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.EF)
+        safeReefAlignment(startingPath, AlignOffset.LEFT_BRANCH, FieldElementFace.EF)
             .alongWith(
                 prepareForScoreWhenReady(TargetAction.L4)
                     .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
@@ -34,7 +34,7 @@ public class AutoE4D4C4 extends AutoBase {
     addCommands(safeStationAlignment(Paths.E2_RL));
     addCommands(HPIntake());
     addCommands(
-        safeReefAlignment(Paths.RL_D4, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.CD)
+        safeReefAlignment(Paths.RL_D4, AlignOffset.RIGHT_BRANCH, FieldElementFace.CD)
             .alongWith(
                 prepareForScoreWhenReady(TargetAction.L4)
                     .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
@@ -44,7 +44,7 @@ public class AutoE4D4C4 extends AutoBase {
     addCommands(safeStationAlignment(Paths.D4_RL));
     addCommands(HPIntake());
     addCommands(
-        safeReefAlignment(Paths.RL_C4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.CD)
+        safeReefAlignment(Paths.RL_C4, AlignOffset.LEFT_BRANCH, FieldElementFace.CD)
             .alongWith(
                 prepareForScoreWhenReady(TargetAction.L4)
                     .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))

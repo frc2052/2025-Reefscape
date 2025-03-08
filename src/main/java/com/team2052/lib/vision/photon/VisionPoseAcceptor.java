@@ -1,4 +1,4 @@
-package com.team2052.lib.vision;
+package com.team2052.lib.vision.photon;
 
 import static edu.wpi.first.units.Units.Meters;
 

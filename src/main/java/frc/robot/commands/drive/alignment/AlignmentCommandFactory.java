@@ -1,7 +1,6 @@
 package frc.robot.commands.drive.alignment;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -9,30 +8,26 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.RobotState;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.controlboard.ControlBoard;
-import frc.robot.subsystems.vision.VisionSubsystem;
-import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
 import frc.robot.util.io.Dashboard;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 public class AlignmentCommandFactory {
-  private static final VisionSubsystem vision = VisionSubsystem.getInstance();
   private static final RobotState robotState = RobotState.getInstance();
   private static final ControlBoard controlBoard = ControlBoard.getInstance();
 
   public static Command getReefAlignmentCommand(Supplier<AlignOffset> offset) {
-    if (offset.get() != AlignOffset.LEFT_REEF_LOC
-        && offset.get() != AlignOffset.MIDDLE_REEF_LOC
-        && offset.get() != AlignOffset.RIGHT_REEF_LOC) {
+    if (offset.get() != AlignOffset.LEFT_BRANCH
+        && offset.get() != AlignOffset.MIDDLE_REEF
+        && offset.get() != AlignOffset.RIGHT_BRANCH) {
       invalidCombination(DesiredElement.REEF, offset.get());
     }
     Supplier<Pose2d> targetSupplier = () -> robotState.getAlignPose();
-    BooleanSupplier shouldAlign = () -> robotState.getHasAlignPose();
+    BooleanSupplier shouldAlign = () -> robotState.shouldAlign();
 
-    return Commands.runOnce(() -> vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM), vision)
-        .andThen(new InstantCommand(() -> robotState.setAlignOffset(offset.get())))
+    return new InstantCommand(() -> robotState.setAlignOffset(offset.get()))
         .andThen(
             Commands.either(
                 new DriveToPose(
@@ -46,18 +41,17 @@ public class AlignmentCommandFactory {
   }
 
   public static Command getSpecificReefAlignmentCommand(
-      Supplier<AlignOffset> offset, TargetFieldLocation fieldLocation) {
-    if (offset.get() != AlignOffset.LEFT_REEF_LOC
-        && offset.get() != AlignOffset.MIDDLE_REEF_LOC
-        && offset.get() != AlignOffset.RIGHT_REEF_LOC) {
+      Supplier<AlignOffset> offset, FieldElementFace reefFace) {
+    if (offset.get() != AlignOffset.LEFT_BRANCH
+        && offset.get() != AlignOffset.MIDDLE_REEF
+        && offset.get() != AlignOffset.RIGHT_BRANCH) {
       invalidCombination(DesiredElement.REEF, offset.get());
     }
 
     Supplier<Pose2d> targetSupplier = robotState::getAlignPose;
     BooleanSupplier seesDesiredFace = robotState::desiredReefFaceIsSeen;
 
-    return Commands.runOnce(() -> vision.setPrimaryFocus(TagTrackerType.CORAL_REEF_CAM), vision)
-        .andThen(new InstantCommand(() -> robotState.setDesiredReefFace(fieldLocation)))
+    return new InstantCommand(() -> robotState.setDesiredReefFace(reefFace))
         .andThen(new InstantCommand(() -> robotState.setAlignOffset(offset.get())))
         .andThen(
             getDefaultDriveCommand()
@@ -79,54 +73,32 @@ public class AlignmentCommandFactory {
         Dashboard.getInstance()::isFieldCentric);
   }
 
-  public static Pose2d reefIdToBranchWithNudge(TargetFieldLocation location, AlignOffset offset) {
-    if (offset == AlignOffset.LEFT_REEF_LOC) {
-      return location.getWithTransform(offset.getTransform().plus(location.getLeftBranchNudge()));
-    } else if (offset == AlignOffset.RIGHT_REEF_LOC) {
-      return location.getWithTransform(offset.getTransform().plus(location.getRightBranchNudge()));
-    }
-
-    return location.getWithOffset(offset);
-  }
-
-  public static Pose2d reefIdToBranchCustomNudge(
-      TargetFieldLocation location, AlignOffset offset, Transform2d customNudge) {
-    if (offset == AlignOffset.LEFT_REEF_LOC) {
-      return location.getWithTransform(
-          offset.getTransform().plus(location.getLeftBranchNudge()).plus(customNudge));
-    } else if (offset == AlignOffset.RIGHT_REEF_LOC) {
-      return location.getWithTransform(offset.getTransform().plus(location.getRightBranchNudge()));
-    }
-
-    return location.getWithOffset(offset);
-  }
-
-  public static TargetFieldLocation idToReefFace(int id) {
+  public static FieldElementFace idToReefFace(int id) {
     switch (id) {
       case 18:
-        return TargetFieldLocation.AB;
+        return FieldElementFace.AB;
       case 7:
-        return TargetFieldLocation.AB;
+        return FieldElementFace.AB;
       case 17:
-        return TargetFieldLocation.CD;
+        return FieldElementFace.CD;
       case 8:
-        return TargetFieldLocation.CD;
+        return FieldElementFace.CD;
       case 22:
-        return TargetFieldLocation.EF;
+        return FieldElementFace.EF;
       case 9:
-        return TargetFieldLocation.EF;
+        return FieldElementFace.EF;
       case 21:
-        return TargetFieldLocation.GH;
+        return FieldElementFace.GH;
       case 10:
-        return TargetFieldLocation.GH;
+        return FieldElementFace.GH;
       case 20:
-        return TargetFieldLocation.IJ;
+        return FieldElementFace.IJ;
       case 11:
-        return TargetFieldLocation.IJ;
+        return FieldElementFace.IJ;
       case 19:
-        return TargetFieldLocation.KL;
+        return FieldElementFace.KL;
       case 6:
-        return TargetFieldLocation.KL;
+        return FieldElementFace.KL;
       default:
         return null;
     }

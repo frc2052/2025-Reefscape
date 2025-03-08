@@ -131,11 +131,6 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
-  public Trigger pointToReef() {
-    return new JoystickButton(rotateStick, 2);
-  }
-
-  @Override
   public Trigger sysIDQuasiForward() {
     return new JoystickButton(translateStick, 7);
   }

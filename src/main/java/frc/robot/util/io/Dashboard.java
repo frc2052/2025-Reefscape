@@ -8,7 +8,6 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.common.AutoFactory.Auto;
-import frc.robot.util.AlignmentCalculator.AlignOffset;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class Dashboard {
@@ -90,14 +89,6 @@ public class Dashboard {
 
   public double getWaitSeconds() {
     return waitTimeSubscriber.get();
-  }
-
-  public AlignOffset getStationAlignSide() {
-    // if (stationSideChooser.get() == true) {
-    return AlignOffset.RIGHT_CORAL_STATION_LOC;
-    // } else {
-    //   return AlignOffset.LEFT_CORAL_STATION_LOC;
-    // }
   }
 
   public boolean getBumpNeeded() {

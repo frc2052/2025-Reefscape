@@ -216,7 +216,7 @@ public class DriveToPose extends Command {
               Rotation2d.fromRadians(turnController.getSetpoint().position))
         });
     Logger.recordOutput("DriveToPose/Goal", new Pose2d[] {targetPose});
-    RobotState.getInstance().setIsAlignGoal(atGoal());
+    RobotState.getInstance().setIsAtAlignGoal(atGoal());
   }
 
   @Override

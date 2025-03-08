@@ -1,4 +1,4 @@
-package com.team2052.lib.vision;
+package com.team2052.lib.vision.photon;
 
 import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;

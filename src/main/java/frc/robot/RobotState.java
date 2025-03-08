@@ -1,41 +1,28 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
-import frc.robot.subsystems.drive.DrivetrainSubsystem;
-import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
-import java.util.Optional;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
+import frc.robot.util.FieldConstants;
 import org.littletonrobotics.junction.Logger;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class RobotState {
   private SwerveDriveState drivetrainState = new SwerveDriveState();
-  private AlignOffset selectedAlignOffset = AlignOffset.MIDDLE_REEF_LOC;
+  private AlignOffset selectedAlignOffset = AlignOffset.MIDDLE_REEF;
   private Pose2d goalPose;
   private Pose2d autoStartPose;
-  private static RobotState INSTANCE;
-  private TargetFieldLocation seenReefFace;
-  private TargetFieldLocation desiredReefFace;
-  private Pose2d goalAlignPose;
-  private Timer poseAlignTimer = new Timer();
+  private FieldElementFace seenReefFace;
+  private FieldElementFace desiredReefFace;
   private boolean isAlignGoal;
   private boolean hasCoral;
   private boolean isIntaking;
 
-  private static boolean regularNudge = true;
-  private static Transform2d customNudgeAmt = new Transform2d(0, 0, new Rotation2d());
+  private static RobotState INSTANCE;
 
   public static RobotState getInstance() {
     if (INSTANCE == null) {
@@ -63,25 +50,6 @@ public class RobotState {
     return hasCoral;
   }
 
-  public static boolean getRegularNudge() {
-    return regularNudge;
-  }
-
-  // have to set back to true each time we apply a custom offset
-  public static void setRegularNudge(boolean regular) {
-    System.out.println("SET REGULAR NUDGE TO " + regular);
-    regularNudge = regular;
-  }
-
-  public static void setCustomNudge(Transform2d nudgeamt) {
-    setRegularNudge(false);
-    customNudgeAmt = nudgeamt;
-  }
-
-  public static Transform2d getCustomNudge() {
-    return customNudgeAmt;
-  }
-
   public Pose2d getFieldToRobot() {
     if (drivetrainState.Pose != null) {
       return drivetrainState.Pose;
@@ -107,7 +75,7 @@ public class RobotState {
   }
 
   public void setAlignOffset(AlignOffset offset) {
-    System.out.println("NEW OFFSET " + offset.transform.getY());
+    System.out.println("NEW OFFSET " + offset.toString());
     selectedAlignOffset = offset;
   }
 
@@ -115,47 +83,38 @@ public class RobotState {
     return selectedAlignOffset;
   }
 
-  public void seenReefFace(Optional<PhotonPipelineResult> result) {
-    if (result.isPresent()) {
-      poseAlignTimer.restart();
-      PhotonTrackedTarget camTarget = result.get().getBestTarget();
-      if (AlignmentCommandFactory.idToReefFace(camTarget.fiducialId) != null
-          && AlignmentCommandFactory.idToReefFace(camTarget.fiducialId).getIsReef()) {
-        seenReefFace = AlignmentCommandFactory.idToReefFace(camTarget.fiducialId);
-
-        goalAlignPose =
-            getRegularNudge() == true
-                ? AlignmentCommandFactory.reefIdToBranchWithNudge(
-                    AlignmentCommandFactory.idToReefFace(camTarget.fiducialId), getAlignOffset())
-                : AlignmentCommandFactory.reefIdToBranchCustomNudge(
-                    AlignmentCommandFactory.idToReefFace(camTarget.fiducialId),
-                    getAlignOffset(),
-                    getCustomNudge());
-      } else {
-        if (poseAlignTimer.get() > 1.0) {
-          goalAlignPose = null;
-          seenReefFace = null;
-        }
-      }
-    } else {
-      if (poseAlignTimer.get() > 1.0) {
-        goalAlignPose = null;
-        seenReefFace = null;
-      }
-    }
+  public void seenReefFaceID(int tagID) {
+    seenReefFace = AlignmentCommandFactory.idToReefFace(tagID);
   }
 
-  public boolean getHasAlignPose() {
-    System.out.println("NO ALIGN POSE*********************");
-    return goalAlignPose != null;
+  public void setDesiredReefFace(FieldElementFace reefFace) {
+    desiredReefFace = reefFace;
+  }
+
+  public boolean shouldAlign() {
+    return getFieldToRobot()
+            .getTranslation()
+            .getDistance(
+                isRedAlliance() ? FieldConstants.RED_REEF_CENTER : FieldConstants.BLUE_REEF_CENTER)
+        < 3.0;
   }
 
   public Pose2d getAlignPose() {
-    return goalAlignPose;
-  }
-
-  public void setDesiredReefFace(TargetFieldLocation desiredReefFace) {
-    this.desiredReefFace = desiredReefFace;
+    if (selectedAlignOffset == AlignOffset.MIDDLE_REEF) {
+      return getFieldToRobot()
+          .nearest(
+              isRedAlliance() ? FieldConstants.redLeftBranchL1 : FieldConstants.blueLeftBranchL1);
+    } else if (selectedAlignOffset == AlignOffset.LEFT_BRANCH) {
+      return getFieldToRobot()
+          .nearest(
+              isRedAlliance() ? FieldConstants.redLeftBranches : FieldConstants.blueLeftBranches);
+    } else if (selectedAlignOffset == AlignOffset.RIGHT_BRANCH) {
+      return getFieldToRobot()
+          .nearest(
+              isRedAlliance() ? FieldConstants.redRightBranches : FieldConstants.blueRightBranches);
+    } else {
+      return getFieldToRobot(); // this should never happen
+    }
   }
 
   public boolean desiredReefFaceIsSeen() {
@@ -166,10 +125,6 @@ public class RobotState {
     return desiredReefFace.getTagID() == seenReefFace.getTagID();
   }
 
-  public TagTrackerType getPrimaryCameraFocus() {
-    return TagTrackerType.CORAL_REEF_CAM;
-  }
-
   public void setGoalAlignment(Pose2d goalPose) {
     this.goalPose = goalPose;
   }
@@ -178,23 +133,11 @@ public class RobotState {
     this.autoStartPose = startPose;
   }
 
-  public void reZeroAfterAuto() { // auto starts facing 180 of where it should
-    Pose2d endAutoPose = drivetrainState.Pose; // store @ teleopInit to reset pose later
-    Pose2d zeroingPose =
-        new Pose2d(
-            autoStartPose.getX(),
-            autoStartPose.getY(),
-            autoStartPose.getRotation().minus(new Rotation2d(Degrees.of(180))));
-    DrivetrainSubsystem.getInstance().resetPose(zeroingPose);
-    DrivetrainSubsystem.getInstance().seedFieldCentric();
-    DrivetrainSubsystem.getInstance().resetPose(endAutoPose);
-  }
-
   public boolean getisAlignGoal() {
     return isAlignGoal;
   }
 
-  public void setIsAlignGoal(boolean atGoal) {
+  public void setIsAtAlignGoal(boolean atGoal) {
     isAlignGoal = atGoal;
   }
   /**

@@ -8,7 +8,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 @AutoDescription(description = "testing vision to reef side")
 public class AutoLLToK4 extends AutoBase {
@@ -22,6 +22,6 @@ public class AutoLLToK4 extends AutoBase {
   @Override
   public void init() {
     System.out.println("START LL - K4");
-    addCommands(safeReefAlignment(startPath, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL));
+    addCommands(safeReefAlignment(startPath, AlignOffset.LEFT_BRANCH, FieldElementFace.KL));
   }
 }

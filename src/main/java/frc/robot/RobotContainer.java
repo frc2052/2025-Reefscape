@@ -15,8 +15,6 @@ import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.algae.AlgaeCommandFactory;
 import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
-import frc.robot.commands.drive.DriveWhilePointingAtReefCommand;
-import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.hand.HandCommandFactory;
@@ -30,7 +28,7 @@ import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
 import frc.robot.util.Telemetry;
 import frc.robot.util.io.Dashboard;
 
@@ -41,7 +39,6 @@ public class RobotContainer {
   public final RobotState robotState = RobotState.getInstance();
   public final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
   public final VisionSubsystem vision = VisionSubsystem.getInstance();
-  //   public final VisionSimSubsystem visionSim = VisionSimSubsystem.getInstance();
   public final AdvantageScopeSubsystem advantageScope = AdvantageScopeSubsystem.getInstance();
   public final AutoFactory autoFactory = AutoFactory.getInstance();
   public final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
@@ -72,22 +69,22 @@ public class RobotContainer {
   private void configureNamedCommands() {
     // snap to angle in gui
     NamedCommands.registerCommand(
-        "Snap Left Coral Station", new AutoSnapToLocationAngleCommand(TargetFieldLocation.LCS));
+        "Snap Left Coral Station", new AutoSnapToLocationAngleCommand(FieldElementFace.LCS));
     NamedCommands.registerCommand(
-        "Snap Right Coral Station", new AutoSnapToLocationAngleCommand(TargetFieldLocation.RCS));
+        "Snap Right Coral Station", new AutoSnapToLocationAngleCommand(FieldElementFace.RCS));
 
     NamedCommands.registerCommand(
-        "Snap to AB", new AutoSnapToLocationAngleCommand(TargetFieldLocation.AB));
+        "Snap to AB", new AutoSnapToLocationAngleCommand(FieldElementFace.AB));
     NamedCommands.registerCommand(
-        "Snap to CD", new AutoSnapToLocationAngleCommand(TargetFieldLocation.CD));
+        "Snap to CD", new AutoSnapToLocationAngleCommand(FieldElementFace.CD));
     NamedCommands.registerCommand(
-        "Snap to EF", new AutoSnapToLocationAngleCommand(TargetFieldLocation.EF));
+        "Snap to EF", new AutoSnapToLocationAngleCommand(FieldElementFace.EF));
     NamedCommands.registerCommand(
-        "Snap to GH", new AutoSnapToLocationAngleCommand(TargetFieldLocation.GH));
+        "Snap to GH", new AutoSnapToLocationAngleCommand(FieldElementFace.GH));
     NamedCommands.registerCommand(
-        "Snap to IJ", new AutoSnapToLocationAngleCommand(TargetFieldLocation.IJ));
+        "Snap to IJ", new AutoSnapToLocationAngleCommand(FieldElementFace.IJ));
     NamedCommands.registerCommand(
-        "Snap to KL", new AutoSnapToLocationAngleCommand(TargetFieldLocation.KL));
+        "Snap to KL", new AutoSnapToLocationAngleCommand(FieldElementFace.KL));
 
     // // score in gui
     // NamedCommands.registerCommand("Score L1", ToLevel.L1.getCommand());
@@ -122,40 +119,6 @@ public class RobotContainer {
     controlBoard
         .alignWithElement()
         .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(robotState::getAlignOffset));
-    controlBoard
-        .pointToReef()
-        .whileTrue(
-            new DriveWhilePointingAtReefCommand(
-                controlBoard::getThrottle, controlBoard::getStrafe, dashboard::isFieldCentric));
-
-    controlBoard
-        .povRotLeft()
-        .onTrue(
-            new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.LEFT_CORAL_STATION_LOC)))
-        .whileTrue(
-            new SnapToLocationAngleCommand(
-                TargetFieldLocation.LCS,
-                controlBoard::getThrottle,
-                // Sideways velocity supplier.
-                controlBoard::getStrafe,
-                // Rotation velocity supplier.
-                controlBoard::getRotation,
-                dashboard::isFieldCentric));
-
-    controlBoard
-        .povRotRight()
-        .onTrue(
-            new InstantCommand(
-                () -> robotState.setAlignOffset(AlignOffset.RIGHT_CORAL_STATION_LOC)))
-        .whileTrue(
-            new SnapToLocationAngleCommand(
-                TargetFieldLocation.RCS,
-                controlBoard::getThrottle,
-                // Sideways velocity supplier.
-                controlBoard::getStrafe,
-                // Rotation velocity supplier.
-                controlBoard::getRotation,
-                dashboard::isFieldCentric));
 
     /* Secondary Driver */
     controlBoard
@@ -169,7 +132,7 @@ public class RobotContainer {
                 () -> {
                   superstructure.setSelectedTargetAction(TargetAction.CL, true);
 
-                  robotState.setAlignOffset(AlignOffset.MIDDLE_REEF_LOC);
+                  robotState.setAlignOffset(AlignOffset.MIDDLE_REEF);
                 }));
     controlBoard
         .setGoalL1H()
@@ -178,7 +141,7 @@ public class RobotContainer {
                 () -> {
                   superstructure.setSelectedTargetAction(TargetAction.L1H, false);
 
-                  robotState.setAlignOffset(AlignOffset.MIDDLE_REEF_LOC);
+                  robotState.setAlignOffset(AlignOffset.MIDDLE_REEF);
                 }));
     controlBoard
         .setGoalL2()
@@ -205,7 +168,7 @@ public class RobotContainer {
                 () -> {
                   superstructure.setSelectedTargetAction(TargetAction.LA, false);
 
-                  robotState.setAlignOffset(AlignOffset.MIDDLE_REEF_LOC);
+                  robotState.setAlignOffset(AlignOffset.MIDDLE_REEF);
                 }));
     controlBoard
         .setGoalUpperAlgae()
@@ -217,7 +180,7 @@ public class RobotContainer {
                 () -> {
                   superstructure.setSelectedTargetAction(TargetAction.UA, false);
 
-                  robotState.setAlignOffset(AlignOffset.MIDDLE_REEF_LOC);
+                  robotState.setAlignOffset(AlignOffset.MIDDLE_REEF);
                 }));
     controlBoard
         .setGoalCoralStation()
@@ -232,10 +195,10 @@ public class RobotContainer {
 
     controlBoard
         .setSubReefLeft()
-        .onTrue(new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.LEFT_REEF_LOC)));
+        .onTrue(new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.LEFT_BRANCH)));
     controlBoard
         .setSubReefRight()
-        .onTrue(new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.RIGHT_REEF_LOC)));
+        .onTrue(new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.RIGHT_BRANCH)));
 
     controlBoard
         .algaeScoreAngle()

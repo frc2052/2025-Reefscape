@@ -10,7 +10,7 @@ import frc.robot.auto.common.AutoDescription;
 import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
 public class AutoE1D1C1 extends AutoBase {
@@ -29,7 +29,7 @@ public class AutoE1D1C1 extends AutoBase {
 
     addCommands(startHP());
     addCommands(
-        safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.EF)
+        safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF, FieldElementFace.EF)
             .alongWith(
                 prepareForScoreWhenReady(TargetAction.L1H)
                     .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))

@@ -9,7 +9,7 @@ import frc.robot.auto.common.AutoBase;
 import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
 public class AutoG4AlgaePrep extends AutoBase {
@@ -26,7 +26,7 @@ public class AutoG4AlgaePrep extends AutoBase {
     addCommands(delaySelectedTime());
 
     addCommands(
-        safeReefAlignment(startPath, AlignOffset.RIGHT_REEF_LOC, TargetFieldLocation.GH)
+        safeReefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.GH)
             .alongWith(
                 prepareForScoreWhenReady(TargetAction.L4)
                     .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))

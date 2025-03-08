@@ -10,7 +10,7 @@ import frc.robot.auto.common.AutoDescription;
 import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
 @AutoDescription(description = "Left Side L1's")
@@ -28,7 +28,7 @@ public class AutoJ1K1L1 extends AutoBase {
     addCommands(delaySelectedTime());
 
     addCommands(
-        safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.IJ)
+        safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF, FieldElementFace.IJ)
             .alongWith(
                 prepareForScoreWhenReady(TargetAction.L1H)
                     .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))

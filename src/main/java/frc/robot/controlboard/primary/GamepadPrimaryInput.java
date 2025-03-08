@@ -128,11 +128,6 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
   }
 
   @Override
-  public Trigger pointToReef() {
-    return new Trigger(() -> false);
-  }
-
-  @Override
   public Trigger sysIDQuasiForward() {
     return new Trigger(() -> false);
   }

@@ -41,8 +41,6 @@ public interface IPrimaryControlBoard {
 
   Trigger alignWithElement();
 
-  Trigger pointToReef();
-
   Trigger outtake();
 
   Trigger intake();

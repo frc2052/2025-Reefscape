@@ -4,8 +4,6 @@
 
 package frc.robot.auto.common;
 
-import static edu.wpi.first.units.Units.Meters;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -33,10 +31,8 @@ import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
-import frc.robot.subsystems.vision.VisionSubsystem.TagTrackerType;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
-import frc.robot.util.io.Dashboard;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -81,7 +77,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     return AutoBuilder.followPath(path);
   }
 
-  protected Command followPathSnap(PathPlannerPath path, TargetFieldLocation snapLoc) {
+  protected Command followPathSnap(PathPlannerPath path, FieldElementFace snapLoc) {
     return new SequentialCommandGroup(followPathCommand(path), snapToReefAngle(snapLoc));
   }
 
@@ -126,42 +122,18 @@ public abstract class AutoBase extends SequentialCommandGroup {
     return new WaitCommand(autoFactory.getSavedWaitSeconds());
   }
 
-  // alignment
-
-  protected AlignOffset getStationAlignOffset() {
-    return Dashboard.getInstance().getStationAlignSide();
-  }
-
-  protected Command snapToReefAngle(TargetFieldLocation snapLocation) {
+  protected Command snapToReefAngle(FieldElementFace snapLocation) {
     return new SnapToLocationAngleCommand(snapLocation, () -> 0, () -> 0, () -> 0, () -> true);
   }
 
-  protected Command algaeReefSideSafeAlign(
-      PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
-    return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
-        .until(
-            () ->
-                vision
-                    .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
-                    .isPresent()); // sees tag, goal pose won't be too far
-    // .andThen(
-    //     new AlignWithFieldElementCommand(
-    //         DesiredElement.REEF,
-    //         () -> AlignOffset.ALGAE_REEF_LOC,
-    //         () -> 0,
-    //         () -> 0,
-    //         () -> 0,
-    //         () -> true));
-  }
-
   protected Command safeReefAlignment(
-      PathPlannerPath startPath, AlignOffset branchside, TargetFieldLocation fieldLoc) {
+      PathPlannerPath startPath, AlignOffset branchside, FieldElementFace fieldLoc) {
     return new ParallelCommandGroup(
         new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
             .withTimeout(
                 (startPath.equals(Paths.SL_J2) || startPath.equals(Paths.SR_E2)) ? 0.0 : 0.35),
         followPathCommand(startPath)
-            .until(vision::getCoralCameraHasTarget)
+            .until(vision::hasReefTarget)
             .andThen(
                 AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> branchside, fieldLoc))
             .withTimeout(
@@ -186,30 +158,13 @@ public abstract class AutoBase extends SequentialCommandGroup {
   protected Command combinedReefChassisElevatorAlign(
       PathPlannerPath backupPath,
       AlignOffset branchSide,
-      TargetFieldLocation snapSide,
+      FieldElementFace snapSide,
       TargetAction level) {
     return new ParallelCommandGroup(
         new SequentialCommandGroup(followPathCommand(backupPath), snapToReefAngle(snapSide))
-            .until(
-                () ->
-                    vision
-                        .getCameraClosestTarget(TagTrackerType.CORAL_REEF_CAM, Meters.of(1.5))
-                        .isPresent())
+            .until(vision::hasReefTarget)
             .andThen(AlignmentCommandFactory.getReefAlignmentCommand(() -> branchSide)),
         new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(level)));
-  }
-
-  protected Command processorVisionOrPathAlign(
-      AlignOffset offset, PathPlannerPath altAlignPath, TargetFieldLocation snaploc) {
-    return new SequentialCommandGroup(followPathCommand(altAlignPath), snapToReefAngle(snaploc))
-        .until(
-            () ->
-                vision
-                    .getCameraClosestTarget(TagTrackerType.ALGAE_CAM, Meters.of(1.0))
-                    .isPresent());
-    // .andThen(
-    //     new AlignWithFieldElementCommand(
-    //         DesiredElement.PROCESSOR, () -> offset, () -> 0, () -> 0, () -> 0, () -> true));
   }
 
   // game piece interactions

@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants.CoralReefCameraConstants;
 import frc.robot.RobotState;
 import frc.robot.util.FieldConstants;
@@ -25,8 +24,8 @@ import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-public class VisionSimSubsystem extends SubsystemBase {
-  private static VisionSimSubsystem INSTANCE;
+public class VisionIOSimPhoton implements VisionIO {
+  private static VisionIOSimPhoton INSTANCE;
 
   private final PhotonCamera reefCam = new PhotonCamera("KrawlerCam_000");
   private final int resWidth = 1280;
@@ -39,15 +38,15 @@ public class VisionSimSubsystem extends SubsystemBase {
   private final RobotState state = RobotState.getInstance();
   private Pose2d lastPose;
 
-  public static VisionSimSubsystem getInstance() {
+  public static VisionIOSimPhoton getInstance() {
     if (INSTANCE == null) {
-      INSTANCE = new VisionSimSubsystem();
+      INSTANCE = new VisionIOSimPhoton();
     }
 
     return INSTANCE;
   }
 
-  public VisionSimSubsystem() {
+  public VisionIOSimPhoton() {
     lastPose = new Pose2d();
     visionSim = new VisionSystemSim("main");
     visionSim.addAprilTags(fieldLayout);
@@ -67,7 +66,7 @@ public class VisionSimSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
+  public void update() {
     Pose2d newOdometryPose = state.getFieldToRobot();
     updateVisionSimWithPose(newOdometryPose);
     Logger.recordOutput("Vision Sim Sees Target", isSeeingTarget());
@@ -119,6 +118,10 @@ public class VisionSimSubsystem extends SubsystemBase {
   public Optional<PhotonPipelineResult> getReefCamClosestTarget() {
     PhotonPipelineResult result = reefCam.getLatestResult();
     return Optional.ofNullable(result);
+  }
+
+  public boolean hasReefTarget() {
+    return false; // getCurrentTag()
   }
 
   public PhotonTrackedTarget getCurrentTag() {

@@ -9,15 +9,15 @@ import static edu.wpi.first.units.Units.Radians;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.RobotState;
-import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class SnapToLocationAngleCommand extends SnapToAngleCommand {
-  TargetFieldLocation goalSnap;
+  FieldElementFace goalSnap;
 
   public SnapToLocationAngleCommand(
-      TargetFieldLocation snapLocation,
+      FieldElementFace snapLocation,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier rotationSupplier,

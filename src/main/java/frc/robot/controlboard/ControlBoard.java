@@ -143,11 +143,6 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
   }
 
   @Override
-  public Trigger pointToReef() {
-    return primaryControlBoard.pointToReef();
-  }
-
-  @Override
   public Trigger sysIDQuasiForward() {
     return primaryControlBoard.sysIDQuasiForward();
   }
