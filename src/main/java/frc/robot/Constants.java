@@ -305,22 +305,22 @@ public class Constants {
 
     public static final class LeftLimelightConstants {
       public static final String CAMERA_NAME = "limelight-left";
-      public static final Distance X_OFFSET = Inches.of(-6.5); // forward positive
-      public static final Distance Y_OFFSET = Inches.of(-6.5); // left positive
-      public static final Distance Z_OFFSET = Inches.of(7.5); // up positive
+      public static final Distance X_OFFSET = Inches.of(11.901); // forward positive
+      public static final Distance Y_OFFSET = Inches.of(9.949); // left positive
+      public static final Distance Z_OFFSET = Inches.of(13.205); // up positive
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
-      public static final Angle THETA_Y_OFFSET = Degrees.of(-21.84); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
+      public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
+      public static final Angle THETA_Z_OFFSET = Degrees.of(-35); // yaw
     }
 
     public static final class RightLimelightConstants {
       public static final String CAMERA_NAME = "limelight-right";
-      public static final Distance X_OFFSET = Inches.of(-6.5); // forward positive
-      public static final Distance Y_OFFSET = Inches.of(-6.5); // left positive
-      public static final Distance Z_OFFSET = Inches.of(7.5); // up positive
+      public static final Distance X_OFFSET = Inches.of(11.328); // forward positive
+      public static final Distance Y_OFFSET = Inches.of(4.650); // left positive
+      public static final Distance Z_OFFSET = Inches.of(12.125); // up positive
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
-      public static final Angle THETA_Y_OFFSET = Degrees.of(-21.84); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw
+      public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
+      public static final Angle THETA_Z_OFFSET = Degrees.of(23); // yaw
     }
     /* CORAL Reef Camera */
     public static final class CoralReefCameraConstants {
