@@ -37,7 +37,7 @@ public class VisionIOHardwarePhoton implements VisionIO {
     // private TagTracker rearTagTracker =
     //     new TagTracker(RearCameraConstants.TagTrackerConstants(), robotState);
 
-    private VisionIOHardwarePhoton() {
+    public VisionIOHardwarePhoton() {
         Collections.addAll(localizationTagTrackers, reefTagTracker); // , algaeTagTracker);
     }
 
