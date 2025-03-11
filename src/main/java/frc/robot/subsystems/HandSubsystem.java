@@ -15,7 +15,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class HandSubsystem extends SubsystemBase {
     private final TalonFX motor;
-    private final CANrange range;
+    // private final CANrange range;
     private static HandSubsystem INSTANCE;
     private boolean isIntaking = false;
 
@@ -28,9 +28,9 @@ public class HandSubsystem extends SubsystemBase {
 
     public HandSubsystem() {
         motor = new TalonFX(Ports.HAND_TALONFX_ID);
-        range = new CANrange(Ports.HAND_CAN_RANGE);
+        // range = new CANrange(Ports.HAND_CAN_RANGE);
 
-        range.getConfigurator().apply(HandConstants.CANRANGE_CONFIG);
+        // range.getConfigurator().apply(HandConstants.CANRANGE_CONFIG);
 
         motor.getConfigurator().apply(HandConstants.MOTOR_CONFIG);
     }
@@ -58,7 +58,8 @@ public class HandSubsystem extends SubsystemBase {
     }
 
     public boolean getHasCoral() {
-        return range.getIsDetected().getValue();
+        // return range.getIsDetected().getValue();
+        return false;
     }
 
     @Override
@@ -66,9 +67,9 @@ public class HandSubsystem extends SubsystemBase {
         // This method will be called once per scheduler run
         Logger.recordOutput("Hand/Motor Velocity", motor.getVelocity().getValueAsDouble());
         Logger.recordOutput("Hand/Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
-        Logger.recordOutput("Hand/Has Coral", getHasCoral());
-        Logger.recordOutput("Hand/ToF Distance", range.getDistance().getValueAsDouble());
-        RobotState.getInstance().setHasCoral(getHasCoral());
+        // Logger.recordOutput("Hand/Has Coral", getHasCoral());
+        // Logger.recordOutput("Hand/ToF Distance", range.getDistance().getValueAsDouble());
+        // RobotState.getInstance().setHasCoral(getHasCoral());
         RobotState.getInstance().setIsIntaking(isIntaking);
     }
 }

@@ -116,13 +116,18 @@ public class VisionIOLimelight implements VisionIO {
             double oldTimestamp = previousEstimate != null ? previousEstimate.timestampSeconds : Double.MAX_VALUE;
             PoseEstimate newEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(id);
             if (newEstimate != null) {
-                Logger.recordOutput(id + " pose", newEstimate.pose);
+                Logger.recordOutput(id + " MT2 pose", newEstimate.pose);
                 if (newEstimate.timestampSeconds == oldTimestamp) {
                     return Optional.empty(); // no new data
                 } else {
                     previousEstimate = newEstimate;
                     return Optional.of(newEstimate);
                 }
+            }
+
+            PoseEstimate mt1Estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(id);
+            if (mt1Estimate != null) {
+                Logger.recordOutput(id + " MT1 pose", mt1Estimate.pose);
             }
         }
         return Optional.empty();
