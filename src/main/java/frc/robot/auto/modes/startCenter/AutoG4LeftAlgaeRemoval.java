@@ -9,27 +9,27 @@ import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.TargetFieldLocation;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
 @AutoDescription(description = "CENTER Side")
 public class AutoG4LeftAlgaeRemoval extends AutoBase {
 
-  public static final PathPlannerPath startPath = Paths.SC_GH;
+    public static final PathPlannerPath startPath = Paths.SC_GH;
 
-  public AutoG4LeftAlgaeRemoval() {
-    super(startPath.getStartingHolonomicPose());
-  }
+    public AutoG4LeftAlgaeRemoval() {
+        super(startPath.getStartingHolonomicPose());
+    }
 
-  @Override
-  public void init() {
-    addCommands(getBumpCommand());
-    addCommands(delaySelectedTime());
+    @Override
+    public void init() {
+        addCommands(getBumpCommand());
+        addCommands(delaySelectedTime());
 
-    addCommands(safeReefAlignment(startPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.GH));
-    addCommands(toPosAndScore(TargetAction.L4));
-    addCommands(descoreScoreNetAlgae(Paths.GH_SCORE_TO_DESCORE, TargetAction.LA, Paths.GH_NET));
-    addCommands(descoreScoreNetAlgae(Paths.NET_IJ, TargetAction.UA, Paths.IJ_NET));
-    addCommands(descoreScoreNetAlgae(Paths.NET_KL, TargetAction.LA, Paths.KL_NET));
-  }
+        addCommands(safeReefAlignment(startPath, AlignOffset.MIDDLE_REEF, FieldElementFace.GH));
+        addCommands(toPosAndScore(TargetAction.L4));
+        addCommands(descoreScoreNetAlgae(Paths.GH_SCORE_TO_DESCORE, TargetAction.LA, Paths.GH_NET));
+        addCommands(descoreScoreNetAlgae(Paths.NET_IJ, TargetAction.UA, Paths.IJ_NET));
+        addCommands(descoreScoreNetAlgae(Paths.NET_KL, TargetAction.LA, Paths.KL_NET));
+    }
 }

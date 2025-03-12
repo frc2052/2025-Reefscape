@@ -11,16 +11,15 @@ import frc.robot.commands.drive.DefaultDriveCommand;
 /** Add your docs here. */
 public class DeadReckoning extends AutoBase {
 
-  private static final PathPlannerPath holderPath = Paths.SL_J2;
+    private static final PathPlannerPath holderPath = Paths.SL_J2;
 
-  public DeadReckoning() {
-    super(holderPath.getStartingHolonomicPose());
-  }
+    public DeadReckoning() {
+        super(holderPath.getStartingHolonomicPose());
+    }
 
-  @Override
-  public void init() {
-    addCommands(manualZero());
-    addCommands(
-        new DefaultDriveCommand(() -> 0.5, () -> 0.0, () -> 0.0, () -> false).withTimeout(2.0));
-  }
+    @Override
+    public void init() {
+        addCommands(manualZero());
+        addCommands(new DefaultDriveCommand(() -> 0.5, () -> 0.0, () -> 0.0, () -> false).withTimeout(2.0));
+    }
 }

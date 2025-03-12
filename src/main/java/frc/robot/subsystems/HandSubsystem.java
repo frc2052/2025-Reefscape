@@ -15,65 +15,65 @@ import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
 public class HandSubsystem extends SubsystemBase {
-  private final TalonFX motor;
-  // private final CANrange range;
-  private static HandSubsystem INSTANCE;
-  private boolean isIntaking = false;
+    private final TalonFX motor;
+    // private final CANrange range;
+    private static HandSubsystem INSTANCE;
+    private boolean isIntaking = false;
 
-  public static HandSubsystem getInstance() {
-    if (INSTANCE == null) {
-      return new HandSubsystem();
+    public static HandSubsystem getInstance() {
+        if (INSTANCE == null) {
+            return new HandSubsystem();
+        }
+        return INSTANCE;
     }
-    return INSTANCE;
-  }
 
-  public HandSubsystem() {
-    motor = new TalonFX(Ports.HAND_TALONFX_ID);
-    // range = new CANrange(Ports.HAND_CAN_RANGE);
+    public HandSubsystem() {
+        motor = new TalonFX(Ports.HAND_TALONFX_ID);
+        // range = new CANrange(Ports.HAND_CAN_RANGE);
 
-    // range.getConfigurator().apply(HandConstants.CANRANGE_CONFIG);
+        // range.getConfigurator().apply(HandConstants.CANRANGE_CONFIG);
 
-    motor.getConfigurator().apply(HandConstants.MOTOR_CONFIG);
-  }
+        motor.getConfigurator().apply(HandConstants.MOTOR_CONFIG);
+    }
 
-  private void setMotor(double speed) {
-    motor.set(speed);
-  }
+    private void setMotor(double speed) {
+        motor.set(speed);
+    }
 
-  public void stopMotor() {
-    isIntaking = false;
-    motor.stopMotor();
-  }
+    public void stopMotor() {
+        isIntaking = false;
+        motor.stopMotor();
+    }
 
-  public void motorOut() {
-    setMotor(
-        SuperstructureSubsystem.getInstance().getCurrentAction().equals(TargetAction.L1H)
-            ? Constants.HandConstants.SCORE_L1_MOTOR_SPEED
-            : Constants.HandConstants.OUT_HAND_MOTOR_SPEED);
-  }
+    public void motorOut() {
+        setMotor(
+                SuperstructureSubsystem.getInstance().getCurrentAction().equals(TargetAction.L1H)
+                        ? Constants.HandConstants.SCORE_L1_MOTOR_SPEED
+                        : Constants.HandConstants.OUT_HAND_MOTOR_SPEED);
+    }
 
-  public void motorIn() {
-    isIntaking = true;
-    setMotor(-Constants.HandConstants.IN_HAND_MOTOR_SPEED);
-  }
+    public void motorIn() {
+        isIntaking = true;
+        setMotor(-Constants.HandConstants.IN_HAND_MOTOR_SPEED);
+    }
 
-  public double motorVelocity() {
-    return motor.getVelocity().getValueAsDouble();
-  }
+    public double motorVelocity() {
+        return motor.getVelocity().getValueAsDouble();
+    }
 
-  public boolean getHasCoral() {
-    // return range.getIsDetected().getValue();
-    return false;
-  }
+    public boolean getHasCoral() {
+        // return range.getIsDetected().getValue();
+        return false;
+    }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    Logger.recordOutput("Hand/Motor Velocity", motor.getVelocity().getValueAsDouble());
-    Logger.recordOutput("Hand/Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
-    // Logger.recordOutput("Hand/Has Coral", getHasCoral());
-    // Logger.recordOutput("Hand/ToF Distance", range.getDistance().getValueAsDouble());
-    RobotState.getInstance().setHasCoral(getHasCoral());
-    RobotState.getInstance().setIsIntaking(isIntaking);
-  }
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+        Logger.recordOutput("Hand/Motor Velocity", motor.getVelocity().getValueAsDouble());
+        Logger.recordOutput("Hand/Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
+        // Logger.recordOutput("Hand/Has Coral", getHasCoral());
+        // Logger.recordOutput("Hand/ToF Distance", range.getDistance().getValueAsDouble());
+        RobotState.getInstance().setHasCoral(getHasCoral());
+        RobotState.getInstance().setIsIntaking(isIntaking);
+    }
 }

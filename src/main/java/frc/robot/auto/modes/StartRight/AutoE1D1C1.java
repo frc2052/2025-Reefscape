@@ -13,51 +13,45 @@ import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 /** Add your docs here. */
 public class AutoE1D1C1 extends AutoBase {
 
-  private static final PathPlannerPath startingPath = Paths.SR_EF_L1;
+    private static final PathPlannerPath startingPath = Paths.SR_EF_L1;
 
-  @AutoDescription(description = "Right Side L1 Auto")
-  public AutoE1D1C1() {
-    super(startingPath.getStartingHolonomicPose());
-  }
+    @AutoDescription(description = "Right Side L1 Auto")
+    public AutoE1D1C1() {
+        super(startingPath.getStartingHolonomicPose());
+    }
 
-  @Override
-  public void init() {
-    addCommands(delaySelectedTime());
-    addCommands(getBumpCommand());
+    @Override
+    public void init() {
+        addCommands(delaySelectedTime());
+        addCommands(getBumpCommand());
 
-    // addCommands(startHP());
-    // addCommands(
-    //     safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.EF)
-    //         .alongWith(
-    //             prepareForScoreWhenReady(TargetAction.L1H)
-    //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-    //         .andThen(score(TargetAction.L1H)));
+        // addCommands(startHP());
+        // addCommands(
+        //     safeReefAlignment(startingPath, AlignOffset.MIDDLE_REEF_LOC, TargetFieldLocation.EF)
+        //         .alongWith(
+        //             prepareForScoreWhenReady(TargetAction.L1H)
+        //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+        //         .andThen(score(TargetAction.L1H)));
 
-    addCommands(
-        followPathCommand(startingPath)
-            .alongWith(
-                prepareForScoreWhenReady(TargetAction.L1H)
-                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-            .andThen(score(TargetAction.L1H)));
+        addCommands(followPathCommand(startingPath)
+                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
+                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+                .andThen(score(TargetAction.L1H)));
 
-    //
-    addCommands(safeStationAlignment(Paths.E2_RL));
-    addCommands(HPIntake());
-    addCommands(
-        followPathCommand(Paths.RL_CD_L1)
-            .alongWith(
-                prepareForScoreWhenReady(TargetAction.L1H)
-                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-            .andThen(score(TargetAction.L1H)));
+        //
+        addCommands(safeStationAlignment(Paths.E2_RL));
+        addCommands(HPIntake());
+        addCommands(followPathCommand(Paths.RL_CD_L1)
+                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
+                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+                .andThen(score(TargetAction.L1H)));
 
-    //
-    addCommands(safeStationAlignment(Paths.CD_RL));
-    addCommands(HPIntake());
-    addCommands(
-        followPathCommand(Paths.RL_CD_L1)
-            .alongWith(
-                prepareForScoreWhenReady(TargetAction.L1H)
-                    .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-            .andThen(score(TargetAction.L1H)));
-  }
+        //
+        addCommands(safeStationAlignment(Paths.CD_RL));
+        addCommands(HPIntake());
+        addCommands(followPathCommand(Paths.RL_CD_L1)
+                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
+                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+                .andThen(score(TargetAction.L1H)));
+    }
 }

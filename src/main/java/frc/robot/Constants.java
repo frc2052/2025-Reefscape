@@ -21,7 +21,7 @@ import com.ctre.phoenix6.signals.UpdateModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.team2052.lib.vision.TagTracker.TagTrackerConstants;
+import com.team2052.lib.vision.photon.TagTracker.TagTrackerConstants;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -39,7 +39,7 @@ import frc.robot.util.io.Ports;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Constants {
-  // spotless:off
+    // spotless:off
   public static final class ElevatorConstants {
     public static final boolean ELEVATOR_MOTORS_INVERTED = false;
 
@@ -133,7 +133,7 @@ public class Constants {
 
     public static final Mass DRIVETRAIN_MASS = Pounds.of(107.1);
 
-    public static final Matrix<N3, N1> ODOMETRY_STDDEV = new Matrix<>(VecBuilder.fill(0.003, 0.003, 0.002));
+    public static final Matrix<N3, N1> ODOMETRY_STDDEV = new Matrix<>(VecBuilder.fill(0.01, 0.01, 0.01));
 
     public static final Angle HEADING_TOLERANCE = Degrees.of(3);
   }
@@ -304,6 +304,25 @@ public class Constants {
     public static final Distance FIELD_BORDER_MARGIN = Meters.of(0.5);
     public static final Distance MAX_VISION_CORRECTION = Meters.of(1);
 
+    public static final class LeftLimelightConstants {
+      public static final String CAMERA_NAME = "limelight-left";
+      public static final Distance X_OFFSET = Inches.of(9.949); // forward positive
+      public static final Distance Y_OFFSET = Inches.of(-11.901); // left positive
+      public static final Distance Z_OFFSET = Inches.of(13.205); // up positive
+      public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
+      public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
+      public static final Angle THETA_Z_OFFSET = Degrees.of(-30); // yaw
+    }
+
+    public static final class RightLimelightConstants {
+      public static final String CAMERA_NAME = "limelight-right";
+      public static final Distance X_OFFSET = Inches.of(4.650); // forward positive
+      public static final Distance Y_OFFSET = Inches.of(11.328); // left positive
+      public static final Distance Z_OFFSET = Inches.of(12.125); // up positive
+      public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
+      public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
+      public static final Angle THETA_Z_OFFSET = Degrees.of(23); // yaw
+    }
     /* CORAL Reef Camera */
     public static final class CoralReefCameraConstants {
       public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =  FieldConstants.CORAL_REEF_CAMERA_LAYOUT_TYPE.layout;
@@ -332,57 +351,31 @@ public class Constants {
 
     /* ALGAE Reef Camera */
     public static final class AlgaeReefCameraConstants {      
-      public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = FieldConstants.ALGAE_REEF_CAMERA_LAYOUT_TYPE.layout;
-
-      public static final String CAMERA_NAME = "Arducam_OV9281_USB_Camera_002";
-
-      public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
-
-      public static final Distance X_OFFSET = Inches.of(4.614); // forward
-      public static final Distance Y_OFFSET = Inches.of(9.995); // left
-      public static final Distance Z_OFFSET = Inches.of(8.418); // up
-
-      public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
-      public static final Angle THETA_Y_OFFSET = Degrees.of(-21.55352); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(90); // yaw
-
-      public static final Transform3d ROBOT_TO_CAMERA_METERS =
-          new Transform3d(
-              new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
-              new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
-
-      public static TagTrackerConstants TagTrackerConstants() {
-        return new TagTrackerConstants(
-            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
-      }
+        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = FieldConstants.ALGAE_REEF_CAMERA_LAYOUT_TYPE.layout;
+  
+        public static final String CAMERA_NAME = "Arducam_OV9281_USB_Camera_002";
+  
+        public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
+  
+        public static final Distance X_OFFSET = Inches.of(4.614); // forward
+        public static final Distance Y_OFFSET = Inches.of(9.995); // left
+        public static final Distance Z_OFFSET = Inches.of(8.418); // up
+  
+        public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
+        public static final Angle THETA_Y_OFFSET = Degrees.of(-21.55352); // pitch
+        public static final Angle THETA_Z_OFFSET = Degrees.of(90); // yaw
+  
+        public static final Transform3d ROBOT_TO_CAMERA_METERS =
+            new Transform3d(
+                new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
+                new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
+  
+        public static TagTrackerConstants TagTrackerConstants() {
+          return new TagTrackerConstants(
+              CAMERA_NAME, ROBOT_TO_CAMERA_METERS, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
+        }
+      }  
     }
-    /* Coral Station + Other Tags Camera */
-    public static final class RearCameraConstants {      
-      public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = FieldConstants.DEFAULT_APRIL_TAG_LAYOUT_TYPE.layout;
-
-      public static final String CAMERA_NAME = "KrawlerCam_002";
-
-      public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
-
-      public static final Distance X_OFFSET = Inches.of(0.0);
-      public static final Distance Y_OFFSET = Inches.of(4);
-      public static final Distance Z_OFFSET = Inches.of(7);
-
-      public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
-      public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(0); // yaw TODO: need to change back to 180 for actual stuff
-
-      public static final Transform3d ROBOT_TO_CAMERA_METERS =
-          new Transform3d(
-              new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
-              new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
-
-      public static TagTrackerConstants TagTrackerConstants() {
-        return new TagTrackerConstants(
-            CAMERA_NAME, ROBOT_TO_CAMERA_METERS, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
-      }
-    }
-  }
 
   
   public static final class DashboardConstants {

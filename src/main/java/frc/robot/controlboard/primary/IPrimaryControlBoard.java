@@ -5,57 +5,57 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public interface IPrimaryControlBoard {
-  double getThrottle();
+    double getThrottle();
 
-  double getStrafe();
+    double getStrafe();
 
-  double getRotation();
+    double getRotation();
 
-  EventLoop povLooper = CommandScheduler.getInstance().getDefaultButtonLoop();
+    EventLoop povLooper = CommandScheduler.getInstance().getDefaultButtonLoop();
 
-  Trigger povUp();
+    Trigger povUp();
 
-  Trigger povUpRight();
+    Trigger povUpRight();
 
-  Trigger povRight();
+    Trigger povRight();
 
-  Trigger povDownRight();
+    Trigger povDownRight();
 
-  Trigger povDown();
+    Trigger povDown();
 
-  Trigger povDownLeft();
+    Trigger povDownLeft();
 
-  Trigger povLeft();
+    Trigger povLeft();
 
-  Trigger povUpLeft();
+    Trigger povUpLeft();
 
-  Trigger povRotLeft();
+    Trigger povRotLeft();
 
-  Trigger povRotRight();
+    Trigger povRotRight();
 
-  Trigger algaeManualUp();
+    Trigger algaeManualUp();
 
-  Trigger algaeManualDown();
+    Trigger algaeManualDown();
 
-  Trigger resetGyro();
+    Trigger resetGyro();
 
-  Trigger alignWithElement();
+    Trigger alignWithReefLeft();
 
-  Trigger pointToReef();
+    Trigger alignWithReefRight();
 
-  Trigger outtake();
+    Trigger outtake();
 
-  Trigger intake();
+    Trigger intake();
 
-  Trigger outtakeAlgae();
+    Trigger shootAlgae();
 
-  Trigger intakeAlgae();
+    Trigger intakeAlgae();
 
-  Trigger sysIDQuasiForward();
+    Trigger sysIDQuasiForward();
 
-  Trigger sysIDQuasiReverse();
+    Trigger sysIDQuasiReverse();
 
-  Trigger sysIDDynamicForward();
+    Trigger sysIDDynamicForward();
 
-  Trigger sysIDDynamicReverse();
+    Trigger sysIDDynamicReverse();
 }
