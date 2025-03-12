@@ -3,14 +3,19 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.auto.common;
 
+import java.util.function.Supplier;
+
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkString;
+
 import frc.robot.Constants.DashboardConstants;
 import frc.robot.RobotState;
 import frc.robot.auto.modes.AutoLLToK4;
 import frc.robot.auto.modes.StartLeft.AutoJ1K1L1;
+import frc.robot.auto.modes.StartLeft.AutoJ1K4L4;
 import frc.robot.auto.modes.StartLeft.AutoJ2K4L4;
 import frc.robot.auto.modes.StartLeft.AutoJ4K4L4;
 import frc.robot.auto.modes.StartLeft.AutoK4L4DAK3L3;
-import frc.robot.auto.modes.StartLeft.AutoMIDJ1K4L4;
 import frc.robot.auto.modes.StartRight.AutoD4C4DAD3C3;
 import frc.robot.auto.modes.StartRight.AutoE1D1C1;
 import frc.robot.auto.modes.StartRight.AutoE1D4C4;
@@ -22,9 +27,6 @@ import frc.robot.auto.modes.safety.DeadReckoning;
 import frc.robot.auto.modes.startCenter.AutoG4LeftAlgaeRemoval;
 import frc.robot.auto.modes.startCenter.AutoH4RightAlgaeRemoval;
 import frc.robot.util.io.Dashboard;
-import java.util.function.Supplier;
-import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
@@ -123,7 +125,7 @@ public class AutoFactory {
         LEFT_J2_K4_L4(AutoJ2K4L4.class),
         LEFT_J4_K4_L4(AutoJ4K4L4.class),
         LEFT_K4_L4_DA_K3_L3(AutoK4L4DAK3L3.class),
-        LEFT_J1_K4_L4(AutoMIDJ1K4L4.class),
+        LEFT_J1_K4_L4(AutoJ1K4L4.class),
 
         // start right
         RIGHT_D4_C4_DA_D3_C3(AutoD4C4DAD3C3.class),

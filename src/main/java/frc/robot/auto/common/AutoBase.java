@@ -4,11 +4,16 @@
 
 package frc.robot.auto.common;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import com.team2052.lib.helpers.MathHelpers;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,9 +38,6 @@ import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -94,6 +96,28 @@ public abstract class AutoBase extends SequentialCommandGroup {
                     "FAILED TO GET PATH FROM PATHFILE" + pathName + e.getMessage(), e.getStackTrace());
             return null;
         }
+    }
+
+    protected static PathPlannerPath getChoreoTraj(String name){
+      try {
+          PathPlannerPath choreoPath = PathPlannerPath.fromChoreoTrajectory(name);
+          return choreoPath;
+      } catch (Exception e) {
+        DriverStation.reportError(
+          "FAILED TO GET CHOREO PATH: " + name + e.getMessage(), e.getStackTrace());
+          return null;
+      }
+    }
+  
+    protected PathPlannerPath getChoreoTraj(String name, int index) {
+      try {
+          PathPlannerPath choreoPath = PathPlannerPath.fromChoreoTrajectory(name, index);
+          return choreoPath;
+      } catch (Exception e) {
+        DriverStation.reportError(
+          "FAILED TO GET CHOREO PATH: " + name + e.getMessage(), e.getStackTrace());
+          return null;
+      }
     }
 
     public static Optional<Pose2d> getStartPoseFromAutoFile(String autoName) {
@@ -269,6 +293,42 @@ public abstract class AutoBase extends SequentialCommandGroup {
                                                 .setCurrentAction(TargetAction.L4))),
                                 AlgaeCommandFactory.intake().withTimeout(1.5))
                         .andThen(AlgaeCommandFactory.outtake().withTimeout(1.0)));
+    }
+
+    public static final class PathsBase{
+      public static final Path RL_C4 = new Path("RL C", "RL C", 0);
+    }
+  
+    public static class Path{ // combines access to pathplanner and choreo
+      private String pathPlannerPathName, chorPathName;
+      private int index;
+  
+      public Path(String PPName, String chorName, int splitI){
+        pathPlannerPathName = PPName;
+        chorPathName = chorName;
+        index = splitI;
+      }
+  
+      public PathPlannerPath getChoreoPath(){
+        try {
+          return AutoBase.getChoreoTraj(chorPathName); // return choreo
+        } catch (Exception e) {
+          DriverStation.reportError(
+            "FAILED TO GET CHOREO PATH FROM PATHFILE " + pathPlannerPathName + e.getMessage(), e.getStackTrace());
+          return null;   
+        }
+      }
+  
+      public PathPlannerPath getPathPlannerPath(){
+        try {
+            return getPathFromFile(pathPlannerPathName);
+  
+        } catch (Exception e) {
+          DriverStation.reportError(
+            "FAILED TO GET PATH FROM PATHFILE " + pathPlannerPathName + e.getMessage(), e.getStackTrace());
+          return null;      
+        }
+      }
     }
 
     public static final class Paths {

@@ -1,6 +1,7 @@
 package frc.robot.auto.modes.StartLeft;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.commands.hand.HandCommandFactory;
@@ -9,12 +10,12 @@ import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 @AutoDescription(description = "LEFT One L2, Two L4")
-public class AutoMIDJ1K4L4 extends AutoBase {
+public class AutoJ1K4L4 extends AutoBase {
     // Start Right Equivalent: AutoE2D4C4
 
     private static final PathPlannerPath startingPath = Paths.SL_IJ;
 
-    public AutoMIDJ1K4L4() {
+    public AutoJ1K4L4() {
         super(startingPath.getStartingHolonomicPose());
     }
 
