@@ -39,13 +39,15 @@ public interface IPrimaryControlBoard {
 
     Trigger resetGyro();
 
-    Trigger alignWithElement();
+    Trigger alignWithReefLeft();
+
+    Trigger alignWithReefRight();
 
     Trigger outtake();
 
     Trigger intake();
 
-    Trigger outtakeAlgae();
+    Trigger shootAlgae();
 
     Trigger intakeAlgae();
 

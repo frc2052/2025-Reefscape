@@ -1,7 +1,6 @@
 package frc.robot.commands.drive.alignment;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -13,7 +12,6 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.RobotState;
@@ -23,38 +21,31 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveToPose extends Command {
-    private final double driveP = 0.9;
+    private final double driveP = 0.78;
     private final double driveD = 0.0;
-    private final double turnP = 1.0;
-    private final double turnD = 0.0;
-    private final double driveMaxSpeed = 3.0;
-    private final double driveMaxAcceleration = 2.0;
-    private final double turnMaxSpeed = Units.degreesToRadians(360.0);
-    private final double turnMaxAcceleration = 5.0;
-    private final double driveTolerance = 0.015;
-    private final double turnTolerance = Units.degreesToRadians(0.5);
+    private final double driveMaxSpeed = 1.0;
+    private final double driveMaxAcceleration = 4.0;
+    private final double driveTolerance = 0.01;
     private final double ffMinRadius = 0.05;
     private final double ffMaxRadius = 0.1;
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
     private final Supplier<Pose2d> target;
 
-    private final SwerveRequest.ApplyRobotSpeeds driveChassisSpeeds = new SwerveRequest.ApplyRobotSpeeds()
+    private final SwerveRequest.FieldCentricFacingAngle driveChassisSpeeds = new SwerveRequest.FieldCentricFacingAngle()
             .withDesaturateWheelSpeeds(true)
-            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+            .withHeadingPID(3.5, 0, 0);
 
     private boolean running = false;
 
     private final ProfiledPIDController driveController;
-    private final ProfiledPIDController turnController;
 
     private Translation2d lastSetpointTranslation = new Translation2d();
     private double driveErrorAbs = 0.0;
-    private double thetaErrorAbs = 0.0;
     private Supplier<Pose2d> robot = RobotState.getInstance()::getFieldToRobot;
 
     private DoubleSupplier xlinearFF = () -> 0.0;
     private DoubleSupplier ylinearFF = () -> 0.0;
-    private DoubleSupplier omegaFF = () -> 0.0;
 
     private Pose2d targetPose;
 
@@ -62,15 +53,8 @@ public class DriveToPose extends Command {
         this.target = target;
 
         driveController = new ProfiledPIDController(
-                driveP, 0.0, driveD, new TrapezoidProfile.Constraints(driveMaxSpeed, driveMaxAcceleration), 0.02);
+                driveP, 0.03, driveD, new TrapezoidProfile.Constraints(driveMaxSpeed, driveMaxAcceleration), 0.02);
         driveController.setTolerance(driveTolerance);
-
-        turnController = new ProfiledPIDController(
-                turnP, 0.0, turnD, new TrapezoidProfile.Constraints(turnMaxSpeed, turnMaxAcceleration), 0.02);
-        turnController.setTolerance(turnTolerance);
-
-        // Enable continuous input for theta controller
-        turnController.enableContinuousInput(-Math.PI, Math.PI);
 
         addRequirements(drivetrain);
     }
@@ -81,15 +65,10 @@ public class DriveToPose extends Command {
     }
 
     public DriveToPose(
-            Supplier<Pose2d> target,
-            Supplier<Pose2d> robot,
-            DoubleSupplier xlinearFF,
-            DoubleSupplier ylinearFF,
-            DoubleSupplier omegaFF) {
+            Supplier<Pose2d> target, Supplier<Pose2d> robot, DoubleSupplier xlinearFF, DoubleSupplier ylinearFF) {
         this(target, robot);
         this.xlinearFF = xlinearFF;
         this.ylinearFF = ylinearFF;
-        this.omegaFF = omegaFF;
     }
 
     @Override
@@ -110,7 +89,6 @@ public class DriveToPose extends Command {
                                         .getAngle()
                                         .unaryMinus())
                                 .getX()));
-        turnController.reset(currentPose.getRotation().getRadians(), fieldVelocity.omegaRadiansPerSecond);
         lastSetpointTranslation = currentPose.getTranslation();
         targetPose = null;
     }
@@ -148,15 +126,6 @@ public class DriveToPose extends Command {
                 .transformBy(new Transform2d(driveController.getSetpoint().position, 0.0, new Rotation2d()))
                 .getTranslation();
 
-        // Calculate theta speed
-        double thetaVelocity = turnController.getSetpoint().velocity * ffScaler
-                + turnController.calculate(
-                        currentPose.getRotation().getRadians(),
-                        targetPose.getRotation().getRadians());
-        thetaErrorAbs = Math.abs(
-                currentPose.getRotation().minus(targetPose.getRotation()).getRadians());
-        if (thetaErrorAbs < turnController.getPositionTolerance()) thetaVelocity = 0.0;
-
         Translation2d driveVelocity = new Pose2d(
                         new Translation2d(),
                         currentPose
@@ -168,29 +137,20 @@ public class DriveToPose extends Command {
 
         // Scale feedback velocities by input ff
         final double linearS = Math.hypot(xlinearFF.getAsDouble(), ylinearFF.getAsDouble()) * 3.0;
-        final double thetaS = Math.abs(omegaFF.getAsDouble()) * 3.0;
         driveVelocity = driveVelocity.interpolate(
                 new Translation2d(xlinearFF.getAsDouble(), ylinearFF.getAsDouble())
                         .times(DrivetrainConstants.DRIVE_MAX_SPEED.in(MetersPerSecond)),
                 linearS);
-        thetaVelocity = MathUtil.interpolate(
-                thetaVelocity,
-                omegaFF.getAsDouble() * DrivetrainConstants.DRIVE_MAX_ANGULAR_RATE.in(RadiansPerSecond),
-                thetaS);
 
-        // Command speeds
-        drivetrain.setControl(driveChassisSpeeds.withSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
-                driveVelocity.getX(), driveVelocity.getY(), thetaVelocity, currentPose.getRotation())));
-
+        drivetrain.setControl(driveChassisSpeeds
+                .withTargetDirection(targetPose.getRotation())
+                .withVelocityX(driveVelocity.getX())
+                .withVelocityY(driveVelocity.getY()));
         // Log data
         Logger.recordOutput("DriveToPose/DistanceMeasured", currentDistance);
         Logger.recordOutput("DriveToPose/DistanceSetpoint", driveController.getSetpoint().position);
         Logger.recordOutput(
-                "DriveToPose/ThetaMeasured", currentPose.getRotation().getRadians());
-        Logger.recordOutput("DriveToPose/ThetaSetpoint", turnController.getSetpoint().position);
-        Logger.recordOutput("DriveToPose/Setpoint", new Pose2d[] {
-            new Pose2d(lastSetpointTranslation, Rotation2d.fromRadians(turnController.getSetpoint().position))
-        });
+                "DriveToPose/Setpoint", new Pose2d[] {new Pose2d(lastSetpointTranslation, targetPose.getRotation())});
         Logger.recordOutput("DriveToPose/Goal", new Pose2d[] {targetPose});
         RobotState.getInstance().setIsAtAlignGoal(atGoal());
     }
@@ -206,18 +166,19 @@ public class DriveToPose extends Command {
 
     @Override
     public boolean isFinished() {
+        if (atGoal()) {
+            System.out.println("DONE*******************************");
+        }
         return atGoal();
     }
 
     /** Checks if the robot is stopped at the final pose. */
     public boolean atGoal() {
-        return running && driveController.atGoal() && turnController.atGoal();
+        return running && driveController.atGoal();
     }
 
     /** Checks if the robot pose is within the allowed drive and theta tolerances. */
     public boolean withinTolerance(double driveTolerance, Rotation2d thetaTolerance) {
-        return running
-                && Math.abs(driveErrorAbs) < driveTolerance
-                && Math.abs(thetaErrorAbs) < thetaTolerance.getRadians();
+        return running && Math.abs(driveErrorAbs) < driveTolerance;
     }
 }

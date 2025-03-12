@@ -133,7 +133,7 @@ public class Constants {
 
     public static final Mass DRIVETRAIN_MASS = Pounds.of(107.1);
 
-    public static final Matrix<N3, N1> ODOMETRY_STDDEV = new Matrix<>(VecBuilder.fill(0.003, 0.003, 0.002));
+    public static final Matrix<N3, N1> ODOMETRY_STDDEV = new Matrix<>(VecBuilder.fill(0.01, 0.01, 0.01));
 
     public static final Angle HEADING_TOLERANCE = Degrees.of(3);
   }
@@ -305,18 +305,18 @@ public class Constants {
 
     public static final class LeftLimelightConstants {
       public static final String CAMERA_NAME = "limelight-left";
-      public static final Distance X_OFFSET = Inches.of(11.901); // forward positive
-      public static final Distance Y_OFFSET = Inches.of(9.949); // left positive
+      public static final Distance X_OFFSET = Inches.of(9.949); // forward positive
+      public static final Distance Y_OFFSET = Inches.of(-11.901); // left positive
       public static final Distance Z_OFFSET = Inches.of(13.205); // up positive
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
       public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(-35); // yaw
+      public static final Angle THETA_Z_OFFSET = Degrees.of(-30); // yaw
     }
 
     public static final class RightLimelightConstants {
       public static final String CAMERA_NAME = "limelight-right";
-      public static final Distance X_OFFSET = Inches.of(11.328); // forward positive
-      public static final Distance Y_OFFSET = Inches.of(4.650); // left positive
+      public static final Distance X_OFFSET = Inches.of(4.650); // forward positive
+      public static final Distance Y_OFFSET = Inches.of(11.328); // left positive
       public static final Distance Z_OFFSET = Inches.of(12.125); // up positive
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
       public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch

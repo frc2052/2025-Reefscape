@@ -33,8 +33,7 @@ public class AlignmentCommandFactory {
                                 targetSupplier,
                                 robotState::getFieldToRobot,
                                 controlBoard::getThrottle,
-                                controlBoard::getStrafe,
-                                controlBoard::getRotation),
+                                controlBoard::getStrafe),
                         getDefaultDriveCommand(),
                         shouldAlign));
     }
@@ -57,8 +56,7 @@ public class AlignmentCommandFactory {
                                 targetSupplier,
                                 robotState::getFieldToRobot,
                                 controlBoard::getThrottle,
-                                controlBoard::getStrafe,
-                                controlBoard::getRotation)));
+                                controlBoard::getStrafe)));
     }
 
     private static Command getDefaultDriveCommand() {

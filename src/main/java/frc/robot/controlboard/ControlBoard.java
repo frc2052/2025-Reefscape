@@ -126,18 +126,23 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
     }
 
     @Override
-    public Trigger outtakeAlgae() {
-        return primaryControlBoard.outtakeAlgae();
-    }
-
-    @Override
     public Trigger intakeAlgae() {
         return primaryControlBoard.intakeAlgae();
     }
 
     @Override
-    public Trigger alignWithElement() {
-        return primaryControlBoard.alignWithElement();
+    public Trigger shootAlgae() {
+        return primaryControlBoard.shootAlgae();
+    }
+
+    @Override
+    public Trigger alignWithReefLeft() {
+        return primaryControlBoard.alignWithReefLeft();
+    }
+
+    @Override
+    public Trigger alignWithReefRight() {
+        return primaryControlBoard.alignWithReefRight();
     }
 
     @Override

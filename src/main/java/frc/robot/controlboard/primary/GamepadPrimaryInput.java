@@ -113,7 +113,7 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
     }
 
     @Override
-    public Trigger outtakeAlgae() {
+    public Trigger shootAlgae() {
         return new Trigger(() -> false);
     }
 
@@ -123,7 +123,12 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
     }
 
     @Override
-    public Trigger alignWithElement() {
+    public Trigger alignWithReefLeft() {
+        return new Trigger(() -> false);
+    }
+
+    @Override
+    public Trigger alignWithReefRight() {
         return new Trigger(() -> false);
     }
 

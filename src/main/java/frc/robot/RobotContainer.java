@@ -105,10 +105,16 @@ public class RobotContainer {
                         () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
 
         controlBoard.intakeAlgae().whileTrue(AlgaeCommandFactory.intake());
-        controlBoard.outtakeAlgae().whileTrue(AlgaeCommandFactory.outtake());
+        controlBoard.shootAlgae().whileTrue(AlgaeCommandFactory.outtake());
 
         controlBoard
-                .alignWithElement()
+                .alignWithReefLeft()
+                .onTrue(new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.LEFT_BRANCH)))
+                .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(robotState::getAlignOffset));
+
+        controlBoard
+                .alignWithReefRight()
+                .onTrue(new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.RIGHT_BRANCH)))
                 .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(robotState::getAlignOffset));
 
         /* Secondary Driver */

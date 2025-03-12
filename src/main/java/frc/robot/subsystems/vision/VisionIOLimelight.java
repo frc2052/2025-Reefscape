@@ -3,6 +3,7 @@ package frc.robot.subsystems.vision;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 
+import com.ctre.phoenix6.Utils;
 import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.vision.limelight.LimelightHelpers;
 import com.team2052.lib.vision.limelight.LimelightHelpers.PoseEstimate;
@@ -51,7 +52,6 @@ public class VisionIOLimelight implements VisionIO {
 
         LimelightHelpers.SetIMUMode(LeftLimelightConstants.CAMERA_NAME, 0);
         LimelightHelpers.SetIMUMode(RightLimelightConstants.CAMERA_NAME, 0);
-        // TODO: make sure MT1 and MT2 work before trying different imu modes
     }
 
     public void update() {
@@ -95,13 +95,13 @@ public class VisionIOLimelight implements VisionIO {
             if (leftStdDev < rightStdDev) {
                 drivetrain.addVisionMeasurement(
                         leftEstimate.get().pose,
-                        leftEstimate.get().timestampSeconds,
+                        Utils.fpgaToCurrentTime(leftEstimate.get().timestampSeconds),
                         VecBuilder.fill(leftStdDev, leftStdDev, leftHeadingStdDev));
                 robotState.seenReefFaceID((int) LimelightHelpers.getFiducialID(LeftLimelightConstants.CAMERA_NAME));
             } else if (rightStdDev < leftStdDev) {
                 drivetrain.addVisionMeasurement(
-                        leftEstimate.get().pose,
-                        leftEstimate.get().timestampSeconds,
+                        rightEstimate.get().pose,
+                        Utils.fpgaToCurrentTime(rightEstimate.get().timestampSeconds),
                         VecBuilder.fill(rightStdDev, rightStdDev, rightHeadingStdDev));
                 robotState.seenReefFaceID((int) LimelightHelpers.getFiducialID(RightLimelightConstants.CAMERA_NAME));
             }
@@ -123,11 +123,6 @@ public class VisionIOLimelight implements VisionIO {
                     previousEstimate = newEstimate;
                     return Optional.of(newEstimate);
                 }
-            }
-
-            PoseEstimate mt1Estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(id);
-            if (mt1Estimate != null) {
-                Logger.recordOutput(id + " MT1 pose", mt1Estimate.pose);
             }
         }
         return Optional.empty();
