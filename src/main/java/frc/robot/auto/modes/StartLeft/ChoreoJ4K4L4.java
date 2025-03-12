@@ -15,11 +15,11 @@ import frc.robot.util.AlignmentCalculator.FieldElementFace;
 /** Add your docs here. */
 public class ChoreoJ4K4L4 extends AutoBase{
 
-    private static final PathPlannerPath startPath = PathsBase.RL_C4.getChoreoPath();
-    // private static final PathPlannerPath load1 = PathsBase.J2_LL.getChoreoPath();
-    // private static final PathPlannerPath score2 = PathsBase.LL_K4.getChoreoPath();
-    // private static final PathPlannerPath load2 = PathsBase.K4_LL.getChoreoPath();
-    // private static final PathPlannerPath score3 = PathsBase.LL_K4.getChoreoPath();
+    private static final PathPlannerPath startPath = PathsBase.SL_J2.getChoreoPath();
+    private static final PathPlannerPath load1 = PathsBase.J2_LL.getChoreoPath();
+    private static final PathPlannerPath score2 = PathsBase.LL_K4.getChoreoPath();
+    private static final PathPlannerPath load2 = PathsBase.K4_LL.getChoreoPath();
+    private static final PathPlannerPath score3 = PathsBase.LL_K4.getChoreoPath();
 
     public ChoreoJ4K4L4(){
         super(startPath.getStartingHolonomicPose());
@@ -38,17 +38,17 @@ public class ChoreoJ4K4L4 extends AutoBase{
                 .andThen(score(TargetAction.L4)));
 
         //
-        addCommands(safeStationAlignment(Paths.J2_LL));
+        addCommands(safeStationAlignment(load1));
         addCommands(HPIntake());
-        addCommands(safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
+        addCommands(safeReefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4)
                         .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L4)));
 
         //
-        addCommands(safeStationAlignment(Paths.K4_LL));
+        addCommands(safeStationAlignment(load2));
         addCommands(HPIntake());
-        addCommands(safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
+        addCommands(safeReefAlignment(score3, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4)
                         .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L4)));
