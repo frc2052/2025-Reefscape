@@ -166,9 +166,6 @@ public class DriveToPose extends Command {
 
     @Override
     public boolean isFinished() {
-        if (atGoal()) {
-            System.out.println("DONE*******************************");
-        }
         return atGoal();
     }
 

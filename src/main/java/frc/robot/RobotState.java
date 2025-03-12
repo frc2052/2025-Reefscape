@@ -75,7 +75,7 @@ public class RobotState {
     }
 
     public void setAlignOffset(AlignOffset offset) {
-        System.out.println("NEW OFFSET " + offset.toString());
+        // System.out.println("NEW OFFSET " + offset.toString());
         selectedAlignOffset = offset;
     }
 
