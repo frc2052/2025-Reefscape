@@ -10,9 +10,13 @@ import frc.robot.auto.modes.StartLeft.AutoJ1K1L1;
 import frc.robot.auto.modes.StartLeft.AutoJ2K4L4;
 import frc.robot.auto.modes.StartLeft.AutoJ4K4L4;
 import frc.robot.auto.modes.StartLeft.AutoK4L4DAK3L3;
+import frc.robot.auto.modes.StartLeft.AutoMIDJ1K4L4;
 import frc.robot.auto.modes.StartRight.AutoD4C4DAD3C3;
 import frc.robot.auto.modes.StartRight.AutoE1D1C1;
+import frc.robot.auto.modes.StartRight.AutoE1D4C4;
 import frc.robot.auto.modes.StartRight.AutoE2D4C4;
+import frc.robot.auto.modes.StartRight.AutoE4D4C4;
+import frc.robot.auto.modes.StartRight.AutoF4D4C4;
 import frc.robot.auto.modes.safety.AutoG4AlgaePrep;
 import frc.robot.auto.modes.safety.DeadReckoning;
 import frc.robot.auto.modes.startCenter.AutoG4LeftAlgaeRemoval;
@@ -115,15 +119,19 @@ public class AutoFactory {
         AUTO_H4_RIGHT_ALGAE_REMOVAL(AutoH4RightAlgaeRemoval.class),
 
         // start left
-        AUTO_J1_K1_L1(AutoJ1K1L1.class),
-        AUTO_J2_K4_L4(AutoJ2K4L4.class),
-        AUTO_J4_K4_L4(AutoJ4K4L4.class),
-        AUTO_K4_L4_DA_K3_L3(AutoK4L4DAK3L3.class),
+        LEFT_J1_K1_L1(AutoJ1K1L1.class),
+        LEFT_J2_K4_L4(AutoJ2K4L4.class),
+        LEFT_J4_K4_L4(AutoJ4K4L4.class),
+        LEFT_K4_L4_DA_K3_L3(AutoK4L4DAK3L3.class),
+        LEFT_J1_K4_L4(AutoMIDJ1K4L4.class),
 
         // start right
-        AUTO_D4_C4_DA_D3_C3(AutoD4C4DAD3C3.class),
-        AUTO_E1_D1_C1(AutoE1D1C1.class),
-        AUTO_E2_D4_C4(AutoE2D4C4.class);
+        RIGHT_D4_C4_DA_D3_C3(AutoD4C4DAD3C3.class),
+        RIGHT_E1_D1_C1(AutoE1D1C1.class),
+        RIGHT_E4_D4_C4(AutoE4D4C4.class),
+        RIGHT_E2_D4_C4(AutoE2D4C4.class),
+        RIGHT_F4_D4_C4(AutoF4D4C4.class),
+        RIGHT_E1_D4_C4(AutoE1D4C4.class);
 
         private final Class<? extends AutoBase> autoClass;
 
@@ -155,6 +163,7 @@ public class AutoFactory {
                     e.printStackTrace();
                 }
             }
+
             return null;
         }
     }

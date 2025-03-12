@@ -9,24 +9,24 @@ import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 @AutoDescription(description = "RIGHT One L2, Two L4")
-public class AutoE2D4C4 extends AutoBase {
-    // Start Left Equivalent: AutoJ2K4L4
+public class AutoF4D4C4 extends AutoBase {
+    // Start Left Equivalent: AutI4K4L4
 
-    private static final PathPlannerPath startingPath = Paths.SR_E2;
+    private static final PathPlannerPath startingPath = Paths.SR_F;
 
-    public AutoE2D4C4() {
+    public AutoF4D4C4() {
         super(startingPath.getStartingHolonomicPose());
     }
 
     @Override
-    public void init() { // test!
+    public void init() {
         addCommands(delaySelectedTime());
         addCommands(getBumpCommand());
 
-        addCommands(safeReefAlignment(startingPath, AlignOffset.LEFT_BRANCH, FieldElementFace.EF)
-                .alongWith(prepareForScoreWhenReady(TargetAction.L2)
+        addCommands(safeReefAlignment(startingPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.EF)
+                .alongWith(prepareForScoreWhenReady(TargetAction.L4)
                         .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-                .andThen(score(TargetAction.L2)));
+                .andThen(score(TargetAction.L4)));
 
         //
         addCommands(safeStationAlignment(Paths.E2_RL));

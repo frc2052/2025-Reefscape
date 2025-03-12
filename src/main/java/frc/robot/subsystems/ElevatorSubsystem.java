@@ -136,9 +136,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
         Logger.recordOutput("Elevator/Position", getPosition());
         Logger.recordOutput("Elevator/Goal Position", goalPositionRotations);
-        Logger.recordOutput("Elevator/At Goal Position", atPosition());
-        Logger.recordOutput("Elevator/Motor Set Speed", frontMotor.get());
-        Logger.recordOutput("Elevator/Velocity", frontMotor.getVelocity().getValueAsDouble());
+        // Logger.recordOutput("Elevator/At Goal Position", atPosition());
+        // Logger.recordOutput("Elevator/Motor Set Speed", frontMotor.get());
+        // Logger.recordOutput("Elevator/Velocity", frontMotor.getVelocity().getValueAsDouble());
 
         // if being used in open loop (usually manual mode), disable the height limit
         // if (controlState == ControlState.OPEN_LOOP) {

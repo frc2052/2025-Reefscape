@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.HandConstants;
 import frc.robot.RobotState;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
@@ -44,7 +46,10 @@ public class HandSubsystem extends SubsystemBase {
     }
 
     public void motorOut() {
-        setMotor(Constants.HandConstants.OUT_HAND_MOTOR_SPEED);
+        setMotor(
+                SuperstructureSubsystem.getInstance().getCurrentAction().equals(TargetAction.L1H)
+                        ? Constants.HandConstants.SCORE_L1_MOTOR_SPEED
+                        : Constants.HandConstants.OUT_HAND_MOTOR_SPEED);
     }
 
     public void motorIn() {
@@ -68,7 +73,7 @@ public class HandSubsystem extends SubsystemBase {
         Logger.recordOutput("Hand/Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
         // Logger.recordOutput("Hand/Has Coral", getHasCoral());
         // Logger.recordOutput("Hand/ToF Distance", range.getDistance().getValueAsDouble());
-        // RobotState.getInstance().setHasCoral(getHasCoral());
+        RobotState.getInstance().setHasCoral(getHasCoral());
         RobotState.getInstance().setIsIntaking(isIntaking);
     }
 }

@@ -109,7 +109,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     protected Command getBumpCommand() {
         if (autoFactory.getBumpNeeded()) {
-            return new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> false).withDeadline(new WaitCommand(0.5));
+            return new DefaultDriveCommand(() -> 0.6, () -> 0, () -> 0, () -> true).withDeadline(new WaitCommand(1.5));
         } else {
             return new InstantCommand();
         }
@@ -124,18 +124,24 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     protected Command safeReefAlignment(PathPlannerPath startPath, AlignOffset branchside, FieldElementFace fieldLoc) {
+
+        double timeout;
+
+        if (startPath.equals(Paths.SR_E2) || startPath.equals(Paths.SL_J2) || startPath.equals(Paths.SC_H4)) {
+            timeout = 3.9;
+        } else if (startPath.equals(Paths.SR_EF) || startPath.equals(Paths.SL_IJ)) { // score L1
+            timeout = 3.0;
+        } else {
+            timeout = 4.1;
+        }
+
         return new ParallelCommandGroup(
                 new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
                         .withTimeout((startPath.equals(Paths.SL_J2) || startPath.equals(Paths.SR_E2)) ? 0.0 : 0.35),
                 followPathCommand(startPath)
                         .until(vision::hasReefTarget)
                         .andThen(AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> branchside, fieldLoc))
-                        .withTimeout(
-                                startPath.equals(Paths.SR_E2)
-                                                || startPath.equals(Paths.SL_J2)
-                                                || startPath.equals(Paths.SC_H4)
-                                        ? 3.9
-                                        : 4.2));
+                        .withTimeout(timeout));
     }
 
     protected Command safeStationAlignment(PathPlannerPath altAlignPath) {
@@ -293,7 +299,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
         // ef
         public static final PathPlannerPath E2_RL = getPathFromFile("E RL");
         public static final PathPlannerPath SR_E2 = getPathFromFile("SR E");
+        public static final PathPlannerPath SR_F = getPathFromFile("SR F");
         public static final PathPlannerPath SR_EF = getPathFromFile("SR EF");
+        public static final PathPlannerPath SR_EF_L1 = getPathFromFile("SR EF L1");
         public static final PathPlannerPath EF_RL = getPathFromFile("EF RL");
         public static final PathPlannerPath RL_EF = getPathFromFile("RL EF");
 
@@ -309,6 +317,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         public static final PathPlannerPath SL_J2 = getPathFromFile("SL J");
         public static final PathPlannerPath SL_IJ = getPathFromFile("SL IJ");
         public static final PathPlannerPath LL_IJ = getPathFromFile("LL IJ");
+        public static final PathPlannerPath SL_IJ_L1 = getPathFromFile("SL IJ L1");
 
         // kl
         public static final PathPlannerPath K3_LL = getPathFromFile("K LL");

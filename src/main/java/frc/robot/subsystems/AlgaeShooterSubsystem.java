@@ -58,14 +58,5 @@ public class AlgaeShooterSubsystem extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
-        // if (isIntaking) {
-        //   if (intakingDelay.update(
-        //       Timer.getFPGATimestamp(),
-        //       MathHelpers.epsilonEquals(pivotMotor.getVelocity().getValueAsDouble(), 0.0, 0.01))) {
-        //     stopScoringMotor();
-        //     hasAlgae = true;
-        //   }
-        // }
-    }
+    public void periodic() {}
 }
