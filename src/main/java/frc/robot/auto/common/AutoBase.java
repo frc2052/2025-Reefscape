@@ -297,6 +297,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     public static final class PathsBase{
       public static final Path RL_C4 = new Path("RL C", "RL C", 0);
+      public static final Path J2_LL = new Path("J LL", "RL C", 0);
+      public static final Path LL_K4 = new Path("LL K", "RL C", 0);
+      public static final Path K4_LL = new Path("K LL", "RL C", 0);
     }
   
     public static class Path{ // combines access to pathplanner and choreo
