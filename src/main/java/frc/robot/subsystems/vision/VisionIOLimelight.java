@@ -127,8 +127,4 @@ public class VisionIOLimelight implements VisionIO {
         }
         return Optional.empty();
     }
-
-    public boolean hasReefTarget() {
-        return false;
-    }
 }

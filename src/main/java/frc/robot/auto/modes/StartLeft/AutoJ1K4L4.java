@@ -1,7 +1,6 @@
 package frc.robot.auto.modes.StartLeft;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.commands.hand.HandCommandFactory;

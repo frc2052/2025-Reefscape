@@ -4,16 +4,11 @@
 
 package frc.robot.auto.common;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import com.team2052.lib.helpers.MathHelpers;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,6 +33,9 @@ import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -98,26 +96,24 @@ public abstract class AutoBase extends SequentialCommandGroup {
         }
     }
 
-    protected static PathPlannerPath getChoreoTraj(String name){
-      try {
-          PathPlannerPath choreoPath = PathPlannerPath.fromChoreoTrajectory(name);
-          return choreoPath;
-      } catch (Exception e) {
-        DriverStation.reportError(
-          "FAILED TO GET CHOREO PATH: " + name + e.getMessage(), e.getStackTrace());
-          return null;
-      }
+    protected static PathPlannerPath getChoreoTraj(String name) {
+        try {
+            PathPlannerPath choreoPath = PathPlannerPath.fromChoreoTrajectory(name);
+            return choreoPath;
+        } catch (Exception e) {
+            DriverStation.reportError("FAILED TO GET CHOREO PATH: " + name + e.getMessage(), e.getStackTrace());
+            return null;
+        }
     }
-  
+
     protected PathPlannerPath getChoreoTraj(String name, int index) {
-      try {
-          PathPlannerPath choreoPath = PathPlannerPath.fromChoreoTrajectory(name, index);
-          return choreoPath;
-      } catch (Exception e) {
-        DriverStation.reportError(
-          "FAILED TO GET CHOREO PATH: " + name + e.getMessage(), e.getStackTrace());
-          return null;
-      }
+        try {
+            PathPlannerPath choreoPath = PathPlannerPath.fromChoreoTrajectory(name, index);
+            return choreoPath;
+        } catch (Exception e) {
+            DriverStation.reportError("FAILED TO GET CHOREO PATH: " + name + e.getMessage(), e.getStackTrace());
+            return null;
+        }
     }
 
     public static Optional<Pose2d> getStartPoseFromAutoFile(String autoName) {
@@ -162,10 +158,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
         return new ParallelCommandGroup(
                 new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
                         .withTimeout((startPath.equals(Paths.SL_J2) || startPath.equals(Paths.SR_E2)) ? 0.0 : 0.35),
+                new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(fieldLoc)),
                 followPathCommand(startPath)
-                        .until(vision::hasReefTarget)
-                        .andThen(AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> branchside, fieldLoc))
-                        .withTimeout(timeout));
+                        .until(() -> RobotState.getInstance().shouldAlignAutonomous())
+                        .andThen(AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> branchside, fieldLoc)));
+        // .withTimeout(timeout));
     }
 
     protected Command safeStationAlignment(PathPlannerPath altAlignPath) {
@@ -180,8 +177,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
             PathPlannerPath backupPath, AlignOffset branchSide, FieldElementFace snapSide, TargetAction level) {
         return new ParallelCommandGroup(
                 new SequentialCommandGroup(followPathCommand(backupPath), snapToReefAngle(snapSide))
-                        .until(vision::hasReefTarget)
-                        .andThen(AlignmentCommandFactory.getReefAlignmentCommand(() -> branchSide)),
+                        .andThen(AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> branchSide, snapSide)),
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(level)));
     }
 
@@ -201,8 +197,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
                 Commands.waitUntil(() -> ElevatorSubsystem.getInstance().atPosition(2.0, position)
-                                && CoralArmSubsystem.getInstance().isAtDesiredPosition())
-                        .andThen(HandCommandFactory.motorOut().withTimeout(0.40)));
+                                && CoralArmSubsystem.getInstance().isAtDesiredPosition(4.0))
+                        .andThen(HandCommandFactory.motorOut().withTimeout(0.30)));
         // .andThen( // do in path to station
         //     new InstantCommand(
         //         () ->
@@ -248,8 +244,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
                     prepAction = TargetAction.L2;
                 }
                 case L4 -> {
-                    maxSpeed = 0.75;
-                    maxDist = 0.75; // TODO: test farther distances to raise elevator
+                    maxSpeed = 0.5;
+                    maxDist = 0.5; // TODO: test farther distances to raise elevator
                     prepAction = TargetAction.L4;
                 }
                 default -> {
@@ -295,43 +291,48 @@ public abstract class AutoBase extends SequentialCommandGroup {
                         .andThen(AlgaeCommandFactory.outtake().withTimeout(1.0)));
     }
 
-    public static final class PathsBase{
-      public static final Path SL_J2 = new Path("SL J", "SL J", 0);
-      public static final Path J2_LL = new Path("J LL", "J LL", 0);
-      public static final Path LL_K4 = new Path("LL K", "LL K", 0);
-      public static final Path K4_LL = new Path("K LL", "K LL", 0);
+    public static final class PathsBase {
+        public static final Path SL_J2 = new Path("SL J", "SL J", 0);
+        public static final Path J2_LL = new Path("J LL", "J LL", 0);
+        public static final Path LL_K4 = new Path("LL K", "LL K", 0);
+        public static final Path K4_LL = new Path("K LL", "K LL", 0);
     }
-  
-    public static class Path{ // combines access to pathplanner and choreo
-      private String pathPlannerPathName, chorPathName;
-      private int index;
-  
-      public Path(String PPName, String chorName, int splitI){
-        pathPlannerPathName = PPName;
-        chorPathName = chorName;
-        index = splitI;
-      }
-  
-      public PathPlannerPath getChoreoPath(){
-        try {
-          return AutoBase.getChoreoTraj(chorPathName); // return choreo
-        } catch (Exception e) {
-          DriverStation.reportError(
-            "FAILED TO GET CHOREO PATH FROM PATHFILE " + pathPlannerPathName + e.getMessage(), e.getStackTrace());
-          return null;   
+
+    public static class Path { // combines access to pathplanner and choreo
+        private String pathPlannerPathName, chorPathName;
+        private int index;
+
+        public Path(String PPName, String chorName, int splitI) {
+            pathPlannerPathName = PPName;
+            chorPathName = chorName;
+            index = splitI;
         }
-      }
-  
-      public PathPlannerPath getPathPlannerPath(){
-        try {
-            return getPathFromFile(pathPlannerPathName);
-  
-        } catch (Exception e) {
-          DriverStation.reportError(
-            "FAILED TO GET PATH FROM PATHFILE " + pathPlannerPathName + e.getMessage(), e.getStackTrace());
-          return null;      
+
+        public PathPlannerPath getChoreoPath() {
+            try {
+                return AutoBase.getChoreoTraj(chorPathName); // return choreo
+            } catch (Exception e) {
+                DriverStation.reportError(
+                        "FAILED TO GET CHOREO PATH FROM PATHFILE " + pathPlannerPathName + e.getMessage(),
+                        e.getStackTrace());
+                return null;
+            }
         }
-      }
+
+        // public PathPlannerPath getChoreoPathAtIndex(){
+
+        // }
+
+        public PathPlannerPath getPathPlannerPath() {
+            try {
+                return getPathFromFile(pathPlannerPathName);
+
+            } catch (Exception e) {
+                DriverStation.reportError(
+                        "FAILED TO GET PATH FROM PATHFILE " + pathPlannerPathName + e.getMessage(), e.getStackTrace());
+                return null;
+            }
+        }
     }
 
     public static final class Paths {

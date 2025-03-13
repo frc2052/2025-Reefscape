@@ -95,7 +95,11 @@ public class RobotState {
         return getFieldToRobot()
                         .getTranslation()
                         .getDistance(isRedAlliance() ? FieldConstants.RED_REEF_CENTER : FieldConstants.BLUE_REEF_CENTER)
-                < 3.0;
+                < 4.0;
+    }
+
+    public boolean shouldAlignAutonomous() {
+        return desiredReefFaceIsSeen() && shouldAlign();
     }
 
     public Pose2d getAlignPose() {

@@ -54,12 +54,12 @@ public class Constants {
         new Slot0Configs()
             .withKP(6.0)
             .withKI(0.0)
-            .withKD(3.0)
+            .withKD(1.0)
             .withKS(0.5)
             .withKV(0.0)
             .withKA(0.0)
             .withGravityType(GravityTypeValue.Elevator_Static)
-            .withKG(3.75);
+            .withKG(5.0);
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
@@ -71,9 +71,9 @@ public class Constants {
     // set Motion Magic settings
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(70)
-            .withMotionMagicExpo_kA(0.03)
-            .withMotionMagicExpo_kV(0.01);
+            .withMotionMagicCruiseVelocity(0)
+            .withMotionMagicExpo_kA(0.004)
+            .withMotionMagicExpo_kV(0.007);
             // .withMotionMagicAcceleration(160) 
             // .withMotionMagicJerk(600);
 
