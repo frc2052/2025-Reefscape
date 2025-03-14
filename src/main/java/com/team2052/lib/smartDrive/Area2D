@@ -1,91 +1,76 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Area2D {
-  private Translation2D P1;
-  private Translation2D P2;   
-  private Translation2D P3;   
-  private Translation2D P4;  
-  private double rad;
-  private List<Translation2D> points;
-  private List<Translation2D> deadZonesPoints;
-  private List<Translation2D> points;
-  private Translation2D DP1;
-  private double DRad;
-  private boolean deadZones;
-  private boolean circle;
+    private Translation2D P1;
+    private Translation2D P2;
+    private Translation2D P3;
+    private Translation2D P4;
+    private double rad;
+    private List<Translation2D> points;
+    private List<Translation2D> deadZonesPoints;
+    private Translation2D DP1;
+    private double DRad;
+    private boolean deadZones;
+    private boolean circle;
 
-
-  public Area2D(Translation2D P1, double rad) {
-    this.P1 = P1; 
-    this.rad = rad;
-    circle = true;
-  }
-  public Area2D(Translation2D P1, Translation2D P2, Translation2D P3) {
-    this.P1 = P1; 
-    this.P2 = P2;
-    this.P3 = p3;
-    points = new ArrayList<>(List.of(P1,P2,P3));
-  }
-  public Area2D(Translation2D P1, Translation2D P2, Translation2D P3, Translation2D P4) {
-    this.P1 = P1; 
-    this.P2 = P2;
-    this.P3 = P3;
-    this.P4 = P4;
-    points = new ArrayList<>(List.of(P1,P2,P3,P4));
-
-  }
-  public Area2D(list<Translation2D> points) {
-    this.Points = Points; 
-  }
-
-  public void addDeadZones(list<Translation2D> deadZonesPoints){
-    this.deadZonesPoints = deadZonesPoints;
-    if (verification(deadZonesPoints)){
-      deadZones = true;
-    }else{
-      deadZones = false;
+    public Area2D(Translation2D P1, double rad) {
+        this.P1 = P1;
+        this.rad = rad;
+        circle = true;
     }
 
-  }
-  public void addDeadZones(Translation2D DP1, double DRad){
-    this.DP1 = DP1;
-    this.DRad = DRad;
-
-  }
-
-  private boolean verification(List<Translation2D> verificationPoints){
-    boolean verification;
-    for (int e = 0, e == verificationPoints.size(), e++ ){
-       if(multiPointCalc(new Pose2d(verificationPoints.get(e).getX(),verificationPoints.get(e).getY(),new Rotation2d(0)),points)){
-        verification = true;
-       }else{
-        verification = false;
-       }
+    public Area2D(Translation2D P1, Translation2D P2, Translation2D P3) {
+        this.P1 = P1;
+        this.P2 = P2;
+        this.P3 = P3;
+        points = new ArrayList<>(List.of(P1, P2, P3));
     }
-    return verification;
-  }
 
-
-  private boolean singlePointVerification(Translation2D point){
-    if (singlePointCalc(Pose2d(point.getX,point.getY, new Rotation2d(0)))){
-      deadZones = true;
-    }else{
-      deadZones = false;
+    public Area2D(Translation2D P1, Translation2D P2, Translation2D P3, Translation2D P4) {
+        this.P1 = P1;
+        this.P2 = P2;
+        this.P3 = P3;
+        this.P4 = P4;
+        points = new ArrayList<>(List.of(P1, P2, P3, P4));
     }
-  }
 
+    public Area2D(List<Translation2D> points) {
+        this.points = points;
+    }
 
-  private boolean singlePointCalc(Pose2d pose){
-    robotPose = pose.getTranslation()
-    if (robotPose.getDistance(P1)<= rad){
+    public void addDeadZones(List<Translation2D> deadZonesPoints) {
+        this.deadZonesPoints = deadZonesPoints;
+        deadZones = verification(deadZonesPoints);
+    }
+
+    public void addDeadZones(Translation2D DP1, double DRad) {
+        this.DP1 = DP1;
+        this.DRad = DRad;
+    }
+
+    private boolean verification(List<Translation2D> verificationPoints) {
+        for (Translation2D point : verificationPoints) {
+            if (!multiPointCalc(new Pose2d(point.getX(), point.getY(), new Rotation2d(0)), points)) {
+                return false;
+            }
+        }
         return true;
-    }else{
-        return false;
     }
-  }
 
-  private multiPointCalc(Pose2d pose,List<Translation2D> Points ){
+    private boolean singlePointVerification(Translation2D point) {
+        return singlePointCalc(new Pose2d(point.getX(), point.getY(), new Rotation2d(0)));
+    }
+
+    private boolean singlePointCalc(Pose2d pose) {
+        Translation2D robotPose = pose.getTranslation();
+        return robotPose.getDistance(P1) <= rad;
+    }
+
+    private boolean multiPointCalc(Pose2d pose, List<Translation2D> points) {
         double x = pose.getX();
         double y = pose.getY();
-        int num = Points.size();
+        int num = points.size();
         boolean inside = false;
 
         for (int i = 0, j = num - 1; i < num; j = i++) {
@@ -98,21 +83,13 @@ public class Area2D {
             }
         }
         return inside;
-
-  }
-
-
-
-  private boolean withInTheRegion(Pose2d pose, List<Translation2D> points){
-    if (circle){
-        return singlePointCalc(pose);
-    }else{
-        return multiPointCalc(pose, points);
     }
-  }
 
- 
-          
-
-  
+    private boolean withInTheRegion(Pose2d pose, List<Translation2D> points) {
+        if (circle) {
+            return singlePointCalc(pose);
+        } else {
+            return multiPointCalc(pose, points);
+        }
+    }
 }
