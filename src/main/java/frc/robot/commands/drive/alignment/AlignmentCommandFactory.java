@@ -25,17 +25,14 @@ public class AlignmentCommandFactory {
             invalidCombination(DesiredElement.REEF, offset.get());
         }
         Supplier<Pose2d> targetSupplier = () -> robotState.getAlignPose();
-        BooleanSupplier shouldAlign = () -> robotState.shouldAlign();
+        // BooleanSupplier shouldAlign = () -> robotState.shouldAlign();
 
         return new InstantCommand(() -> robotState.setAlignOffset(offset.get()))
-                .andThen(Commands.either(
-                        new DriveToPose(
-                                targetSupplier,
-                                robotState::getFieldToRobot,
-                                controlBoard::getThrottle,
-                                controlBoard::getStrafe),
-                        getDefaultDriveCommand(),
-                        shouldAlign))
+                .andThen(new DriveToPose(
+                        targetSupplier,
+                        robotState::getFieldToRobot,
+                        controlBoard::getThrottle,
+                        controlBoard::getStrafe))
                 .withName("Reef Alignment Command");
     }
 
