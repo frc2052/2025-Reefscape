@@ -20,34 +20,31 @@ public class Area2D {
         circle = true;
     }
 
-    public Area2D(Translation2D P1, Translation2D P2, Translation2D P3) {
+    public Area2D(Translation2D P1, double rad, List<Translation2D> deadZonesPoints) {
         this.P1 = P1;
-        this.P2 = P2;
-        this.P3 = P3;
-        points = new ArrayList<>(List.of(P1, P2, P3));
-    }
-
-    public Area2D(Translation2D P1, Translation2D P2, Translation2D P3, Translation2D P4) {
-        this.P1 = P1;
-        this.P2 = P2;
-        this.P3 = P3;
-        this.P4 = P4;
-        points = new ArrayList<>(List.of(P1, P2, P3, P4));
+        this.rad = rad;
+        circle = true;
+        if (verification(deadZonesPoints)){
+        this.deadZonesPoints = deadZonesPoints;
+        }else{
+            system.out.print("the values you entered for dead zones are outside of the shape, pls enter points that are inside the shape")
+        }
     }
 
     public Area2D(List<Translation2D> points) {
         this.points = points;
     }
 
-    public void addDeadZones(List<Translation2D> deadZonesPoints) {
-        this.deadZonesPoints = deadZonesPoints;
-        deadZones = verification(deadZonesPoints);
+    public Area2D(List<Translation2D> points,List<Translation2D> deadZonesPoints){
+        this.points = points;
+        if (verification(deadZonesPoints)){
+            points.add(deadZonesPoints);
+            }else{
+                system.out.print("the values you entered for dead zones are outside of the shape, pls enter points that are inside the shape");
+            }
+
     }
 
-    public void addDeadZones(Translation2D DP1, double DRad) {
-        this.DP1 = DP1;
-        this.DRad = DRad;
-    }
 
     private boolean verification(List<Translation2D> verificationPoints) {
         for (Translation2D point : verificationPoints) {
@@ -58,8 +55,10 @@ public class Area2D {
         return true;
     }
 
-    private boolean singlePointVerification(Translation2D point) {
-        return singlePointCalc(new Pose2d(point.getX(), point.getY(), new Rotation2d(0)));
+    private boolean singlePointVerification(List<Translation2D> point) {
+    for (Translation2D point: point){
+        singlePointCalc(new Pose2d(point.getX(),point.getY(),new rotation2d(0)))
+    }
     }
 
     private boolean singlePointCalc(Pose2d pose) {
