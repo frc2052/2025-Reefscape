@@ -2,71 +2,67 @@ package frc.robot.util;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.wpilibj.Filesystem;
-import frc.robot.RobotState;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 public class FieldConstants {
-    public static final FieldType FIELD_TYPE = FieldType.WELDED;
+    // public static final FieldType FIELD_TYPE = FieldType.WELDED;
 
-    public static final Distance FIELD_LENGTH = Meters.of(AprilTagLayoutType.OFFICIAL.layout.getFieldLength());
-    public static final Distance FIELD_WIDTH = Meters.of(AprilTagLayoutType.OFFICIAL.layout.getFieldWidth());
+    public static final AprilTagFieldLayout DEFAULT_APRIL_TAG_LAYOUT =
+            AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+    public static final Distance FIELD_LENGTH = Meters.of(DEFAULT_APRIL_TAG_LAYOUT.getFieldLength());
+    public static final Distance FIELD_WIDTH = Meters.of(DEFAULT_APRIL_TAG_LAYOUT.getFieldWidth());
 
     public static final Translation2d BLUE_REEF_CENTER = new Translation2d(Inches.of(176.495), Inches.of(158.751));
     public static final Translation2d RED_REEF_CENTER = new Translation2d(Inches.of(513.880), Inches.of(158.749));
+    // public static final AprilTagLayoutType CORAL_REEF_CAMERA_LAYOUT_TYPE =
+    //         RobotState.getInstance().isRedAlliance() ? AprilTagLayoutType.RED_REEF : AprilTagLayoutType.BLUE_REEF;
+    // public static final AprilTagLayoutType ALGAE_REEF_CAMERA_LAYOUT_TYPE = AprilTagLayoutType.NO_BARGE;
 
-    public static final AprilTagLayoutType DEFAULT_APRIL_TAG_LAYOUT_TYPE = AprilTagLayoutType.NO_BARGE;
-    public static final AprilTagLayoutType CORAL_REEF_CAMERA_LAYOUT_TYPE =
-            RobotState.getInstance().isRedAlliance() ? AprilTagLayoutType.RED_REEF : AprilTagLayoutType.BLUE_REEF;
-    public static final AprilTagLayoutType ALGAE_REEF_CAMERA_LAYOUT_TYPE = AprilTagLayoutType.NO_BARGE;
+    // public enum AprilTagLayoutType {
+    //     OFFICIAL("2025-official"),
+    //     NO_BARGE("2025-no-barge"),
+    //     BLUE_REEF("2025-blue-reef"),
+    //     RED_REEF("2025-red-reef");
 
-    public enum AprilTagLayoutType {
-        OFFICIAL("2025-official"),
-        NO_BARGE("2025-no-barge"),
-        BLUE_REEF("2025-blue-reef"),
-        RED_REEF("2025-red-reef");
+    //     AprilTagLayoutType(String name) {
+    //         try {
+    //             layout = new AprilTagFieldLayout(Path.of(
+    //                     Filesystem.getDeployDirectory().getPath(), "apriltags", FIELD_TYPE.jsonFolder, name +
+    // ".json"));
+    //         } catch (IOException e) {
+    //             throw new RuntimeException(e);
+    //         }
+    //         if (layout == null) {
+    //             layoutString = "";
+    //         } else {
+    //             try {
+    //                 layoutString = new ObjectMapper().writeValueAsString(layout);
+    //             } catch (JsonProcessingException e) {
+    //                 throw new RuntimeException("Failed to serialize AprilTag layout JSON " + toString());
+    //             }
+    //         }
+    //     }
 
-        AprilTagLayoutType(String name) {
-            try {
-                layout = new AprilTagFieldLayout(Path.of(
-                        Filesystem.getDeployDirectory().getPath(), "apriltags", FIELD_TYPE.jsonFolder, name + ".json"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            if (layout == null) {
-                layoutString = "";
-            } else {
-                try {
-                    layoutString = new ObjectMapper().writeValueAsString(layout);
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException("Failed to serialize AprilTag layout JSON " + toString());
-                }
-            }
-        }
+    //     public final AprilTagFieldLayout layout;
+    //     public final String layoutString;
+    // }
 
-        public final AprilTagFieldLayout layout;
-        public final String layoutString;
-    }
+    // public enum FieldType {
+    //     ANDYMARK("andymark"),
+    //     WELDED("welded");
 
-    public enum FieldType {
-        ANDYMARK("andymark"),
-        WELDED("welded");
+    //     private final String jsonFolder;
 
-        private final String jsonFolder;
-
-        private FieldType(String string) {
-            this.jsonFolder = string;
-        }
-    }
+    //     private FieldType(String string) {
+    //         this.jsonFolder = string;
+    //     }
+    // }
 
     /* All positions in blue coordinate system
      *

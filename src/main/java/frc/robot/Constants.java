@@ -266,7 +266,7 @@ public class Constants {
     }  
 
     public static final class CoralReefCameraConstants {
-      public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =  FieldConstants.CORAL_REEF_CAMERA_LAYOUT_TYPE.layout;
+      public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =  FieldConstants.DEFAULT_APRIL_TAG_LAYOUT;
       public static final String CAMERA_NAME = "Arducam_OV2311_USB_Camera_001";
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
