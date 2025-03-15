@@ -91,11 +91,11 @@ public class RobotState {
         desiredReefFace = reefFace;
     }
 
-    public boolean shouldAlign() {
+    public boolean shouldAlign() { // only used in auto
         return getFieldToRobot()
                         .getTranslation()
                         .getDistance(isRedAlliance() ? FieldConstants.RED_REEF_CENTER : FieldConstants.BLUE_REEF_CENTER)
-                < 4.0;
+                < 2.5;
     }
 
     public boolean shouldAlignAutonomous() {

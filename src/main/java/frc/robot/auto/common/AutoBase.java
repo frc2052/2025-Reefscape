@@ -155,6 +155,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
             timeout = 4.1;
         }
 
+
         return new ParallelCommandGroup(
                 new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
                         .withTimeout((startPath.equals(Paths.SL_J2) || startPath.equals(Paths.SR_E2)) ? 0.0 : 0.35),
@@ -184,9 +185,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
     // game piece interactions
 
     protected Command HPIntake() {
-        return new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
-                .until(() -> HandSubsystem.getInstance().getHasCoral())
-                .withTimeout(3.5);
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> HandSubsystem.getInstance().motorIn()), new WaitCommand(2.0));
     }
 
     protected Command elevatorToPos(TargetAction position) {

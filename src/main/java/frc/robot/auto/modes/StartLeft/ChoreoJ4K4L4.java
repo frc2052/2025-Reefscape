@@ -5,10 +5,13 @@
 package frc.robot.auto.modes.StartLeft;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.commands.hand.HandCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
@@ -40,7 +43,7 @@ public class ChoreoJ4K4L4 extends AutoBase {
 
         //
         addCommands(safeStationAlignment(load1));
-        addCommands(HPIntake());
+        addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4)
                         .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
@@ -48,10 +51,12 @@ public class ChoreoJ4K4L4 extends AutoBase {
 
         //
         addCommands(safeStationAlignment(load2));
-        addCommands(HPIntake());
+        addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4)
                         .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L4)));
+        addCommands(
+                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
     }
 }
