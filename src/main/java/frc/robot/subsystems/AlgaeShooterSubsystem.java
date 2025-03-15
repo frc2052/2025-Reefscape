@@ -57,6 +57,10 @@ public class AlgaeShooterSubsystem extends SubsystemBase {
         isIntaking = false;
     }
 
+    public boolean getHasAlgae() {
+        return true; // TODO: remember to make this part of the code.
+    }
+
     @Override
     public void periodic() {}
 }

@@ -24,9 +24,9 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
 import frc.robot.RobotState;
 import frc.robot.RobotState.FieldLocation;
-import frc.robot.controlboard.PositionSuperstructure;
-import frc.robot.controlboard.PositionSuperstructure.TargetAction;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 
 public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.005; // 5 ms
@@ -132,32 +132,29 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
         }
 
         robotState.addDrivetrainState(super.getState());
+        setFieldLocation();
     }
-    robotState.addDrivetrainState(super.getState());
 
-    setFieldLocation();
-  }
+    private void setFieldLocation() {
+        if (FieldLocation.HP.getArea().withInTheRegion(robotState.getFieldToRobot())) {
+            robotState.setFieldLocation(FieldLocation.HP);
 
-  private void setFieldLocation() {
-    if (FieldLocation.HP.getArea().withInTheRegion(robotState.getFieldToRobot())) {
-      robotState.setFieldLocation(FieldLocation.HP);
+        } else if (FieldLocation.REEF.getArea().withInTheRegion(robotState.getFieldToRobot())) {
+            robotState.setFieldLocation(FieldLocation.REEF);
 
-    } else if (FieldLocation.REEF.getArea().withInTheRegion(robotState.getFieldToRobot())) {
-      robotState.setFieldLocation(FieldLocation.REEF);
+        } else if (FieldLocation.BARGE.getArea().withInTheRegion(robotState.getFieldToRobot())) {
+            robotState.setFieldLocation(FieldLocation.BARGE);
 
-    } else if (FieldLocation.BARGE.getArea().withInTheRegion(robotState.getFieldToRobot())) {
-      robotState.setFieldLocation(FieldLocation.BARGE);
-
-    } else if (FieldLocation.PROCESSOR.getArea().withInTheRegion(robotState.getFieldToRobot())) {
-      robotState.setFieldLocation(FieldLocation.PROCESSOR);
-    } else {
-      robotState.setFieldLocation(FieldLocation.TRAVEL);
+        } else if (FieldLocation.PROCESSOR.getArea().withInTheRegion(robotState.getFieldToRobot())) {
+            robotState.setFieldLocation(FieldLocation.PROCESSOR);
+        } else {
+            robotState.setFieldLocation(FieldLocation.TRAVEL);
+        }
     }
-  }
 
-  private void setTargetAction() {
-    PositionSuperstructure.getInstance().setTargetAction(TargetAction.TR);
-  }
+    private void setTargetAction() {
+        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.TR);
+    }
 
     private void startSimThread() {
         lastSimTime = Utils.getCurrentTimeSeconds();

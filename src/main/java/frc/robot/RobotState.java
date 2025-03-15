@@ -19,13 +19,11 @@ public class RobotState {
     private FieldElementFace seenReefFace;
     private FieldElementFace desiredReefFace;
     private boolean isAlignGoal;
-    private boolean hasCoral;
     private boolean isIntaking;
-  private SwerveDriveState drivetrainState = new SwerveDriveState();
-  private static FieldLocation loca;
+    private static FieldLocation loca;
 
-  private boolean isReefTracking;
-  private boolean hasCoral;
+    private boolean isReefTracking;
+    private boolean hasCoral;
 
     private static RobotState INSTANCE;
 
@@ -46,38 +44,32 @@ public class RobotState {
     public boolean getIsIntaking() {
         return isIntaking;
     }
-  public Pose2d getFieldToRobot() {
-    if (drivetrainState.Pose != null) {
-      return drivetrainState.Pose;
+
+    public void setFieldLocation(FieldLocation location) {
+        loca = location;
     }
 
-    return MathHelpers.POSE_2D_ZERO;
-  }
-
-  public void setFieldLocation(FieldLocation location) {
-    loca = location;
-  }
-
-  public static FieldLocation getFieldLocation() {
-    return loca;
-  }
-
-  public ChassisSpeeds getChassisSpeeds(boolean isFieldRelative) {
-    ChassisSpeeds chassisSpeeds = drivetrainState.Speeds;
-    if (isFieldRelative) {
-      return ChassisSpeeds.fromRobotRelativeSpeeds(chassisSpeeds, getFieldToRobot().getRotation());
-    } else {
-      return chassisSpeeds;
+    public static FieldLocation getFieldLocation() {
+        return loca;
     }
-  }
 
-  public void setReefTracking(boolean isReefTracking) {
-    this.isReefTracking = isReefTracking;
-  }
+    public ChassisSpeeds getChassisSpeeds(boolean isFieldRelative) {
+        ChassisSpeeds chassisSpeeds = drivetrainState.Speeds;
+        if (isFieldRelative) {
+            return ChassisSpeeds.fromRobotRelativeSpeeds(
+                    chassisSpeeds, getFieldToRobot().getRotation());
+        } else {
+            return chassisSpeeds;
+        }
+    }
 
-  public boolean getIsReefTracking() {
-    return isReefTracking;
-  }
+    public void setReefTracking(boolean isReefTracking) {
+        this.isReefTracking = isReefTracking;
+    }
+
+    public boolean getIsReefTracking() {
+        return isReefTracking;
+    }
 
     public void setHasCoral(boolean hasCoral) {
         this.hasCoral = hasCoral;
@@ -178,7 +170,7 @@ public class RobotState {
      *
      * @return True if the robot is on red alliance.
      */
-    public boolean isRedAlliance() {
+    public static boolean isRedAlliance() {
         var alliance = DriverStation.getAlliance();
         if (alliance.isPresent()) {
             return (alliance.get() == DriverStation.Alliance.Red) ? true : false;
@@ -187,33 +179,33 @@ public class RobotState {
         }
     }
 
-  public void output() {
-    Logger.recordOutput("Swerve Module States", drivetrainState.ModuleStates);
-    Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
-    Logger.recordOutput("Current Pose", drivetrainState.Pose);
-  }
-
-  public enum FieldLocation {
-    HP(new Area2D(null), new Area2D(null)), // adjust these values.
-    REEF(new Area2D(null), new Area2D(null)),
-    BARGE(new Area2D(null), new Area2D(null)),
-    PROCESSOR(new Area2D(null), new Area2D(null)),
-    TRAVEL(new Area2D(null), new Area2D(null));
-
-    public final Area2D blueArea;
-    public final Area2D redArea;
-
-    private FieldLocation(Area2D blueArea, Area2D redArea) {
-      this.blueArea = blueArea;
-      this.redArea = redArea;
+    public void output() {
+        Logger.recordOutput("Swerve Module States", drivetrainState.ModuleStates);
+        Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
+        Logger.recordOutput("Current Pose", drivetrainState.Pose);
     }
 
-    public Area2D getArea() {
-      if (isRedAlliance()) {
-        return redArea;
-      } else {
-        return blueArea;
-      }
+    public enum FieldLocation {
+        HP(new Area2D(null), new Area2D(null)), // adjust these values.
+        REEF(new Area2D(null), new Area2D(null)),
+        BARGE(new Area2D(null), new Area2D(null)),
+        PROCESSOR(new Area2D(null), new Area2D(null)),
+        TRAVEL(new Area2D(null), new Area2D(null));
+
+        public final Area2D blueArea;
+        public final Area2D redArea;
+
+        private FieldLocation(Area2D blueArea, Area2D redArea) {
+            this.blueArea = blueArea;
+            this.redArea = redArea;
+        }
+
+        public Area2D getArea() {
+            if (isRedAlliance()) {
+                return redArea;
+            } else {
+                return blueArea;
+            }
+        }
     }
-  }
 }

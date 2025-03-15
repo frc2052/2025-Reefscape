@@ -4,7 +4,9 @@ import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
+import frc.robot.RobotState.FieldLocation;
 import frc.robot.subsystems.AlgaePivotSubsystem;
+import frc.robot.subsystems.AlgaeShooterSubsystem;
 import frc.robot.subsystems.CoralArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
@@ -152,5 +154,25 @@ public class SuperstructureSubsystem extends SubsystemBase {
         }
 
         previousAction = target;
+        setTargetAction();
+    }
+
+    private void setTargetAction() {
+        if (RobotState.getFieldLocation() == FieldLocation.HP) {
+            setCurrentAction(TargetAction.HP);
+        } else if (RobotState.getFieldLocation() == FieldLocation.REEF) {
+            setCurrentAction(TargetAction.L3);
+        } else if (RobotState.getFieldLocation() == FieldLocation.PROCESSOR) {
+            // PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM); we have nothing to
+            // do in the processor zone.
+        } else if (RobotState.getFieldLocation() == FieldLocation.BARGE) {
+            if (AlgaeShooterSubsystem.getInstance().getHasAlgae()) {
+                setCurrentAction(TargetAction.AS);
+            } else {
+                setCurrentAction(TargetAction.HM);
+            }
+        } else {
+            setCurrentAction(TargetAction.HM);
+        }
     }
 }
