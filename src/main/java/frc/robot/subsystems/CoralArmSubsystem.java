@@ -17,139 +17,133 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.RobotState;
-import frc.robot.controlboard.PositionSuperstructure;
-import frc.robot.controlboard.PositionSuperstructure.TargetAction;
-import frc.robot.util.Ports;
+import frc.robot.Constants.CoralArmConstants;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
 public class CoralArmSubsystem extends SubsystemBase {
-  private final RobotState robotState = RobotState.getInstance();
-  private final TalonFX pivotMotor;
-  private Angle goalPosition;
+    private final TalonFX pivotMotor;
+    private Angle goalPosition;
 
-  private static CoralArmSubsystem INSTANCE;
+    private static CoralArmSubsystem INSTANCE;
 
-  public static CoralArmSubsystem getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new CoralArmSubsystem();
-    }
-    return INSTANCE;
-  }
-
-  private CoralArmSubsystem() {
-    goalPosition = PositionSuperstructure.getInstance().getTargetAction().getCoralArmAngle();
-
-    pivotMotor = new TalonFX(Ports.ARM_TALONFX_ID);
-
-    pivotMotor.getConfigurator().apply(ArmConstants.MOTOR_CONFIG);
-  }
-
-  public Command runPct(double pct) {
-    return Commands.runOnce(() -> setPivotSpeed(pct), this);
-  }
-
-  private void setPivotSpeed(double pct) {
-    pivotMotor.set(pct);
-  }
-
-  private void setPivotVolts(Voltage v) {
-    pivotMotor.setVoltage(v.in(Volts));
-  }
-
-  private void setPivotAngle(Angle angle) {
-    if (angle == goalPosition && isAtDesiredPosition()) {
-      return;
+    public static CoralArmSubsystem getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new CoralArmSubsystem();
+        }
+        return INSTANCE;
     }
 
-    pivotMotor.setControl(new PositionVoltage(angle));
-  }
+    private CoralArmSubsystem() {
+        goalPosition = TargetAction.HP.getCoralArmAngle();
 
-  public void setArmPosition(TargetAction position) {
-    this.goalPosition = clampPosition(position.getCoralArmAngle());
-    setPivotAngle(goalPosition);
-  }
+        pivotMotor = new TalonFX(Ports.ARM_TALONFX_ID);
 
-  private Angle clampPosition(Angle pos) {
-    if (robotState.getHasCoral()) {
-      if (pos.in(Degrees) < ArmConstants.MIN_CORAL_ANGLE.in(Degrees)) {
-        System.out.println("DESIRED ANGLE BEYOND MIN LIMIT");
-        return ArmConstants.MIN_CORAL_ANGLE;
-      } else if (pos.in(Degrees) > ArmConstants.MAX_CORAL_ANGLE.in(Degrees)) {
-        System.out.println("DESIRED ANGLE BEYOND MAX LIMIT");
-        return ArmConstants.MAX_CORAL_ANGLE;
-      }
+        pivotMotor.getConfigurator().apply(CoralArmConstants.MOTOR_CONFIG);
     }
 
-    return pos;
-  }
+    public Command runPct(double pct) {
+        return Commands.runOnce(() -> setPivotSpeed(pct), this);
+    }
 
-  public Angle getArmDesiredPosition() {
-    return goalPosition;
-  }
+    private void setPivotSpeed(double pct) {
+        pivotMotor.set(pct);
+    }
 
-  public Angle getArmAngle() {
-    return pivotMotor.getPosition().getValue();
-  }
+    private void setPivotVolts(Voltage v) {
+        pivotMotor.setVoltage(v.in(Volts));
+    }
 
-  public boolean isAtDesiredPosition() {
-    return isAtDesiredPosition(ArmConstants.DEG_TOL);
-  }
+    private void setPivotAngle(Angle angle) {
+        if (angle == goalPosition && isAtDesiredPosition()) {
+            return;
+        }
 
-  public boolean isAtDesiredPosition(double tol) {
-    return isAtPosition(tol, goalPosition);
-  }
+        pivotMotor.setControl(new PositionVoltage(angle));
+    }
 
-  public boolean isAtPosition(double tol, Angle goal) {
-    return Math.abs(getPosition().in(Degrees) - goal.in(Degrees)) <= tol;
-  }
+    public void setArmPosition(TargetAction position) {
+        this.goalPosition = clampPosition(position.getCoralArmAngle());
+        setPivotAngle(goalPosition);
+    }
 
-  public Angle getPosition() {
-    return Rotations.of(pivotMotor.getPosition().getValueAsDouble());
-  }
+    private Angle clampPosition(Angle pos) {
+        if (pos.in(Degrees) < CoralArmConstants.MIN_CORAL_ARM_ANGLE.in(Degrees)) {
+            System.out.println("DESIRED ANGLE BEYOND MIN LIMIT");
+            return CoralArmConstants.MIN_CORAL_ARM_ANGLE;
+        } else if (pos.in(Degrees) > CoralArmConstants.MAX_CORAL_ARM_ANGLE.in(Degrees)) {
+            System.out.println("DESIRED ANGLE BEYOND MAX LIMIT");
+            return CoralArmConstants.MAX_CORAL_ARM_ANGLE;
+        }
 
-  @Override
-  public void periodic() {
-    Logger.recordOutput("Coral Arm Angle", getPosition().in(Degrees));
-    Logger.recordOutput("Coral Arm Goal Angle", goalPosition.in(Degrees));
-    Logger.recordOutput("Coral Arm Motor Set Speed", pivotMotor.get());
-    Logger.recordOutput("Coral Arm Velocity", pivotMotor.getVelocity().getValueAsDouble());
-    Logger.recordOutput("Coral Arm At Goal", isAtDesiredPosition(5));
-  }
+        return pos;
+    }
 
-  /* SysId routine for characterizing arm. This is used to find PID gains for the arm motor. */
-  private final SysIdRoutine m_sysIdRoutineArm =
-      new SysIdRoutine(
-          new SysIdRoutine.Config(
-              null, // Use default ramp rate (1 V/s)
-              Volts.of(7), // Use dynamic voltage of 7 V
-              null, // Use default timeout (10 s)
-              // Log state with SignalLogger class
-              state -> SignalLogger.writeString("SysIdArm_State", state.toString())),
-          new SysIdRoutine.Mechanism(this::setPivotVolts, null, this));
+    public Angle getArmDesiredPosition() {
+        return goalPosition;
+    }
 
-  /* The SysId routine to test */
-  private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineArm;
-  /**
-   * Runs the SysId Quasistatic test in the given direction for the routine specified by {@link
-   * #m_sysIdRoutineToApply}.
-   *
-   * @param direction Direction of the SysId Quasistatic test
-   * @return Command to run
-   */
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return m_sysIdRoutineToApply.quasistatic(direction);
-  }
+    public Angle getArmAngle() {
+        return pivotMotor.getPosition().getValue();
+    }
 
-  /**
-   * Runs the SysId Dynamic test in the given direction for the routine specified by {@link
-   * #m_sysIdRoutineToApply}.
-   *
-   * @param direction Direction of the SysId Dynamic test
-   * @return Command to run
-   */
-  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return m_sysIdRoutineToApply.dynamic(direction);
-  }
+    public boolean isAtDesiredPosition() {
+        return isAtDesiredPosition(CoralArmConstants.DEG_TOL);
+    }
+
+    public boolean isAtDesiredPosition(double tol) {
+        return isAtPosition(tol, goalPosition);
+    }
+
+    public boolean isAtPosition(double tol, Angle goal) {
+        return Math.abs(getPosition().in(Degrees) - goal.in(Degrees)) <= tol;
+    }
+
+    public Angle getPosition() {
+        return Rotations.of(pivotMotor.getPosition().getValueAsDouble());
+    }
+
+    @Override
+    public void periodic() {
+        Logger.recordOutput("Coral Arm/Angle", getPosition().in(Degrees));
+        Logger.recordOutput("Coral Arm/Goal Angle", goalPosition.in(Degrees));
+        // Logger.recordOutput("Coral Arm/Motor Set Speed", pivotMotor.get());
+        // Logger.recordOutput("Coral Arm/Velocity", pivotMotor.getVelocity().getValueAsDouble());
+        // Logger.recordOutput("Coral Arm/At Goal", isAtDesiredPosition(5));
+    }
+
+    /* SysId routine for characterizing arm. This is used to find PID gains for the arm motor. */
+    private final SysIdRoutine m_sysIdRoutineArm = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                    null, // Use default ramp rate (1 V/s)
+                    Volts.of(7), // Use dynamic voltage of 7 V
+                    null, // Use default timeout (10 s)
+                    // Log state with SignalLogger class
+                    state -> SignalLogger.writeString("SysIdArm_State", state.toString())),
+            new SysIdRoutine.Mechanism(this::setPivotVolts, null, this));
+
+    /* The SysId routine to test */
+    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineArm;
+    /**
+     * Runs the SysId Quasistatic test in the given direction for the routine specified by {@link
+     * #m_sysIdRoutineToApply}.
+     *
+     * @param direction Direction of the SysId Quasistatic test
+     * @return Command to run
+     */
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutineToApply.quasistatic(direction);
+    }
+
+    /**
+     * Runs the SysId Dynamic test in the given direction for the routine specified by {@link
+     * #m_sysIdRoutineToApply}.
+     *
+     * @param direction Direction of the SysId Dynamic test
+     * @return Command to run
+     */
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutineToApply.dynamic(direction);
+    }
 }

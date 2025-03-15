@@ -8,31 +8,27 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 
 public class AdvantageScopeSubsystem extends SubsystemBase {
-  static DrivetrainSubsystem drivetrainSubsystem;
+    static DrivetrainSubsystem drivetrainSubsystem;
 
-  static String folder = "Data_";
+    static String folder = "Data_";
 
-  private static AdvantageScopeSubsystem INSTANCE;
+    private static AdvantageScopeSubsystem INSTANCE;
 
-  public static AdvantageScopeSubsystem getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new AdvantageScopeSubsystem(drivetrainSubsystem);
+    public static AdvantageScopeSubsystem getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new AdvantageScopeSubsystem(drivetrainSubsystem);
+        }
+        return INSTANCE;
     }
-    return INSTANCE;
-  }
 
-  public AdvantageScopeSubsystem(DrivetrainSubsystem drivetrainSubsystem) {
-    AdvantageScopeSubsystem.drivetrainSubsystem = drivetrainSubsystem;
-  }
+    public AdvantageScopeSubsystem(DrivetrainSubsystem drivetrainSubsystem) {
+        AdvantageScopeSubsystem.drivetrainSubsystem = drivetrainSubsystem;
+    }
 
-  @Override
-  public void periodic() {
-    recordDrivetrainData();
-  }
+    @Override
+    public void periodic() {
+        recordDrivetrainData();
+    }
 
-  public static void recordDrivetrainData() {
-    String drivetrainFolder = "Drivetrain_";
-
-    // TODO: swerve array + Pose2d
-  }
+    public static void recordDrivetrainData() {}
 }

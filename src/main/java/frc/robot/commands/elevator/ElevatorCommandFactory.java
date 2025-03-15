@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 public class ElevatorCommandFactory {
-  private static final ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
+    private static final ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
 
-  public static Command manualUp() {
-    return Commands.runEnd(() -> elevator.manualUp(), () -> elevator.stopElevator(), elevator);
-  }
+    public static Command manualUp() {
+        return Commands.runEnd(() -> elevator.manualUp(), () -> elevator.stopElevator(), elevator);
+    }
 
-  public static Command manualDown() {
-    return Commands.runEnd(() -> elevator.manualDown(), () -> elevator.stopElevator(), elevator);
-  }
+    public static Command manualDown() {
+        return Commands.runEnd(() -> elevator.manualDown(), () -> elevator.stopElevator(), elevator);
+    }
 }

@@ -8,274 +8,242 @@ import frc.robot.controlboard.primary.IPrimaryControlBoard;
 import frc.robot.controlboard.primary.JoystickPrimaryInput;
 import frc.robot.controlboard.secondary.ControlPanelInput;
 import frc.robot.controlboard.secondary.ISecondaryControlBoard;
-import frc.robot.util.Ports;
+import frc.robot.util.io.Ports;
 
 public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoard {
-  private final IPrimaryControlBoard primaryControlBoard;
-  private final ISecondaryControlBoard secondaryControlBoard;
+    private final IPrimaryControlBoard primaryControlBoard;
+    private final ISecondaryControlBoard secondaryControlBoard;
 
-  private static ControlBoard INSTANCE;
+    private static ControlBoard INSTANCE;
 
-  public static ControlBoard getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new ControlBoard();
+    public static ControlBoard getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new ControlBoard();
+        }
+        return INSTANCE;
     }
-    return INSTANCE;
-  }
 
-  private ControlBoard() {
-    boolean useDriveGamepad =
-        DriverStation.getJoystickIsXbox(Ports.GAMEPAD_PORT) || DriverConstants.FORCE_GAMEPAD;
-    primaryControlBoard =
-        useDriveGamepad ? GamepadPrimaryInput.getInstance() : JoystickPrimaryInput.getInstance();
-    secondaryControlBoard = ControlPanelInput.getInstance();
+    private ControlBoard() {
+        boolean useDriveGamepad = DriverStation.getJoystickIsXbox(Ports.GAMEPAD_PORT) || DriverConstants.FORCE_GAMEPAD;
+        primaryControlBoard = useDriveGamepad ? GamepadPrimaryInput.getInstance() : JoystickPrimaryInput.getInstance();
+        secondaryControlBoard = ControlPanelInput.getInstance();
 
-    if (!useDriveGamepad) {
-      IPrimaryControlBoard.povLooper.poll();
+        if (!useDriveGamepad) {
+            IPrimaryControlBoard.povLooper.poll();
+        }
     }
-  }
 
-  /* Primary */
+    /* Primary */
 
-  @Override
-  public double getThrottle() {
-    return primaryControlBoard.getThrottle();
-  }
+    @Override
+    public double getThrottle() {
+        return primaryControlBoard.getThrottle();
+    }
 
-  @Override
-  public double getStrafe() {
-    return primaryControlBoard.getStrafe();
-  }
+    @Override
+    public double getStrafe() {
+        return primaryControlBoard.getStrafe();
+    }
 
-  @Override
-  public double getRotation() {
-    return primaryControlBoard.getRotation();
-  }
+    @Override
+    public double getRotation() {
+        return primaryControlBoard.getRotation();
+    }
 
-  @Override
-  public Trigger povUp() {
-    return primaryControlBoard.povUp();
-  }
+    @Override
+    public Trigger povUp() {
+        return primaryControlBoard.povUp();
+    }
 
-  @Override
-  public Trigger povUpRight() {
-    return primaryControlBoard.povUpRight();
-  }
+    @Override
+    public Trigger povUpRight() {
+        return primaryControlBoard.povUpRight();
+    }
 
-  @Override
-  public Trigger povRight() {
-    return primaryControlBoard.povRight();
-  }
+    @Override
+    public Trigger povRight() {
+        return primaryControlBoard.povRight();
+    }
 
-  @Override
-  public Trigger povDownRight() {
-    return primaryControlBoard.povDownRight();
-  }
+    @Override
+    public Trigger povDownRight() {
+        return primaryControlBoard.povDownRight();
+    }
 
-  @Override
-  public Trigger povDown() {
-    return primaryControlBoard.povDown();
-  }
+    @Override
+    public Trigger povDown() {
+        return primaryControlBoard.povDown();
+    }
 
-  @Override
-  public Trigger povDownLeft() {
-    return primaryControlBoard.povDownLeft();
-  }
+    @Override
+    public Trigger povDownLeft() {
+        return primaryControlBoard.povDownLeft();
+    }
 
-  @Override
-  public Trigger povLeft() {
-    return primaryControlBoard.povLeft();
-  }
+    @Override
+    public Trigger povLeft() {
+        return primaryControlBoard.povLeft();
+    }
 
-  @Override
-  public Trigger povUpLeft() {
-    return primaryControlBoard.povUpLeft();
-  }
+    @Override
+    public Trigger povUpLeft() {
+        return primaryControlBoard.povUpLeft();
+    }
 
-  @Override
-  public Trigger povRotLeft() {
-    return primaryControlBoard.povRotLeft();
-  }
+    @Override
+    public Trigger povRotLeft() {
+        return primaryControlBoard.povRotLeft();
+    }
 
-  @Override
-  public Trigger povRotRight() {
-    return primaryControlBoard.povRotRight();
-  }
+    @Override
+    public Trigger povRotRight() {
+        return primaryControlBoard.povRotRight();
+    }
 
-  @Override
-  public Trigger resetGyro() {
-    return primaryControlBoard.resetGyro();
-  }
+    @Override
+    public Trigger algaeManualUp() {
+        return primaryControlBoard.algaeManualUp();
+    }
 
-  @Override
-  public Trigger outtakeCoral() {
-    return primaryControlBoard.outtakeCoral();
-  }
+    @Override
+    public Trigger algaeManualDown() {
+        return primaryControlBoard.algaeManualDown();
+    }
 
-  @Override
-  public Trigger intakeCoral() {
-    return primaryControlBoard.intakeCoral();
-  }
+    @Override
+    public Trigger resetGyro() {
+        return primaryControlBoard.resetGyro();
+    }
 
-  @Override
-  public Trigger intakeAlgae() {
-    return primaryControlBoard.intakeAlgae();
-  }
+    @Override
+    public Trigger outtake() {
+        return primaryControlBoard.outtake();
+    }
 
-  @Override
-  public Trigger shootAlgae() {
-    return primaryControlBoard.shootAlgae();
-  }
+    @Override
+    public Trigger intake() {
+        return primaryControlBoard.intake();
+    }
 
-  @Override
-  public Trigger reefAlignment() {
-    return primaryControlBoard.reefAlignment();
-  }
+    @Override
+    public Trigger intakeAlgae() {
+        return primaryControlBoard.intakeAlgae();
+    }
 
-  @Override
-  public Trigger sysIDQuasiForward() {
-    return primaryControlBoard.sysIDQuasiForward();
-  }
+    @Override
+    public Trigger shootAlgae() {
+        return primaryControlBoard.shootAlgae();
+    }
 
-  @Override
-  public Trigger sysIDQuasiReverse() {
-    return primaryControlBoard.sysIDQuasiReverse();
-  }
+    @Override
+    public Trigger alignWithReefLeft() {
+        return primaryControlBoard.alignWithReefLeft();
+    }
 
-  @Override
-  public Trigger sysIDDynamicForward() {
-    return primaryControlBoard.sysIDDynamicForward();
-  }
+    @Override
+    public Trigger alignWithReefRight() {
+        return primaryControlBoard.alignWithReefRight();
+    }
 
-  @Override
-  public Trigger sysIDDynamicReverse() {
-    return primaryControlBoard.sysIDDynamicReverse();
-  }
+    @Override
+    public Trigger sysIDQuasiForward() {
+        return primaryControlBoard.sysIDQuasiForward();
+    }
 
-  /* Secondary */
+    @Override
+    public Trigger sysIDQuasiReverse() {
+        return primaryControlBoard.sysIDQuasiReverse();
+    }
 
-  @Override
-  public Trigger homeElevator() {
-    return secondaryControlBoard.homeElevator();
-  }
+    @Override
+    public Trigger sysIDDynamicForward() {
+        return primaryControlBoard.sysIDDynamicForward();
+    }
 
-  @Override
-  public Trigger actTrigger() {
-    return secondaryControlBoard.actTrigger();
-  }
+    @Override
+    public Trigger sysIDDynamicReverse() {
+        return primaryControlBoard.sysIDDynamicReverse();
+    }
 
-  @Override
-  public Trigger manualUp() {
-    return secondaryControlBoard.manualUp();
-  }
+    /* Secondary */
 
-  @Override
-  public Trigger manualDown() {
-    return secondaryControlBoard.manualDown();
-  }
+    @Override
+    public Trigger homeElevator() {
+        return secondaryControlBoard.homeElevator();
+    }
 
-  @Override
-  public Trigger climbUp() {
-    return secondaryControlBoard.climbUp();
-  }
+    @Override
+    public Trigger actTrigger() {
+        return secondaryControlBoard.actTrigger();
+    }
 
-  @Override
-  public Trigger climbDown() {
-    return secondaryControlBoard.climbDown();
-  }
+    @Override
+    public Trigger algaeScoreAngle() {
+        return secondaryControlBoard.algaeScoreAngle();
+    }
 
-  @Override
-  public Trigger reefAB() {
-    return secondaryControlBoard.reefAB();
-  }
+    @Override
+    public Trigger algaeLowAngle() {
+        return secondaryControlBoard.algaeLowAngle();
+    }
 
-  @Override
-  public Trigger reefCD() {
-    return secondaryControlBoard.reefCD();
-  }
+    @Override
+    public Trigger climbUp() {
+        return secondaryControlBoard.climbUp();
+    }
 
-  @Override
-  public Trigger reefEF() {
-    return secondaryControlBoard.reefEF();
-  }
+    @Override
+    public Trigger climbDown() {
+        return secondaryControlBoard.climbDown();
+    }
 
-  @Override
-  public Trigger reefGH() {
-    return secondaryControlBoard.reefGH();
-  }
+    @Override
+    public Trigger setGoalCL() {
+        return secondaryControlBoard.setGoalCL();
+    }
 
-  @Override
-  public Trigger reefIJ() {
-    return secondaryControlBoard.reefIJ();
-  }
+    @Override
+    public Trigger setGoalL1H() {
+        return secondaryControlBoard.setGoalL1H();
+    }
 
-  @Override
-  public Trigger reefKL() {
-    return secondaryControlBoard.reefKL();
-  }
+    @Override
+    public Trigger setGoalL2() {
+        return secondaryControlBoard.setGoalL2();
+    }
 
-  @Override
-  public Trigger setGoalL1L() {
-    return secondaryControlBoard.setGoalL1L();
-  }
+    @Override
+    public Trigger setGoalL3() {
+        return secondaryControlBoard.setGoalL3();
+    }
 
-  @Override
-  public Trigger setGoalL1H() {
-    return secondaryControlBoard.setGoalL1H();
-  }
+    @Override
+    public Trigger setGoalL4() {
+        return secondaryControlBoard.setGoalL4();
+    }
 
-  @Override
-  public Trigger setGoalL2() {
-    return secondaryControlBoard.setGoalL2();
-  }
+    @Override
+    public Trigger setGoalUpperAlgae() {
+        return secondaryControlBoard.setGoalUpperAlgae();
+    }
 
-  @Override
-  public Trigger setGoalL3() {
-    return secondaryControlBoard.setGoalL3();
-  }
+    @Override
+    public Trigger setGoalLowerAlgae() {
+        return secondaryControlBoard.setGoalLowerAlgae();
+    }
 
-  @Override
-  public Trigger setGoalL4() {
-    return secondaryControlBoard.setGoalL4();
-  }
+    @Override
+    public Trigger setSubReefLeft() {
+        return secondaryControlBoard.setSubReefLeft();
+    }
 
-  @Override
-  public Trigger setGoalUpperAlgae() {
-    return secondaryControlBoard.setGoalUpperAlgae();
-  }
+    @Override
+    public Trigger setSubReefRight() {
+        return secondaryControlBoard.setSubReefRight();
+    }
 
-  @Override
-  public Trigger setGoalLowerAlgae() {
-    return secondaryControlBoard.setGoalLowerAlgae();
-  }
-
-  @Override
-  public Trigger setSubReefLeft() {
-    return secondaryControlBoard.setSubReefLeft();
-  }
-
-  @Override
-  public Trigger setSubReefCenter() {
-    return secondaryControlBoard.setSubReefCenter();
-  }
-
-  @Override
-  public Trigger setSubReefRight() {
-    return secondaryControlBoard.setSubReefRight();
-  }
-
-  @Override
-  public Trigger setGoalCoralStation() {
-    return secondaryControlBoard.setGoalCoralStation();
-  }
-
-  @Override
-  public Trigger setGoalAlgaeScoring() {
-    return secondaryControlBoard.setGoalAlgaeScoring();
-  }
-
-  @Override
-  public Trigger setGoalTravel() {
-    return secondaryControlBoard.setGoalTravel();
-  }
+    @Override
+    public Trigger setGoalCoralStation() {
+        return secondaryControlBoard.setGoalCoralStation();
+    }
 }

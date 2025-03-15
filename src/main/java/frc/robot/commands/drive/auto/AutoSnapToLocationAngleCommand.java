@@ -5,26 +5,26 @@
 package frc.robot.commands.drive.auto;
 
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
-import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 public class AutoSnapToLocationAngleCommand extends SnapToLocationAngleCommand {
-  public AutoSnapToLocationAngleCommand(TargetFieldLocation targetFieldLocation) {
-    super(targetFieldLocation, () -> 0, () -> 0, () -> 0, () -> false);
-  }
+    public AutoSnapToLocationAngleCommand(FieldElementFace targetFieldLocation) {
+        super(targetFieldLocation, () -> 0, () -> 0, () -> 0, () -> false);
+    }
 
-  @Override
-  public void initialize() {
-    // no overrides necessary? just a regular command
-  }
+    @Override
+    public void initialize() {
+        // no overrides necessary? just a regular command
+    }
 
-  @Override
-  public void execute() {}
+    @Override
+    public void execute() {}
 
-  @Override
-  public void end(boolean interrupted) {}
+    @Override
+    public void end(boolean interrupted) {}
 
-  @Override
-  public boolean isFinished() {
-    return super.isFinished();
-  }
+    @Override
+    public boolean isFinished() {
+        return super.isFinished();
+    }
 }

@@ -7,21 +7,21 @@ package frc.robot.auto.modes;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.controlboard.PositionSuperstructure.ReefSubSide;
-import frc.robot.controlboard.PositionSuperstructure.TargetFieldLocation;
+import frc.robot.util.AlignmentCalculator.AlignOffset;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 @AutoDescription(description = "testing vision to reef side")
 public class AutoLLToK4 extends AutoBase {
-  private static final PathPlannerPath startPath = Paths.LL_STOP;
+    private static final PathPlannerPath startPath = Paths.LL_STOP;
 
-  /** Creates a new AutoLLToK4. */
-  public AutoLLToK4() {
-    super(startPath.getStartingHolonomicPose());
-  }
+    /** Creates a new AutoLLToK4. */
+    public AutoLLToK4() {
+        super(startPath.getStartingHolonomicPose());
+    }
 
-  @Override
-  public void init() {
-    System.out.println("START LL - K4");
-    addCommands(reefSideVisionOrPathAlign(ReefSubSide.LEFT, startPath, TargetFieldLocation.KL));
-  }
+    @Override
+    public void init() {
+        System.out.println("START LL - K4");
+        addCommands(safeReefAlignment(startPath, AlignOffset.LEFT_BRANCH, FieldElementFace.KL));
+    }
 }

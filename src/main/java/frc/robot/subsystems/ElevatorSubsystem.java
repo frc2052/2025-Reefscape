@@ -16,169 +16,169 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.controlboard.PositionSuperstructure.TargetAction;
-import frc.robot.util.Ports;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
 public class ElevatorSubsystem extends SubsystemBase {
-  private static TalonFX frontMotor;
-  private static TalonFX backMotor;
+    private static TalonFX frontMotor;
+    private static TalonFX backMotor;
 
-  private ControlState controlState;
+    private ControlState controlState;
 
-  private boolean homing;
-  private boolean shouldHome = true;
-  private final DelayedBoolean homingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.05);
+    private boolean homing;
+    private boolean shouldHome = true;
+    private final DelayedBoolean homingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.05);
 
-  private double goalPositionRotations;
+    private double goalPositionRotations;
 
-  private static ElevatorSubsystem INSTANCE;
+    private static ElevatorSubsystem INSTANCE;
 
-  public static ElevatorSubsystem getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new ElevatorSubsystem();
-    }
-    return INSTANCE;
-  }
-
-  private ElevatorSubsystem() {
-    goalPositionRotations = TargetAction.HM.getElevatorPositionRotations();
-
-    frontMotor = new TalonFX(Ports.ELEVATOR_FRONT_ID, "Krawlivore");
-    backMotor = new TalonFX(Ports.ELEVATOR_BACK_ID, "Krawlivore");
-
-    backMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
-    frontMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
-
-    frontMotor.clearStickyFault_SupplyCurrLimit();
-
-    backMotor.setControl(new Follower(frontMotor.getDeviceID(), true));
-  }
-
-  public void setPositionMotionMagic(TargetAction elevatorAction) {
-    setPositionMotionMagic(elevatorAction.getElevatorPositionRotations());
-  }
-
-  public void setPositionMotionMagic(double elevatorPositionRotations) {
-    controlState = ControlState.MOTION_MAGIC;
-    if (goalPositionRotations == elevatorPositionRotations && atPosition()) {
-      return;
+    public static ElevatorSubsystem getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new ElevatorSubsystem();
+        }
+        return INSTANCE;
     }
 
-    if (elevatorPositionRotations != TargetAction.HM.getElevatorPositionRotations()) {
-      shouldHome = true;
+    private ElevatorSubsystem() {
+        goalPositionRotations = TargetAction.HM.getElevatorPositionRotations();
+
+        frontMotor = new TalonFX(Ports.ELEVATOR_FRONT_ID, "Krawlivore");
+        backMotor = new TalonFX(Ports.ELEVATOR_BACK_ID, "Krawlivore");
+
+        backMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
+        frontMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
+
+        frontMotor.clearStickyFault_SupplyCurrLimit();
+
+        backMotor.setControl(new Follower(frontMotor.getDeviceID(), true));
     }
 
-    goalPositionRotations = elevatorPositionRotations;
-
-    frontMotor.setControl(new MotionMagicExpoTorqueCurrentFOC(elevatorPositionRotations));
-  }
-
-  public void setOpenLoop(double speed) {
-    controlState = ControlState.OPEN_LOOP;
-    frontMotor.setControl(new DutyCycleOut(speed));
-  }
-
-  public Command manualUp() {
-    return Commands.runOnce(() -> setOpenLoop(ElevatorConstants.MANUAL_MOTOR_SPEED), this);
-  }
-
-  public Command manualDown() {
-    return Commands.runOnce(() -> setOpenLoop(-ElevatorConstants.MANUAL_MOTOR_SPEED), this);
-  }
-
-  public Command homeElevator() {
-    return new InstantCommand(() -> setWantHome(true));
-  }
-
-  public Command stopElevator() {
-    return new InstantCommand(() -> frontMotor.set(0.0));
-  }
-
-  public double getPosition() {
-    return frontMotor.getPosition().getValueAsDouble();
-  }
-
-  public boolean atPosition() {
-    return Math.abs(goalPositionRotations - getPosition()) <= ElevatorConstants.TICKS_DEADZONE;
-  }
-
-  public boolean atPosition(TargetAction position) {
-    return Math.abs(position.ElevatorPositionRotations - getPosition())
-        <= ElevatorConstants.TICKS_DEADZONE;
-  }
-
-  public boolean atPosition(double tol, TargetAction position) {
-    return Math.abs(position.ElevatorPositionRotations - getPosition()) <= tol;
-  }
-
-  public void zeroEncoder() {
-    frontMotor.getConfigurator().setPosition(0);
-  }
-
-  public void setWantHome(boolean home) {
-    homing = home;
-    // once homing is started, no longer needs to home
-    if (homing) {
-      shouldHome = false;
+    public void setPositionMotionMagic(TargetAction elevatorAction) {
+        setPositionMotionMagic(elevatorAction.getElevatorPositionRotations());
     }
-  }
 
-  public boolean shouldHome() {
-    return shouldHome;
-  }
+    public void setPositionMotionMagic(double elevatorPositionRotations) {
+        controlState = ControlState.MOTION_MAGIC;
+        if (goalPositionRotations == elevatorPositionRotations && atPosition()) {
+            return;
+        }
 
-  public boolean atHomingLocation() {
-    return getPosition() < TargetAction.HM.getElevatorPositionRotations()
-        || MathHelpers.epsilonEquals(
-            getPosition(), TargetAction.HM.getElevatorPositionRotations(), 0.05);
-  }
+        if (elevatorPositionRotations != TargetAction.HM.getElevatorPositionRotations()) {
+            shouldHome = true;
+        }
 
-  @Override
-  public void periodic() {
-    Logger.recordOutput("Elevator Position", getPosition());
-    Logger.recordOutput("Elevator Goal Position", goalPositionRotations);
-    Logger.recordOutput("Elevator At Goal Position", atPosition());
-    Logger.recordOutput("Elevator Motor Set Speed", frontMotor.get());
+        goalPositionRotations = elevatorPositionRotations;
 
-    // if being used in open loop (usually manual mode), disable the height limit
-    // if (controlState == ControlState.OPEN_LOOP) {
-    //   frontMotor
-    //       .getConfigurator()
-    //       .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(false));
-    // } else {
-    //   frontMotor
-    //       .getConfigurator()
-    //       .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(true));
-    // }
-
-    // if we still intend to go to the home position, currently at alleged home, and should re-home,
-    // then re-home
-    // if (MathHelpers.epsilonEquals(
-    //         goalPositionRotations, TargetAction.HM.getElevatorPositionRotations(), .02)
-    //     && atHomingLocation()
-    //     && shouldHome) {
-    //   setWantHome(true);
-    // } else if (controlState != ControlState.OPEN_LOOP) {
-    //   setWantHome(false);
-    // }
-
-    Logger.recordOutput("Elevator Homing", homing);
-    if (homing) {
-      setOpenLoop(ElevatorConstants.HOMING_SPEED);
-      if (homingDelay.update(
-          Timer.getFPGATimestamp(),
-          MathHelpers.epsilonEquals(frontMotor.getVelocity().getValueAsDouble(), 0.0, 0.03))) {
-        zeroEncoder();
-        setPositionMotionMagic(TargetAction.HM);
-        homing = false;
-        homingDelay.update(Timer.getFPGATimestamp(), false);
-      }
+        frontMotor.setControl(new MotionMagicExpoTorqueCurrentFOC(elevatorPositionRotations));
     }
-  }
 
-  public static enum ControlState {
-    OPEN_LOOP,
-    MOTION_MAGIC
-  }
+    public void setOpenLoop(double speed) {
+        controlState = ControlState.OPEN_LOOP;
+        frontMotor.setControl(new DutyCycleOut(speed));
+    }
+
+    public Command manualUp() {
+        return Commands.runOnce(() -> setOpenLoop(ElevatorConstants.MANUAL_MOTOR_SPEED), this);
+    }
+
+    public Command manualDown() {
+        return Commands.runOnce(() -> setOpenLoop(-ElevatorConstants.MANUAL_MOTOR_SPEED), this);
+    }
+
+    public Command homeElevator() {
+        return new InstantCommand(() -> setWantHome(true));
+    }
+
+    public Command stopElevator() {
+        return new InstantCommand(() -> frontMotor.set(0.0));
+    }
+
+    public double getPosition() {
+        return frontMotor.getPosition().getValueAsDouble();
+    }
+
+    public boolean atPosition() {
+        return Math.abs(goalPositionRotations - getPosition()) <= ElevatorConstants.TICKS_DEADZONE;
+    }
+
+    public boolean atPosition(TargetAction position) {
+        return Math.abs(position.getElevatorPositionRotations() - getPosition()) <= ElevatorConstants.TICKS_DEADZONE;
+    }
+
+    public boolean atPosition(double tol, TargetAction position) {
+        return Math.abs(position.getElevatorPositionRotations() - getPosition()) <= tol;
+    }
+
+    public void zeroEncoder() {
+        frontMotor.getConfigurator().setPosition(0);
+    }
+
+    public void setWantHome(boolean home) {
+        homing = home;
+        // once homing is started, no longer needs to home
+        if (homing) {
+            shouldHome = false;
+        }
+    }
+
+    public boolean shouldHome() {
+        return shouldHome;
+    }
+
+    public boolean atHomingLocation() {
+        return getPosition() < TargetAction.HM.getElevatorPositionRotations()
+                || MathHelpers.epsilonEquals(getPosition(), TargetAction.HM.getElevatorPositionRotations(), 0.05);
+    }
+
+    @Override
+    public void periodic() {
+        Logger.recordOutput("Elevator/Position", getPosition());
+        Logger.recordOutput("Elevator/Goal Position", goalPositionRotations);
+        // Logger.recordOutput("Elevator/At Goal Position", atPosition());
+        // Logger.recordOutput("Elevator/Motor Set Speed", frontMotor.get());
+        // Logger.recordOutput("Elevator/Velocity", frontMotor.getVelocity().getValueAsDouble());
+
+        // if being used in open loop (usually manual mode), disable the height limit
+        // if (controlState == ControlState.OPEN_LOOP) {
+        //   frontMotor
+        //       .getConfigurator()
+        //       .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(false));
+        // } else {
+        //   frontMotor
+        //       .getConfigurator()
+        //       .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(true));
+        // }
+
+        // if we still intend to go to the home position, currently at alleged home, and should re-home,
+        // then re-home
+        // if (MathHelpers.epsilonEquals(
+        //         goalPositionRotations, TargetAction.HM.getElevatorPositionRotations(), .02)
+        //     && atHomingLocation()
+        //     && shouldHome) {
+        //   setWantHome(true);
+        // } else if (controlState != ControlState.OPEN_LOOP) {
+        //   setWantHome(false);
+        // }
+
+        Logger.recordOutput("Elevator Homing", homing);
+        if (homing) {
+            setOpenLoop(ElevatorConstants.HOMING_SPEED);
+            if (homingDelay.update(
+                    Timer.getFPGATimestamp(),
+                    MathHelpers.epsilonEquals(frontMotor.getVelocity().getValueAsDouble(), 0.0, 0.5))) {
+                zeroEncoder();
+                System.out.println("Elevator Homed");
+                setPositionMotionMagic(TargetAction.HP);
+                homing = false;
+                homingDelay.update(Timer.getFPGATimestamp(), false);
+            }
+        }
+    }
+
+    public static enum ControlState {
+        OPEN_LOOP,
+        MOTION_MAGIC
+    }
 }
