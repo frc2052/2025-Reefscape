@@ -3,9 +3,6 @@ package frc.robot.auto.modes.StartLeft;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 @AutoDescription(description = "LEFT Two L4, Remove Algae, Two L3")
 public class AutoK4L4DAK3L3 extends AutoBase {

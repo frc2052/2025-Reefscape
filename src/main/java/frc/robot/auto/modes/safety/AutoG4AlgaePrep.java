@@ -7,10 +7,6 @@ package frc.robot.auto.modes.safety;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.commands.hand.HandCommandFactory;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
 @AutoDescription(description = "CENTER Side")
