@@ -288,16 +288,16 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     public static class Path { // combines access to pathplanner and choreo
-        private String pathPlannerPathName, chorRedPathName, chorBluePathName;
+        private String pathPlannerPathName, chorPathName;
 
-        public Path(String PPName, String chorRed) {
+        public Path(String PPName, String chorName) {
             pathPlannerPathName = PPName;
-            chorRedPathName = chorRed;
+            chorPathName = chorName;
         }
 
         public PathPlannerPath getChoreoPath() {
             try {
-                return AutoBase.getChoreoTraj(chorRedPathName); // return choreo
+                return AutoBase.getChoreoTraj(chorPathName); // return choreo
             } catch (Exception e) {
                 DriverStation.reportError(
                         "FAILED TO GET CHOREO PATH FROM PATHFILE " + pathPlannerPathName + e.getMessage(),
@@ -305,17 +305,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 return null;
             }
         }
+        // public PathPlannerPath getChoreoPathAtIndex(){
 
-        public PathPlannerPath getChoreoPathBlue(){
-            try {
-                return AutoBase.getChoreoTraj(chorRedPathName); // return choreo
-            } catch (Exception e) {
-                DriverStation.reportError(
-                        "FAILED TO GET CHOREO PATH FROM PATHFILE " + pathPlannerPathName + e.getMessage(),
-                        e.getStackTrace());
-                return null;
-            }
-        }
+        // }
 
         public PathPlannerPath getPathPlannerPath() {
             try {

@@ -22,6 +22,6 @@ public class AutoLLToK4 extends AutoBase {
     @Override
     public void init() {
         System.out.println("START LL - K4");
-        addCommands(safeReefAlignment(startPath, AlignOffset.LEFT_BRANCH, FieldElementFace.KL));
+        // addCommands(safeReefAlignment(startPath, AlignOffset.LEFT_BRANCH, FieldElementFace.KL));
     }
 }

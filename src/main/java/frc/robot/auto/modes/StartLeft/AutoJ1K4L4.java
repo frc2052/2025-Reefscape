@@ -32,23 +32,23 @@ public class AutoJ1K4L4 extends AutoBase {
         //         .andThen(score(TargetAction.L1H)));
 
         // path L1 (off side)
-        addCommands(followPathCommand(Paths.SL_IJ_L1)
-                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-                .andThen(score(TargetAction.L1H)));
+        // addCommands(followPathCommand(Paths.SL_IJ_L1)
+        //         .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
+        //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+        //         .andThen(score(TargetAction.L1H)));
 
-        //
-        addCommands(safeStationAlignment(Paths.J2_LL));
-        addCommands(HPIntake());
-        addCommands(safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
-                .alongWith(prepareForScoreWhenReady(TargetAction.L4)
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-                .andThen(score(TargetAction.L4)));
+        // //
+        // addCommands(safeStationAlignment(Paths.J2_LL));
+        // addCommands(HPIntake());
+        // addCommands(safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
+        //         .alongWith(prepareForScoreWhenReady(TargetAction.L4)
+        //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+        //         .andThen(score(TargetAction.L4)));
 
-        //
-        addCommands(safeStationAlignment(Paths.K4_LL));
-        addCommands(HPIntake());
-        addCommands(HandCommandFactory.motorIn().withTimeout(1.0));
+        // //
+        // addCommands(safeStationAlignment(Paths.K4_LL));
+        // addCommands(HPIntake());
+        // addCommands(HandCommandFactory.motorIn().withTimeout(1.0));
         // addCommands( // don't go  back to reef or start raising elevator
         //     safeReefAlignment(Paths.LL_K4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.KL)
         //         .alongWith(

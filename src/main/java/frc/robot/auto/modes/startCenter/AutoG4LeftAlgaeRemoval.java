@@ -26,7 +26,7 @@ public class AutoG4LeftAlgaeRemoval extends AutoBase {
         addCommands(getBumpCommand());
         addCommands(delaySelectedTime());
 
-        addCommands(safeReefAlignment(startPath, AlignOffset.MIDDLE_REEF, FieldElementFace.GH));
+        // addCommands(safeReefAlignment(startPath, AlignOffset.MIDDLE_REEF, FieldElementFace.GH));
         addCommands(toPosAndScore(TargetAction.L4));
         addCommands(descoreScoreNetAlgae(Paths.GH_SCORE_TO_DESCORE, TargetAction.LA, Paths.GH_NET));
         addCommands(descoreScoreNetAlgae(Paths.NET_IJ, TargetAction.UA, Paths.IJ_NET));

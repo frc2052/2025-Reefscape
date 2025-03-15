@@ -39,19 +39,19 @@ public class AutoE1D1C1 extends AutoBase {
                 .andThen(score(TargetAction.L1H)));
 
         //
-        addCommands(safeStationAlignment(Paths.E2_RL));
-        addCommands(HPIntake());
-        addCommands(followPathCommand(Paths.RL_CD_L1)
-                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-                .andThen(score(TargetAction.L1H)));
+        // addCommands(safeStationAlignment(Paths.E2_RL));
+        // addCommands(HPIntake());
+        // addCommands(followPathCommand(Paths.RL_CD_L1)
+        //         .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
+        //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+        //         .andThen(score(TargetAction.L1H)));
 
-        //
-        addCommands(safeStationAlignment(Paths.CD_RL));
-        addCommands(HPIntake());
-        addCommands(followPathCommand(Paths.RL_CD_L1)
-                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-                .andThen(score(TargetAction.L1H)));
+        // //
+        // addCommands(safeStationAlignment(Paths.CD_RL));
+        // addCommands(HPIntake());
+        // addCommands(followPathCommand(Paths.RL_CD_L1)
+        //         .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
+        //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+        //         .andThen(score(TargetAction.L1H)));
     }
 }
