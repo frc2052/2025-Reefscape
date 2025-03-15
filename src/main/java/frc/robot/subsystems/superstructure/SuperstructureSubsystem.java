@@ -2,11 +2,12 @@ package frc.robot.subsystems.superstructure;
 
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
-import frc.robot.subsystems.AlgaePivotSubsystem;
-import frc.robot.subsystems.CoralArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import org.littletonrobotics.junction.Logger;
 
@@ -14,9 +15,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     private static SuperstructureSubsystem INSTANCE;
 
-    private AlgaePivotSubsystem algaePivot = AlgaePivotSubsystem.getInstance();
     private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
-    private CoralArmSubsystem coralArm = CoralArmSubsystem.getInstance();
+    private ArmPivotSubsystem coralArm = ArmPivotSubsystem.getInstance();
 
     private TargetAction selectedTargetAction = TargetAction.TR;
     private TargetAction currentAction = TargetAction.TR;
@@ -73,6 +73,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
         }
     }
 
+    public Command set(TargetAction target, boolean confirm) {
+        return new InstantCommand(() -> setSelectedTargetAction(target, confirm));
+    }
+
     public void setSelectedTargetAction(TargetAction target, boolean confirm) {
         selectedTargetAction = target;
         pushChangedValueToShuffleboard(selectedTargetAction);
@@ -84,6 +88,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public void setCurrentAction(TargetAction target) {
         currentAction = target;
+    }
+
+    public Command confirm() {
+        return new InstantCommand(() -> confirmSelectedAction());
     }
 
     public void confirmSelectedAction() {
@@ -125,7 +133,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
             coralArm.setArmPosition(target);
             // algaeArm.setGoalPosition(target);
 
-            if (elevator.atPosition(target) && coralArm.isAtPosition(5, target.getCoralArmAngle())) {
+            if (elevator.atPosition(target) && coralArm.isAtPosition(5, target.getArmPivotAngle())) {
                 // && algaePivot.isAtPosition(5, target.getAlgaeArmPivotPosition())) {
                 isChangingState = false;
                 Logger.recordOutput("Arrived at Target State", true);

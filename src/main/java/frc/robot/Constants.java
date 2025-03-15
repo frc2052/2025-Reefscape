@@ -138,7 +138,7 @@ public class Constants {
     public static final Angle HEADING_TOLERANCE = Degrees.of(3);
   }
 
-  public static class CoralArmConstants {
+  public static class ArmPivotConstants {
     public static final boolean ARM_MOTOR_INVERTED = true;
     public static final double DEG_TOL = 2.5;
 
@@ -166,7 +166,7 @@ public class Constants {
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
             .withInverted(
-                CoralArmConstants.ARM_MOTOR_INVERTED
+                ArmPivotConstants.ARM_MOTOR_INVERTED
                     ? InvertedValue.Clockwise_Positive
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake); 
@@ -194,12 +194,13 @@ public class Constants {
             .withCurrentLimits(CURRENT_LIMIT_CONFIG);
   }
 
-  public static class HandConstants {
-    public static final boolean HAND_MOTOR_INVERTED = true;
-    public static final double IN_HAND_MOTOR_SPEED = 0.33;
-    public static final double SCORE_L1_MOTOR_SPEED = 0.2052;
-    public static final double OUT_HAND_MOTOR_SPEED = 0.35;
-    public static final double HAND_RANGE_CORAL_SEEN = 0.4;
+  public static class ArmRollerConstants {
+    public static final boolean MOTOR_INVERTED = true;
+    public static final double CORAL_IN_SPEED = 0.33;
+    public static final double CORAL_L1_OUT_SPEED = 0.2052;
+    public static final double CORAL_OUT_SPEED = 0.35;
+    public static final double ALGAE_IN_SPEED = 0.35;
+    public static final double ALGAE_OUT_SPEED = 0.35;
 
     public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()
     .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
@@ -208,7 +209,7 @@ public class Constants {
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
             .withInverted(
-              HandConstants.HAND_MOTOR_INVERTED
+              ArmRollerConstants.MOTOR_INVERTED
                     ? InvertedValue.Clockwise_Positive
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake); 
@@ -221,66 +222,6 @@ public class Constants {
     .withMotorOutput(MOTOR_OUTPUT_CONFIG)
     .withCurrentLimits(CURRENT_LIMITS_CONFIG)
     .withAudio(new AudioConfigs().withBeepOnBoot(false));
-  }
-
-  public static class AlgaePivotConstants {
-    public static final boolean MOTOR_INVERTED = true;
-    public static final double TOLERANCE = 1.0;
-
-    public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
-        new CurrentLimitsConfigs()
-            .withSupplyCurrentLimitEnable(false)
-            .withSupplyCurrentLimit(Amps.of(70))
-            .withSupplyCurrentLowerLimit(Amps.of(40))
-            .withStatorCurrentLimit(Amps.of(120))
-            .withSupplyCurrentLowerTime(Seconds.of(0.2));
-
-    public static final FeedbackConfigs FEEDBACK_CONFIG =
-    new FeedbackConfigs()
-        .withFeedbackRemoteSensorID(Ports.ALGAE_ENCODER_ID)
-        .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-        .withRotorToSensorRatio(100)
-        .withSensorToMechanismRatio(1);
-
-    public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
-        new MotorOutputConfigs()
-            .withInverted(
-                MOTOR_INVERTED
-                    ? InvertedValue.Clockwise_Positive
-                    : InvertedValue.CounterClockwise_Positive)
-            .withNeutralMode(NeutralModeValue.Brake);
-
-    public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
-        new SoftwareLimitSwitchConfigs()
-            .withForwardSoftLimitThreshold(Degrees.of(260)) // TODO: adjust as needed
-            .withForwardSoftLimitEnable(true)
-            .withReverseSoftLimitThreshold(Degrees.of(115))
-            .withReverseSoftLimitEnable(true);
-
-    public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
-      .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-      .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS)
-      .withFeedback(FEEDBACK_CONFIG)
-      .withCurrentLimits(CURRENT_LIMIT_CONFIG);
-  }
-
-  public static class AlgaeShooterConstants {
-      public static final double MOTOR_CURRENT_LIMIT = 60.0;
-      public static final double INTAKE_SPEED = 1.0;
-      public static final double SCORE_SPEED = -1.0;
-
-      public static final boolean MOTOR_INVERTED = false;
-
-      public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
-          new MotorOutputConfigs()
-              .withInverted(
-                  MOTOR_INVERTED
-                      ? InvertedValue.Clockwise_Positive
-                      : InvertedValue.CounterClockwise_Positive)
-              .withNeutralMode(NeutralModeValue.Brake); 
-
-      public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
-        .withMotorOutput(MOTOR_OUTPUT_CONFIG);
   }
   
   public static final class ClimberConstants {
@@ -322,8 +263,8 @@ public class Constants {
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
       public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
       public static final Angle THETA_Z_OFFSET = Degrees.of(23); // yaw
-    }
-    /* CORAL Reef Camera */
+    }  
+
     public static final class CoralReefCameraConstants {
       public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =  FieldConstants.CORAL_REEF_CAMERA_LAYOUT_TYPE.layout;
       public static final String CAMERA_NAME = "Arducam_OV2311_USB_Camera_001";
@@ -348,34 +289,7 @@ public class Constants {
             CAMERA_NAME, ROBOT_TO_CAMERA, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
       }
     }
-
-    /* ALGAE Reef Camera */
-    public static final class AlgaeReefCameraConstants {      
-        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = FieldConstants.ALGAE_REEF_CAMERA_LAYOUT_TYPE.layout;
-  
-        public static final String CAMERA_NAME = "Arducam_OV9281_USB_Camera_002";
-  
-        public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
-  
-        public static final Distance X_OFFSET = Inches.of(4.614); // forward
-        public static final Distance Y_OFFSET = Inches.of(9.995); // left
-        public static final Distance Z_OFFSET = Inches.of(8.418); // up
-  
-        public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
-        public static final Angle THETA_Y_OFFSET = Degrees.of(-21.55352); // pitch
-        public static final Angle THETA_Z_OFFSET = Degrees.of(90); // yaw
-  
-        public static final Transform3d ROBOT_TO_CAMERA_METERS =
-            new Transform3d(
-                new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
-                new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
-  
-        public static TagTrackerConstants TagTrackerConstants() {
-          return new TagTrackerConstants(
-              CAMERA_NAME, ROBOT_TO_CAMERA_METERS, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
-        }
-      }  
-    }
+  }
 
   
   public static final class DashboardConstants {

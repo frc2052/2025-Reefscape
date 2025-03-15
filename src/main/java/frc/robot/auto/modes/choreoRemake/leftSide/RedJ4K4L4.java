@@ -9,19 +9,21 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoBase.PathsBase;
-import frc.robot.commands.hand.HandCommandFactory;
+import frc.robot.commands.arm.ArmRollerCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
-public class RedJ4K4L4 extends AutoBase{
-        private static final Path startPath = PathsBase.R_SL_J2;
+public class RedJ4K4L4 extends AutoBase {
+    private static final Path startPath = PathsBase.R_SL_J2;
     private static final Path load1 = PathsBase.R_J2_LL;
-    private static final Path score2 = PathsBase.R_LL_K4;;
+    private static final Path score2 = PathsBase.R_LL_K4;
+    ;
     private static final Path load2 = PathsBase.R_K4_LL;
-    private static final Path score3 = PathsBase.R_LL_K4;;
+    private static final Path score3 = PathsBase.R_LL_K4;
+    ;
 
     public RedJ4K4L4() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());
@@ -36,7 +38,7 @@ public class RedJ4K4L4 extends AutoBase{
         addCommands(safeReefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4))
                 .andThen(new PrintCommand("alignment done")
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05))
+                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05))
                         // .andThen(new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> false))
                         .andThen(score(TargetAction.L4))));
 
@@ -45,7 +47,7 @@ public class RedJ4K4L4 extends AutoBase{
         addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4)
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L4)));
 
         //
@@ -53,7 +55,7 @@ public class RedJ4K4L4 extends AutoBase{
         addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4)
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L4)));
         addCommands(
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));

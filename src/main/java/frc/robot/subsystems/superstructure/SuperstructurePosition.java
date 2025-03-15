@@ -6,54 +6,40 @@ import edu.wpi.first.units.measure.Angle;
 
 public class SuperstructurePosition {
     public enum TargetAction {
-        HM(0.5, Degrees.of(170.0), Degrees.of(135), ActionType.NONE), // Homing
-        // L1L(1.0, Degrees.of(255.0), Degrees.of(90), ActionType.CORAL),
-        L1H(2.0, Degrees.of(240.0), Degrees.of(135), ActionType.CORAL),
-        L2(21.5, Degrees.of(287.0), Degrees.of(135), ActionType.CORAL),
-        L3(38.5, Degrees.of(287.0), Degrees.of(135), ActionType.CORAL),
-        L4(62.5, Degrees.of(280), Degrees.of(135), ActionType.CORAL),
-        LA(6.0, Degrees.of(170.0), Degrees.of(135), ActionType.ALGAE), // Lower Algae
-        UA(40.0, Degrees.of(170.0), Degrees.of(135), ActionType.ALGAE), // Upper Algae
-        HP(1.5, Degrees.of(112), Degrees.of(135), ActionType.STATION), // Coral Station
-        AS(55.0, Degrees.of(180.0), Degrees.of(135), ActionType.NONE), // Algae Scoring NET
-        AP(55.0, Degrees.of(180.0), Degrees.of(135), ActionType.PROCESS), // Algae Scoring Processor
-        TR(5.0, Degrees.of(180.0), Degrees.of(135), ActionType.NONE), // Travel
-        CL(8.0, Degrees.of(170.0), Degrees.of(135), ActionType.NONE); // Climb
+        HM(0.5, Degrees.of(170.0), Degrees.of(135)), // Homing
+        INTAKE(2.0, Degrees.of(150.0), Degrees.of(30)),
+        L1H(2.0, Degrees.of(240.0), Degrees.of(135)),
+        L2(21.5, Degrees.of(287.0), Degrees.of(135)),
+        L3(38.5, Degrees.of(287.0), Degrees.of(135)),
+        L4(62.5, Degrees.of(280), Degrees.of(135)),
+        LA(6.0, Degrees.of(170.0), Degrees.of(135)), // Lower Algae
+        UA(40.0, Degrees.of(170.0), Degrees.of(135)), // Upper Algae
+        HP(1.5, Degrees.of(112), Degrees.of(135)), // Coral Station
+        AS(55.0, Degrees.of(180.0), Degrees.of(135)), // Algae Scoring NET
+        AP(55.0, Degrees.of(180.0), Degrees.of(135)), // Algae Scoring Processor
+        TR(5.0, Degrees.of(180.0), Degrees.of(135)), // Travel
+        CL(8.0, Degrees.of(170.0), Degrees.of(135)); // Climb
 
         private final double elevatorPosition;
-        private final Angle coralArmAngle;
-        private final Angle algaeArmAngle;
-        private final ActionType actionType;
+        private final Angle armPivotAngle;
+        private final Angle intakePivotAngle;
 
-        private TargetAction(double elevatorPosition, Angle coralArmAngle, Angle algaeArmAngle, ActionType actionType) {
+        private TargetAction(double elevatorPosition, Angle coralArmAngle, Angle algaeArmAngle) {
             this.elevatorPosition = elevatorPosition;
-            this.coralArmAngle = coralArmAngle;
-            this.algaeArmAngle = algaeArmAngle;
-            this.actionType = actionType;
+            this.armPivotAngle = coralArmAngle;
+            this.intakePivotAngle = algaeArmAngle;
         }
 
         public double getElevatorPositionRotations() {
             return elevatorPosition;
         }
 
-        public Angle getCoralArmAngle() {
-            return coralArmAngle;
+        public Angle getArmPivotAngle() {
+            return armPivotAngle;
         }
 
         public Angle getAlgaeArmPivotPosition() {
-            return algaeArmAngle;
+            return intakePivotAngle;
         }
-
-        public ActionType getActionType() {
-            return actionType;
-        }
-    }
-
-    public enum ActionType {
-        CORAL,
-        ALGAE,
-        STATION,
-        PROCESS,
-        NONE
     }
 }
