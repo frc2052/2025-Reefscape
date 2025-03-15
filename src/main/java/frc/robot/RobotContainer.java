@@ -17,7 +17,6 @@ import frc.robot.RobotState.FieldLocation;
 import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.algae.AlgaeCommandFactory;
 import frc.robot.commands.climber.ClimberCommandFactory;
-import frc.robot.commands.drive.CircleAroundReefCommand;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.hand.HandCommandFactory;

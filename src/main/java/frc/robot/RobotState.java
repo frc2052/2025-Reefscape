@@ -3,7 +3,6 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import org.littletonrobotics.junction.Logger;
@@ -78,43 +77,41 @@ public class RobotState {
    * @return True if the robot is on red alliance.
    */
   public static boolean isRedAlliance() {
-      var alliance = DriverStation.getAlliance();
-      if (alliance.isPresent()) {
-        return (alliance.get() == DriverStation.Alliance.Red) ? true : false;
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      return (alliance.get() == DriverStation.Alliance.Red) ? true : false;
+    } else {
+      return false;
+    }
+  }
+
+  public void output() {
+    Logger.recordOutput("Swerve Module States", drivetrainState.ModuleStates);
+    Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
+    Logger.recordOutput("Current Pose", drivetrainState.Pose);
+  }
+
+  public enum FieldLocation {
+    HP(new Area2D(null), new Area2D(null)), // adjust these values.
+    REEF(new Area2D(null), new Area2D(null)),
+    BARGE(new Area2D(null), new Area2D(null)),
+    PROCESSOR(new Area2D(null), new Area2D(null)),
+    TRAVEL(new Area2D(null), new Area2D(null));
+
+    public final Area2D blueArea;
+    public final Area2D redArea;
+
+    private FieldLocation(Area2D blueArea, Area2D redArea) {
+      this.blueArea = blueArea;
+      this.redArea = redArea;
+    }
+
+    public Area2D getArea() {
+      if (isRedAlliance()) {
+        return redArea;
       } else {
-        return false;
+        return blueArea;
       }
-    }
-  
-    public void output() {
-      Logger.recordOutput("Swerve Module States", drivetrainState.ModuleStates);
-      Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
-      Logger.recordOutput("Current Pose", drivetrainState.Pose);
-    }
-  
-    public enum FieldLocation {
-      HP(new Area2D(null),new Area2D(null)), // adjust these values.
-      REEF(new Area2D(null), new Area2D(null)),
-      BARGE(new Area2D(null), new Area2D(null)),
-      PROCESSOR(new Area2D(null), new Area2D(null)),
-      TRAVEL(new Area2D(null), new Area2D(null));
-  
-      public final Area2D blueArea;
-      public final Area2D redArea;
-  
-  
-      private FieldLocation(Area2D blueArea, Area2D redArea) {
-        this.blueArea = blueArea;
-        this.redArea = redArea;
-  
-      }
-  
-      public Area2D getArea() {
-        if (isRedAlliance()){
-          return redArea;
-        }else{
-          return blueArea;
-        }
     }
   }
 }

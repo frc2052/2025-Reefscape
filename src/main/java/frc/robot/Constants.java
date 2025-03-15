@@ -67,7 +67,7 @@ public class Constants {
 
     // set Motion Magic settings
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
-        new MotionMagicConfigs()
+        new MotionMagicConfigs()  
             .withMotionMagicCruiseVelocity(70)
             .withMotionMagicExpo_kA(0.03)
             .withMotionMagicExpo_kV(0.01);

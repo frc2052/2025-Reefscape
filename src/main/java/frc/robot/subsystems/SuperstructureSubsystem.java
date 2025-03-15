@@ -154,5 +154,3 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
   }
 }
-
-
