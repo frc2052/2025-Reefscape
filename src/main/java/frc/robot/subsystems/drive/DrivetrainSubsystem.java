@@ -150,8 +150,6 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
   }
 
   private void setFieldLocation() {
-    Pose2d robotPose = robotState.getFieldToRobot();
-    Translation2d robotTranslation = robotPose.getTranslation(); // adjust the following values.
     if (FieldLocation.HP.getArea().withInTheRegion(robotState.getFieldToRobot())) {
       robotState.setFieldLocation(FieldLocation.HP);
 
