@@ -17,15 +17,16 @@ import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
 public class ChoreoJ4K4L4 extends AutoBase {
+        // we pass in Path and followPath turns them into pp paths
 
-    private static final PathPlannerPath startPath = PathsBase.SL_J2.getChoreoPath();
-    private static final PathPlannerPath load1 = PathsBase.J2_LL.getChoreoPath();
-    private static final PathPlannerPath score2 = PathsBase.LL_K4.getChoreoPath();
-    private static final PathPlannerPath load2 = PathsBase.K4_LL.getChoreoPath();
-    private static final PathPlannerPath score3 = PathsBase.LL_K4.getChoreoPath();
+    private static final Path startPath = PathsBase.SL_J2;;
+    private static final Path load1 = PathsBase.J2_LL;
+    private static final Path score2 = PathsBase.LL_K4;;
+    private static final Path load2 = PathsBase.K4_LL;
+    private static final Path score3 = PathsBase.LL_K4;;
 
     public ChoreoJ4K4L4() {
-        super(startPath.getStartingHolonomicPose());
+        super(startPath.getChoreoPath().getStartingHolonomicPose());
     }
 
     @Override

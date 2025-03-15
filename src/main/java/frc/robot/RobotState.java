@@ -91,15 +91,15 @@ public class RobotState {
         desiredReefFace = reefFace;
     }
 
-    public boolean shouldAlign() { // only used in auto
+    public boolean shouldAlign(double dist) { // only used in auto
         return getFieldToRobot()
                         .getTranslation()
                         .getDistance(isRedAlliance() ? FieldConstants.RED_REEF_CENTER : FieldConstants.BLUE_REEF_CENTER)
-                < 2.5;
+                < dist;
     }
 
-    public boolean shouldAlignAutonomous() {
-        return desiredReefFaceIsSeen() && shouldAlign();
+    public boolean shouldAlignAutonomous(double dist) {
+        return desiredReefFaceIsSeen() && shouldAlign(dist);
     }
 
     public Pose2d getAlignPose() {
