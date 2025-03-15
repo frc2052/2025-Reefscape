@@ -7,14 +7,10 @@ import java.util.List;
 
 public class Area2D {
     private Translation2d P1;
-    private Translation2d P2;
-    private Translation2d P3;
-    private Translation2d P4;
     private double rad;
     private List<Translation2d> points;
     private List<Translation2d> deadZonesPoints;
-    private Translation2d DP1;
-    private double DRad;
+    ;
     private boolean deadZones;
     private boolean circle;
 
@@ -24,29 +20,29 @@ public class Area2D {
         circle = true;
     }
 
-    public Area2D(Translation2d P1, double rad, List<Translation2d> deadZonesPoints) {
+    public Area2D(Translation2d P1, double rad, List<Translation2d> deadPoints) {
         this.P1 = P1;
         this.rad = rad;
         circle = true;
-        deadZones = true;
-        if (verification(deadZonesPoints)) {
-            this.deadZonesPoints = deadZonesPoints;
+        if (verification(deadPoints)) {
+            deadZones = true;
+            deadZonesPoints = deadPoints;
         } else {
             System.out.print(
                     "the values you entered for dead zones are outside of the shape, pls enter points that are inside the shape");
         }
     }
 
-    public Area2D(List<Translation2d> points) {
-        this.points = points;
+    public Area2D(List<Translation2d> areaPoints) {
+        points = areaPoints;
     }
 
-    public Area2D(List<Translation2d> points, List<Translation2d> deadZonesPoints) {
-        this.points = points;
-        deadZones = true;
-        if (verification(deadZonesPoints)) {
-            for (Translation2d i : deadZonesPoints) {
-                points.add(i);
+    public Area2D(List<Translation2d> areaPoints, List<Translation2d> deadPoints) {
+        points = areaPoints;
+        if (verification(deadPoints)) {
+            deadZones = true;
+            for (Translation2d i : deadPoints) {
+                deadZonesPoints.add(i);
             }
         } else {
             System.out.print(
@@ -56,11 +52,11 @@ public class Area2D {
 
     private boolean verification(List<Translation2d> verificationPoints) {
         for (Translation2d point : verificationPoints) {
-            if (!multiPointCalc(new Pose2d(point.getX(), point.getY(), new Rotation2d(0)), points)) {
-                return false;
+            if (multiPointCalc(new Pose2d(point.getX(), point.getY(), new Rotation2d(0)), points)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     private boolean singlePointCalc(Pose2d pose) {
@@ -96,9 +92,16 @@ public class Area2D {
                 }
             }
         } else {
-            return multiPointCalc(pose, points);
+            if (deadZones) {
+                if (multiPointCalc(pose, deadZonesPoints)) {
+                    System.out.println("out of zone");
+                    return false;
+                } else {
+                    System.out.println("zone in");
+                    return multiPointCalc(pose, points);
+                }
+            }
         }
-
         return false;
     }
 }

@@ -186,11 +186,13 @@ public class RobotState {
     }
 
     public enum FieldLocation {
-        HP(new Area2D(null), new Area2D(null)), // adjust these values.
-        REEF(new Area2D(null), new Area2D(null)),
-        BARGE(new Area2D(null), new Area2D(null)),
-        PROCESSOR(new Area2D(null), new Area2D(null)),
-        TRAVEL(new Area2D(null), new Area2D(null));
+        HP(
+                new Area2D(Constants.SmartDrive.blueHP),
+                new Area2D(Constants.SmartDrive.redHP, Constants.SmartDrive.deadZone)), // adjust these values.
+        REEF(new Area2D(Constants.SmartDrive.blueReef), new Area2D(Constants.SmartDrive.redReef)),
+        BARGE(new Area2D(Constants.SmartDrive.blueBarge), new Area2D(Constants.SmartDrive.redBarge)),
+        PROCESSOR(new Area2D(Constants.SmartDrive.blueProcessor), new Area2D(Constants.SmartDrive.redProcessor)),
+        TRAVEL(new Area2D(Constants.SmartDrive.blueTravel), new Area2D(Constants.SmartDrive.redTravel));
 
         public final Area2D blueArea;
         public final Area2D redArea;

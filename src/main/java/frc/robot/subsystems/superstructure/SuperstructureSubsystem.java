@@ -162,6 +162,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
             setCurrentAction(TargetAction.HP);
         } else if (RobotState.getFieldLocation() == FieldLocation.REEF) {
             setCurrentAction(TargetAction.L3);
+            System.out.println("in zone");
         } else if (RobotState.getFieldLocation() == FieldLocation.PROCESSOR) {
             // PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM); we have nothing to
             // do in the processor zone.

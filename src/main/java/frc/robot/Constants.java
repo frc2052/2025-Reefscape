@@ -27,6 +27,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -36,6 +37,8 @@ import frc.robot.subsystems.drive.ctre.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import frc.robot.util.FieldConstants;
 import frc.robot.util.io.Ports;
+import java.util.Arrays;
+import java.util.List;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Constants {
@@ -413,4 +416,24 @@ public class Constants {
   }
 
   // spotless:on
+
+    public static final class SmartDrive {
+
+        public static final List<Translation2d> redReef = Arrays.asList(
+                new Translation2d(15, 0), new Translation2d(15, 5), new Translation2d(18, 5), new Translation2d(18, 0));
+        public static final List<Translation2d> redBarge = Arrays.asList();
+
+        public static final List<Translation2d> deadZone = Arrays.asList(
+                new Translation2d(16, 3), new Translation2d(16, 2), new Translation2d(17, 2), new Translation2d(17, 3));
+
+        public static final List<Translation2d> redProcessor = Arrays.asList();
+        public static final List<Translation2d> redHP = Arrays.asList();
+        public static final List<Translation2d> redTravel = Arrays.asList();
+
+        public static final List<Translation2d> blueReef = Arrays.asList();
+        public static final List<Translation2d> blueBarge = Arrays.asList();
+        public static final List<Translation2d> blueProcessor = Arrays.asList();
+        public static final List<Translation2d> blueHP = Arrays.asList();
+        public static final List<Translation2d> blueTravel = Arrays.asList();
+    }
 }
