@@ -160,14 +160,14 @@ public class RobotContainer {
         .povUpRight()
         .whileTrue(new DefaultDriveCommand(() -> 0.2, () -> -0.2, () -> 0.0, () -> false));
 
-    controlBoard
-        .povRight()
-        .whileTrue(
-            new CircleAroundReefCommand(
-                getdistance(FieldLocation.REEF.getPose(), robotState.getFieldToRobot()),
-                1,
-                true,
-                drivetrain));
+    // controlBoard
+    //     .povRight()
+    //     .whileTrue(
+    //         new CircleAroundReefCommand(
+    //             getdistance(FieldLocation.REEF.getPose(), robotState.getFieldToRobot()),
+    //             1,
+    //             true,
+    //             drivetrain));
 
     controlBoard
         .povDownRight()
@@ -181,14 +181,14 @@ public class RobotContainer {
         .povDownLeft()
         .whileTrue(new DefaultDriveCommand(() -> -0.2, () -> 0.2, () -> 0.0, () -> false));
 
-    controlBoard
-        .povLeft()
-        .whileTrue(
-            new CircleAroundReefCommand(
-                getdistance(FieldLocation.REEF.getPose(), robotState.getFieldToRobot()),
-                1,
-                false,
-                drivetrain)); // adjust the following values
+    // controlBoard
+    //     .povLeft()
+    //     .whileTrue(
+    //         new CircleAroundReefCommand(
+    //             getdistance(FieldLocation.REEF.getPose(), robotState.getFieldToRobot()),
+    //             1,
+    //             false,
+    //             drivetrain)); // adjust the following values
 
     controlBoard
         .povUpLeft()

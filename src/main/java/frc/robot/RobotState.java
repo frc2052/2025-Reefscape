@@ -77,36 +77,44 @@ public class RobotState {
    *
    * @return True if the robot is on red alliance.
    */
-  public boolean isRedAlliance() {
-    var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
-      return (alliance.get() == DriverStation.Alliance.Red) ? true : false;
-    } else {
-      return false;
+  public static boolean isRedAlliance() {
+      var alliance = DriverStation.getAlliance();
+      if (alliance.isPresent()) {
+        return (alliance.get() == DriverStation.Alliance.Red) ? true : false;
+      } else {
+        return false;
+      }
     }
-  }
-
-  public void output() {
-    Logger.recordOutput("Swerve Module States", drivetrainState.ModuleStates);
-    Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
-    Logger.recordOutput("Current Pose", drivetrainState.Pose);
-  }
-
-  public enum FieldLocation {
-    HP(new Translation2d(0, 0)), // adjust these values.
-    REEF(new Translation2d(0, 0)),
-    BARGE(new Translation2d(0, 0)),
-    PROCESSOR(new Translation2d(0, 0)),
-    TRAVEL(new Translation2d(0, 0));
-
-    public final Translation2d pose;
-
-    private FieldLocation(Translation2d pose) {
-      this.pose = pose;
+  
+    public void output() {
+      Logger.recordOutput("Swerve Module States", drivetrainState.ModuleStates);
+      Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
+      Logger.recordOutput("Current Pose", drivetrainState.Pose);
     }
-
-    public Translation2d getPose() {
-      return pose;
+  
+    public enum FieldLocation {
+      HP(new Area2D(null),new Area2D(null)), // adjust these values.
+      REEF(new Area2D(null), new Area2D(null)),
+      BARGE(new Area2D(null), new Area2D(null)),
+      PROCESSOR(new Area2D(null), new Area2D(null)),
+      TRAVEL(new Area2D(null), new Area2D(null));
+  
+      public final Area2D blueArea;
+      public final Area2D redArea;
+  
+  
+      private FieldLocation(Area2D blueArea, Area2D redArea) {
+        this.blueArea = blueArea;
+        this.redArea = redArea;
+  
+      }
+  
+      public Area2D getArea() {
+        if (isRedAlliance()){
+          return redArea;
+        }else{
+          return blueArea;
+        }
     }
   }
 }

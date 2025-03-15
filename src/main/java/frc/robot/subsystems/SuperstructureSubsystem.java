@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotState;
+import frc.robot.RobotState.FieldLocation;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.controlboard.PositionSuperstructure;
 import frc.robot.controlboard.PositionSuperstructure.TargetAction;
@@ -133,22 +135,24 @@ public class SuperstructureSubsystem extends SubsystemBase {
     setTargetAction();
   }
 
-
-  private void setTargetAction(){
-    if(RobotState.getFieldLocation() == FieldLocation.HP){
+  private void setTargetAction() {
+    if (RobotState.getFieldLocation() == FieldLocation.HP) {
       PositionSuperstructure.getInstance().setTargetAction(TargetAction.HP);
-    }else if(RobotState.getFieldLocation()  == FieldLocation.REEF){
+    } else if (RobotState.getFieldLocation() == FieldLocation.REEF) {
       PositionSuperstructure.getInstance().setTargetAction(TargetAction.L3);
-    } else if(RobotState.getFieldLocation()  == FieldLocation.PROCESSOR){
-      //PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM); we have nothing to do in the processor zone.
-    } else if(RobotState.getFieldLocation()  == FieldLocation.BARGE){
-      if (AlgaeSubsystem.getHasAlgae()){
+    } else if (RobotState.getFieldLocation() == FieldLocation.PROCESSOR) {
+      // PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM); we have nothing to
+      // do in the processor zone.
+    } else if (RobotState.getFieldLocation() == FieldLocation.BARGE) {
+      if (AlgaeSubsystem.getHasAlgae()) {
         PositionSuperstructure.getInstance().setTargetAction(TargetAction.AS);
-      }else{
+      } else {
         PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM);
       }
-    } else{
+    } else {
       PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM);
     }
   }
 }
+
+

@@ -3,6 +3,8 @@ package frc.robot.subsystems.drive;
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.lang.reflect.Field;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -25,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Area2D;
 import frc.robot.Robot;
 import frc.robot.RobotState;
 import frc.robot.RobotState.FieldLocation;
@@ -149,16 +152,16 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
   private void setFieldLocation() {
     Pose2d robotPose = robotState.getFieldToRobot();
     Translation2d robotTranslation = robotPose.getTranslation(); // adjust the following values.
-    if (robotTranslation.getDistance(FieldLocation.HP.getPose()) <= 1) {
+    if (FieldLocation.HP.getArea().withInTheRegion(robotState.getFieldToRobot())) {
       robotState.setFieldLocation(FieldLocation.HP);
 
-    } else if (robotTranslation.getDistance(FieldLocation.REEF.getPose()) <= 1) {
+    } else if (FieldLocation.REEF.getArea().withInTheRegion(robotState.getFieldToRobot())) {
       robotState.setFieldLocation(FieldLocation.REEF);
 
-    } else if (robotTranslation.getDistance(FieldLocation.BARGE.getPose()) <= 1) {
+    } else if (FieldLocation.BARGE.getArea().withInTheRegion(robotState.getFieldToRobot())) {
       robotState.setFieldLocation(FieldLocation.BARGE);
 
-    } else if (robotTranslation.getDistance(FieldLocation.PROCESSOR.getPose()) <= 1) {
+    } else if (FieldLocation.PROCESSOR.getArea().withInTheRegion(robotState.getFieldToRobot())) {
       robotState.setFieldLocation(FieldLocation.PROCESSOR);
     } else {
       robotState.setFieldLocation(FieldLocation.TRAVEL);
