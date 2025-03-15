@@ -6,7 +6,6 @@ package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.ArmRollerConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
@@ -48,13 +47,13 @@ public class ArmRollerSubsystem extends SubsystemBase {
     public void coralOut() {
         setMotor(
                 SuperstructureSubsystem.getInstance().getCurrentAction().equals(TargetAction.L1H)
-                        ? Constants.ArmRollerConstants.CORAL_L1_OUT_SPEED
-                        : Constants.ArmRollerConstants.CORAL_OUT_SPEED);
+                        ? ArmRollerConstants.CORAL_L1_OUT_SPEED
+                        : ArmRollerConstants.CORAL_OUT_SPEED);
     }
 
     public void coralIn() {
         isIntaking = true;
-        setMotor(-Constants.ArmRollerConstants.CORAL_IN_SPEED);
+        setMotor(ArmRollerConstants.CORAL_IN_SPEED);
     }
 
     public void algaeOut() {
@@ -62,7 +61,7 @@ public class ArmRollerSubsystem extends SubsystemBase {
     }
 
     public void algaeIn() {
-        setMotor(-Constants.ArmRollerConstants.ALGAE_IN_SPEED);
+        setMotor(ArmRollerConstants.ALGAE_IN_SPEED);
     }
 
     public double motorVelocity() {

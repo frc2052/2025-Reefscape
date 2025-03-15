@@ -99,7 +99,7 @@ public class RobotContainer {
         controlBoard
                 .outtake()
                 .whileTrue(ArmRollerCommandFactory.coralOut())
-                .onFalse(superstructure.set(TargetAction.HP, true));
+                .onFalse(superstructure.set(TargetAction.STOW, true));
 
         controlBoard.intakeAlgae().whileTrue(ArmRollerCommandFactory.algaeIn());
         controlBoard.shootAlgae().whileTrue(ArmRollerCommandFactory.algaeOut());
@@ -115,7 +115,7 @@ public class RobotContainer {
         /* Secondary Driver */
         controlBoard.actTrigger().onTrue(superstructure.confirm());
 
-        controlBoard.setGoalCL().onTrue(superstructure.set(TargetAction.CL, true));
+        controlBoard.setGoalCL().onTrue(superstructure.set(TargetAction.INTAKE, true));
         controlBoard
                 .setGoalL1H()
                 .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
@@ -131,7 +131,7 @@ public class RobotContainer {
                 .setGoalUpperAlgae()
                 .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
                 .onTrue(superstructure.set(TargetAction.UA, false));
-        controlBoard.setGoalCoralStation().onTrue(superstructure.set(TargetAction.HP, false));
+        controlBoard.setGoalCoralStation().onTrue(superstructure.set(TargetAction.STOW, false));
         controlBoard.homeElevator().onTrue(superstructure.set(TargetAction.HM, false));
 
         controlBoard.setSubReefLeft().onTrue(robotState.setAlignOffsetCommand(AlignOffset.LEFT_BRANCH));

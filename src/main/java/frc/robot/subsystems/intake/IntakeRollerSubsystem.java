@@ -6,10 +6,11 @@ package frc.robot.subsystems.intake;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.IntakeRollerConstants;
 import frc.robot.util.io.Ports;
 
 public class IntakeRollerSubsystem extends SubsystemBase {
-    private TalonFX intakeMotor;
+    private TalonFX motor;
 
     /** Public method to provide access to the instance. */
     private static IntakeRollerSubsystem INSTANCE;
@@ -22,7 +23,23 @@ public class IntakeRollerSubsystem extends SubsystemBase {
     }
 
     private IntakeRollerSubsystem() {
-        intakeMotor = new TalonFX(Ports.INTAKE_ROLLER_ID);
+        motor = new TalonFX(Ports.INTAKE_ROLLER_ID);
+    }
+
+    private void setMotor(double speed) {
+        motor.set(speed);
+    }
+
+    public void stopMotor() {
+        motor.stopMotor();
+    }
+
+    public void outtake() {
+        setMotor(IntakeRollerConstants.OUTTAKE_SPEED);
+    }
+
+    public void intake() {
+        setMotor(IntakeRollerConstants.INTAKE_SPEED);
     }
 
     @Override

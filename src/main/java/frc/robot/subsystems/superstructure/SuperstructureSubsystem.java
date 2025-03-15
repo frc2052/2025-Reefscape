@@ -5,9 +5,10 @@ import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotState;
+import frc.robot.Constants.SuperstructureConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
+import frc.robot.subsystems.intake.IntakePivotSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import org.littletonrobotics.junction.Logger;
 
@@ -16,7 +17,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private static SuperstructureSubsystem INSTANCE;
 
     private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
-    private ArmPivotSubsystem coralArm = ArmPivotSubsystem.getInstance();
+    private ArmPivotSubsystem armPivot = ArmPivotSubsystem.getInstance();
+    private IntakePivotSubsystem intakePivot = IntakePivotSubsystem.getInstance();
 
     private TargetAction selectedTargetAction = TargetAction.TR;
     private TargetAction currentAction = TargetAction.TR;
@@ -24,10 +26,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private TargetAction previousAction;
     private boolean isChangingState;
 
+    private boolean cancelHome = false;
+
     /** Private constructor to prevent instantiation. */
     private SuperstructureSubsystem() {
         previousAction = getSelectedTargetAction();
-        pushChangedValueToShuffleboard(previousAction);
+        // pushChangedValueToShuffleboard(previousAction);
         isChangingState = false;
     }
 
@@ -79,7 +83,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public void setSelectedTargetAction(TargetAction target, boolean confirm) {
         selectedTargetAction = target;
-        pushChangedValueToShuffleboard(selectedTargetAction);
+        // pushChangedValueToShuffleboard(selectedTargetAction);
         if (confirm) {
             confirmSelectedAction();
         }
@@ -120,44 +124,76 @@ public class SuperstructureSubsystem extends SubsystemBase {
         if (target != previousAction) {
             Logger.recordOutput("Target Superstructure State Has Changed", true);
             isChangingState = true;
+            if (target != TargetAction.HM) {
+                cancelHome = true;
+            }
         } else {
             Logger.recordOutput("Target Superstructure State Has Changed", false);
         }
 
         if (isChangingState) {
-            if (target == TargetAction.HM && elevator.shouldHome()) {
-                elevator.homeElevator().schedule();
-            } else {
-                elevator.setPositionMotionMagic(target);
+            if (cancelHome) {
+                elevator.setWantHome(false);
+                cancelHome = false;
+            } else if (target == TargetAction.HM) {
+                elevator.setWantHome(true);
+                System.out.println("HOMING");
+                return;
             }
-            coralArm.setArmPosition(target);
-            // algaeArm.setGoalPosition(target);
 
-            if (elevator.atPosition(target) && coralArm.isAtPosition(5, target.getArmPivotAngle())) {
+            if (target.getElevatorPositionRotations() > elevator.getPosition()) { // going up
+                elevator.setPositionMotionMagic(target);
+                System.out.println("STAGE 1");
+                if (elevator.getPosition() > SuperstructureConstants.UPWARDS_MIN_ELEVATOR) {
+                    armPivot.setArmPosition(target);
+                    intakePivot.setPosition(target);
+                    System.out.println("STAGE 2");
+                }
+            } else if (target.getElevatorPositionRotations() < elevator.getPosition()) { // going down
+                if (target.getElevatorPositionRotations() > SuperstructureConstants.UPWARDS_MIN_ELEVATOR) {
+                    armPivot.setArmPosition(target);
+                    intakePivot.setPosition(target);
+                    elevator.setPositionMotionMagic(target);
+                } else {
+                    armPivot.setArmPosition(target);
+                    intakePivot.setPosition(target);
+                    System.out.println("STAGE 3");
+
+                    if (armPivot.isAtPosition(
+                            5,
+                            target.getArmPivotAngle())) { // Degrees.of(SuperstructureConstants.DOWNWARDS_ARM_ANGLE))) {
+                        elevator.setPositionMotionMagic(target);
+                        System.out.println("STAGE 4");
+                    }
+                }
+            }
+
+            if (elevator.atPosition(target) && armPivot.isAtPosition(5, target.getArmPivotAngle())) {
                 // && algaePivot.isAtPosition(5, target.getAlgaeArmPivotPosition())) {
                 isChangingState = false;
                 Logger.recordOutput("Arrived at Target State", true);
             } else {
                 Logger.recordOutput("Arrived at Target State", false);
             }
-        } else {
-            if (RobotState.getInstance().getHasCoral()
-                    && (getCurrentAction() == TargetAction.HP)
-                    && !RobotState.getInstance().getIsIntaking()) {
-                if (getSelectedTargetAction() == TargetAction.L2
-                        || getSelectedTargetAction() == TargetAction.L3
-                        || getSelectedTargetAction() == TargetAction.L4) {
-                    setCurrentAction(TargetAction.L2);
-                } else if (getSelectedTargetAction() == TargetAction.L1H
-                        && (getCurrentAction() == TargetAction.HP)
-                        && !RobotState.getInstance().getIsIntaking()) {
-                    setCurrentAction(TargetAction.L1H);
-                } else if ((getCurrentAction() == TargetAction.HP)
-                        && !RobotState.getInstance().getIsIntaking()) {
-                    setCurrentAction(TargetAction.TR);
-                }
-            }
         }
+        // else {
+        //     if (RobotState.getInstance().getHasCoral()
+        //             && (getCurrentAction() == TargetAction.STOW)
+        //             && !RobotState.getInstance().getIsIntaking()) {
+        //         if (getSelectedTargetAction() == TargetAction.L2
+        //                 || getSelectedTargetAction() == TargetAction.L3
+        //                 || getSelectedTargetAction() == TargetAction.L4) {
+        //             setCurrentAction(TargetAction.L2);
+        //         } else if (getSelectedTargetAction() == TargetAction.L1H
+        //                 && (getCurrentAction() == TargetAction.STOW)
+        //                 && !RobotState.getInstance().getIsIntaking()) {
+        //             setCurrentAction(TargetAction.L1H);
+        //         } else if ((getCurrentAction() == TargetAction.STOW)
+        //                 && !RobotState.getInstance().getIsIntaking()) {
+        //             setCurrentAction(TargetAction.TR);
+        //         }
+        //     }
+        // }
 
         previousAction = target;
     }

@@ -196,10 +196,10 @@ public class Constants {
 
   public static class ArmRollerConstants {
     public static final boolean MOTOR_INVERTED = true;
-    public static final double CORAL_IN_SPEED = 0.33;
+    public static final double CORAL_IN_SPEED = -0.33;
     public static final double CORAL_L1_OUT_SPEED = 0.2052;
     public static final double CORAL_OUT_SPEED = 0.35;
-    public static final double ALGAE_IN_SPEED = 0.35;
+    public static final double ALGAE_IN_SPEED = -0.35;
     public static final double ALGAE_OUT_SPEED = 0.35;
 
     public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()
@@ -210,6 +210,85 @@ public class Constants {
         new MotorOutputConfigs()
             .withInverted(
               ArmRollerConstants.MOTOR_INVERTED
+                    ? InvertedValue.Clockwise_Positive
+                    : InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake); 
+
+    public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIG = new CurrentLimitsConfigs()
+    .withSupplyCurrentLimit(20.0)
+    .withSupplyCurrentLimitEnable(true);
+    
+    public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
+    .withMotorOutput(MOTOR_OUTPUT_CONFIG)
+    .withCurrentLimits(CURRENT_LIMITS_CONFIG)
+    .withAudio(new AudioConfigs().withBeepOnBoot(false));
+  }
+
+  public static final class IntakePivotConstants {
+    public static final boolean MOTOR_INVERTED = true;
+    public static final double DEG_TOL = 2.5;
+
+    public static final Angle MIN_INTAKE_ARM_ANGLE = Degrees.of(30);
+    public static final Angle MAX_INTAKE_ARM_ANGLE = Degrees.of(330);
+
+
+    public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
+        new CurrentLimitsConfigs()
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(Amps.of(70))
+            .withSupplyCurrentLowerLimit(Amps.of(30))
+            .withStatorCurrentLimit(Amps.of(100))
+            .withSupplyCurrentLowerTime(Seconds.of(0.2));
+            
+    public static final Slot0Configs SLOT0_CONFIGS = 
+        new Slot0Configs()
+            .withKP(5.0)
+            .withKI(0.2)
+            .withKD(0.0)
+            .withKS(0.0)
+            .withKV(0.0) //11.7
+            .withKA(0.0);
+
+    public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
+        new MotorOutputConfigs()
+            .withInverted(
+                IntakePivotConstants.MOTOR_INVERTED
+                    ? InvertedValue.Clockwise_Positive
+                    : InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake); 
+
+    public static final FeedbackConfigs FEEDBACK_CONFIG =
+        new FeedbackConfigs()
+            .withFeedbackRemoteSensorID(Ports.INTAKE_ENCODER_ID)
+            .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
+            // .withRotorToSensorRatio(58.333)
+            .withSensorToMechanismRatio(1);
+    
+    public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitThreshold(MAX_INTAKE_ARM_ANGLE) // TODO: adjust as needed
+            .withForwardSoftLimitEnable(true)
+            .withReverseSoftLimitThreshold(MIN_INTAKE_ARM_ANGLE)
+            .withReverseSoftLimitEnable(true);
+    
+    public static final TalonFXConfiguration MOTOR_CONFIG = 
+        new TalonFXConfiguration()
+            .withSlot0(SLOT0_CONFIGS)
+            .withMotorOutput(MOTOR_OUTPUT_CONFIG)
+            .withFeedback(FEEDBACK_CONFIG)
+            .withAudio(new AudioConfigs().withBeepOnBoot(false))
+            .withCurrentLimits(CURRENT_LIMIT_CONFIG);
+  }
+
+  public static final class IntakeRollerConstants {
+    public static final boolean MOTOR_INVERTED = false;
+    public static final double INTAKE_SPEED = 0.33;
+    public static final double OUTTAKE_SPEED = -0.35;
+
+    public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
+        new MotorOutputConfigs()
+            .withInverted(
+              IntakeRollerConstants.MOTOR_INVERTED
                     ? InvertedValue.Clockwise_Positive
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake); 
@@ -234,6 +313,11 @@ public class Constants {
     ).withCurrentLimits(
       new CurrentLimitsConfigs()
     );
+  }
+
+  public static final class SuperstructureConstants {
+    public static final double UPWARDS_MIN_ELEVATOR = 7.5;
+    public static final double DOWNWARDS_ARM_ANGLE = 300;
   }
 
   public static class VisionConstants {

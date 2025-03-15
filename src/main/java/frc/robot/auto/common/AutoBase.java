@@ -81,7 +81,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     protected Command startHP() {
-        return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP));
+        return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW));
     }
 
     protected static PathPlannerPath getPathFromFile(String pathName) {
@@ -168,7 +168,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     protected Command safeStationAlignment(Path altAlignPath) {
         return new SequentialCommandGroup(followPathCommand(altAlignPath.getChoreoPath())
                 .alongWith(new InstantCommand(
-                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)))
+                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW)))
                 .alongWith(new InstantCommand(
                                 () -> ArmRollerSubsystem.getInstance().coralIn())
                         .beforeStarting(new WaitCommand(1.0))));

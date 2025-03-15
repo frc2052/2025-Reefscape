@@ -60,6 +60,6 @@ public class BlueJ4K4L4 extends AutoBase {
                         .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L4)));
         addCommands(
-                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
+                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW)));
     }
 }
