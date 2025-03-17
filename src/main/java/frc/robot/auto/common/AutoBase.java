@@ -163,7 +163,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
                                         ? 0.0
                                         : 0.35),
                 new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(fieldLoc)),
-                followPathCommand(startPath.getChoreoPath()) // TODO: default to choreo path
+                followPathCommand(startPath.getChoreoPath()) // default to choreo path
                         .until(() -> RobotState.getInstance().shouldAlignAutonomous(distance))
                         .andThen(AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> branchside, fieldLoc)));
     }
@@ -311,9 +311,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 return null;
             }
         }
-        // public PathPlannerPath getChoreoPathAtIndex(){
-
-        // }
 
         public PathPlannerPath getPathPlannerPath() {
             try {
@@ -329,7 +326,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     public static final class PathsBase {
         // USING W/ CHOREO PATHS, CREATED
-            // J4K4L4
+        // J4K4L4
         public static final Path B_SL_J = new Path("SL J", "BLUE SL J");
         public static final Path B_J_LL = new Path("J LL", "BLUE J LL");
         public static final Path B_LL_K = new Path("LL K", "BLUE LL K");
@@ -342,7 +339,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         public static final Path R_K4_LL = new Path("K LL", "RED K LL");
         public static final Path R_LL_L = new Path("LL L", "RED LL L");
 
-            // E/F4D4C4
+        // E/F4D4C4
         public static final Path B_SR_E = new Path("SR E", "BLUE SR E");
         public static final Path B_SR_F = new Path("SR F", "BLUE SR F");
         public static final Path B_E_RL = new Path("E RL", "BLUE E RL");
@@ -350,8 +347,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         public static final Path B_RL_D = new Path("RL D", "BLUE RL D");
         public static final Path B_D_RL = new Path("D RL", "BLUE D RL");
         public static final Path B_RL_C = new Path("RL C", "BLUE RL C");
-
-        // TODO
+        
         public static final Path R_SR_E = new Path("SR E", "RED SR E");
         public static final Path R_SR_F = new Path("SR F", "RED SR F");
         public static final Path R_E_RL = new Path("E RL", "RED E RL");

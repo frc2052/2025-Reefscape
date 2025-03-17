@@ -16,12 +16,14 @@ import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
-public class RedJ4K4L4 extends AutoBase{
-        private static final Path startPath = PathsBase.R_SL_J2;
+public class RedJ4K4L4 extends AutoBase {
+    private static final Path startPath = PathsBase.R_SL_J2;
     private static final Path load1 = PathsBase.R_J2_LL;
-    private static final Path score2 = PathsBase.R_LL_K4;;
+    private static final Path score2 = PathsBase.R_LL_K4;
+    ;
     private static final Path load2 = PathsBase.R_K4_LL;
-    private static final Path score3 = PathsBase.R_LL_L;;
+    private static final Path score3 = PathsBase.R_LL_L;
+    ;
 
     public RedJ4K4L4() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());

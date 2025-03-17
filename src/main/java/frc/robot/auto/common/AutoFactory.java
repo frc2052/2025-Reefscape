@@ -3,11 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.auto.common;
 
-import java.util.function.Supplier;
-
-import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-import org.littletonrobotics.junction.networktables.LoggedNetworkString;
-
 import frc.robot.Constants.DashboardConstants;
 import frc.robot.RobotState;
 import frc.robot.auto.modes.AutoLLToK4;
@@ -25,11 +20,16 @@ import frc.robot.auto.modes.choreoRemake.leftSide.BlueJ4K4L4;
 import frc.robot.auto.modes.choreoRemake.leftSide.RedJ4K4L4;
 import frc.robot.auto.modes.choreoRemake.rightSide.BlueE4D4C4;
 import frc.robot.auto.modes.choreoRemake.rightSide.BlueF4D4C4;
+import frc.robot.auto.modes.choreoRemake.rightSide.RedE4D4C4;
+import frc.robot.auto.modes.choreoRemake.rightSide.RedF4D4C4;
 import frc.robot.auto.modes.safety.AutoG4AlgaePrep;
 import frc.robot.auto.modes.safety.DeadReckoning;
 import frc.robot.auto.modes.startCenter.AutoG4LeftAlgaeRemoval;
 import frc.robot.auto.modes.startCenter.AutoH4RightAlgaeRemoval;
 import frc.robot.util.io.Dashboard;
+import java.util.function.Supplier;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
@@ -123,6 +123,8 @@ public class AutoFactory {
         C_Blue_E4D4C4(BlueE4D4C4.class),
         C_Blue_F4D4C4(BlueF4D4C4.class),
         C_Red_J4KL4(RedJ4K4L4.class),
+        C_RED_E4D4C4(RedE4D4C4.class),
+        C_RED_F4D4C4(RedF4D4C4.class),
 
         // start center
         AUTO_G4_ALGAE_PREP(AutoG4AlgaePrep.class),
@@ -153,7 +155,6 @@ public class AutoFactory {
         public AutoBase getInstance() {
             if (autoClass != null) {
                 try {
-                    // TODO: does this fix the problem
 
                     // AutoDescription autoDescription =
                     // autoClass.getClass().getAnnotation(AutoDescription.class);

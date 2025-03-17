@@ -20,9 +20,11 @@ import frc.robot.util.AlignmentCalculator.FieldElementFace;
 public class BlueF4D4C4 extends AutoBase {
     private static final Path startPath = PathsBase.B_SR_F;
     private static final Path load1 = PathsBase.B_F_RL;
-    private static final Path score2 = PathsBase.B_RL_D;;
+    private static final Path score2 = PathsBase.B_RL_D;
+    ;
     private static final Path load2 = PathsBase.B_D_RL;
-    private static final Path score3 = PathsBase.B_RL_C;;
+    private static final Path score3 = PathsBase.B_RL_C;
+    ;
 
     public BlueF4D4C4() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());
@@ -40,7 +42,7 @@ public class BlueF4D4C4 extends AutoBase {
                         .andThen(HandCommandFactory.motorIn().withTimeout(0.05))
                         .andThen(score(TargetAction.L4))));
 
-        // pickup and score 2nd coral (K)
+        // pickup and score 2nd coral (D)
         addCommands(safeStationAlignment(load1));
         addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
@@ -48,7 +50,7 @@ public class BlueF4D4C4 extends AutoBase {
                         .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L4)));
 
-        // pickup and score 3rd coral (L)
+        // pickup and score 3rd coral (C)
         addCommands(safeStationAlignment(load2));
         addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
