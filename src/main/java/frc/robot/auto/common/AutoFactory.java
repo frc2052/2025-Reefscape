@@ -23,6 +23,8 @@ import frc.robot.auto.modes.StartRight.AutoE4D4C4;
 import frc.robot.auto.modes.StartRight.AutoF4D4C4;
 import frc.robot.auto.modes.choreoRemake.leftSide.BlueJ4K4L4;
 import frc.robot.auto.modes.choreoRemake.leftSide.RedJ4K4L4;
+import frc.robot.auto.modes.choreoRemake.rightSide.BlueE4D4C4;
+import frc.robot.auto.modes.choreoRemake.rightSide.BlueF4D4C4;
 import frc.robot.auto.modes.safety.AutoG4AlgaePrep;
 import frc.robot.auto.modes.safety.DeadReckoning;
 import frc.robot.auto.modes.startCenter.AutoG4LeftAlgaeRemoval;
@@ -115,8 +117,12 @@ public class AutoFactory {
         NO_AUTO(null),
         LL_K4_VISION_TEST(AutoLLToK4.class),
         BACKUP_AUTO_H4_DA_NET(AutoG4AlgaePrep.class),
-        CHORBlue_J4K4L4(BlueJ4K4L4.class),
-        CHORRed_J4KL4(RedJ4K4L4.class),
+
+        // choreo
+        C_Blue_J4K4L4(BlueJ4K4L4.class),
+        C_Blue_E4D4C4(BlueE4D4C4.class),
+        C_Blue_F4D4C4(BlueF4D4C4.class),
+        C_Red_J4KL4(RedJ4K4L4.class),
 
         // start center
         AUTO_G4_ALGAE_PREP(AutoG4AlgaePrep.class),

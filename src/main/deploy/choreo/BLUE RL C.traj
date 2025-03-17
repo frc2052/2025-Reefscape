@@ -1,0 +1,30 @@
+{
+ "name":"BLUE RL C",
+ "version":1,
+ "snapshot":{
+  "waypoints":[],
+  "constraints":[],
+  "targetDt":0.05
+ },
+ "params":{
+  "waypoints":[
+    {"x":{"exp":"1.499061942100525 m", "val":1.499061942100525}, "y":{"exp":"0.625533401966095 m", "val":0.625533401966095}, "heading":{"exp":"0.9272951023143567 rad", "val":0.9272951023143567}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"2.818030834197998 m", "val":2.818030834197998}, "y":{"exp":"1.6353689432144165 m", "val":1.6353689432144165}, "heading":{"exp":"0.9505470753132234 rad", "val":0.9505470753132234}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"3.7248220443725586 m", "val":3.7248220443725586}, "y":{"exp":"2.9749467372894287 m", "val":2.9749467372894287}, "heading":{"exp":"1.0303764862677023 rad", "val":1.0303764862677025}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
+  "constraints":[
+    {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
+    {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
+    {"from":"first", "to":"last", "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"0 m", "val":0.0}, "y":{"exp":"0 m", "val":0.0}, "w":{"exp":"17.548 m", "val":17.548}, "h":{"exp":"8.052 m", "val":8.052}}}, "enabled":false}],
+  "targetDt":{
+   "exp":"0.05 s",
+   "val":0.05
+  }
+ },
+ "trajectory":{
+  "sampleType":null,
+  "waypoints":[],
+  "samples":[],
+  "splits":[]
+ },
+ "events":[]
+}

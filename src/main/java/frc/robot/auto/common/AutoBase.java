@@ -4,11 +4,16 @@
 
 package frc.robot.auto.common;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import com.team2052.lib.helpers.MathHelpers;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,9 +38,6 @@ import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -148,7 +150,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         double distance;
 
         // start paths start alignment from closer to drive path longer
-        if (startPath.equals(PathsBase.B_SL_J2) || startPath.equals(PathsBase.R_SL_J2)) {
+        if (startPath.equals(PathsBase.B_SL_J) || startPath.equals(PathsBase.R_SL_J2)) {
             distance = 2.0;
         } else {
             distance = 2.5;
@@ -157,7 +159,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         return new ParallelCommandGroup(
                 new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
                         .withTimeout(
-                                (startPath.equals(PathsBase.B_SL_J2) || startPath.equals(PathsBase.R_SL_J2))
+                                (startPath.equals(PathsBase.B_SL_J) || startPath.equals(PathsBase.R_SL_J2))
                                         ? 0.0
                                         : 0.35),
                 new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(fieldLoc)),
@@ -327,15 +329,36 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     public static final class PathsBase {
         // USING W/ CHOREO PATHS, CREATED
-        public static final Path B_SL_J2 = new Path("SL J", "BLUE SL J");
-        public static final Path B_J2_LL = new Path("J LL", "BLUE J LL");
-        public static final Path B_LL_K4 = new Path("LL K", "BLUE LL K");
-        public static final Path B_K4_LL = new Path("K LL", "BLUE K LL");
+            // J4K4L4
+        public static final Path B_SL_J = new Path("SL J", "BLUE SL J");
+        public static final Path B_J_LL = new Path("J LL", "BLUE J LL");
+        public static final Path B_LL_K = new Path("LL K", "BLUE LL K");
+        public static final Path B_K_LL = new Path("K LL", "BLUE K LL");
+        public static final Path B_LL_L = new Path("LL L", "BLUE LL L");
 
         public static final Path R_SL_J2 = new Path("SL J", "RED SL J");
         public static final Path R_J2_LL = new Path("J LL", "RED J LL");
         public static final Path R_LL_K4 = new Path("LL K", "RED LL K");
         public static final Path R_K4_LL = new Path("K LL", "RED K LL");
+        public static final Path R_LL_L = new Path("LL L", "RED LL L");
+
+            // E/F4D4C4
+        public static final Path B_SR_E = new Path("SR E", "BLUE SR E");
+        public static final Path B_SR_F = new Path("SR F", "BLUE SR F");
+        public static final Path B_E_RL = new Path("E RL", "BLUE E RL");
+        public static final Path B_F_RL = new Path("F RL", "BLUE F RL");
+        public static final Path B_RL_D = new Path("RL D", "BLUE RL D");
+        public static final Path B_D_RL = new Path("D RL", "BLUE D RL");
+        public static final Path B_RL_C = new Path("RL C", "BLUE RL C");
+
+        // TODO
+        public static final Path R_SR_E = new Path("SR E", "RED SR E");
+        public static final Path R_SR_F = new Path("SR F", "RED SR F");
+        public static final Path R_E_RL = new Path("E RL", "RED E RL");
+        public static final Path R_F_RL = new Path("F RL", "RED F RL");
+        public static final Path R_RL_D = new Path("RL D", "RED RL D");
+        public static final Path R_D_RL = new Path("D RL", "RED D RL");
+        public static final Path R_RL_C = new Path("RL C", "RED RL C");
         //
 
         // public static final Path LL_STOP = new Path("LL STOP", "LL STOP");
@@ -351,15 +374,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
         // public static final Path RL_CD_L1 = new Path("RL CD L1", "RL CD L1");
         // public static final Path CD_RL = new Path("CD RL", "CD RL");
 
-        // // ef
-        // public static final Path E2_RL = new Path("E RL", "E RL");
-        // public static final Path SR_E2 = new Path("SR E", "SR E");
-        // public static final Path SR_F = new Path("SR F", "SR F");
-        // public static final Path SR_EF = new Path("SR EF", "SR EF");
-        // public static final Path SR_EF_L1 = new Path("SR EF L1", "SR EF L1");
-        // public static final Path EF_RL = new Path("EF RL", "EF RL");
-        // public static final Path RL_EF = new Path("RL EF", "RL EF");
-
         // // gh
         // public static final Path SC_H4 = new Path("SC H", "SC H");
         // public static final Path H4_PROCESS = new Path("H Processor", "H Processor");
@@ -371,17 +385,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
         // public static final Path SL_IJ = new Path("SL IJ", "SL IJ");
         // public static final Path LL_IJ = new Path("LL IJ", "LL IJ");
         // public static final Path SL_IJ_L1 = new Path("SL IJ L1", "SL IJ L1");
-
-        // // kl
-        // public static final Path K3_LL = new Path("K LL", "K LL");
-        // public static final Path LL_K3 = new Path("LL K", "LL K");
-        // public static final Path L4_LL = new Path("L LL", "L LL");
-        // public static final Path LL_L3 = new Path("LL L", "LL L");
-        // public static final Path LL_L4 = LL_L3;
-        // public static final Path SL_K4 = new Path("SL K", "SL K");
-        // public static final Path LL_KL = new Path("LL KL", "LL KL");
-        // public static final Path KL_LL = new Path("KL LL", "KL LL");
-        // public static final Path LL_KL_L1 = new Path("LL KL L1", "LL KL L1");
 
         //  // algae score and descore
         //  public static final Path KL_NET = new Path("KL Net", "KL Net");
