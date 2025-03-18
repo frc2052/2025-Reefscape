@@ -317,7 +317,8 @@ public class Constants {
 
   public static final class SuperstructureConstants {
     public static final double UPWARDS_MIN_ELEVATOR = 11.0;
-    public static final double DOWNWARDS_ARM_ANGLE = 300;
+    public static final double ROTATE_DOWN_COLLISION = 215;
+    public static final double ROTATE_UP_COLLISION = 295;
   }
 
   public static class VisionConstants {

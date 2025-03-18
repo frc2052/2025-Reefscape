@@ -1,7 +1,10 @@
 package frc.robot.subsystems.superstructure;
 
+import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -10,6 +13,9 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.intake.IntakePivotSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+
+import static edu.wpi.first.units.Units.Degrees;
+
 import org.littletonrobotics.junction.Logger;
 
 public class SuperstructureSubsystem extends SubsystemBase {
@@ -145,10 +151,32 @@ public class SuperstructureSubsystem extends SubsystemBase {
             // down
             if (target.getElevatorPositionRotations() < SuperstructureConstants.UPWARDS_MIN_ELEVATOR
                     && elevator.getPosition() < SuperstructureConstants.UPWARDS_MIN_ELEVATOR) {
+                if (target.getArmPivotAngle().in(Degrees) > armPivot.getArmAngle().in(Degrees)) { // arm swinging down
+                    if (target.getArmPivotAngle().in(Degrees) > SuperstructureConstants.ROTATE_DOWN_COLLISION) { // would hit the bellypan
+                        // elevator.setPositionMotionMagic(TargetAction.MIN_ARM);
+                        System.out.println("WOULD BE MOVING ELEVATOR UP TO SWING ARM DOWN");
+                    } else {
+                        // armPivot.setArmPosition(target);
+                        // intakePivot.setPosition(target);
+                        // elevator.setPositionMotionMagic(target);
+
+                        System.out.println("SHOULD BE CLEAR TO MOVE, WOULD ROTATE ARM DOWN");
+                    }
+                } else { // arm swinging up
+                    if (target.getArmPivotAngle().in(Degrees) < SuperstructureConstants.ROTATE_UP_COLLISION && armPivot.getArmAngle().in(Degrees) > SuperstructureConstants.ROTATE_UP_COLLISION) { // would hit the bellypan
+                        // elevator.setPositionMotionMagic(TargetAction.MIN_ARM);
+                        System.out.println("WOULD BE MOVING ELEVATOR UP TO SWING ARM UP");
+                    } else {
+                        // armPivot.setArmPosition(target);
+                        // intakePivot.setPosition(target);
+                        // elevator.setPositionMotionMagic(target);
+
+                        System.out.println("SHOULD BE CLEAR TO MOVE, WOULD ROTATE ARM UP");
+                    }
+                }
                 // arm still needs to swing around, so go up so arm is allowed to do so
                 if (!armPivot.isAtPosition(5, target.getArmPivotAngle())) {
                     elevator.setPositionMotionMagic(TargetAction.MIN_ARM);
-                    System.out.println("GOING TO MIN ARM");
                 }
 
                 // we up at safe height, now move arm
@@ -159,7 +187,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
                     // arm is now there so we can set elevator height
                     if (armPivot.isAtPosition(5, target.getArmPivotAngle())) {
                         elevator.setPositionMotionMagic(target);
-                        System.out.println("GOING TO TARGET ELEVATOR");
                     }
                 }
                 // second case: going up, so just go to elevator height then swing arm when safe
@@ -183,6 +210,20 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
                     if (armPivot.isAtPosition(5, target.getArmPivotAngle())) {
                         elevator.setPositionMotionMagic(target);
+                    }
+
+                    if (target.getArmPivotAngle().in(Degrees) > armPivot.getArmAngle().in(Degrees)) { // arm swinging down
+                        // if (target.getArmPivotAngle().in(Degrees) < SuperstructureConstants.ROTATE_DOWN_COLLISION) { // would not hit the bellypan
+                        //     elevator.setPositionMotionMagic(target);
+                        // } else {
+                        //     if (elevator.getPosition() < SuperstructureConstants.UPWARDS_MIN_ELEVATOR && !armPivot.isAtPosition(5, target.getArmPivotAngle())) {
+                        //         elevator.setPositionMotionMagic(TargetAction.MIN_ARM);
+                        //     } else {
+                        //         elevator.setPositionMotionMagic(target);
+                        //     }
+                        // }
+                    } else { // arm swinging up
+                        // elevator.setPositionMotionMagic(target);
                     }
                 }
             }
