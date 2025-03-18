@@ -168,12 +168,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     protected Command safeStationAlignment(Path altAlignPath) {
-        return new SequentialCommandGroup(followPathCommand(altAlignPath.getChoreoPath())
-                .alongWith(new InstantCommand(
-                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW)))
-                .alongWith(new InstantCommand(
-                                () -> ArmRollerSubsystem.getInstance().coralIn())
-                        .beforeStarting(new WaitCommand(1.0))));
+        return followPathCommand(altAlignPath.getChoreoPath())
+                .alongWith(new InstantCommand(() -> ArmRollerSubsystem.getInstance().coralIn()))
+                .alongWith(
+                    new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
+                .beforeStarting(new WaitCommand(0.5)));
     }
 
     protected Command combinedReefChassisElevatorAlign(
