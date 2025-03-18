@@ -426,7 +426,7 @@ public class Constants {
         public static final List<Translation2d> deadZone = Arrays.asList(
                 new Translation2d(16, 3), new Translation2d(16, 2), new Translation2d(17, 2), new Translation2d(17, 3));
 
-        public static final List<Translation2d> redProcessor = Arrays.asList();
+        public static final List<Translation2d> redProcessor  = Arrays.asList();
         public static final List<Translation2d> redHP = Arrays.asList();
         public static final List<Translation2d> redTravel = Arrays.asList();
 
