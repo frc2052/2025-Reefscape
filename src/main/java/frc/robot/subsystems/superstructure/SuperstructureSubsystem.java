@@ -141,29 +141,48 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 return;
             }
 
-            if (target.getElevatorPositionRotations() > elevator.getPosition()) { // going up
+            // first case: elevator below min elevator and needs to swing around, so must go up then swing then go back
+            // down
+            if (target.getElevatorPositionRotations() < SuperstructureConstants.UPWARDS_MIN_ELEVATOR
+                    && elevator.getPosition() < SuperstructureConstants.UPWARDS_MIN_ELEVATOR) {
+                // arm still needs to swing around, so go up so arm is allowed to do so
+                if (!armPivot.isAtPosition(5, target.getArmPivotAngle())) {
+                    elevator.setPositionMotionMagic(TargetAction.MIN_ARM);
+                    System.out.println("GOING TO MIN ARM");
+                }
+
+                // we up at safe height, now move arm
+                if (elevator.atPosition(1.0, TargetAction.MIN_ARM)) {
+                    armPivot.setArmPosition(target);
+                    intakePivot.setPosition(target);
+
+                    // arm is now there so we can set elevator height
+                    if (armPivot.isAtPosition(5, target.getArmPivotAngle())) {
+                        elevator.setPositionMotionMagic(target);
+                        System.out.println("GOING TO TARGET ELEVATOR");
+                    }
+                }
+                // second case: going up, so just go to elevator height then swing arm when safe
+            } else if (target.getElevatorPositionRotations() > elevator.getPosition()) {
                 elevator.setPositionMotionMagic(target);
-                System.out.println("STAGE 1");
                 if (elevator.getPosition() > SuperstructureConstants.UPWARDS_MIN_ELEVATOR) {
                     armPivot.setArmPosition(target);
                     intakePivot.setPosition(target);
-                    System.out.println("STAGE 2");
                 }
-            } else if (target.getElevatorPositionRotations() < elevator.getPosition()) { // going down
+                // third case: going down
+            } else if (target.getElevatorPositionRotations() < elevator.getPosition()) {
+                // goal is above danger zone, and we must be above danger zone already and can do everything
                 if (target.getElevatorPositionRotations() > SuperstructureConstants.UPWARDS_MIN_ELEVATOR) {
                     armPivot.setArmPosition(target);
                     intakePivot.setPosition(target);
                     elevator.setPositionMotionMagic(target);
+                    // goal is in the danger zone, but we must be above danger zone already so move arm then go down
                 } else {
                     armPivot.setArmPosition(target);
                     intakePivot.setPosition(target);
-                    System.out.println("STAGE 3");
 
-                    if (armPivot.isAtPosition(
-                            5,
-                            target.getArmPivotAngle())) { // Degrees.of(SuperstructureConstants.DOWNWARDS_ARM_ANGLE))) {
+                    if (armPivot.isAtPosition(5, target.getArmPivotAngle())) {
                         elevator.setPositionMotionMagic(target);
-                        System.out.println("STAGE 4");
                     }
                 }
             }

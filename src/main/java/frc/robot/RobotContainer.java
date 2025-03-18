@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
@@ -22,6 +23,7 @@ import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.intake.IntakePivotSubsystem;
 import frc.robot.subsystems.intake.IntakeRollerSubsystem;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.ActionType;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -95,14 +97,20 @@ public class RobotContainer {
 
         controlBoard.resetGyro().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
 
-        controlBoard.intake().whileTrue(ArmRollerCommandFactory.coralIn());
+        controlBoard
+                .intake()
+                .onTrue(new ConditionalCommand(
+                        new InstantCommand(),
+                        superstructure.set(TargetAction.INTAKE, true),
+                        () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE))
+                .whileTrue(ArmRollerCommandFactory.intake());
         controlBoard
                 .outtake()
-                .whileTrue(ArmRollerCommandFactory.coralOut())
+                .whileTrue(ArmRollerCommandFactory.outtake())
                 .onFalse(superstructure.set(TargetAction.STOW, true));
 
-        controlBoard.intakeAlgae().whileTrue(ArmRollerCommandFactory.algaeIn());
-        controlBoard.shootAlgae().whileTrue(ArmRollerCommandFactory.algaeOut());
+        controlBoard.rollerTap().whileTrue(ArmRollerCommandFactory.coralIn());
+        // controlBoard.shootAlgae().whileTrue(ArmRollerCommandFactory.algaeOut());
 
         controlBoard
                 .alignWithReefLeft()
@@ -139,6 +147,9 @@ public class RobotContainer {
 
         controlBoard.climbUp().whileTrue(ClimberCommandFactory.climberUp());
         controlBoard.climbDown().whileTrue(ClimberCommandFactory.climberDown());
+
+        controlBoard.algaeScoreAngle().onTrue(superstructure.set(TargetAction.AS, false));
+        controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.AP, false));
 
         // controlBoard.sysIDQuasiForward().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         // controlBoard.sysIDQuasiReverse().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
