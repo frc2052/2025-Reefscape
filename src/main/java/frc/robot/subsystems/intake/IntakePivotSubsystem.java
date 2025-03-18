@@ -36,7 +36,6 @@ public class IntakePivotSubsystem extends SubsystemBase {
     }
 
     public void setAngle(Angle angle) {
-
         if (angle == goalPosition && isAtDesiredPosition()) {
             return;
         }

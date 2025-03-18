@@ -49,7 +49,7 @@ public interface IPrimaryControlBoard {
 
     Trigger shootAlgae();
 
-    Trigger intakeAlgae();
+    Trigger rollerTap();
 
     Trigger sysIDQuasiForward();
 

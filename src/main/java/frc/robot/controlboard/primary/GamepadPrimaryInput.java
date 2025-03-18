@@ -118,7 +118,7 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
     }
 
     @Override
-    public Trigger intakeAlgae() {
+    public Trigger rollerTap() {
         return new Trigger(() -> false);
     }
 

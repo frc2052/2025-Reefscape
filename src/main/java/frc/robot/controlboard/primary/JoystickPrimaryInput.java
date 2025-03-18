@@ -116,7 +116,7 @@ public class JoystickPrimaryInput implements IPrimaryControlBoard {
     }
 
     @Override
-    public Trigger intakeAlgae() {
+    public Trigger rollerTap() {
         return new JoystickButton(translateStick, 4);
     }
 

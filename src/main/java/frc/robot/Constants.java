@@ -72,8 +72,8 @@ public class Constants {
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
             .withMotionMagicCruiseVelocity(0)
-            .withMotionMagicExpo_kA(0.004)
-            .withMotionMagicExpo_kV(0.007);
+            .withMotionMagicExpo_kA(0.005)
+            .withMotionMagicExpo_kV(0.025);
             // .withMotionMagicAcceleration(160) 
             // .withMotionMagicJerk(600);
 
@@ -199,8 +199,8 @@ public class Constants {
     public static final double CORAL_IN_SPEED = -0.33;
     public static final double CORAL_L1_OUT_SPEED = 0.2052;
     public static final double CORAL_OUT_SPEED = 0.35;
-    public static final double ALGAE_IN_SPEED = -0.35;
-    public static final double ALGAE_OUT_SPEED = 0.35;
+    public static final double ALGAE_IN_SPEED = 0.5;
+    public static final double ALGAE_OUT_SPEED = -1.00;
 
     public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()
     .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
@@ -316,7 +316,7 @@ public class Constants {
   }
 
   public static final class SuperstructureConstants {
-    public static final double UPWARDS_MIN_ELEVATOR = 7.5;
+    public static final double UPWARDS_MIN_ELEVATOR = 11.0;
     public static final double DOWNWARDS_ARM_ANGLE = 300;
   }
 
