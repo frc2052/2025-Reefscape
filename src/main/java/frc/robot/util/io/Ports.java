@@ -11,6 +11,7 @@ public class Ports {
     public static final int ARM_TALONFX_ID = 2;
 
     public static final int HAND_TALONFX_ID = 3;
+    public static final int INTAKE_ROLLER_ID = 5;
 
     /*
      *  Bus: Krawlivore
@@ -21,7 +22,6 @@ public class Ports {
     public static final int CLIMBER_ID = 16;
 
     public static final int INTAKE_PIVOT_ID = 17;
-    public static final int INTAKE_ROLLER_ID = 18;
     public static final int INTAKE_ENCODER_ID = 19;
 
     /*

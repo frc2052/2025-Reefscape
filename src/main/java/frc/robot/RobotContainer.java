@@ -17,6 +17,7 @@ import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
+import frc.robot.commands.intake.IntakeRollerCommandFactory;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.subsystems.LedSubsystem;
@@ -103,10 +104,12 @@ public class RobotContainer {
                         new InstantCommand(),
                         superstructure.set(TargetAction.INTAKE, true),
                         () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE))
-                .whileTrue(ArmRollerCommandFactory.intake());
+                .whileTrue(ArmRollerCommandFactory.intake())
+                .whileTrue(IntakeRollerCommandFactory.intake());
         controlBoard
                 .outtake()
                 .whileTrue(ArmRollerCommandFactory.outtake())
+                .whileTrue(IntakeRollerCommandFactory.outtake())
                 .onFalse(superstructure.set(TargetAction.STOW, true));
 
         controlBoard.rollerTap().whileTrue(ArmRollerCommandFactory.coralIn());
