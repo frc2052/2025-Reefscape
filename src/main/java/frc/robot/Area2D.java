@@ -9,9 +9,7 @@ public class Area2D {
     private Translation2d P1;
     private double rad;
     private List<Translation2d> points;
-    private List<Translation2d> deadZonesPoints = Arrays.asList();
     ;
-    private boolean deadZones;
     private boolean circle;
 
     public Area2D(Translation2d P1, double rad) {
@@ -20,23 +18,11 @@ public class Area2D {
         circle = true;
     }
 
-    public Area2D(Translation2d P1, double rad, List<Translation2d> deadPoints) {
-        this.P1 = P1;
-        this.rad = rad;
-        circle = true;
-        deadZones = true;
-        deadZonesPoints = deadPoints;
-    }
 
     public Area2D(List<Translation2d> areaPoints) {
         points = areaPoints;
     }
 
-    public Area2D(List<Translation2d> areaPoints, List<Translation2d> deadPoints) {
-        points = areaPoints;
-        deadZones = true;
-        deadZonesPoints = deadPoints;
-    }
 
     private boolean singlePointCalc(Pose2d pose) {
         Translation2d robotPose = pose.getTranslation();
@@ -66,29 +52,10 @@ public class Area2D {
     }
 
     public boolean withInTheRegion(Pose2d pose) {
-        if (circle) {
-            if (deadZones) {
-                if (multiPointCalc(pose, deadZonesPoints)) {
-                    return false;
-                } else {
-                    return singlePointCalc(pose);
-                }
-            } else {
-                return singlePointCalc(pose);
-            }
-        } else {
-            if (deadZones) {
-                if (multiPointCalc(pose, deadZonesPoints)) {
-                    System.out.println(multiPointCalc(pose, deadZonesPoints));
-                    return false;
-                } else {
-                    System.out.println("multipoint calc " + multiPointCalc(pose, points) + "pose " + pose.getX() + ","
-                            + pose.getY() + "," + pose.getRotation());
-                    return multiPointCalc(pose, points);
-                }
-            } else {
-                return multiPointCalc(pose, points);
-            }
+        if(circle){
+            singlePointCalc(pose)
+        }else{
+            multiPointCalc(pose,points)
+
         }
-    }
 }
