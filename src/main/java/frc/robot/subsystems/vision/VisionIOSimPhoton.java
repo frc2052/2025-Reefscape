@@ -30,7 +30,7 @@ public class VisionIOSimPhoton implements VisionIO {
     private final PhotonCamera reefCam = new PhotonCamera("KrawlerCam_000");
     private final int resWidth = 1280;
     private final int resHeight = 800;
-    private final AprilTagFieldLayout fieldLayout = FieldConstants.DEFAULT_APRIL_TAG_LAYOUT_TYPE.layout;
+    private final AprilTagFieldLayout fieldLayout = FieldConstants.DEFAULT_APRIL_TAG_LAYOUT;
 
     private final VisionSystemSim visionSim;
     private final PhotonCameraSim reefCameraSim;
@@ -89,8 +89,7 @@ public class VisionIOSimPhoton implements VisionIO {
         visionSim.update(pose);
         Field2d debugField = visionSim.getDebugField();
         if (getCurrentTagID() != 0) {
-            Optional<Pose3d> tagPose =
-                    FieldConstants.DEFAULT_APRIL_TAG_LAYOUT_TYPE.layout.getTagPose(getCurrentTagID());
+            Optional<Pose3d> tagPose = FieldConstants.DEFAULT_APRIL_TAG_LAYOUT.getTagPose(getCurrentTagID());
             if (tagPose.isPresent()) {
                 lastPose = tagPose.get().toPose2d();
             } else {

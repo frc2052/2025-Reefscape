@@ -7,7 +7,7 @@ package frc.robot.auto.modes.StartLeft;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.commands.hand.HandCommandFactory;
+import frc.robot.commands.arm.ArmRollerCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 
 /** Add your docs here. */
@@ -35,7 +35,7 @@ public class AutoJ1K1L1 extends AutoBase {
         // no alignment
         addCommands(followPathCommand(startingPath)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L1H)));
 
         //

@@ -5,6 +5,8 @@ import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
@@ -72,6 +74,10 @@ public class RobotState {
         }
         return Math.abs(
                 getAlignPose().getTranslation().getDistance(getFieldToRobot().getTranslation()));
+    }
+
+    public Command setAlignOffsetCommand(AlignOffset offset) {
+        return new InstantCommand(() -> setAlignOffset(offset));
     }
 
     public void setAlignOffset(AlignOffset offset) {

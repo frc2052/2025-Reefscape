@@ -2,38 +2,37 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.HandConstants;
+import frc.robot.Constants.ArmRollerConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
-public class HandSubsystem extends SubsystemBase {
+public class ArmRollerSubsystem extends SubsystemBase {
     private final TalonFX motor;
     // private final CANrange range;
-    private static HandSubsystem INSTANCE;
+    private static ArmRollerSubsystem INSTANCE;
     private boolean isIntaking = false;
 
-    public static HandSubsystem getInstance() {
+    public static ArmRollerSubsystem getInstance() {
         if (INSTANCE == null) {
-            return new HandSubsystem();
+            return new ArmRollerSubsystem();
         }
         return INSTANCE;
     }
 
-    public HandSubsystem() {
+    public ArmRollerSubsystem() {
         motor = new TalonFX(Ports.HAND_TALONFX_ID);
         // range = new CANrange(Ports.HAND_CAN_RANGE);
 
         // range.getConfigurator().apply(HandConstants.CANRANGE_CONFIG);
 
-        motor.getConfigurator().apply(HandConstants.MOTOR_CONFIG);
+        motor.getConfigurator().apply(ArmRollerConstants.MOTOR_CONFIG);
     }
 
     private void setMotor(double speed) {
@@ -45,16 +44,24 @@ public class HandSubsystem extends SubsystemBase {
         motor.stopMotor();
     }
 
-    public void motorOut() {
+    public void coralOut() {
         setMotor(
                 SuperstructureSubsystem.getInstance().getCurrentAction().equals(TargetAction.L1H)
-                        ? Constants.HandConstants.SCORE_L1_MOTOR_SPEED
-                        : Constants.HandConstants.OUT_HAND_MOTOR_SPEED);
+                        ? ArmRollerConstants.CORAL_L1_OUT_SPEED
+                        : ArmRollerConstants.CORAL_OUT_SPEED);
     }
 
-    public void motorIn() {
+    public void coralIn() {
         isIntaking = true;
-        setMotor(-Constants.HandConstants.IN_HAND_MOTOR_SPEED);
+        setMotor(ArmRollerConstants.CORAL_IN_SPEED);
+    }
+
+    public void algaeOut() {
+        setMotor(ArmRollerConstants.ALGAE_OUT_SPEED);
+    }
+
+    public void algaeIn() {
+        setMotor(ArmRollerConstants.ALGAE_IN_SPEED);
     }
 
     public double motorVelocity() {

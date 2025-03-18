@@ -24,14 +24,13 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
-import frc.robot.commands.algae.AlgaeCommandFactory;
+import frc.robot.commands.arm.ArmRollerCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
-import frc.robot.commands.hand.HandCommandFactory;
-import frc.robot.subsystems.CoralArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.HandSubsystem;
+import frc.robot.subsystems.arm.ArmPivotSubsystem;
+import frc.robot.subsystems.arm.ArmRollerSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
@@ -84,7 +83,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     protected Command startHP() {
-        return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP));
+        return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW));
     }
 
     protected static PathPlannerPath getPathFromFile(String pathName) {
@@ -157,7 +156,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         }
 
         return new ParallelCommandGroup(
-                new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
+                new InstantCommand(() -> ArmRollerSubsystem.getInstance().coralIn())
                         .withTimeout(
                                 (startPath.equals(PathsBase.B_SL_J) || startPath.equals(PathsBase.R_SL_J2))
                                         ? 0.0
@@ -171,8 +170,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
     protected Command safeStationAlignment(Path altAlignPath) {
         return new SequentialCommandGroup(followPathCommand(altAlignPath.getChoreoPath())
                 .alongWith(new InstantCommand(
-                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)))
-                .alongWith(new InstantCommand(() -> HandSubsystem.getInstance().motorIn())
+                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW)))
+                .alongWith(new InstantCommand(
+                                () -> ArmRollerSubsystem.getInstance().coralIn())
                         .beforeStarting(new WaitCommand(1.0))));
     }
 
@@ -188,7 +188,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     protected Command HPIntake() {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> HandSubsystem.getInstance().motorIn()), new WaitCommand(2.0));
+                new InstantCommand(() -> ArmRollerSubsystem.getInstance().coralIn()), new WaitCommand(2.0));
     }
 
     protected Command elevatorToPos(TargetAction position) {
@@ -199,31 +199,31 @@ public abstract class AutoBase extends SequentialCommandGroup {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
                 Commands.waitUntil(() -> ElevatorSubsystem.getInstance().atPosition(2.0, position)
-                                && CoralArmSubsystem.getInstance().isAtDesiredPosition(4.0))
-                        .andThen(HandCommandFactory.motorOut().withTimeout(0.30)));
+                                && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0))
+                        .andThen(ArmRollerCommandFactory.coralOut().withTimeout(0.30)));
         // .andThen( // do in path to station
-        //     new InstantCommand(
-        //         () ->
-        //             SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP))));
+        // new InstantCommand(
+        // () ->
+        // SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP))));
     }
 
     protected Command toPosAndScore(TargetAction position) {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
-                new InstantCommand(() -> HandSubsystem.getInstance().stopMotor()),
+                new InstantCommand(() -> ArmRollerSubsystem.getInstance().stopMotor()),
                 Commands.waitUntil(() -> ElevatorSubsystem.getInstance().atPosition(2.0, position)
-                                && CoralArmSubsystem.getInstance().isAtDesiredPosition())
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.2))
+                                && ArmPivotSubsystem.getInstance().isAtDesiredPosition())
+                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.2))
                         .andThen(new InstantCommand(
-                                () -> HandSubsystem.getInstance().stopMotor()))
-                        .andThen(HandCommandFactory.motorOut().withTimeout(0.55)));
+                                () -> ArmRollerSubsystem.getInstance().stopMotor()))
+                        .andThen(ArmRollerCommandFactory.coralOut().withTimeout(0.55)));
     }
 
     protected Command scoreL1(TargetAction position) {
         return new SequentialCommandGroup(
                 Commands.waitUntil(() -> ElevatorSubsystem.getInstance().atPosition(2.0, position)
-                                && CoralArmSubsystem.getInstance().isAtDesiredPosition())
-                        .andThen(HandCommandFactory.motorOut().withTimeout(1.0)));
+                                && ArmPivotSubsystem.getInstance().isAtDesiredPosition())
+                        .andThen(ArmRollerCommandFactory.coralOut().withTimeout(1.0)));
     }
 
     protected Command prepareForScoreWhenReady(TargetAction action) {
@@ -264,15 +264,16 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 .andThen(new PrintCommand("CLOSE ENOUGH**************"));
     }
 
-    // protected Command descoreAlgae(PathPlannerPath toPosition,TargetAction algaeLevel){
-    //   return new SequentialCommandGroup(
-    //     new ParallelCommandGroup(
-    //       new InstantCommand(() ->
+    // protected Command descoreAlgae(PathPlannerPath toPosition,TargetAction
+    // algaeLevel){
+    // return new SequentialCommandGroup(
+    // new ParallelCommandGroup(
+    // new InstantCommand(() ->
     // SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)).withTimeout(1.0),
-    //       followPathCommand(toPosition)
-    //     ),
-    //     new InstantCommand(() -> AlgaeShooterSubsystem.getInstance().)
-    //   );
+    // followPathCommand(toPosition)
+    // ),
+    // new InstantCommand(() -> AlgaeShooterSubsystem.getInstance().)
+    // );
     // }
 
     protected Command descoreScoreNetAlgae(
@@ -289,8 +290,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
                                         new WaitCommand(1.0),
                                         new InstantCommand(() -> SuperstructureSubsystem.getInstance()
                                                 .setCurrentAction(TargetAction.L4))),
-                                AlgaeCommandFactory.intake().withTimeout(1.5))
-                        .andThen(AlgaeCommandFactory.outtake().withTimeout(1.0)));
+                                ArmRollerCommandFactory.algaeIn().withTimeout(1.5))
+                        .andThen(ArmRollerCommandFactory.algaeOut().withTimeout(1.0)));
     }
 
     public static class Path { // combines access to pathplanner and choreo
@@ -373,9 +374,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
         // // gh
         // public static final Path SC_H4 = new Path("SC H", "SC H");
         // public static final Path H4_PROCESS = new Path("H Processor", "H Processor");
-        // public static final Path H_ALGAE_PREP = new Path("H Algae Prep", "H ALGAE PREP");
+        // public static final Path H_ALGAE_PREP = new Path("H Algae Prep", "H ALGAE
+        // PREP");
         // public static final Path SC_GH = new Path("SC G", "SC G");
-        // public static final Path G_AlGAE_PREP = new Path("G Algae Prep", "G Algae Prep");
+        // public static final Path G_AlGAE_PREP = new Path("G Algae Prep", "G Algae
+        // Prep");
 
         // // ij
         // public static final Path SL_IJ = new Path("SL IJ", "SL IJ");
@@ -386,24 +389,29 @@ public abstract class AutoBase extends SequentialCommandGroup {
         //  public static final Path KL_NET = new Path("KL Net", "KL Net");
         //  public static final Path NET_KL = new Path("Net KL", "Net KL");
 
-        //  public static final Path CD_NET = new Path("CD Net", "CD Net");
-        //  public static final Path NET_CD = new Path("Net CD", "Net CD");
+        // public static final Path CD_NET = new Path("CD Net", "CD Net");
+        // public static final Path NET_CD = new Path("Net CD", "Net CD");
 
-        //  public static final Path GH_NET = new Path("GH Net", "GH Net");
-        //  public static final Path NET_GH = new Path("Net GH", "Net GH");
+        // public static final Path GH_NET = new Path("GH Net", "GH Net");
+        // public static final Path NET_GH = new Path("Net GH", "Net GH");
 
-        //  public static final Path NET_IJ = new Path("Net IJ", "Net IJ");
-        //  public static final Path IJ_NET = new Path("IJ Net", "IJ Net");
+        // public static final Path NET_IJ = new Path("Net IJ", "Net IJ");
+        // public static final Path IJ_NET = new Path("IJ Net", "IJ Net");
 
-        //  public static final Path NET_EF = new Path("Net EF", "Net EF");
-        //  public static final Path EF_NET = new Path("EF Net", "EF Net");
+        // public static final Path NET_EF = new Path("Net EF", "Net EF");
+        // public static final Path EF_NET = new Path("EF Net", "EF Net");
 
-        //  public static final PathPlannerPath NET_SCORE_LEFT_STATION = getPathFromFile("Net Left Station");
-        //  public static final PathPlannerPath NET_SCORE_RIGHT_STATION = getPathFromFile("Net Right Station");
+        // public static final PathPlannerPath NET_SCORE_LEFT_STATION =
+        // getPathFromFile("Net Left Station");
+        // public static final PathPlannerPath NET_SCORE_RIGHT_STATION =
+        // getPathFromFile("Net Right Station");
 
-        //  public static final PathPlannerPath KL_SCORE_TO_DESCORE = getPathFromFile("KL Descore Algae");
-        //  public static final PathPlannerPath CD_SCORE_TO_DESCORE = getPathFromFile("CD Descore Algae");
-        //  public static final PathPlannerPath GH_SCORE_TO_DESCORE = getPathFromFile("GH Descore Algae");
+        // public static final PathPlannerPath KL_SCORE_TO_DESCORE = getPathFromFile("KL
+        // Descore Algae");
+        // public static final PathPlannerPath CD_SCORE_TO_DESCORE = getPathFromFile("CD
+        // Descore Algae");
+        // public static final PathPlannerPath GH_SCORE_TO_DESCORE = getPathFromFile("GH
+        // Descore Algae");
     }
 
     public static final class Paths {
