@@ -235,9 +235,18 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double DEG_TOL = 2.5;
 
-    public static final Angle MIN_INTAKE_ARM_ANGLE = Degrees.of(-250);
-    public static final Angle MAX_INTAKE_ARM_ANGLE = Degrees.of(-349);
+    public static final Angle ENCODER_OFFSET = Rotations.of(0.9);
 
+    public static final Angle MIN_INTAKE_ARM_ANGLE = Degrees.of(0);
+    public static final Angle MAX_INTAKE_ARM_ANGLE = Degrees.of(120);
+
+    public static final double kS = 0.0;
+    public static final double kG = 0.0;
+    public static final double kV = 0.0;
+    public static final double kA = 0.0;
+
+    public static final double MAX_VELOCITY = Math.PI;
+    public static final double MAX_ACCELERATION = 5;
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
@@ -251,12 +260,7 @@ public class Constants {
         new Slot0Configs()
             .withKP(5.0)
             .withKI(0.0)
-            .withKD(0.0)
-            .withKS(2.0)
-            .withGravityType(GravityTypeValue.Arm_Cosine)
-            .withKG(0.5)
-            .withKV(0.0)
-            .withKA(0.0);
+            .withKD(0.0);
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()

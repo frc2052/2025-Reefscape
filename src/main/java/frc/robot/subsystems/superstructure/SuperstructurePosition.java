@@ -8,6 +8,7 @@ import frc.robot.Constants.SuperstructureConstants;
 public class SuperstructurePosition {
     public enum TargetAction {
         HM(0.5, Degrees.of(228.0), Degrees.of(135), ActionType.NONE), // Homing
+        EXPLODE(5.0, Degrees.of(306.5), Degrees.of(30), ActionType.NONE),
         INTAKE(3.0, Degrees.of(306.5), Degrees.of(30), ActionType.CORAL),
         L1H(6.0, Degrees.of(190.0), Degrees.of(135), ActionType.CORAL),
         L2(21.5, Degrees.of(190.0), Degrees.of(135), ActionType.CORAL),

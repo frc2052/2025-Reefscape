@@ -4,13 +4,15 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.arm.ArmRollerCommandFactory;
@@ -107,14 +109,13 @@ public class RobotContainer {
                         () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE))
                 .whileTrue(ArmRollerCommandFactory.intake())
                 .whileTrue(IntakeRollerCommandFactory.intake());
-        controlBoard
-                .outtake()
-                .whileTrue(ArmRollerCommandFactory.outtake())
-                .whileTrue(IntakeRollerCommandFactory.outtake())
-                .onFalse(new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.INTAKE)));
+        // controlBoard
+        //         .outtake()
+        //         .whileTrue(ArmRollerCommandFactory.outtake())
+        //         .whileTrue(IntakeRollerCommandFactory.outtake())
+        //         .onFalse(new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.INTAKE)));
 
         controlBoard.rollerTap().whileTrue(ArmRollerCommandFactory.coralIn());
-        // controlBoard.shootAlgae().whileTrue(ArmRollerCommandFactory.algaeOut());
 
         controlBoard
                 .alignWithReefLeft()
@@ -146,10 +147,6 @@ public class RobotContainer {
         controlBoard.setGoalCoralStation().onTrue(superstructure.set(TargetAction.STOW, false));
         controlBoard.homeElevator().onTrue(superstructure.set(TargetAction.HM, false));
 
-        controlBoard.setSubReefLeft().onTrue(new InstantCommand(() -> IntakePivotSubsystem.getInstance()
-                .setAngle(Degrees.of(10))));
-        controlBoard.setSubReefRight().onTrue(new InstantCommand(() -> IntakePivotSubsystem.getInstance()
-                .setAngle(Degrees.of(30))));
         // controlBoard.setSubReefLeft().onTrue(robotState.setAlignOffsetCommand(AlignOffset.LEFT_BRANCH));
         // controlBoard.setSubReefRight().onTrue(robotState.setAlignOffsetCommand(AlignOffset.RIGHT_BRANCH));
 
@@ -159,24 +156,15 @@ public class RobotContainer {
         controlBoard.algaeScoreAngle().onTrue(superstructure.set(TargetAction.AS, false));
         controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.AP, false));
 
-        // controlBoard.sysIDQuasiForward().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        // controlBoard.sysIDQuasiReverse().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-        // controlBoard.sysIDDynamicForward().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        // controlBoard.sysIDDynamicReverse().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        // controlBoard
-        //     .shoot()
-        //     .onTrue(Commands.runOnce(SignalLogger::start))
-        //     .onFalse(Commands.runOnce(SignalLogger::stop));
-
-        // controlBoard
-        //     .manualUp()
-        //     .onTrue(ElevatorSubsystem.getInstance().manualUp())
-        //     .onFalse(ElevatorSubsystem.getInstance().stopElevator());
-
-        // controlBoard
-        //     .manualDown()
-        //     .onTrue(ElevatorSubsystem.getInstance().manualDown())
-        //     .onFalse(ElevatorSubsystem.getInstance().stopElevator());
+        /* SysID */
+        controlBoard.sysIDQuasiForward().whileTrue(intakePivot.sysIdQuasistatic(Direction.kForward));
+        controlBoard.sysIDQuasiReverse().whileTrue(intakePivot.sysIdQuasistatic(Direction.kReverse));
+        controlBoard.sysIDDynamicForward().whileTrue(intakePivot.sysIdDynamic(Direction.kForward));
+        controlBoard.sysIDDynamicReverse().whileTrue(intakePivot.sysIdDynamic(Direction.kReverse));
+        controlBoard
+                .outtake()
+                .onTrue(Commands.runOnce(SignalLogger::start))
+                .onFalse(Commands.runOnce(SignalLogger::stop));
     }
 
     private void configurePOVBindings() {
