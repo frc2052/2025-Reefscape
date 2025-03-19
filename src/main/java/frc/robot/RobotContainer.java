@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -102,7 +103,7 @@ public class RobotContainer {
                 .intake()
                 .onTrue(new ConditionalCommand(
                         new InstantCommand(),
-                        superstructure.set(TargetAction.INTAKE, true),
+                        new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.INTAKE)),
                         () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE))
                 .whileTrue(ArmRollerCommandFactory.intake())
                 .whileTrue(IntakeRollerCommandFactory.intake());
@@ -110,7 +111,7 @@ public class RobotContainer {
                 .outtake()
                 .whileTrue(ArmRollerCommandFactory.outtake())
                 .whileTrue(IntakeRollerCommandFactory.outtake())
-                .onFalse(superstructure.set(TargetAction.STOW, true));
+                .onFalse(new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.INTAKE)));
 
         controlBoard.rollerTap().whileTrue(ArmRollerCommandFactory.coralIn());
         // controlBoard.shootAlgae().whileTrue(ArmRollerCommandFactory.algaeOut());
@@ -145,8 +146,12 @@ public class RobotContainer {
         controlBoard.setGoalCoralStation().onTrue(superstructure.set(TargetAction.STOW, false));
         controlBoard.homeElevator().onTrue(superstructure.set(TargetAction.HM, false));
 
-        controlBoard.setSubReefLeft().onTrue(robotState.setAlignOffsetCommand(AlignOffset.LEFT_BRANCH));
-        controlBoard.setSubReefRight().onTrue(robotState.setAlignOffsetCommand(AlignOffset.RIGHT_BRANCH));
+        controlBoard.setSubReefLeft().onTrue(new InstantCommand(() -> IntakePivotSubsystem.getInstance()
+                .setAngle(Degrees.of(10))));
+        controlBoard.setSubReefRight().onTrue(new InstantCommand(() -> IntakePivotSubsystem.getInstance()
+                .setAngle(Degrees.of(30))));
+        // controlBoard.setSubReefLeft().onTrue(robotState.setAlignOffsetCommand(AlignOffset.LEFT_BRANCH));
+        // controlBoard.setSubReefRight().onTrue(robotState.setAlignOffsetCommand(AlignOffset.RIGHT_BRANCH));
 
         controlBoard.climbUp().whileTrue(ClimberCommandFactory.climberUp());
         controlBoard.climbDown().whileTrue(ClimberCommandFactory.climberDown());

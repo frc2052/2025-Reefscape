@@ -45,7 +45,7 @@ public class Constants {
 
     // public static final double ROTATIONS_PER_INCH = (1.0 / 12.0) * 2.0; // wrong
 
-    public static final double TICKS_DEADZONE = 0.5;
+    public static final double TICKS_DEADZONE = 0.25;
 
     public static final double MANUAL_MOTOR_SPEED = 0.2;
     public static final double HOMING_SPEED = -0.1;
@@ -163,6 +163,13 @@ public class Constants {
             .withKV(11.7) //11.7
             .withKA(0.0);
 
+    
+    public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
+            new MotionMagicConfigs()
+                .withMotionMagicCruiseVelocity(8)
+                .withMotionMagicAcceleration(8) 
+                .withMotionMagicJerk(16);
+
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
             .withInverted(
@@ -228,8 +235,8 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double DEG_TOL = 2.5;
 
-    public static final Angle MIN_INTAKE_ARM_ANGLE = Degrees.of(30);
-    public static final Angle MAX_INTAKE_ARM_ANGLE = Degrees.of(330);
+    public static final Angle MIN_INTAKE_ARM_ANGLE = Degrees.of(-250);
+    public static final Angle MAX_INTAKE_ARM_ANGLE = Degrees.of(-349);
 
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
@@ -243,10 +250,12 @@ public class Constants {
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
             .withKP(5.0)
-            .withKI(0.2)
+            .withKI(0.0)
             .withKD(0.0)
-            .withKS(0.0)
-            .withKV(0.0) //11.7
+            .withKS(2.0)
+            .withGravityType(GravityTypeValue.Arm_Cosine)
+            .withKG(0.5)
+            .withKV(0.0)
             .withKA(0.0);
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
@@ -261,7 +270,7 @@ public class Constants {
         new FeedbackConfigs()
             .withFeedbackRemoteSensorID(Ports.INTAKE_ENCODER_ID)
             .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-            // .withRotorToSensorRatio(58.333)
+            .withRotorToSensorRatio(58.333)
             .withSensorToMechanismRatio(1);
     
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
@@ -282,7 +291,7 @@ public class Constants {
 
   public static final class IntakeRollerConstants {
     public static final boolean MOTOR_INVERTED = false;
-    public static final double INTAKE_SPEED = -0.75;
+    public static final double INTAKE_SPEED = -0.694;
     public static final double OUTTAKE_SPEED = 0.35;
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =

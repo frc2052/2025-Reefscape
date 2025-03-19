@@ -7,7 +7,7 @@ package frc.robot.subsystems.intake;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 
-import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,15 +31,17 @@ public class IntakePivotSubsystem extends SubsystemBase {
     }
 
     private IntakePivotSubsystem() {
-        goalPosition = TargetAction.STOW.getIntakePivotPosition();
+        goalPosition = Degrees.of(30); // TargetAction.STOW.getIntakePivotPosition();
         pivotMotor = new TalonFX(Ports.INTAKE_PIVOT_ID);
+        pivotMotor.getConfigurator().apply(IntakePivotConstants.MOTOR_CONFIG);
     }
 
     public void setAngle(Angle angle) {
         if (angle == goalPosition && isAtDesiredPosition()) {
             return;
         }
-        pivotMotor.setControl(new PositionVoltage(angle));
+        System.out.println(angle.in(Degrees));
+        pivotMotor.setControl(new MotionMagicVoltage(angle.in(Rotations)));
     }
 
     public void setPosition(TargetAction action) {

@@ -8,7 +8,7 @@ import frc.robot.Constants.SuperstructureConstants;
 public class SuperstructurePosition {
     public enum TargetAction {
         HM(0.5, Degrees.of(228.0), Degrees.of(135), ActionType.NONE), // Homing
-        INTAKE(2.25, Degrees.of(307.0), Degrees.of(30), ActionType.CORAL),
+        INTAKE(3.0, Degrees.of(306.5), Degrees.of(30), ActionType.CORAL),
         L1H(6.0, Degrees.of(190.0), Degrees.of(135), ActionType.CORAL),
         L2(21.5, Degrees.of(190.0), Degrees.of(135), ActionType.CORAL),
         L3(31.5, Degrees.of(190.0), Degrees.of(135), ActionType.CORAL),
@@ -16,7 +16,7 @@ public class SuperstructurePosition {
         LA(6.0, Degrees.of(265.0), Degrees.of(135), ActionType.ALGAE), // Lower Algae
         UA(23.0, Degrees.of(265.0), Degrees.of(135), ActionType.ALGAE), // Upper Algae
         MIN_ARM(SuperstructureConstants.UPWARDS_MIN_ELEVATOR, Degrees.of(228), Degrees.of(135), ActionType.NONE),
-        STOW(3.0, Degrees.of(221), Degrees.of(135), ActionType.NONE), // Coral Station
+        STOW(14.0, Degrees.of(221), Degrees.of(135), ActionType.NONE), // Coral Station
         AS(65.0, Degrees.of(175.0), Degrees.of(135), ActionType.ALGAE), // Algae Scoring NET
         AP(5.0, Degrees.of(325.0), Degrees.of(135), ActionType.ALGAE), // Algae Scoring Processor
         TR(5.0, Degrees.of(228.0), Degrees.of(135), ActionType.NONE), // Travel

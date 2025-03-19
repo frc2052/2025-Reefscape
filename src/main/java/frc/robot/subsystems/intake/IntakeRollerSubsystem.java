@@ -24,6 +24,7 @@ public class IntakeRollerSubsystem extends SubsystemBase {
 
     private IntakeRollerSubsystem() {
         motor = new TalonFX(Ports.INTAKE_ROLLER_ID);
+        motor.getConfigurator().apply(IntakeRollerConstants.MOTOR_CONFIG);
     }
 
     private void setMotor(double speed) {
