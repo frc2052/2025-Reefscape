@@ -6,13 +6,10 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
 import frc.robot.commands.arm.ArmRollerCommandFactory;
@@ -109,11 +106,11 @@ public class RobotContainer {
                         () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE))
                 .whileTrue(ArmRollerCommandFactory.intake())
                 .whileTrue(IntakeRollerCommandFactory.intake());
-        // controlBoard
-        //         .outtake()
-        //         .whileTrue(ArmRollerCommandFactory.outtake())
-        //         .whileTrue(IntakeRollerCommandFactory.outtake())
-        //         .onFalse(new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.INTAKE)));
+        controlBoard
+                .outtake()
+                .whileTrue(ArmRollerCommandFactory.outtake())
+                .whileTrue(IntakeRollerCommandFactory.outtake())
+                .onFalse(new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.INTAKE)));
 
         controlBoard.rollerTap().whileTrue(ArmRollerCommandFactory.coralIn());
 
@@ -128,7 +125,7 @@ public class RobotContainer {
         /* Secondary Driver */
         controlBoard.actTrigger().onTrue(superstructure.confirm());
 
-        controlBoard.setGoalCL().onTrue(superstructure.set(TargetAction.INTAKE, true));
+        controlBoard.setGoalCL().onTrue(superstructure.set(TargetAction.CL, true));
         controlBoard
                 .setGoalL1H()
                 .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
@@ -157,14 +154,14 @@ public class RobotContainer {
         controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.AP, false));
 
         /* SysID */
-        controlBoard.sysIDQuasiForward().whileTrue(intakePivot.sysIdQuasistatic(Direction.kForward));
-        controlBoard.sysIDQuasiReverse().whileTrue(intakePivot.sysIdQuasistatic(Direction.kReverse));
-        controlBoard.sysIDDynamicForward().whileTrue(intakePivot.sysIdDynamic(Direction.kForward));
-        controlBoard.sysIDDynamicReverse().whileTrue(intakePivot.sysIdDynamic(Direction.kReverse));
-        controlBoard
-                .outtake()
-                .onTrue(Commands.runOnce(SignalLogger::start))
-                .onFalse(Commands.runOnce(SignalLogger::stop));
+        // controlBoard.sysIDQuasiForward().whileTrue(intakePivot.sysIdQuasistatic(Direction.kForward));
+        // controlBoard.sysIDQuasiReverse().whileTrue(intakePivot.sysIdQuasistatic(Direction.kReverse));
+        // controlBoard.sysIDDynamicForward().whileTrue(intakePivot.sysIdDynamic(Direction.kForward));
+        // controlBoard.sysIDDynamicReverse().whileTrue(intakePivot.sysIdDynamic(Direction.kReverse));
+        // controlBoard
+        //         .outtake()
+        //         .onTrue(Commands.runOnce(SignalLogger::start))
+        //         .onFalse(Commands.runOnce(SignalLogger::stop));
     }
 
     private void configurePOVBindings() {
