@@ -12,6 +12,10 @@ public class Ports {
 
     public static final int HAND_TALONFX_ID = 3;
 
+    public static final int INTAKE_ROLLER_ID = 5;
+    public static final int INTAKE_PIVOT_ID = 6;
+    public static final int INTAKE_ENCODER_ID = 7;
+
     /*
      *  Bus: Krawlivore
      */
@@ -19,10 +23,6 @@ public class Ports {
     public static final int ELEVATOR_BACK_ID = 15;
 
     public static final int CLIMBER_ID = 16;
-
-    public static final int INTAKE_PIVOT_ID = 17;
-    public static final int INTAKE_ROLLER_ID = 18;
-    public static final int INTAKE_ENCODER_ID = 19;
 
     /*
      *  DIO

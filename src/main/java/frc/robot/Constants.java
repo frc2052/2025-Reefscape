@@ -45,7 +45,7 @@ public class Constants {
 
     // public static final double ROTATIONS_PER_INCH = (1.0 / 12.0) * 2.0; // wrong
 
-    public static final double TICKS_DEADZONE = 0.5;
+    public static final double TICKS_DEADZONE = 0.25;
 
     public static final double MANUAL_MOTOR_SPEED = 0.2;
     public static final double HOMING_SPEED = -0.1;
@@ -163,6 +163,13 @@ public class Constants {
             .withKV(11.7) //11.7
             .withKA(0.0);
 
+    
+    public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
+            new MotionMagicConfigs()
+                .withMotionMagicCruiseVelocity(8)
+                .withMotionMagicAcceleration(8) 
+                .withMotionMagicJerk(16);
+
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
             .withInverted(
@@ -228,9 +235,18 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double DEG_TOL = 2.5;
 
-    public static final Angle MIN_INTAKE_ARM_ANGLE = Degrees.of(30);
-    public static final Angle MAX_INTAKE_ARM_ANGLE = Degrees.of(330);
+    public static final Angle ENCODER_OFFSET = Rotations.of(-0.47558);
 
+    public static final double MIN_INTAKE_ARM_ANGLE = 0;
+    public static final double MAX_INTAKE_ARM_ANGLE = 20;
+
+    public static final double kS = 0.0;
+    public static final double kG = 0.3;
+    public static final double kV = 0.0;
+    public static final double kA = 0.0;
+
+    public static final double MAX_VELOCITY = 36 * Math.PI;
+    public static final double MAX_ACCELERATION = 250;
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
@@ -242,12 +258,9 @@ public class Constants {
             
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
-            .withKP(5.0)
-            .withKI(0.2)
-            .withKD(0.0)
-            .withKS(0.0)
-            .withKV(0.0) //11.7
-            .withKA(0.0);
+            .withKP(75.0) // 22.673
+            .withKI(0.0)
+            .withKD(7.0); // 14.89
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
@@ -260,30 +273,29 @@ public class Constants {
     public static final FeedbackConfigs FEEDBACK_CONFIG =
         new FeedbackConfigs()
             .withFeedbackRemoteSensorID(Ports.INTAKE_ENCODER_ID)
-            .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-            // .withRotorToSensorRatio(58.333)
+            .withFeedbackSensorSource(FeedbackSensorSourceValue.SyncCANcoder)
+            .withRotorToSensorRatio(58.333)
             .withSensorToMechanismRatio(1);
     
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
         new SoftwareLimitSwitchConfigs()
-            .withForwardSoftLimitThreshold(MAX_INTAKE_ARM_ANGLE) // TODO: adjust as needed
+            .withForwardSoftLimitThreshold(MIN_INTAKE_ARM_ANGLE)
             .withForwardSoftLimitEnable(true)
-            .withReverseSoftLimitThreshold(MIN_INTAKE_ARM_ANGLE)
+            .withReverseSoftLimitThreshold(MAX_INTAKE_ARM_ANGLE)
             .withReverseSoftLimitEnable(true);
     
     public static final TalonFXConfiguration MOTOR_CONFIG = 
         new TalonFXConfiguration()
             .withSlot0(SLOT0_CONFIGS)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-            .withFeedback(FEEDBACK_CONFIG)
             .withAudio(new AudioConfigs().withBeepOnBoot(false))
             .withCurrentLimits(CURRENT_LIMIT_CONFIG);
   }
 
   public static final class IntakeRollerConstants {
     public static final boolean MOTOR_INVERTED = false;
-    public static final double INTAKE_SPEED = 0.33;
-    public static final double OUTTAKE_SPEED = -0.35;
+    public static final double INTAKE_SPEED = -1.00;
+    public static final double OUTTAKE_SPEED = 0.35;
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
@@ -317,7 +329,8 @@ public class Constants {
 
   public static final class SuperstructureConstants {
     public static final double UPWARDS_MIN_ELEVATOR = 11.0;
-    public static final double DOWNWARDS_ARM_ANGLE = 300;
+    public static final double ROTATE_DOWN_COLLISION = 215;
+    public static final double ROTATE_UP_COLLISION = 295;
   }
 
   public static class VisionConstants {

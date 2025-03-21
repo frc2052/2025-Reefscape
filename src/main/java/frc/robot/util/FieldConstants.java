@@ -14,7 +14,7 @@ public class FieldConstants {
     // public static final FieldType FIELD_TYPE = FieldType.WELDED;
 
     public static final AprilTagFieldLayout DEFAULT_APRIL_TAG_LAYOUT =
-            AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+            AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
     public static final Distance FIELD_LENGTH = Meters.of(DEFAULT_APRIL_TAG_LAYOUT.getFieldLength());
     public static final Distance FIELD_WIDTH = Meters.of(DEFAULT_APRIL_TAG_LAYOUT.getFieldWidth());
 

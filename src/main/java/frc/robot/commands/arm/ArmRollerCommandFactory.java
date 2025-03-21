@@ -20,7 +20,7 @@ public class ArmRollerCommandFactory {
     public static Command outtake() {
         return new ConditionalCommand(
                 algaeOut(),
-                coralOut(),
+                coralIn().withTimeout(0.1).andThen(coralOut()),
                 () -> SuperstructureSubsystem.getInstance().getCurrentAction().getType() == ActionType.ALGAE);
     }
 
