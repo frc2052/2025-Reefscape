@@ -235,18 +235,18 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double DEG_TOL = 2.5;
 
-    public static final Angle ENCODER_OFFSET = Rotations.of(0.9);
+    public static final Angle ENCODER_OFFSET = Rotations.of(-0.47558);
 
-    public static final Angle MIN_INTAKE_ARM_ANGLE = Degrees.of(0);
-    public static final Angle MAX_INTAKE_ARM_ANGLE = Degrees.of(120);
+    public static final double MIN_INTAKE_ARM_ANGLE = 0;
+    public static final double MAX_INTAKE_ARM_ANGLE = 20;
 
     public static final double kS = 0.0;
-    public static final double kG = 0.0;
+    public static final double kG = 0.3;
     public static final double kV = 0.0;
     public static final double kA = 0.0;
 
-    public static final double MAX_VELOCITY = Math.PI;
-    public static final double MAX_ACCELERATION = 5;
+    public static final double MAX_VELOCITY = 36 * Math.PI;
+    public static final double MAX_ACCELERATION = 250;
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
@@ -258,9 +258,9 @@ public class Constants {
             
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
-            .withKP(5.0)
+            .withKP(75.0) // 22.673
             .withKI(0.0)
-            .withKD(0.0);
+            .withKD(7.0); // 14.89
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
@@ -273,22 +273,21 @@ public class Constants {
     public static final FeedbackConfigs FEEDBACK_CONFIG =
         new FeedbackConfigs()
             .withFeedbackRemoteSensorID(Ports.INTAKE_ENCODER_ID)
-            .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
+            .withFeedbackSensorSource(FeedbackSensorSourceValue.SyncCANcoder)
             .withRotorToSensorRatio(58.333)
             .withSensorToMechanismRatio(1);
     
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
         new SoftwareLimitSwitchConfigs()
-            .withForwardSoftLimitThreshold(MAX_INTAKE_ARM_ANGLE) // TODO: adjust as needed
+            .withForwardSoftLimitThreshold(MIN_INTAKE_ARM_ANGLE)
             .withForwardSoftLimitEnable(true)
-            .withReverseSoftLimitThreshold(MIN_INTAKE_ARM_ANGLE)
+            .withReverseSoftLimitThreshold(MAX_INTAKE_ARM_ANGLE)
             .withReverseSoftLimitEnable(true);
     
     public static final TalonFXConfiguration MOTOR_CONFIG = 
         new TalonFXConfiguration()
             .withSlot0(SLOT0_CONFIGS)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-            .withFeedback(FEEDBACK_CONFIG)
             .withAudio(new AudioConfigs().withBeepOnBoot(false))
             .withCurrentLimits(CURRENT_LIMIT_CONFIG);
   }
