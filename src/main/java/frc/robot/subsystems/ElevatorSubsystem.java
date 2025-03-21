@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
@@ -17,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.SuperstructureConstants;
+import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
@@ -54,6 +58,18 @@ public class ElevatorSubsystem extends SubsystemBase {
         frontMotor.clearStickyFault_SupplyCurrLimit();
 
         backMotor.setControl(new Follower(frontMotor.getDeviceID(), true));
+    }
+
+    public double clamp(double pos) {
+        double armDeg = ArmPivotSubsystem.getInstance().getArmAngle().in(Degrees);
+        if (armDeg > SuperstructureConstants.RIGHT_LIMIT - 2
+                && armDeg < SuperstructureConstants.LEFT_LIMIT + 2) { // potentially danger zone
+            if (getPosition() < SuperstructureConstants.MIN_SAFE_ROTATION) {
+                pos = SuperstructureConstants.MIN_SAFE_ROTATION;
+            }
+        }
+
+        return pos;
     }
 
     public void setPositionMotionMagic(TargetAction elevatorAction) {

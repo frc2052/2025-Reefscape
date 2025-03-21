@@ -14,7 +14,6 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -87,25 +86,6 @@ public class IntakePivotSubsystem extends SubsystemBase {
                 .withPosition(setpoint.in(Rotations))
                 .withFeedForward(feedforward)
                 .withSlot(0));
-        // double goalDeg = setpoint.in(Degrees);
-        // double currentDeg = getPosition().in(Degrees);
-        // double diff = goalDeg - currentDeg;
-
-        // if (currentDeg > 100 && goalDeg > 100) {
-        //     pivotMotor.set(0.05);
-        //     return;
-        // }
-
-        // if (Math.abs(diff) > 30) {
-        //     pivotMotor.set(Math.copySign(0.4, diff));
-        // } else if (Math.abs(diff) > 15) {
-        //     pivotMotor.set(Math.copySign(0.3, diff));
-        // } else if (Math.abs(diff) > 4) {
-        //     pivotMotor.set(Math.copySign(0.175, diff));
-        // } else {
-        //     pivotMotor.stopMotor();
-        //     // pivotMotor.setVoltage(ff.calculate(goalDeg, 0));
-        // }
     }
 
     public void setAngle(double rotations) {
@@ -113,7 +93,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
     }
 
     public void setPosition(TargetAction action) {
-        // goalPosition = action.getIntakePivotPosition().in(Rotations);
+        goalPosition = action.getIntakePivotPosition();
     }
 
     public boolean isAtDesiredPosition() {
@@ -128,12 +108,17 @@ public class IntakePivotSubsystem extends SubsystemBase {
         return Math.abs(getPosition() - goal) <= tol;
     }
 
+    public boolean atPosition(TargetAction action) {
+        return isAtPosition(IntakePivotConstants.DEG_TOL, action.getIntakePivotPosition());
+    }
+
     public double getPosition() {
         double position = pivotMotor.getPosition().getValueAsDouble();
         return position;
     }
 
     public void setNeutralMode(NeutralModeValue mode) {
+        System.out.println("INTAKE SET TO: " + mode.toString());
         pivotMotor.setNeutralMode(mode);
     }
 

@@ -246,7 +246,7 @@ public class Constants {
     public static final double kA = 0.0;
 
     public static final double MAX_VELOCITY = 36 * Math.PI;
-    public static final double MAX_ACCELERATION = 250;
+    public static final double MAX_ACCELERATION = 350;
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
@@ -328,9 +328,10 @@ public class Constants {
   }
 
   public static final class SuperstructureConstants {
-    public static final double UPWARDS_MIN_ELEVATOR = 11.0;
-    public static final double ROTATE_DOWN_COLLISION = 215;
-    public static final double ROTATE_UP_COLLISION = 295;
+    public static final double MIN_SAFE_ROTATION = 11.0;
+    public static final double MIN_MOVE_ROTATION = 45.0;
+    public static final double RIGHT_LIMIT = 215;
+    public static final double LEFT_LIMIT = 295;
   }
 
   public static class VisionConstants {
