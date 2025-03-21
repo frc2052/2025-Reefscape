@@ -325,6 +325,10 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     public static final class PathsBase {
+        // backup from side paths for algae
+        public static final Path B_KL_BACKUP = new Path(null, null);
+        public static final Path B_CD_BACKUP = new Path(null, null);
+
         // USING W/ CHOREO PATHS, CREATED
         // J4K4L4
         public static final Path B_SL_J = new Path("SL J", "BLUE SL J");
