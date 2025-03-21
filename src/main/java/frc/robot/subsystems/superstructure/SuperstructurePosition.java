@@ -3,57 +3,58 @@ package frc.robot.subsystems.superstructure;
 import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.units.measure.Angle;
+import frc.robot.Constants.SuperstructureConstants;
 
 public class SuperstructurePosition {
     public enum TargetAction {
-        HM(0.5, Degrees.of(170.0), Degrees.of(135), ActionType.NONE), // Homing
-        // L1L(1.0, Degrees.of(255.0), Degrees.of(90), ActionType.CORAL),
-        L1H(2.0, Degrees.of(240.0), Degrees.of(135), ActionType.CORAL),
-        L2(21.5, Degrees.of(287.0), Degrees.of(135), ActionType.CORAL),
-        L3(38.5, Degrees.of(287.0), Degrees.of(135), ActionType.CORAL),
-        L4(62.5, Degrees.of(280), Degrees.of(135), ActionType.CORAL),
-        LA(6.0, Degrees.of(170.0), Degrees.of(135), ActionType.ALGAE), // Lower Algae
-        UA(40.0, Degrees.of(170.0), Degrees.of(135), ActionType.ALGAE), // Upper Algae
-        HP(1.5, Degrees.of(112), Degrees.of(135), ActionType.STATION), // Coral Station
-        AS(55.0, Degrees.of(180.0), Degrees.of(135), ActionType.NONE), // Algae Scoring NET
-        AP(55.0, Degrees.of(180.0), Degrees.of(135), ActionType.PROCESS), // Algae Scoring Processor
-        TR(5.0, Degrees.of(180.0), Degrees.of(135), ActionType.NONE), // Travel
-        CL(8.0, Degrees.of(170.0), Degrees.of(135), ActionType.NONE); // Climb
+        HM(0.5, Degrees.of(228.0), Degrees.of(135), ActionType.NONE), // Homing
+        EXPLODE(5.0, Degrees.of(306.5), Degrees.of(30), ActionType.NONE),
+        INTAKE(3.0, Degrees.of(305), Degrees.of(30), ActionType.CORAL),
+        L1H(6.0, Degrees.of(190.0), Degrees.of(135), ActionType.CORAL),
+        L2(21.5, Degrees.of(190.0), Degrees.of(135), ActionType.CORAL),
+        L3(31.5, Degrees.of(190.0), Degrees.of(135), ActionType.CORAL),
+        L4(65.0, Degrees.of(190.0), Degrees.of(135), ActionType.CORAL),
+        LA(6.0, Degrees.of(265.0), Degrees.of(135), ActionType.ALGAE), // Lower Algae
+        UA(23.0, Degrees.of(265.0), Degrees.of(135), ActionType.ALGAE), // Upper Algae
+        MIN_ARM(SuperstructureConstants.UPWARDS_MIN_ELEVATOR, Degrees.of(228), Degrees.of(135), ActionType.NONE),
+        STOW(14.0, Degrees.of(227.5), Degrees.of(135), ActionType.NONE), // Coral Station
+        AS(65.0, Degrees.of(175.0), Degrees.of(135), ActionType.ALGAE), // Algae Scoring NET
+        AP(5.0, Degrees.of(325.0), Degrees.of(135), ActionType.ALGAE), // Algae Scoring Processor
+        TR(5.0, Degrees.of(228.0), Degrees.of(135), ActionType.NONE), // Travel
+        CL(14.0, Degrees.of(265.0), Degrees.of(135), ActionType.NONE); // Climb
 
         private final double elevatorPosition;
-        private final Angle coralArmAngle;
-        private final Angle algaeArmAngle;
-        private final ActionType actionType;
+        private final Angle armPivotAngle;
+        private final Angle intakePivotAngle;
+        private final ActionType type;
 
-        private TargetAction(double elevatorPosition, Angle coralArmAngle, Angle algaeArmAngle, ActionType actionType) {
+        private TargetAction(double elevatorPosition, Angle coralArmAngle, Angle algaeArmAngle, ActionType type) {
             this.elevatorPosition = elevatorPosition;
-            this.coralArmAngle = coralArmAngle;
-            this.algaeArmAngle = algaeArmAngle;
-            this.actionType = actionType;
+            this.armPivotAngle = coralArmAngle;
+            this.intakePivotAngle = algaeArmAngle;
+            this.type = type;
         }
 
         public double getElevatorPositionRotations() {
             return elevatorPosition;
         }
 
-        public Angle getCoralArmAngle() {
-            return coralArmAngle;
+        public Angle getArmPivotAngle() {
+            return armPivotAngle;
         }
 
-        public Angle getAlgaeArmPivotPosition() {
-            return algaeArmAngle;
+        public Angle getIntakePivotPosition() {
+            return intakePivotAngle;
         }
 
-        public ActionType getActionType() {
-            return actionType;
+        public ActionType getType() {
+            return type;
         }
     }
 
     public enum ActionType {
+        NONE,
         CORAL,
-        ALGAE,
-        STATION,
-        PROCESS,
-        NONE
+        ALGAE
     }
 }

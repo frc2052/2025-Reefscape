@@ -7,7 +7,7 @@ package frc.robot.auto.modes.StartRight;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.commands.hand.HandCommandFactory;
+import frc.robot.commands.arm.ArmRollerCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 
 /** Add your docs here. */
@@ -35,23 +35,23 @@ public class AutoE1D1C1 extends AutoBase {
 
         addCommands(followPathCommand(startingPath)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L1H)));
 
         //
-        addCommands(safeStationAlignment(Paths.E2_RL));
-        addCommands(HPIntake());
-        addCommands(followPathCommand(Paths.RL_CD_L1)
-                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-                .andThen(score(TargetAction.L1H)));
+        // addCommands(safeStationAlignment(Paths.E2_RL));
+        // addCommands(HPIntake());
+        // addCommands(followPathCommand(Paths.RL_CD_L1)
+        //         .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
+        //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+        //         .andThen(score(TargetAction.L1H)));
 
-        //
-        addCommands(safeStationAlignment(Paths.CD_RL));
-        addCommands(HPIntake());
-        addCommands(followPathCommand(Paths.RL_CD_L1)
-                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-                .andThen(score(TargetAction.L1H)));
+        // //
+        // addCommands(safeStationAlignment(Paths.CD_RL));
+        // addCommands(HPIntake());
+        // addCommands(followPathCommand(Paths.RL_CD_L1)
+        //         .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
+        //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+        //         .andThen(score(TargetAction.L1H)));
     }
 }

@@ -170,7 +170,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                     MathHelpers.epsilonEquals(frontMotor.getVelocity().getValueAsDouble(), 0.0, 0.5))) {
                 zeroEncoder();
                 System.out.println("Elevator Homed");
-                setPositionMotionMagic(TargetAction.HP);
+                setPositionMotionMagic(TargetAction.STOW);
                 homing = false;
                 homingDelay.update(Timer.getFPGATimestamp(), false);
             }

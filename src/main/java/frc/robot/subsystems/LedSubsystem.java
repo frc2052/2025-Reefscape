@@ -122,7 +122,7 @@ public class LedSubsystem extends SubsystemBase {
             // teleop LED status modes
 
             if (DriverStation.isTeleopEnabled()) {
-                if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.HP) {
+                if (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.STOW) {
                     currentStatusMode = LEDStatusMode.DONE_CLIMBING;
                 } else if (state.desiredReefFaceIsSeen()) {
                     currentStatusMode = LEDStatusMode.REQUEST_LOADING;

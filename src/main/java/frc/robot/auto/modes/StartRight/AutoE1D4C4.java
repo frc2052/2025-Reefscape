@@ -3,10 +3,6 @@ package frc.robot.auto.modes.StartRight;
 import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
-import frc.robot.commands.hand.HandCommandFactory;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 @AutoDescription(description = "RIGHT One L2, Two L4")
 public class AutoE1D4C4 extends AutoBase {
@@ -32,23 +28,23 @@ public class AutoE1D4C4 extends AutoBase {
         //         .andThen(score(TargetAction.L1H)));
 
         // paths L1
-        addCommands(followPathCommand(Paths.SR_EF_L1)
-                .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-                .andThen(score(TargetAction.L1H)));
+        // addCommands(followPathCommand(Paths.SR_EF_L1)
+        //         .alongWith(prepareForScoreWhenReady(TargetAction.L1H)
+        //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+        //         .andThen(score(TargetAction.L1H)));
 
-        //
-        addCommands(safeStationAlignment(Paths.E2_RL));
-        addCommands(HPIntake());
-        addCommands(safeReefAlignment(Paths.RL_D4, AlignOffset.RIGHT_BRANCH, FieldElementFace.CD)
-                .alongWith(prepareForScoreWhenReady(TargetAction.L4)
-                        .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
-                .andThen(score(TargetAction.L4)));
+        // //
+        // addCommands(safeStationAlignment(Paths.E2_RL));
+        // addCommands(HPIntake());
+        // addCommands(safeReefAlignment(Paths.RL_D4, AlignOffset.RIGHT_BRANCH, FieldElementFace.CD)
+        //         .alongWith(prepareForScoreWhenReady(TargetAction.L4)
+        //                 .andThen(HandCommandFactory.motorIn().withTimeout(0.05)))
+        //         .andThen(score(TargetAction.L4)));
 
-        //
-        addCommands(safeStationAlignment(Paths.D4_RL));
-        addCommands(HPIntake());
-        addCommands(HandCommandFactory.motorIn().withTimeout(1.0));
+        // //
+        // addCommands(safeStationAlignment(Paths.D4_RL));
+        // addCommands(HPIntake());
+        // addCommands(HandCommandFactory.motorIn().withTimeout(1.0));
         // addCommands( // don't keep going
         //     safeReefAlignment(Paths.RL_C4, AlignOffset.LEFT_REEF_LOC, TargetFieldLocation.CD)
         //         .alongWith(

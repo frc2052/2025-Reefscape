@@ -26,10 +26,6 @@ public class VisionSubsystem extends SubsystemBase {
         }
     }
 
-    public boolean hasReefTarget() {
-        return io.hasReefTarget();
-    }
-
     @Override
     public void periodic() {
         io.update();
