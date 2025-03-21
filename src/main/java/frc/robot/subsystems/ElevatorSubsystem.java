@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.util.DelayedBoolean;
 import edu.wpi.first.wpilibj.Timer;
@@ -130,6 +131,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     public boolean atHomingLocation() {
         return getPosition() < TargetAction.HM.getElevatorPositionRotations()
                 || MathHelpers.epsilonEquals(getPosition(), TargetAction.HM.getElevatorPositionRotations(), 0.05);
+    }
+
+    public void setNeutralMode(NeutralModeValue mode) {
+        frontMotor.setNeutralMode(mode);
+        backMotor.setNeutralMode(mode);
     }
 
     @Override

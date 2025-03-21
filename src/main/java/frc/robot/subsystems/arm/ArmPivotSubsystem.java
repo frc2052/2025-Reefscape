@@ -11,6 +11,8 @@ import static edu.wpi.first.units.Units.Volts;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -102,6 +104,10 @@ public class ArmPivotSubsystem extends SubsystemBase {
 
     public Angle getPosition() {
         return Rotations.of(pivotMotor.getPosition().getValueAsDouble());
+    }
+
+    public void setNeutralMode(NeutralModeValue mode) {
+        pivotMotor.setNeutralMode(mode);
     }
 
     @Override

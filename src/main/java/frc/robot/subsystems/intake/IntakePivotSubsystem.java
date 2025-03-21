@@ -13,6 +13,8 @@ import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -129,6 +131,10 @@ public class IntakePivotSubsystem extends SubsystemBase {
     public double getPosition() {
         double position = pivotMotor.getPosition().getValueAsDouble();
         return position;
+    }
+
+    public void setNeutralMode(NeutralModeValue mode) {
+        pivotMotor.setNeutralMode(mode);
     }
 
     @Override
