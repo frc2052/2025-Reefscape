@@ -4,12 +4,16 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SuperstructureConstants;
+import frc.robot.RobotState;
+import frc.robot.RobotState.FieldLocation;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
+import frc.robot.subsystems.arm.ArmRollerSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import org.littletonrobotics.junction.Logger;
 
@@ -17,6 +21,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     private static SuperstructureSubsystem INSTANCE;
 
+    private RobotState robotState = RobotState.getInstance();
     private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
     private ArmPivotSubsystem armPivot = ArmPivotSubsystem.getInstance();
     // private IntakePivotSubsystem intakePivot = IntakePivotSubsystem.getInstance();
@@ -266,23 +271,21 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
 
     private void setTargetAction() {
-        if (RobotState.getFieldLocation() == FieldLocation.HP) {
-            setCurrentAction(TargetAction.HP);
-        } else if (RobotState.getFieldLocation() == FieldLocation.REEF) {
-            System.out.println("in zone");
+        if (robotState.getFieldLocation() == FieldLocation.HP) {
+            setCurrentAction(TargetAction.AP);
+        } else if (robotState.getFieldLocation() == FieldLocation.REEF) {
             setCurrentAction(TargetAction.L3);
-        } else if (RobotState.getFieldLocation() == FieldLocation.PROCESSOR) {
+        } else if (robotState.getFieldLocation() == FieldLocation.PROCESSOR) {
             // PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM); we have nothing to
             // do in the processor zone.
-        } else if (RobotState.getFieldLocation() == FieldLocation.BARGE) {
-            if (AlgaeShooterSubsystem.getInstance().getHasAlgae()) {
+        } else if (robotState.getFieldLocation() == FieldLocation.BARGE) {
+            if (ArmRollerSubsystem.getInstance().getHasAlgae()) {
                 setCurrentAction(TargetAction.AS);
             } else {
                 setCurrentAction(TargetAction.HM);
             }
         } else {
             setCurrentAction(TargetAction.HM);
-            System.out.println("out of zone");
         }
     }
 }

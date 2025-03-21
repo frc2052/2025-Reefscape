@@ -53,9 +53,11 @@ public class Area2D {
 
     public boolean withInTheRegion(Pose2d pose) {
         if(circle){
-            singlePointCalc(pose)
+            return singlePointCalc(pose);
         }else{
-            multiPointCalc(pose,points)
+            return multiPointCalc(pose,points);
 
         }
+    
+}
 }

@@ -63,6 +63,9 @@ public class ArmRollerSubsystem extends SubsystemBase {
     public void algaeIn() {
         setMotor(ArmRollerConstants.ALGAE_IN_SPEED);
     }
+    public boolean getHasAlgae(){
+        return true;
+    }
 
     public double motorVelocity() {
         return motor.getVelocity().getValueAsDouble();

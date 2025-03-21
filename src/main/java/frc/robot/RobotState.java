@@ -199,7 +199,7 @@ public class RobotState {
         HP(new Area2D(Constants.SmartDrive.blueHP), new Area2D(Constants.SmartDrive.redHP)), // adjust these values.
         REEF(
                 new Area2D(Constants.SmartDrive.blueReef),
-                new Area2D(Constants.SmartDrive.redReef, Constants.SmartDrive.deadZone)),
+                new Area2D(Constants.SmartDrive.redReef)),
         BARGE(new Area2D(Constants.SmartDrive.blueBarge), new Area2D(Constants.SmartDrive.redBarge)),
         PROCESSOR(new Area2D(Constants.SmartDrive.blueProcessor), new Area2D(Constants.SmartDrive.redProcessor)),
         TRAVEL(new Area2D(Constants.SmartDrive.blueTravel), new Area2D(Constants.SmartDrive.redTravel));
