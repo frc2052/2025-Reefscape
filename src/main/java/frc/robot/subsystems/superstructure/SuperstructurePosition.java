@@ -23,7 +23,8 @@ public class SuperstructurePosition {
                 IntakePivotPositions.STOW.position,
                 ActionType.NONE),
         STOW(12.0, Degrees.of(140.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Coral Station
-        AS(65.0, Degrees.of(175.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Algae Scoring NET
+        POST_ALGAE_STOW(12.0, Degrees.of(305.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Coral Station
+        AS(65.0, Degrees.of(185.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Algae Scoring NET
         AP(5.0, Degrees.of(325.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring Processor
         TR(5.0, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Travel
         CL(14.0, Degrees.of(265.0), IntakePivotPositions.MID.position, ActionType.NONE); // Climb
@@ -65,8 +66,8 @@ public class SuperstructurePosition {
     }
 
     private enum IntakePivotPositions {
-        STOW(18),
-        INTAKE(0.22),
+        STOW(17.5),
+        INTAKE(0.75),
         L1(15),
         MID(9);
 

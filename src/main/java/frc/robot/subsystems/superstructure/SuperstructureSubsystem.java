@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SuperstructureConstants;
+import frc.robot.RobotState;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.intake.IntakePivotSubsystem;
@@ -29,6 +30,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private boolean isChangingState;
 
     private boolean cancelHome = false;
+    private boolean algaeScoreDownNeeded = false;
+    private boolean movingFromIntake = false;
 
     /** Private constructor to prevent instantiation. */
     private SuperstructureSubsystem() {
@@ -92,6 +95,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
         revealCombination();
     }
 
+    public void stow() {
+        setCurrentAction(getStowFromCurrent());
+    }
+
     public void setCurrentAction(TargetAction target) {
         currentAction = target;
     }
@@ -102,6 +109,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public void confirmSelectedAction() {
         currentAction = selectedTargetAction;
+        movingFromIntake = false;
         revealCombination();
     }
 
@@ -122,6 +130,23 @@ public class SuperstructureSubsystem extends SubsystemBase {
         TargetAction target = getCurrentAction();
         Logger.recordOutput("Superstructure/Current = Selected", target == getSelectedTargetAction());
         Logger.recordOutput("Target Superstructure Changing State", isChangingState);
+
+        if (target == TargetAction.AS) {
+            algaeScoreDownNeeded = true;
+        }
+
+        if (!movingFromIntake
+                && RobotState.getInstance().getHasCoral()
+                && (target == TargetAction.INTAKE)
+                && armPivot.atPosition(target)) {
+            System.out.println("GOT CORAL********************");
+            movingFromIntake = true;
+            set(TargetAction.STOW, true).schedule();
+        }
+
+        if (armPivot.atPosition(TargetAction.STOW)) {
+            movingFromIntake = false;
+        }
 
         if (target != previousAction) {
             Logger.recordOutput("Target Superstructure State Has Changed", true);
@@ -163,6 +188,15 @@ public class SuperstructureSubsystem extends SubsystemBase {
                     }
                 }
             } else if (target.getElevatorPositionRotations() < elevator.getPosition()) {
+                if (algaeScoreDownNeeded) {
+                    armPivot.setArmPosition(target);
+                    intakePivot.setPosition(target);
+
+                    if (armPivot.isAtPosition(3, target.getArmPivotAngle())) {
+                        elevator.setPositionMotionMagic(target);
+                        algaeScoreDownNeeded = false;
+                    }
+                }
                 if (target.getElevatorPositionRotations() > SuperstructureConstants.MIN_SAFE_ROTATION
                         || elevator.getPosition() > SuperstructureConstants.MIN_MOVE_ROTATION) {
                     armPivot.setArmPosition(target);
@@ -232,5 +266,15 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return elevator.atPosition(goalPosition)
                 && armPivot.atPosition(goalPosition)
                 && intakePivot.atPosition(goalPosition);
+    }
+
+    public TargetAction getStowFromCurrent() {
+        if (currentAction == TargetAction.AS) {
+            return TargetAction.POST_ALGAE_STOW;
+        } else if (currentAction == TargetAction.AP) {
+            return TargetAction.AP;
+        } else {
+            return TargetAction.STOW;
+        }
     }
 }

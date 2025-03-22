@@ -4,6 +4,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.arm.ArmRollerSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.ActionType;
@@ -25,6 +26,10 @@ public class ArmCommandFactory {
                 algaeOut(),
                 coralIn().withTimeout(0.1).andThen(coralOut()),
                 () -> SuperstructureSubsystem.getInstance().getCurrentAction().getType() == ActionType.ALGAE);
+    }
+
+    public static Command coralInTap() {
+        return coralIn().withDeadline(new WaitCommand(0.75));
     }
 
     public static Command coralIn() {

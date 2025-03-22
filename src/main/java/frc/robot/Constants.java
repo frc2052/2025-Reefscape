@@ -235,7 +235,10 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double DEG_TOL = 2.5;
 
-    public static final Angle ENCODER_OFFSET = Rotations.of(-0.47558);
+    public static final double MOTOR_RANGE = 19.568359375; // rotations
+    public static final double ENCODER_RANGE = 0.306; // rotations
+
+    public static final Angle ENCODER_OFFSET = Rotations.of(-0.473512);
 
     public static final double MIN_INTAKE_ARM_ANGLE = 0;
     public static final double MAX_INTAKE_ARM_ANGLE = 20;
@@ -270,12 +273,12 @@ public class Constants {
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake); 
 
-    public static final FeedbackConfigs FEEDBACK_CONFIG =
-        new FeedbackConfigs()
-            .withFeedbackRemoteSensorID(Ports.INTAKE_ENCODER_ID)
-            .withFeedbackSensorSource(FeedbackSensorSourceValue.SyncCANcoder)
-            .withRotorToSensorRatio(58.333)
-            .withSensorToMechanismRatio(1);
+    // public static final FeedbackConfigs FEEDBACK_CONFIG =
+    //     new FeedbackConfigs()
+    //         .withFeedbackRemoteSensorID(Ports.INTAKE_ENCODER_ID)
+    //         .withFeedbackSensorSource(FeedbackSensorSourceValue.SyncCANcoder)
+    //         .withRotorToSensorRatio(58.333)
+    //         .withSensorToMechanismRatio(1);
     
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
         new SoftwareLimitSwitchConfigs()

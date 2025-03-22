@@ -117,7 +117,7 @@ public class RobotContainer {
         controlBoard
                 .outtake()
                 .whileTrue(ArmCommandFactory.outtake())
-                .onFalse(new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.STOW)));
+                .onFalse(new InstantCommand(() -> superstructure.stow()));
 
         controlBoard.rollerTap().whileTrue(ArmCommandFactory.coralIn());
 
