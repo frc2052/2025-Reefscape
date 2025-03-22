@@ -136,10 +136,7 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
     }
 
     private void setFieldLocation() {
-        if (FieldLocation.HP.getArea().withInTheRegion(robotState.getFieldToRobot())) {
-            robotState.setFieldLocation(FieldLocation.HP);
-
-        } else if (FieldLocation.REEF.getArea().withInTheRegion(robotState.getFieldToRobot())) {
+     if (FieldLocation.REEF.getArea().withInTheRegion(robotState.getFieldToRobot())) {
             robotState.setFieldLocation(FieldLocation.REEF);
 
         } else if (FieldLocation.BARGE.getArea().withInTheRegion(robotState.getFieldToRobot())) {

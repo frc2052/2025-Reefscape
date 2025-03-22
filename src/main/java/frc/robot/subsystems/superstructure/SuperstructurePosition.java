@@ -1,4 +1,4 @@
-package frc.robot.subsystems.superstructure;
+ package frc.robot.subsystems.superstructure;
 
 import static edu.wpi.first.units.Units.Degrees;
 
@@ -57,4 +57,6 @@ public class SuperstructurePosition {
         CORAL,
         ALGAE
     }
+
+   
 }

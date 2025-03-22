@@ -2,6 +2,8 @@ package frc.robot.subsystems.superstructure;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import java.lang.annotation.Target;
+
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 
@@ -14,8 +16,11 @@ import frc.robot.RobotState.FieldLocation;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.arm.ArmRollerSubsystem;
+import frc.robot.subsystems.intake.IntakeRollerSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import org.littletonrobotics.junction.Logger;
+import frc.robot.util.AlignmentCalculator.AlignOffset;
+
 
 public class SuperstructureSubsystem extends SubsystemBase {
 
@@ -33,6 +38,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private boolean isChangingState;
 
     private boolean cancelHome = false;
+    private boolean driverAction;
 
     /** Private constructor to prevent instantiation. */
     private SuperstructureSubsystem() {
@@ -98,7 +104,18 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public void setCurrentAction(TargetAction target) {
         currentAction = target;
+        if(target == TargetAction.STOW){
+            driverAction = true;
+        }else{
+            driverAction = false;
+        }
     }
+
+    private void setSmartDriveAction(TargetAction target){
+        currentAction = target;
+        driverAction = true;
+    }
+
 
     public Command confirm() {
         return new InstantCommand(() -> confirmSelectedAction());
@@ -271,21 +288,24 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
 
     private void setTargetAction() {
-        if (robotState.getFieldLocation() == FieldLocation.HP) {
-            setCurrentAction(TargetAction.AP);
-        } else if (robotState.getFieldLocation() == FieldLocation.REEF) {
-            setCurrentAction(TargetAction.L3);
-        } else if (robotState.getFieldLocation() == FieldLocation.PROCESSOR) {
-            // PositionSuperstructure.getInstance().setTargetAction(TargetAction.HM); we have nothing to
-            // do in the processor zone.
-        } else if (robotState.getFieldLocation() == FieldLocation.BARGE) {
-            if (ArmRollerSubsystem.getInstance().getHasAlgae()) {
-                setCurrentAction(TargetAction.AS);
-            } else {
-                setCurrentAction(TargetAction.HM);
-            }
-        } else {
-            setCurrentAction(TargetAction.HM);
+    if (getCurrentAction() == TargetAction.STOW || getCurrentAction() == TargetAction.TR && driverAction){
+       if(RobotState.getFieldLocation() == FieldLocation.REEF && IntakeRollerSubsystem.getInstance().getHasCoral()){
+        if(robotState.getAlignOffset() == AlignOffset.LEFT_BRANCH || robotState.getAlignOffset() == AlignOffset.RIGHT_BRANCH){
+            setSmartDriveAction(TargetAction.L3);
+            
+        }else if(robotState.getAlignOffset() == AlignOffset.MIDDLE_REEF){
+            setSmartDriveAction(TargetAction.L1H);
         }
+       }else if(RobotState.getFieldLocation() == FieldLocation.PROCESSOR){
+        setSmartDriveAction(TargetAction.AP);
+
+       }else if(RobotState.getFieldLocation() == FieldLocation.BARGE){
+
+       }else{
+        setCurrentAction(TargetAction.STOW);
+
+       }
+       }
     }
 }
+

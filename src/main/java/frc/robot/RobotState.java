@@ -196,7 +196,6 @@ public class RobotState {
     }
 
     public enum FieldLocation {
-        HP(new Area2D(Constants.SmartDrive.blueHP), new Area2D(Constants.SmartDrive.redHP)), // adjust these values.
         REEF(
                 new Area2D(Constants.SmartDrive.blueReef),
                 new Area2D(Constants.SmartDrive.redReef)),
