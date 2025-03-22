@@ -86,9 +86,9 @@ public class LedSubsystem extends SubsystemBase {
         if (!disableLEDs) {
 
             // disabled
-            if (RobotState.getInstance().isRedAlliance()) {
+            if (RobotState.isRedAlliance()) {
                 currentStatusMode = LEDStatusMode.RED_DEFAULT;
-            } else if (!RobotState.getInstance().isRedAlliance()) {
+            } else if (!RobotState.isRedAlliance()) {
                 currentStatusMode = LEDStatusMode.BLUE_DEFAULT;
             } else {
                 currentStatusMode = LEDStatusMode.SPARKLE;

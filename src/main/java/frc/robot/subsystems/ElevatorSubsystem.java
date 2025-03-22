@@ -29,8 +29,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     private static TalonFX frontMotor;
     private static TalonFX backMotor;
 
-    private ControlState controlState;
-
     private boolean homing;
     private boolean shouldHome = true;
     private final DelayedBoolean homingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.05);
@@ -77,7 +75,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setPositionMotionMagic(double elevatorPositionRotations) {
-        controlState = ControlState.MOTION_MAGIC;
         if (goalPositionRotations == elevatorPositionRotations && atPosition()) {
             return;
         }
@@ -92,7 +89,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setOpenLoop(double speed) {
-        controlState = ControlState.OPEN_LOOP;
         frontMotor.setControl(new DutyCycleOut(speed));
     }
 

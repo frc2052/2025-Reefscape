@@ -35,6 +35,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     private boolean cancelHome = false;
     private boolean driverAction;
+    private boolean shouldSmartDrive;
 
     /** Private constructor to prevent instantiation. */
     private SuperstructureSubsystem() {
@@ -100,16 +101,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public void setCurrentAction(TargetAction target) {
         currentAction = target;
-        if (target == TargetAction.STOW) {
-            driverAction = true;
-        } else {
-            driverAction = false;
-        }
+        driverAction = true;
     }
 
     private void setSmartDriveAction(TargetAction target) {
         currentAction = target;
-        driverAction = true;
+        driverAction = false;
     }
 
     public Command confirm() {
@@ -225,11 +222,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
         // }
 
         previousAction = target;
+        setDriverAction(driverAction);
         setTargetAction();
     }
 
     private void setTargetAction() {
-        if (getCurrentAction() == TargetAction.STOW || getCurrentAction() == TargetAction.TR && driverAction) {
+        if (getCurrentAction() == TargetAction.STOW || getCurrentAction() == TargetAction.TR && shouldSmartDrive) {
             if (RobotState.getFieldLocation() == FieldLocation.REEF
                     && IntakeRollerSubsystem.getInstance().getHasCoral()) {
                 if (robotState.getAlignOffset() == AlignOffset.LEFT_BRANCH
@@ -246,6 +244,18 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
             } else {
                 setCurrentAction(TargetAction.STOW);
+            }
+        }
+    }
+
+    private void setDriverAction(boolean driver){       
+        if (!driver){
+            shouldSmartDrive = true;
+        }else{
+            if(getCurrentAction() == TargetAction.STOW && robotState.getInstance().getFieldLocation() == FieldLocation.TRAVEL){
+                shouldSmartDrive = true;
+            }else{
+                shouldSmartDrive = false;
             }
         }
     }
