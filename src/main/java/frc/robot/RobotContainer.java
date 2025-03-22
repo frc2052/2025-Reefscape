@@ -13,12 +13,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
-import frc.robot.commands.arm.ArmRollerCommandFactory;
+import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
-import frc.robot.commands.intake.IntakeRollerCommandFactory;
+import frc.robot.commands.intake.IntakeCommandFactory;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.subsystems.LedSubsystem;
@@ -105,15 +105,15 @@ public class RobotContainer {
                         new InstantCommand(),
                         new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.INTAKE)),
                         () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE))
-                .whileTrue(ArmRollerCommandFactory.intake())
-                .whileTrue(IntakeRollerCommandFactory.intake());
+                .whileTrue(ArmCommandFactory.intake())
+                .whileTrue(IntakeCommandFactory.intake());
         controlBoard
                 .outtake()
-                .whileTrue(ArmRollerCommandFactory.outtake())
-                .whileTrue(IntakeRollerCommandFactory.outtake())
+                .whileTrue(ArmCommandFactory.outtake())
+                .whileTrue(IntakeCommandFactory.outtake())
                 .onFalse(new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.INTAKE)));
 
-        controlBoard.rollerTap().whileTrue(ArmRollerCommandFactory.coralIn());
+        controlBoard.rollerTap().whileTrue(ArmCommandFactory.coralIn());
 
         controlBoard
                 .alignWithReefLeft()

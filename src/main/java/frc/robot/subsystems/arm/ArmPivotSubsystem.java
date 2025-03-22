@@ -11,6 +11,7 @@ import static edu.wpi.first.units.Units.Volts;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -68,7 +69,7 @@ public class ArmPivotSubsystem extends SubsystemBase {
         setPivotAngle(goalPosition);
     }
 
-    private Angle clampPosition(Angle pos) {
+    public Angle clampPosition(Angle pos) {
         if (pos.in(Degrees) < ArmPivotConstants.MIN_CORAL_ARM_ANGLE.in(Degrees)) {
             System.out.println("DESIRED ANGLE BEYOND MIN LIMIT");
             return ArmPivotConstants.MIN_CORAL_ARM_ANGLE;
@@ -100,8 +101,16 @@ public class ArmPivotSubsystem extends SubsystemBase {
         return Math.abs(getPosition().in(Degrees) - goal.in(Degrees)) <= tol;
     }
 
+    public boolean atPosition(TargetAction action) {
+        return isAtPosition(ArmPivotConstants.DEG_TOL, action.getArmPivotAngle());
+    }
+
     public Angle getPosition() {
         return Rotations.of(pivotMotor.getPosition().getValueAsDouble());
+    }
+
+    public void setNeutralMode(NeutralModeValue mode) {
+        pivotMotor.setNeutralMode(mode);
     }
 
     @Override

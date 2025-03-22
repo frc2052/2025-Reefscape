@@ -1,14 +1,17 @@
 package frc.robot.commands.arm;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.arm.ArmRollerSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.ActionType;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 
-public class ArmRollerCommandFactory {
-    private static final ArmRollerSubsystem hand = ArmRollerSubsystem.getInstance();
+public class ArmCommandFactory {
+    private static final ArmRollerSubsystem rollers = ArmRollerSubsystem.getInstance();
+    private static final ArmPivotSubsystem pivot = ArmPivotSubsystem.getInstance();
 
     public static Command intake() {
         return new ConditionalCommand(
@@ -25,18 +28,26 @@ public class ArmRollerCommandFactory {
     }
 
     public static Command coralIn() {
-        return Commands.runEnd(() -> hand.coralIn(), () -> hand.stopMotor(), hand);
+        return Commands.runEnd(() -> rollers.coralIn(), () -> rollers.stopMotor(), rollers);
     }
 
     public static Command coralOut() {
-        return Commands.runEnd(() -> hand.coralOut(), () -> hand.stopMotor(), hand);
+        return Commands.runEnd(() -> rollers.coralOut(), () -> rollers.stopMotor(), rollers);
     }
 
     public static Command algaeIn() {
-        return Commands.runEnd(() -> hand.algaeIn(), () -> hand.stopMotor(), hand);
+        return Commands.runEnd(() -> rollers.algaeIn(), () -> rollers.stopMotor(), rollers);
     }
 
     public static Command algaeOut() {
-        return Commands.runEnd(() -> hand.algaeOut(), () -> hand.stopMotor(), hand);
+        return Commands.runEnd(() -> rollers.algaeOut(), () -> rollers.stopMotor(), rollers);
+    }
+
+    public static Command setCoast() {
+        return Commands.runOnce(() -> pivot.setNeutralMode(NeutralModeValue.Coast), pivot);
+    }
+
+    public static Command setBrake() {
+        return Commands.runOnce(() -> pivot.setNeutralMode(NeutralModeValue.Brake), pivot);
     }
 }
