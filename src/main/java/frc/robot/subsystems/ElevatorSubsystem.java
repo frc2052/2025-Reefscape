@@ -13,6 +13,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.util.DelayedBoolean;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -158,31 +159,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
         Logger.recordOutput("Elevator/Position", getPosition());
         Logger.recordOutput("Elevator/Goal Position", goalPositionRotations);
-        // Logger.recordOutput("Elevator/At Goal Position", atPosition());
-        // Logger.recordOutput("Elevator/Motor Set Speed", frontMotor.get());
-        // Logger.recordOutput("Elevator/Velocity", frontMotor.getVelocity().getValueAsDouble());
 
-        // if being used in open loop (usually manual mode), disable the height limit
-        // if (controlState == ControlState.OPEN_LOOP) {
-        //   frontMotor
-        //       .getConfigurator()
-        //       .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(false));
-        // } else {
-        //   frontMotor
-        //       .getConfigurator()
-        //       .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(true));
-        // }
-
-        // if we still intend to go to the home position, currently at alleged home, and should re-home,
-        // then re-home
-        // if (MathHelpers.epsilonEquals(
-        //         goalPositionRotations, TargetAction.HM.getElevatorPositionRotations(), .02)
-        //     && atHomingLocation()
-        //     && shouldHome) {
-        //   setWantHome(true);
-        // } else if (controlState != ControlState.OPEN_LOOP) {
-        //   setWantHome(false);
-        // }
+        if (DriverStation.isDisabled()) {
+            goalPositionRotations = getPosition();
+        }
 
         Logger.recordOutput("Elevator Homing", homing);
         if (homing) {

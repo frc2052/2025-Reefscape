@@ -12,9 +12,9 @@ public class SuperstructurePosition {
         EXPLODE(5.0, Degrees.of(306.5), IntakePivotPositions.STOW.position, ActionType.NONE),
         INTAKE(3.0, Degrees.of(305), IntakePivotPositions.INTAKE.position, ActionType.CORAL),
         L1H(6.0, Degrees.of(190.0), IntakePivotPositions.L1.position, ActionType.CORAL),
-        L2(21.5, Degrees.of(190.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
-        L3(31.5, Degrees.of(190.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
-        L4(65.0, Degrees.of(190.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
+        L2(17.7, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
+        L3(36.0, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
+        L4(62.5, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
         LA(6.0, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Lower Algae
         UA(23.0, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Upper Algae
         SAFE_ARM_HEIGHT(
@@ -22,7 +22,7 @@ public class SuperstructurePosition {
                 Degrees.of(228),
                 IntakePivotPositions.STOW.position,
                 ActionType.NONE),
-        STOW(14.0, Degrees.of(227.5), IntakePivotPositions.STOW.position, ActionType.NONE), // Coral Station
+        STOW(12.0, Degrees.of(140.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Coral Station
         AS(65.0, Degrees.of(175.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Algae Scoring NET
         AP(5.0, Degrees.of(325.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring Processor
         TR(5.0, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Travel

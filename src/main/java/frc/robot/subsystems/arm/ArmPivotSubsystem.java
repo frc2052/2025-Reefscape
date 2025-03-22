@@ -14,6 +14,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -117,9 +118,10 @@ public class ArmPivotSubsystem extends SubsystemBase {
     public void periodic() {
         Logger.recordOutput("Coral Arm/Angle", getPosition().in(Degrees));
         Logger.recordOutput("Coral Arm/Goal Angle", goalPosition.in(Degrees));
-        // Logger.recordOutput("Coral Arm/Motor Set Speed", pivotMotor.get());
-        // Logger.recordOutput("Coral Arm/Velocity", pivotMotor.getVelocity().getValueAsDouble());
-        // Logger.recordOutput("Coral Arm/At Goal", isAtDesiredPosition(5));
+
+        if (DriverStation.isDisabled()) {
+            goalPosition = getPosition();
+        }
     }
 
     /* SysId routine for characterizing arm. This is used to find PID gains for the arm motor. */

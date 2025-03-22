@@ -67,7 +67,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
         // armEncoderConfig.MagnetSensor.MagnetOffset = IntakePivotConstants.ENCODER_OFFSET.in(Rotations);
         // encoder.getConfigurator().apply(armEncoderConfig, 1.0);
 
-        pivotMotor.getConfigurator().setPosition(00); // TODO: change to 20 when done tuning
+        pivotMotor.getConfigurator().setPosition(20);
 
         // pivotMotor.getConfigurator().apply(IntakePivotConstants.FEEDBACK_CONFIG);
 
