@@ -248,13 +248,14 @@ public class SuperstructureSubsystem extends SubsystemBase {
         }
     }
 
-    private void setDriverAction(boolean driver){       
-        if (!driver){
+    private void setDriverAction(boolean driver) {
+        if (!driver) {
             shouldSmartDrive = true;
-        }else{
-            if(getCurrentAction() == TargetAction.STOW && robotState.getInstance().getFieldLocation() == FieldLocation.TRAVEL){
+        } else {
+            if (getCurrentAction() == TargetAction.STOW
+                    && robotState.getInstance().getFieldLocation() == FieldLocation.TRAVEL) {
                 shouldSmartDrive = true;
-            }else{
+            } else {
                 shouldSmartDrive = false;
             }
         }
@@ -272,10 +273,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
         return false;
     }
-
-    
-
-   
 
     public boolean atConfirmedPosition() {
         return atPosition(currentAction);

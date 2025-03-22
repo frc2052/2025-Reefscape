@@ -25,6 +25,7 @@ import com.team2052.lib.vision.photon.TagTracker.TagTrackerConstants;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -435,5 +436,8 @@ public class Constants {
         public static final List<Translation2d> blueProcessor = Arrays.asList();
         public static final List<Translation2d> blueHP = Arrays.asList();
         public static final List<Translation2d> blueTravel = Arrays.asList();
+
+        public static final Rotation2d bestRotation = new Rotation2d();
+        public static final double bestYpoint = 0;
     }
 }
