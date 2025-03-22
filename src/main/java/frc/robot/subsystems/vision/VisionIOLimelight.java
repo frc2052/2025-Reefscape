@@ -109,6 +109,7 @@ public class VisionIOLimelight implements VisionIO {
                         leftEstimate.get().pose,
                         Utils.fpgaToCurrentTime(leftEstimate.get().timestampSeconds),
                         VecBuilder.fill(leftStdDev, leftStdDev, leftHeadingStdDev));
+
                 robotState.seenReefFaceID((int) LimelightHelpers.getFiducialID(LeftLimelightConstants.CAMERA_NAME));
             } else if (rightStdDev < leftStdDev) {
                 drivetrain.addVisionMeasurement(
