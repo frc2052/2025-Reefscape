@@ -5,6 +5,7 @@
 package frc.robot.auto.modes.startCenter;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
@@ -26,8 +27,8 @@ public class AutoG4LeftAlgaeRemoval extends AutoBase {
 
         // addCommands(safeReefAlignment(startPath, AlignOffset.MIDDLE_REEF, FieldElementFace.GH));
         addCommands(toPosAndScore(TargetAction.L4));
-        addCommands(descoreScoreNetAlgae(Paths.GH_SCORE_TO_DESCORE, TargetAction.LA, Paths.GH_NET));
-        addCommands(descoreScoreNetAlgae(Paths.NET_IJ, TargetAction.UA, Paths.IJ_NET));
-        addCommands(descoreScoreNetAlgae(Paths.NET_KL, TargetAction.LA, Paths.KL_NET));
+        // addCommands(scoreNet(Paths.GH_SCORE_TO_DESCORE, TargetAction.LA, Paths.GH_NET));
+        // addCommands(scoreNet(Paths.NET_IJ, TargetAction.UA, Paths.IJ_NET));
+        // addCommands(scoreNet(Paths.NET_KL, TargetAction.LA, Paths.KL_NET));
     }
 }

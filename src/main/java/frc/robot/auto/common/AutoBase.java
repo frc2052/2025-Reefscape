@@ -44,11 +44,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
     private final AutoFactory autoFactory = AutoFactory.getInstance();
     private Pose2d startPose;
 
-    // left side blue l4 // good enough, L4 mmissing
-    // left side red l4
-    // left side blue l1 // adjusting
-    // left side red l1
-
     protected AutoBase(Optional<Pose2d> pathStartPose) {
         if (pathStartPose.isEmpty()) {
             startPose = new Pose2d();
@@ -184,7 +179,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     // game piece interactions
-
     protected Command HPIntake() {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> ArmRollerSubsystem.getInstance().coralIn()), new WaitCommand(2.0));
@@ -263,32 +257,36 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 .andThen(new PrintCommand("CLOSE ENOUGH**************"));
     }
 
-    // protected Command descoreAlgae(PathPlannerPath toPosition,TargetAction
-    // algaeLevel){
-    // return new SequentialCommandGroup(
-    // new ParallelCommandGroup(
-    // new InstantCommand(() ->
-    // SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)).withTimeout(1.0),
-    // followPathCommand(toPosition)
-    // ),
-    // new InstantCommand(() -> AlgaeShooterSubsystem.getInstance().)
-    // );
-    // }
+    // TODO: add
+    protected Command descoreAlgae(
+        Path toPosition,
+        TargetAction algaeLevel)
+    {
+        return 
+            followPathCommand(toPosition.getChoreoPath())
+            .alongWith(new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)))
+            // grab event along the path
+            .alongWith(
+                new SequentialCommandGroup(
+                    Commands.waitUntil(() -> true), // TODO: trajectory @ event marker
+                    new InstantCommand(() -> SuperstructureSubsystem.getInstance().getCurrentAction())
+                )
+            );
+    }
 
-    protected Command descoreScoreNetAlgae(
-            PathPlannerPath toPositionPath, TargetAction algaeLevel, PathPlannerPath score) {
+    // TOOD: add
+    protected Command scoreNet(
+            Path firstPath,
+            TargetAction algaeLevel, 
+            Path score) 
+    {
         return new SequentialCommandGroup(
-                // descore
-                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)),
-                followPathCommand(toPositionPath),
-
-                // score
                 new ParallelCommandGroup(
-                                followPathCommand(score),
+                                followPathCommand(score.getChoreoPath()),
                                 new SequentialCommandGroup(
                                         new WaitCommand(1.0),
                                         new InstantCommand(() -> SuperstructureSubsystem.getInstance()
-                                                .setCurrentAction(TargetAction.L4))),
+                                                .setCurrentAction(TargetAction.UA))),
                                 ArmRollerCommandFactory.algaeIn().withTimeout(1.5))
                         .andThen(ArmRollerCommandFactory.algaeOut().withTimeout(1.0)));
     }
@@ -359,62 +357,62 @@ public abstract class AutoBase extends SequentialCommandGroup {
         public static final Path R_RL_D = new Path("RL D", "RED RL D");
         public static final Path R_D_RL = new Path("D RL", "RED D RL");
         public static final Path R_RL_C = new Path("RL C", "RED RL C");
-        //
 
-        // public static final Path LL_STOP = new Path("LL STOP", "LL STOP");
-        // public static final Path LL_AB = new Path("LL AB", "LL AB");
-        // public static final Path RL_C4 = new Path("RL C", "RL C");
-        // public static final Path C4_RL = new Path("C RL", "C RL");
-        // public static final Path RL_C3 = RL_C4;
-        // public static final Path RL_D4 = new Path("RL D", "RL D");
-        // public static final Path D4_RL = new Path("D RL", "D RL");
-        // public static final Path SR_D4 = new Path("SR D", "SR D");
-        // public static final Path RL_D3 = RL_D4;
-        // public static final Path D3_RL = new Path("D RL", "D RL");
-        // public static final Path RL_CD_L1 = new Path("RL CD L1", "RL CD L1");
-        // public static final Path CD_RL = new Path("CD RL", "CD RL");
 
-        // // gh
-        // public static final Path SC_H4 = new Path("SC H", "SC H");
-        // public static final Path H4_PROCESS = new Path("H Processor", "H Processor");
-        // public static final Path H_ALGAE_PREP = new Path("H Algae Prep", "H ALGAE
-        // PREP");
-        // public static final Path SC_GH = new Path("SC G", "SC G");
-        // public static final Path G_AlGAE_PREP = new Path("G Algae Prep", "G Algae
-        // Prep");
+        // TODO: TO MAKE
+            // 5.5 y val for blue net score
+            // 5.5 y val for 
 
-        // // ij
-        // public static final Path SL_IJ = new Path("SL IJ", "SL IJ");
-        // public static final Path LL_IJ = new Path("LL IJ", "LL IJ");
-        // public static final Path SL_IJ_L1 = new Path("SL IJ L1", "SL IJ L1");
+            // GH
+            public static final Path B_SC_G = new Path("SC G", "BLUE SC G"); //
+            public static final Path B_SC_H = new Path("SC H", "BLUE SC H"); // 
+            public static final Path R_SC_G = new Path("SC G", "RED SC G"); //
+            public static final Path R_SC_H = new Path("SC H", "RED SC H"); //
 
-        //  // algae score and descore
-        //  public static final Path KL_NET = new Path("KL Net", "KL Net");
-        //  public static final Path NET_KL = new Path("Net KL", "Net KL");
+            // main
+            public static final Path B_SC_GH = new Path("SC GH", "BLUE SC GH"); //
+            public static final Path B_GH_NET = new Path("GH Net", "BLUE GH NET"); //
+            public static final Path B_NET_GH = new Path("NET GH", "BLUE NET GH"); //
+            public static final Path B_KL_NET = new Path("KL NET", "BLUE KL NET"); //
+            public static final Path B_NET_KL = new Path("KL NET", "BLUE NET KL"); //
+            public static final Path B_IJ_NET = new Path("IJ NET", "BLUE IJ NET"); 
+            public static final Path B_NET_IJ = new Path("NET IJ", "BLUE NET IJ");
 
-        // public static final Path CD_NET = new Path("CD Net", "CD Net");
-        // public static final Path NET_CD = new Path("Net CD", "Net CD");
+            public static final Path R_SC_GH = new Path("SC GH", "RED SC GH"); //
+            public static final Path R_GH_NET = new Path("GH Net", "RED GH NET");
+            public static final Path R_NET_GH = new Path("NET GH", "RED NET GH");
+            public static final Path R_KL_NET = new Path("KL NET", "RED KL NET");
+            public static final Path R_NET_KL = new Path("KL NET", "RED KL NET");
+            public static final Path R_IJ_NET = new Path("IJ NET", "RED IJ NET");
+            public static final Path R_NET_IJ = new Path("NET IJ", "RED NET IJ");
 
-        // public static final Path GH_NET = new Path("GH Net", "GH Net");
-        // public static final Path NET_GH = new Path("Net GH", "Net GH");
+            // cd, ef
+            public static final Path B_CD_NET = new Path("CD NET", "BLUE CD NET");
+            public static final Path B_NET_CD = new Path("CD NET", "BLUE NET CD");
+            public static final Path B_EF_NET = new Path("EF NET", "BLUE EF NET");
+            public static final Path B_NET_EF = new Path("EF NET", "BLUE NET EF");
 
-        // public static final Path NET_IJ = new Path("Net IJ", "Net IJ");
-        // public static final Path IJ_NET = new Path("IJ Net", "IJ Net");
+            public static final Path R_CD_NET = new Path("CD NET", "RED CD NET");
+            public static final Path R_NET_CD = new Path("CD NET", "RED NET CD");
+            public static final Path R_EF_NET = new Path("EF NET", "RED EF NET");
+            public static final Path R_NET_EF = new Path("EF NET", "RED NET EF");
 
-        // public static final Path NET_EF = new Path("Net EF", "Net EF");
-        // public static final Path EF_NET = new Path("EF Net", "EF Net");
+            // score to descore
+            public static final Path B_GH_SCORE_TO_DESCORE = new Path("GH Descore Algae", "BLUE GH Descore Algae");
+            public static final Path R_GH_SCORE_TO_DESCORE = new Path("GH Descore Algae", "RED GH Descore Algae");
 
-        // public static final PathPlannerPath NET_SCORE_LEFT_STATION =
-        // getPathFromFile("Net Left Station");
-        // public static final PathPlannerPath NET_SCORE_RIGHT_STATION =
-        // getPathFromFile("Net Right Station");
+            public static final Path B_KL_SCORE_TO_DESCORE = new Path("KL Descore Algae", "BLUE KL Descore Algae");
+            public static final Path R_KL_SCORE_TO_DESCORE = new Path("KL Descore Algae", "RED KL Descore Algae");
 
-        // public static final PathPlannerPath KL_SCORE_TO_DESCORE = getPathFromFile("KL
-        // Descore Algae");
-        // public static final PathPlannerPath CD_SCORE_TO_DESCORE = getPathFromFile("CD
-        // Descore Algae");
-        // public static final PathPlannerPath GH_SCORE_TO_DESCORE = getPathFromFile("GH
-        // Descore Algae");
+            public static final Path B_CD_SCORE_TO_DESCORE = new Path("CD Descore Algae", "BLUE CD Descore Algae");
+            public static final Path R_CD_SCORE_TO_DESCORE = new Path("CD Descore Algae", "RED CD Descore Algae");
+
+            // extras
+            public static final PathPlannerPath SC_H4 = getPathFromFile("SC H"); 
+            public static final PathPlannerPath H4_PROCESS = getPathFromFile("H Processor");
+            public static final PathPlannerPath H_ALGAE_PREP = getPathFromFile("H Algae Prep");
+            public static final PathPlannerPath G_AlGAE_PREP = getPathFromFile("G Algae Prep");
+        // 
     }
 
     public static final class Paths {

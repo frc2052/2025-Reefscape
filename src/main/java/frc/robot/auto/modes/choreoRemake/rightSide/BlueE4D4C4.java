@@ -21,11 +21,9 @@ public class BlueE4D4C4 extends AutoBase {
 
     private static final Path startPath = PathsBase.B_SR_E;
     private static final Path load1 = PathsBase.B_E_RL;
-    private static final Path score2 = PathsBase.B_RL_D;
-    ;
+    private static final Path score2 = PathsBase.B_RL_D;;
     private static final Path load2 = PathsBase.B_D_RL;
     private static final Path score3 = PathsBase.B_RL_C;
-    ;
 
     public BlueE4D4C4() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());
