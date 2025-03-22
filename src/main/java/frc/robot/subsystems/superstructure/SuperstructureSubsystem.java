@@ -230,6 +230,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
         if (getCurrentAction() == TargetAction.STOW || getCurrentAction() == TargetAction.TR && shouldSmartDrive) {
             if (RobotState.getFieldLocation() == FieldLocation.REEF
                     && IntakeRollerSubsystem.getInstance().getHasCoral()) {
+                System.out.println("inside the zone");
                 if (robotState.getAlignOffset() == AlignOffset.LEFT_BRANCH
                         || robotState.getAlignOffset() == AlignOffset.RIGHT_BRANCH) {
                     setSmartDriveAction(TargetAction.L3);
@@ -243,7 +244,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
             } else if (RobotState.getFieldLocation() == FieldLocation.BARGE) {
 
             } else {
-                setCurrentAction(TargetAction.STOW);
+                setSmartDriveAction(TargetAction.STOW);
             }
         }
     }
