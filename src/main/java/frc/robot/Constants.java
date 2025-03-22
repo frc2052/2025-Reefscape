@@ -423,14 +423,9 @@ public class Constants {
 
     public static final class SmartDrive {
 
-        public static final List<Translation2d> redReef = Arrays.asList(
-                new Translation2d(15, 0), new Translation2d(15, 5), new Translation2d(18, 5), new Translation2d(18, 0));
+        public static final List<Translation2d> redReef = Arrays.asList();
         public static final List<Translation2d> redBarge = Arrays.asList();
-
-        public static final List<Translation2d> deadZone = Arrays.asList(
-                new Translation2d(16, 3), new Translation2d(16, 2), new Translation2d(17, 2), new Translation2d(17, 3));
-
-        public static final List<Translation2d> redProcessor  = Arrays.asList();
+        public static final List<Translation2d> redProcessor = Arrays.asList();
         public static final List<Translation2d> redHP = Arrays.asList();
         public static final List<Translation2d> redTravel = Arrays.asList();
 

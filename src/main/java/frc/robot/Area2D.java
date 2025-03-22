@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import java.util.Arrays;
 import java.util.List;
 
 public class Area2D {
@@ -18,11 +17,9 @@ public class Area2D {
         circle = true;
     }
 
-
     public Area2D(List<Translation2d> areaPoints) {
         points = areaPoints;
     }
-
 
     private boolean singlePointCalc(Pose2d pose) {
         Translation2d robotPose = pose.getTranslation();
@@ -52,12 +49,10 @@ public class Area2D {
     }
 
     public boolean withInTheRegion(Pose2d pose) {
-        if(circle){
+        if (circle) {
             return singlePointCalc(pose);
-        }else{
-            return multiPointCalc(pose,points);
-
+        } else {
+            return multiPointCalc(pose, points);
         }
-    
-}
+    }
 }
