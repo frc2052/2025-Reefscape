@@ -1,14 +1,15 @@
 package frc.robot.util;
 
-import static edu.wpi.first.units.Units.*;
+import java.util.List;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 import edu.wpi.first.units.measure.Distance;
-import java.util.List;
 
 public class FieldConstants {
     // public static final FieldType FIELD_TYPE = FieldType.WELDED;
@@ -20,6 +21,7 @@ public class FieldConstants {
 
     public static final Translation2d BLUE_REEF_CENTER = new Translation2d(Inches.of(176.495), Inches.of(158.751));
     public static final Translation2d RED_REEF_CENTER = new Translation2d(Inches.of(513.880), Inches.of(158.749));
+
     // public static final AprilTagLayoutType CORAL_REEF_CAMERA_LAYOUT_TYPE =
     //         RobotState.getInstance().isRedAlliance() ? AprilTagLayoutType.RED_REEF : AprilTagLayoutType.BLUE_REEF;
     // public static final AprilTagLayoutType ALGAE_REEF_CAMERA_LAYOUT_TYPE = AprilTagLayoutType.NO_BARGE;

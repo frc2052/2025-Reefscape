@@ -1,0 +1,195 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.auto.common;
+
+import java.util.function.BooleanSupplier;
+
+import com.team2052.lib.helpers.MathHelpers;
+
+import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
+import choreo.auto.AutoTrajectory;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.RobotState;
+import frc.robot.auto.common.AutoBase.PathsBase;
+import frc.robot.commands.arm.ArmRollerCommandFactory;
+import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.arm.ArmPivotSubsystem;
+import frc.robot.subsystems.arm.ArmRollerSubsystem;
+import frc.robot.subsystems.drive.DrivetrainSubsystem;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
+import frc.robot.util.AlignmentCalculator.AlignOffset;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
+
+/** Add your docs here. */
+public class Autos {
+
+    private final AutoFactory autoFactory;
+    private final BooleanSupplier flip = () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
+    
+
+    // TODO: follow trajecotry ? apply chassis speeds
+    public Autos(){
+        autoFactory = new AutoFactory(
+            () -> DrivetrainSubsystem.getInstance().getState().Pose, 
+            DrivetrainSubsystem.getInstance()::resetPose, 
+            // follow trajectory
+            DrivetrainSubsystem.getInstance()::followTrajectory, 
+            flip.getAsBoolean(), // TODO: test false to prevent flipping
+            DrivetrainSubsystem.getInstance());
+    }
+
+    // ---------- AUTO 1: J4K4L4 -------- //
+    public AutoRoutine J4K4L4(){
+        AutoRoutine BlueJ4K4L4 = autoFactory.newRoutine("J4K4L4");
+
+        // load trajectories
+        AutoTrajectory startPath = BlueJ4K4L4.trajectory(AutoBase.PathsBase.B_SL_J.getTrajName());
+        AutoTrajectory load1 = BlueJ4K4L4.trajectory(AutoBase.PathsBase.B_J_LL.getTrajName());
+        AutoTrajectory score2 = BlueJ4K4L4.trajectory(AutoBase.PathsBase.B_LL_K.getTrajName());
+        AutoTrajectory load2 = BlueJ4K4L4.trajectory(AutoBase.PathsBase.B_K_LL.getTrajName());
+        AutoTrajectory score3 = BlueJ4K4L4.trajectory(AutoBase.PathsBase.B_LL_L.getTrajName());
+
+
+        BlueJ4K4L4.active().onTrue(
+            Commands.sequence(
+                startPath.resetOdometry(),
+
+                // score preload
+                reefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
+                    .alongWith(prepareForScore(TargetAction.L4))
+                    .andThen(
+                        new PrintCommand("AUTO ALIGNMENT DONE")
+                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05))
+                        .andThen(score(TargetAction.L4))
+                    )
+                
+                // pickup 2nd coral
+                .andThen(loadWithPath(load1))
+
+                // score 2nd coral
+                .andThen(
+                    reefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
+                        .alongWith(prepareForScore(TargetAction.L4))
+                        .andThen(
+                            new PrintCommand("AUTO ALIGNMENT DONE")
+                            .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05))
+                            .andThen(score(TargetAction.L4))
+                        )
+                )
+
+                // pickup 3rd coral
+                .andThen(loadWithPath(load2))
+
+                // score 3rd coral
+                .andThen(
+                    reefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
+                        .alongWith(prepareForScore(TargetAction.L4))
+                        .andThen(
+                            new PrintCommand("AUTO ALIGNMENT DONE")
+                            .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05))
+                            .andThen(score(TargetAction.L4))
+                        )
+                )
+            )
+        );
+        
+        return BlueJ4K4L4;
+    }
+
+    // ---------- AUTO 2: J4K4L4 -------- /
+
+    
+
+    public Command reefAlignment(AutoTrajectory startPath, AlignOffset offset, FieldElementFace fieldLoc){
+        double distance; 
+
+        if (startPath.toString().equals(PathsBase.B_SL_J.getTrajName()))
+        { // start paths start align closer
+            distance = 2.0;
+        } else{
+            distance = 2.5;
+        }
+
+        return new ParallelCommandGroup(
+            new InstantCommand(() -> ArmRollerSubsystem.getInstance().coralIn())
+                .withTimeout(0.5)
+                .alongWith(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(fieldLoc))),
+            startPath.cmd()
+                .until(() -> RobotState.getInstance().shouldAlignAutonomous(distance))
+                .andThen(AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> offset, fieldLoc)));
+    }
+
+    public Command loadWithPath(AutoTrajectory altPath){
+        return new ParallelCommandGroup(
+            altPath.cmd(),
+            new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW))
+                .beforeStarting(new WaitCommand(1.0))
+        ).until(() -> ArmRollerSubsystem.getInstance().getHasCoral());
+    }
+
+    public Command prepareForScore(TargetAction action){
+        final double maxSpeed;
+        final double maxDist;
+        TargetAction prepAction = TargetAction.TR;
+
+        if (action == null) {
+            maxSpeed = 0;
+            maxDist = 0.1;
+        } else {
+            switch (action) {
+                case L1H -> {
+                    maxSpeed = 2.5;
+                    maxDist = 1.5;
+                    prepAction = action;
+                }
+                case L2, L3 -> {
+                    maxSpeed = 1.5;
+                    maxDist = 1.0;
+                    prepAction = TargetAction.L2;
+                }
+                case L4 -> {
+                    maxSpeed = 0.5;
+                    maxDist = 0.5; // TODO: test farther distances to raise elevator
+                    prepAction = TargetAction.L4;
+                }
+                default -> {
+                    maxSpeed = 0;
+                    maxDist = 0.1;
+                }
+            }
+        }
+
+        BooleanSupplier speedOkay = () -> (MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()) < maxSpeed);
+        BooleanSupplier distanceCheck = () -> RobotState.getInstance().distanceToAlignPose() < maxDist;
+        return elevatorToPos(prepAction)
+            .beforeStarting(Commands.waitUntil(distanceCheck))
+            .andThen(new PrintCommand("CLOSE ENOUGH ***************"));
+    }
+
+    public Command elevatorToPos(TargetAction pos){
+        return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(pos));
+    }
+
+    public Command score(TargetAction pos){
+        return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(pos))
+            .andThen(
+                Commands.waitUntil(
+                    () -> (ElevatorSubsystem.getInstance().atPosition(2.0, pos)
+                    && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0))
+                )
+                .andThen(ArmRollerCommandFactory.coralOut().withTimeout(0.3))
+            );
+    }
+}
