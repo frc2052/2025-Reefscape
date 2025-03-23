@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
 import frc.robot.auto.common.AutoBase.PathsBase;
-import frc.robot.commands.arm.ArmRollerCommandFactory;
+import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
@@ -38,31 +38,29 @@ public class Autos {
     private final AutoFactory autoFactory;
     private final BooleanSupplier flip = () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
     
-
-    // TODO: follow trajecotry ? apply chassis speeds
     public Autos(){
         autoFactory = new AutoFactory(
             () -> DrivetrainSubsystem.getInstance().getState().Pose, 
             DrivetrainSubsystem.getInstance()::resetPose, 
             // follow trajectory
             DrivetrainSubsystem.getInstance()::followTrajectory, 
-            flip.getAsBoolean(), // TODO: test false to prevent flipping
+            flip.getAsBoolean(),
             DrivetrainSubsystem.getInstance());
     }
 
     // ---------- AUTO 1: J4K4L4 -------- //
     public AutoRoutine J4K4L4(){
-        AutoRoutine BlueJ4K4L4 = autoFactory.newRoutine("J4K4L4");
+        AutoRoutine J4K4L4 = autoFactory.newRoutine("J4K4L4");
 
         // load trajectories
-        AutoTrajectory startPath = BlueJ4K4L4.trajectory(AutoBase.PathsBase.B_SL_J.getTrajName());
-        AutoTrajectory load1 = BlueJ4K4L4.trajectory(AutoBase.PathsBase.B_J_LL.getTrajName());
-        AutoTrajectory score2 = BlueJ4K4L4.trajectory(AutoBase.PathsBase.B_LL_K.getTrajName());
-        AutoTrajectory load2 = BlueJ4K4L4.trajectory(AutoBase.PathsBase.B_K_LL.getTrajName());
-        AutoTrajectory score3 = BlueJ4K4L4.trajectory(AutoBase.PathsBase.B_LL_L.getTrajName());
+        AutoTrajectory startPath = J4K4L4.trajectory(AutoBase.PathsBase.B_SL_J.getTrajName());
+        AutoTrajectory load1 = J4K4L4.trajectory(AutoBase.PathsBase.B_J_LL.getTrajName());
+        AutoTrajectory score2 = J4K4L4.trajectory(AutoBase.PathsBase.B_LL_K.getTrajName());
+        AutoTrajectory load2 = J4K4L4.trajectory(AutoBase.PathsBase.B_K_LL.getTrajName());
+        AutoTrajectory score3 = J4K4L4.trajectory(AutoBase.PathsBase.B_LL_L.getTrajName());
 
 
-        BlueJ4K4L4.active().onTrue(
+        J4K4L4.active().onTrue(
             Commands.sequence(
                 startPath.resetOdometry(),
 
@@ -71,7 +69,7 @@ public class Autos {
                     .alongWith(prepareForScore(TargetAction.L4))
                     .andThen(
                         new PrintCommand("AUTO ALIGNMENT DONE")
-                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05))
+                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
                         .andThen(score(TargetAction.L4))
                     )
                 
@@ -84,7 +82,7 @@ public class Autos {
                         .alongWith(prepareForScore(TargetAction.L4))
                         .andThen(
                             new PrintCommand("AUTO ALIGNMENT DONE")
-                            .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05))
+                            .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
                             .andThen(score(TargetAction.L4))
                         )
                 )
@@ -98,24 +96,83 @@ public class Autos {
                         .alongWith(prepareForScore(TargetAction.L4))
                         .andThen(
                             new PrintCommand("AUTO ALIGNMENT DONE")
-                            .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05))
+                            .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
                             .andThen(score(TargetAction.L4))
                         )
                 )
             )
         );
         
-        return BlueJ4K4L4;
+        return J4K4L4;
     }
 
-    // ---------- AUTO 2: J4K4L4 -------- /
+    // ---------- AUTO 2: E4D4C4 -------- //
+    public AutoRoutine E4D4C4(){
+        AutoRoutine E4D4C4 = autoFactory.newRoutine("E4D4C4");
+
+        // load trajectories
+        AutoTrajectory startPath = E4D4C4.trajectory(AutoBase.PathsBase.B_SR_E.getTrajName());
+        AutoTrajectory load1 = E4D4C4.trajectory(AutoBase.PathsBase.B_E_RL.getTrajName());
+        AutoTrajectory score2 = E4D4C4.trajectory(AutoBase.PathsBase.B_RL_D.getTrajName());
+        AutoTrajectory load2 = E4D4C4.trajectory(AutoBase.PathsBase.B_D_RL.getTrajName());
+        AutoTrajectory score3 = E4D4C4.trajectory(AutoBase.PathsBase.B_RL_C.getTrajName());
+
+
+        E4D4C4.active().onTrue(
+            Commands.sequence(
+                startPath.resetOdometry(),
+
+                // score preload
+                reefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
+                    .alongWith(prepareForScore(TargetAction.L4))
+                    .andThen(
+                        new PrintCommand("AUTO ALIGNMENT DONE")
+                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
+                        .andThen(score(TargetAction.L4))
+                    )
+                
+                // pickup 2nd coral
+                .andThen(loadWithPath(load1))
+
+                // score 2nd coral
+                .andThen(
+                    reefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
+                        .alongWith(prepareForScore(TargetAction.L4))
+                        .andThen(
+                            new PrintCommand("AUTO ALIGNMENT DONE")
+                            .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
+                            .andThen(score(TargetAction.L4))
+                        )
+                )
+
+                // pickup 3rd coral
+                .andThen(loadWithPath(load2))
+
+                // score 3rd coral
+                .andThen(
+                    reefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
+                        .alongWith(prepareForScore(TargetAction.L4))
+                        .andThen(
+                            new PrintCommand("AUTO ALIGNMENT DONE")
+                            .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
+                            .andThen(score(TargetAction.L4))
+                        )
+                )
+            )
+        );
+        
+        return E4D4C4;
+    }
+
+
 
     
+    // ---------------------- HELPER METHODS -------------------- // 
 
     public Command reefAlignment(AutoTrajectory startPath, AlignOffset offset, FieldElementFace fieldLoc){
         double distance; 
 
-        if (startPath.toString().equals(PathsBase.B_SL_J.getTrajName()))
+        if (startPath.toString().equals(PathsBase.B_SL_J.getTrajName())) // TODO: add start paths
         { // start paths start align closer
             distance = 2.0;
         } else{
@@ -136,7 +193,35 @@ public class Autos {
             altPath.cmd(),
             new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW))
                 .beforeStarting(new WaitCommand(1.0))
-        ).until(() -> ArmRollerSubsystem.getInstance().getHasCoral());
+        ).until(() -> RobotState.getInstance().getHasCoral());
+    }
+
+    protected Command descoreAlgae(
+        AutoTrajectory toPosition,
+        TargetAction algaeLevel)
+    {
+        return 
+            toPosition.cmd()
+            .alongWith(
+                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel))
+                .andThen(new InstantCommand(() -> ArmRollerSubsystem.getInstance().coralIn())))
+            .andThen(new WaitCommand(1.0)); // wait to ensure algae grab
+    }
+
+    protected Command scoreNet(
+        AutoTrajectory score,
+        TargetAction algaeLevel) 
+    {
+        return score.cmd()
+                .alongWith(
+                    Commands.waitUntil(() -> true) // TODO: event marker to raise
+                    .andThen(new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))))
+                .andThen(
+                    Commands.waitUntil(() -> SuperstructureSubsystem.getInstance().isAtTargetState())
+                    .andThen(ArmCommandFactory.algaeIn()).withTimeout(0.2)
+                    .andThen(ArmCommandFactory.algaeOut()).withTimeout(1.0)
+                )
+                .andThen(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE));
     }
 
     public Command prepareForScore(TargetAction action){
@@ -189,7 +274,7 @@ public class Autos {
                     () -> (ElevatorSubsystem.getInstance().atPosition(2.0, pos)
                     && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0))
                 )
-                .andThen(ArmRollerCommandFactory.coralOut().withTimeout(0.3))
+                .andThen(ArmCommandFactory.coralOut().withTimeout(0.3))
             );
     }
 }

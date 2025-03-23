@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoBase.Path;
 import frc.robot.auto.common.AutoBase.PathsBase;
-import frc.robot.commands.arm.ArmRollerCommandFactory;
+import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
@@ -38,7 +38,7 @@ public class BlueE4D4C4 extends AutoBase {
         addCommands(safeReefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4))
                 .andThen(new PrintCommand("alignment done")
-                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05))
+                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
                         .andThen(score(TargetAction.L4))));
 
         // pickup and score 2nd coral (K)
@@ -46,7 +46,7 @@ public class BlueE4D4C4 extends AutoBase {
         addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4)
-                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05)))
+                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L4)));
 
         // pickup and score 3rd coral (L)
@@ -54,7 +54,7 @@ public class BlueE4D4C4 extends AutoBase {
         addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4)
-                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05)))
+                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L4)));
         addCommands(
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW)));
