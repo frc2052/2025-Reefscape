@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
-import frc.robot.commands.arm.ArmRollerCommandFactory;
+import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
@@ -193,7 +193,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
                 Commands.waitUntil(() -> ElevatorSubsystem.getInstance().atPosition(2.0, position)
                                 && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0))
-                        .andThen(ArmRollerCommandFactory.coralOut().withTimeout(0.30)));
+                        .andThen(ArmCommandFactory.coralOut().withTimeout(0.30)));
         // .andThen( // do in path to station
         // new InstantCommand(
         // () ->
@@ -206,17 +206,17 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 new InstantCommand(() -> ArmRollerSubsystem.getInstance().stopMotor()),
                 Commands.waitUntil(() -> ElevatorSubsystem.getInstance().atPosition(2.0, position)
                                 && ArmPivotSubsystem.getInstance().isAtDesiredPosition())
-                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.2))
+                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.2))
                         .andThen(new InstantCommand(
                                 () -> ArmRollerSubsystem.getInstance().stopMotor()))
-                        .andThen(ArmRollerCommandFactory.coralOut().withTimeout(0.55)));
+                        .andThen(ArmCommandFactory.coralOut().withTimeout(0.55)));
     }
 
     protected Command scoreL1(TargetAction position) {
         return new SequentialCommandGroup(
                 Commands.waitUntil(() -> ElevatorSubsystem.getInstance().atPosition(2.0, position)
                                 && ArmPivotSubsystem.getInstance().isAtDesiredPosition())
-                        .andThen(ArmRollerCommandFactory.coralOut().withTimeout(1.0)));
+                        .andThen(ArmCommandFactory.coralOut().withTimeout(1.0)));
     }
 
     protected Command prepareForScoreWhenReady(TargetAction action) {
@@ -279,8 +279,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
                     .andThen(new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))))
                 .andThen(
                     Commands.waitUntil(() -> SuperstructureSubsystem.getInstance().isAtTargetState())
-                    .andThen(ArmRollerCommandFactory.algaeIn()).withTimeout(0.2)
-                    .andThen(ArmRollerCommandFactory.algaeOut()).withTimeout(1.0)
+                    .andThen(ArmCommandFactory.algaeIn()).withTimeout(0.2)
+                    .andThen(ArmCommandFactory.algaeOut()).withTimeout(1.0)
                 )
                 .andThen(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE));
     }

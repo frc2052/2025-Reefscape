@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.auto.common.AutoBase;
-import frc.robot.commands.arm.ArmRollerCommandFactory;
+import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
@@ -40,7 +40,7 @@ public class ChoreoJ4K4L4 extends AutoBase {
         addCommands(safeReefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4))
                 .andThen(new PrintCommand("alignment done")
-                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05))
+                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
                         // .andThen(new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> false))
                         .andThen(score(TargetAction.L4))));
 
@@ -49,7 +49,7 @@ public class ChoreoJ4K4L4 extends AutoBase {
         addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4)
-                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05)))
+                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L4)));
 
         //
@@ -57,7 +57,7 @@ public class ChoreoJ4K4L4 extends AutoBase {
         addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4)
-                        .andThen(ArmRollerCommandFactory.coralIn().withTimeout(0.05)))
+                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L4)));
         addCommands(
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW)));

@@ -7,31 +7,38 @@ import frc.robot.Constants.SuperstructureConstants;
 
 public class SuperstructurePosition {
     public enum TargetAction {
-        HM(0.5, Degrees.of(228.0), Degrees.of(135), ActionType.NONE), // Homing
-        EXPLODE(5.0, Degrees.of(306.5), Degrees.of(30), ActionType.NONE),
-        INTAKE(3.0, Degrees.of(305), Degrees.of(30), ActionType.CORAL),
-        L1H(6.0, Degrees.of(190.0), Degrees.of(135), ActionType.CORAL),
-        L2(21.5, Degrees.of(190.0), Degrees.of(135), ActionType.CORAL),
-        L3(31.5, Degrees.of(190.0), Degrees.of(135), ActionType.CORAL),
-        L4(65.0, Degrees.of(190.0), Degrees.of(135), ActionType.CORAL),
-        LA(6.0, Degrees.of(265.0), Degrees.of(135), ActionType.ALGAE), // Lower Algae
-        UA(23.0, Degrees.of(265.0), Degrees.of(135), ActionType.ALGAE), // Upper Algae
-        MIN_ARM(SuperstructureConstants.UPWARDS_MIN_ELEVATOR, Degrees.of(228), Degrees.of(135), ActionType.NONE),
-        STOW(14.0, Degrees.of(227.5), Degrees.of(135), ActionType.NONE), // Coral Station
-        AS(65.0, Degrees.of(175.0), Degrees.of(135), ActionType.ALGAE), // Algae Scoring NET
-        AP(5.0, Degrees.of(325.0), Degrees.of(135), ActionType.ALGAE), // Algae Scoring Processor
-        TR(5.0, Degrees.of(228.0), Degrees.of(135), ActionType.NONE), // Travel
-        CL(14.0, Degrees.of(265.0), Degrees.of(135), ActionType.NONE); // Climb
+        // spotless: off
+        HM(0.5, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Homing
+        EXPLODE(5.0, Degrees.of(306.5), IntakePivotPositions.STOW.position, ActionType.NONE),
+        INTAKE(3.0, Degrees.of(305), IntakePivotPositions.INTAKE.position, ActionType.CORAL),
+        L1H(6.0, Degrees.of(190.0), IntakePivotPositions.L1.position, ActionType.CORAL),
+        L2(17.7, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
+        L3(36.0, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
+        L4(62.5, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
+        LA(6.0, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Lower Algae
+        UA(23.0, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Upper Algae
+        SAFE_ARM_HEIGHT(
+                SuperstructureConstants.MIN_SAFE_ROTATION,
+                Degrees.of(228),
+                IntakePivotPositions.STOW.position,
+                ActionType.NONE),
+        STOW(12.0, Degrees.of(140.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Coral Station
+        POST_ALGAE_STOW(12.0, Degrees.of(305.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Coral Station
+        AS(65.0, Degrees.of(185.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Algae Scoring NET
+        AP(5.0, Degrees.of(325.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring Processor
+        TR(5.0, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Travel
+        CL(14.0, Degrees.of(265.0), IntakePivotPositions.MID.position, ActionType.NONE); // Climb
 
+        // spotless: on
         private final double elevatorPosition;
         private final Angle armPivotAngle;
-        private final Angle intakePivotAngle;
+        private final double intakePosition;
         private final ActionType type;
 
-        private TargetAction(double elevatorPosition, Angle coralArmAngle, Angle algaeArmAngle, ActionType type) {
+        private TargetAction(double elevatorPosition, Angle coralArmAngle, double intakePosition, ActionType type) {
             this.elevatorPosition = elevatorPosition;
             this.armPivotAngle = coralArmAngle;
-            this.intakePivotAngle = algaeArmAngle;
+            this.intakePosition = intakePosition;
             this.type = type;
         }
 
@@ -43,8 +50,8 @@ public class SuperstructurePosition {
             return armPivotAngle;
         }
 
-        public Angle getIntakePivotPosition() {
-            return intakePivotAngle;
+        public double getIntakePivotPosition() {
+            return intakePosition;
         }
 
         public ActionType getType() {
@@ -56,5 +63,18 @@ public class SuperstructurePosition {
         NONE,
         CORAL,
         ALGAE
+    }
+
+    private enum IntakePivotPositions {
+        STOW(17.5),
+        INTAKE(0.75),
+        L1(15),
+        MID(9);
+
+        private double position;
+
+        private IntakePivotPositions(double position) {
+            this.position = position;
+        }
     }
 }

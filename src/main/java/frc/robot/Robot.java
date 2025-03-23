@@ -12,6 +12,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 
 public class Robot extends LoggedRobot {
     private Command m_autonomousCommand;
+    // private Trigger coastTrigger;
 
     private final RobotContainer m_robotContainer;
 
@@ -26,7 +27,10 @@ public class Robot extends LoggedRobot {
         }
 
         Logger.start(); // Start logging
-        // CameraServer.startAutomaticCapture();
+
+        // coastTrigger = new Trigger(Dashboard.getInstance()::getCoastOut);
+        // coastTrigger.onTrue(SuperstructureCommandFactory.setCoast());
+        // coastTrigger.onFalse(SuperstructureCommandFactory.setBrake());
     }
 
     @Override

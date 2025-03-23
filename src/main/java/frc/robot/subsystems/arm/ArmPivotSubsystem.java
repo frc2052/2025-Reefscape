@@ -11,8 +11,10 @@ import static edu.wpi.first.units.Units.Volts;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -68,7 +70,7 @@ public class ArmPivotSubsystem extends SubsystemBase {
         setPivotAngle(goalPosition);
     }
 
-    private Angle clampPosition(Angle pos) {
+    public Angle clampPosition(Angle pos) {
         if (pos.in(Degrees) < ArmPivotConstants.MIN_CORAL_ARM_ANGLE.in(Degrees)) {
             System.out.println("DESIRED ANGLE BEYOND MIN LIMIT");
             return ArmPivotConstants.MIN_CORAL_ARM_ANGLE;
@@ -100,17 +102,26 @@ public class ArmPivotSubsystem extends SubsystemBase {
         return Math.abs(getPosition().in(Degrees) - goal.in(Degrees)) <= tol;
     }
 
+    public boolean atPosition(TargetAction action) {
+        return isAtPosition(ArmPivotConstants.DEG_TOL, action.getArmPivotAngle());
+    }
+
     public Angle getPosition() {
         return Rotations.of(pivotMotor.getPosition().getValueAsDouble());
+    }
+
+    public void setNeutralMode(NeutralModeValue mode) {
+        pivotMotor.setNeutralMode(mode);
     }
 
     @Override
     public void periodic() {
         Logger.recordOutput("Coral Arm/Angle", getPosition().in(Degrees));
         Logger.recordOutput("Coral Arm/Goal Angle", goalPosition.in(Degrees));
-        // Logger.recordOutput("Coral Arm/Motor Set Speed", pivotMotor.get());
-        // Logger.recordOutput("Coral Arm/Velocity", pivotMotor.getVelocity().getValueAsDouble());
-        // Logger.recordOutput("Coral Arm/At Goal", isAtDesiredPosition(5));
+
+        if (DriverStation.isDisabled()) {
+            goalPosition = getPosition();
+        }
     }
 
     /* SysId routine for characterizing arm. This is used to find PID gains for the arm motor. */

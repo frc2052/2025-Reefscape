@@ -8,8 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SuperstructureConstants;
+import frc.robot.RobotState;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
+import frc.robot.subsystems.intake.IntakePivotSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import org.littletonrobotics.junction.Logger;
 
@@ -19,7 +21,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
     private ArmPivotSubsystem armPivot = ArmPivotSubsystem.getInstance();
-    // private IntakePivotSubsystem intakePivot = IntakePivotSubsystem.getInstance();
+    private IntakePivotSubsystem intakePivot = IntakePivotSubsystem.getInstance();
 
     private TargetAction selectedTargetAction = TargetAction.TR;
     private TargetAction currentAction = TargetAction.TR;
@@ -28,6 +30,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private boolean isChangingState;
 
     private boolean cancelHome = false;
+    private boolean algaeScoreDownNeeded = false;
+    private boolean movingFromIntake = false;
 
     /** Private constructor to prevent instantiation. */
     private SuperstructureSubsystem() {
@@ -91,6 +95,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
         revealCombination();
     }
 
+    public void stow() {
+        setCurrentAction(getStowFromCurrent());
+    }
+
     public void setCurrentAction(TargetAction target) {
         currentAction = target;
     }
@@ -101,6 +109,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public void confirmSelectedAction() {
         currentAction = selectedTargetAction;
+        movingFromIntake = false;
         revealCombination();
     }
 
@@ -122,6 +131,23 @@ public class SuperstructureSubsystem extends SubsystemBase {
         Logger.recordOutput("Superstructure/Current = Selected", target == getSelectedTargetAction());
         Logger.recordOutput("Target Superstructure Changing State", isChangingState);
 
+        if (target == TargetAction.AS) {
+            algaeScoreDownNeeded = true;
+        }
+
+        if (!movingFromIntake
+                && RobotState.getInstance().getHasCoral()
+                && (target == TargetAction.INTAKE)
+                && armPivot.atPosition(target)) {
+            System.out.println("GOT CORAL********************");
+            movingFromIntake = true;
+            set(TargetAction.STOW, true).schedule();
+        }
+
+        if (armPivot.atPosition(TargetAction.STOW)) {
+            movingFromIntake = false;
+        }
+
         if (target != previousAction) {
             Logger.recordOutput("Target Superstructure State Has Changed", true);
             isChangingState = true;
@@ -142,100 +168,55 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 return;
             }
 
-            // first case: elevator below min elevator and needs to swing around, so must go up then swing then go back
-            // down
-            if (target.getElevatorPositionRotations() < SuperstructureConstants.UPWARDS_MIN_ELEVATOR
-                    && elevator.getPosition() < SuperstructureConstants.UPWARDS_MIN_ELEVATOR) {
-                // if (target.getArmPivotAngle().in(Degrees)
-                //         > armPivot.getArmAngle().in(Degrees)) { // arm swinging down
-                //     if (target.getArmPivotAngle().in(Degrees)
-                //             > SuperstructureConstants.ROTATE_DOWN_COLLISION) { // would hit the bellypan
-                //         // elevator.setPositionMotionMagic(TargetAction.MIN_ARM);
-                //         System.out.println("WOULD BE MOVING ELEVATOR UP TO SWING ARM DOWN");
-                //     } else {
-                //         // armPivot.setArmPosition(target);
-                //         // intakePivot.setPosition(target);
-                //         // elevator.setPositionMotionMagic(target);
+            boolean armCrossingDanger = willArmCrossDangerZone(
+                    armPivot.getArmAngle().in(Degrees),
+                    target.getArmPivotAngle().in(Degrees));
 
-                //         System.out.println("SHOULD BE CLEAR TO MOVE, WOULD ROTATE ARM DOWN");
-                //     }
-                // } else { // arm swinging up
-                //     if (target.getArmPivotAngle().in(Degrees) < SuperstructureConstants.ROTATE_UP_COLLISION
-                //             && armPivot.getArmAngle().in(Degrees)
-                //                     > SuperstructureConstants.ROTATE_UP_COLLISION) { // would hit the bellypan
-                //         // elevator.setPositionMotionMagic(TargetAction.MIN_ARM);
-                //         System.out.println("WOULD BE MOVING ELEVATOR UP TO SWING ARM UP");
-                //     } else {
-                //         // armPivot.setArmPosition(target);
-                //         // intakePivot.setPosition(target);
-                //         // elevator.setPositionMotionMagic(target);
+            if (target.getElevatorPositionRotations() < SuperstructureConstants.MIN_SAFE_ROTATION
+                    && elevator.getPosition() < SuperstructureConstants.MIN_SAFE_ROTATION
+                    && armCrossingDanger) {
+                intakePivot.setPosition(target);
 
-                //         System.out.println("SHOULD BE CLEAR TO MOVE, WOULD ROTATE ARM UP");
-                //     }
-                // }
-                // arm still needs to swing around, so go up so arm is allowed to do so
                 if (!armPivot.isAtPosition(5, target.getArmPivotAngle())) {
-                    elevator.setPositionMotionMagic(TargetAction.MIN_ARM);
+                    elevator.setPositionMotionMagic(TargetAction.SAFE_ARM_HEIGHT);
                 }
 
-                // we up at safe height, now move arm
-                if (elevator.atPosition(1.0, TargetAction.MIN_ARM)) {
+                if (elevator.atPosition(1.0, TargetAction.SAFE_ARM_HEIGHT)) {
                     armPivot.setArmPosition(target);
-                    // intakePivot.setPosition(target);
-                    // //************************************************************************** */
-
-                    // arm is now there so we can set elevator height
                     if (armPivot.isAtPosition(5, target.getArmPivotAngle())) {
                         elevator.setPositionMotionMagic(target);
                     }
                 }
-                // second case: going up, so just go to elevator height then swing arm when safe
-            } else if (target.getElevatorPositionRotations() > elevator.getPosition()) {
-                elevator.setPositionMotionMagic(target);
-                if (elevator.getPosition() > SuperstructureConstants.UPWARDS_MIN_ELEVATOR) {
-                    armPivot.setArmPosition(target);
-                    // intakePivot.setPosition(target);
-                    // //************************************************************************** */
-                }
-                // third case: going down
             } else if (target.getElevatorPositionRotations() < elevator.getPosition()) {
-                // goal is above danger zone, and we must be above danger zone already and can do everything
-                if (target.getElevatorPositionRotations() > SuperstructureConstants.UPWARDS_MIN_ELEVATOR) {
+                if (algaeScoreDownNeeded) {
                     armPivot.setArmPosition(target);
-                    // intakePivot.setPosition(target);
-                    // //************************************************************************** */
+                    intakePivot.setPosition(target);
+
+                    if (armPivot.isAtPosition(3, target.getArmPivotAngle())) {
+                        elevator.setPositionMotionMagic(target);
+                        algaeScoreDownNeeded = false;
+                    }
+                }
+                if (target.getElevatorPositionRotations() > SuperstructureConstants.MIN_SAFE_ROTATION
+                        || elevator.getPosition() > SuperstructureConstants.MIN_MOVE_ROTATION) {
+                    armPivot.setArmPosition(target);
                     elevator.setPositionMotionMagic(target);
-                    // goal is in the danger zone, but we must be above danger zone already so move arm then go down
+                    intakePivot.setPosition(target);
                 } else {
                     armPivot.setArmPosition(target);
-                    // intakePivot.setPosition(target);
-                    // //************************************************************************** */
+                    intakePivot.setPosition(target);
 
-                    if (armPivot.isAtPosition(5, target.getArmPivotAngle())) {
+                    if (armPivot.isAtPosition(10, target.getArmPivotAngle())) {
                         elevator.setPositionMotionMagic(target);
                     }
-
-                    if (target.getArmPivotAngle().in(Degrees)
-                            > armPivot.getArmAngle().in(Degrees)) { // arm swinging down
-                        // if (target.getArmPivotAngle().in(Degrees) < SuperstructureConstants.ROTATE_DOWN_COLLISION) {
-                        // // would not hit the bellypan
-                        //     elevator.setPositionMotionMagic(target);
-                        // } else {
-                        //     if (elevator.getPosition() < SuperstructureConstants.UPWARDS_MIN_ELEVATOR &&
-                        // !armPivot.isAtPosition(5, target.getArmPivotAngle())) {
-                        //         elevator.setPositionMotionMagic(TargetAction.MIN_ARM);
-                        //     } else {
-                        //         elevator.setPositionMotionMagic(target);
-                        //     }
-                        // }
-                    } else { // arm swinging up
-                        // elevator.setPositionMotionMagic(target);
-                    }
                 }
+            } else if (target.getElevatorPositionRotations() > elevator.getPosition()) {
+                elevator.setPositionMotionMagic(target);
+                armPivot.setArmPosition(target);
+                intakePivot.setPosition(target);
             }
 
             if (elevator.atPosition(target) && armPivot.isAtPosition(5, target.getArmPivotAngle())) {
-                // && algaePivot.isAtPosition(5, target.getAlgaeArmPivotPosition())) {
                 isChangingState = false;
                 Logger.recordOutput("Arrived at Target State", true);
             } else {
@@ -262,5 +243,38 @@ public class SuperstructureSubsystem extends SubsystemBase {
         // }
 
         previousAction = target;
+    }
+
+    public boolean willArmCrossDangerZone(double currentDeg, double goalDeg) {
+        if (goalDeg > SuperstructureConstants.LEFT_LIMIT && currentDeg < SuperstructureConstants.RIGHT_LIMIT) {
+            return true;
+        } else if (goalDeg < SuperstructureConstants.RIGHT_LIMIT && currentDeg > SuperstructureConstants.LEFT_LIMIT) {
+            return true;
+        } else if (currentDeg > SuperstructureConstants.RIGHT_LIMIT
+                && currentDeg < SuperstructureConstants.LEFT_LIMIT) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean atConfirmedPosition() {
+        return atPosition(currentAction);
+    }
+
+    public boolean atPosition(TargetAction goalPosition) {
+        return elevator.atPosition(goalPosition)
+                && armPivot.atPosition(goalPosition)
+                && intakePivot.atPosition(goalPosition);
+    }
+
+    public TargetAction getStowFromCurrent() {
+        if (currentAction == TargetAction.AS) {
+            return TargetAction.POST_ALGAE_STOW;
+        } else if (currentAction == TargetAction.AP) {
+            return TargetAction.AP;
+        } else {
+            return TargetAction.STOW;
+        }
     }
 }

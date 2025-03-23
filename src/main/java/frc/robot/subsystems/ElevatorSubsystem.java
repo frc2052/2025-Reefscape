@@ -4,18 +4,24 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.util.DelayedBoolean;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.SuperstructureConstants;
+import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
@@ -53,6 +59,18 @@ public class ElevatorSubsystem extends SubsystemBase {
         frontMotor.clearStickyFault_SupplyCurrLimit();
 
         backMotor.setControl(new Follower(frontMotor.getDeviceID(), true));
+    }
+
+    public double clamp(double pos) {
+        double armDeg = ArmPivotSubsystem.getInstance().getArmAngle().in(Degrees);
+        if (armDeg > SuperstructureConstants.RIGHT_LIMIT - 2
+                && armDeg < SuperstructureConstants.LEFT_LIMIT + 2) { // potentially danger zone
+            if (getPosition() < SuperstructureConstants.MIN_SAFE_ROTATION) {
+                pos = SuperstructureConstants.MIN_SAFE_ROTATION;
+            }
+        }
+
+        return pos;
     }
 
     public void setPositionMotionMagic(TargetAction elevatorAction) {
@@ -132,35 +150,19 @@ public class ElevatorSubsystem extends SubsystemBase {
                 || MathHelpers.epsilonEquals(getPosition(), TargetAction.HM.getElevatorPositionRotations(), 0.05);
     }
 
+    public void setNeutralMode(NeutralModeValue mode) {
+        frontMotor.setNeutralMode(mode);
+        backMotor.setNeutralMode(mode);
+    }
+
     @Override
     public void periodic() {
         Logger.recordOutput("Elevator/Position", getPosition());
         Logger.recordOutput("Elevator/Goal Position", goalPositionRotations);
-        // Logger.recordOutput("Elevator/At Goal Position", atPosition());
-        // Logger.recordOutput("Elevator/Motor Set Speed", frontMotor.get());
-        // Logger.recordOutput("Elevator/Velocity", frontMotor.getVelocity().getValueAsDouble());
 
-        // if being used in open loop (usually manual mode), disable the height limit
-        // if (controlState == ControlState.OPEN_LOOP) {
-        //   frontMotor
-        //       .getConfigurator()
-        //       .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(false));
-        // } else {
-        //   frontMotor
-        //       .getConfigurator()
-        //       .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(true));
-        // }
-
-        // if we still intend to go to the home position, currently at alleged home, and should re-home,
-        // then re-home
-        // if (MathHelpers.epsilonEquals(
-        //         goalPositionRotations, TargetAction.HM.getElevatorPositionRotations(), .02)
-        //     && atHomingLocation()
-        //     && shouldHome) {
-        //   setWantHome(true);
-        // } else if (controlState != ControlState.OPEN_LOOP) {
-        //   setWantHome(false);
-        // }
+        if (DriverStation.isDisabled()) {
+            goalPositionRotations = getPosition();
+        }
 
         Logger.recordOutput("Elevator Homing", homing);
         if (homing) {

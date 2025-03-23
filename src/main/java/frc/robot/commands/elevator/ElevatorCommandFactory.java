@@ -4,6 +4,7 @@
 
 package frc.robot.commands.elevator;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -17,5 +18,13 @@ public class ElevatorCommandFactory {
 
     public static Command manualDown() {
         return Commands.runEnd(() -> elevator.manualDown(), () -> elevator.stopElevator(), elevator);
+    }
+
+    public static Command setCoast() {
+        return Commands.runOnce(() -> elevator.setNeutralMode(NeutralModeValue.Coast), elevator);
+    }
+
+    public static Command setBrake() {
+        return Commands.runOnce(() -> elevator.setNeutralMode(NeutralModeValue.Brake), elevator);
     }
 }

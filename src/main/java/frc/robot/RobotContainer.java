@@ -10,18 +10,20 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
-import frc.robot.commands.arm.ArmRollerCommandFactory;
+import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
-import frc.robot.commands.intake.IntakeRollerCommandFactory;
+import frc.robot.commands.intake.IntakeCommandFactory;
+import frc.robot.commands.superstructure.SuperstructureCommandFactory;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.subsystems.LedSubsystem;
+import frc.robot.subsystems.arm.ArmPivotSubsystem;
+import frc.robot.subsystems.arm.ArmRollerSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.intake.IntakePivotSubsystem;
 import frc.robot.subsystems.intake.IntakeRollerSubsystem;
@@ -44,6 +46,8 @@ public class RobotContainer {
     public final AdvantageScopeSubsystem advantageScope = AdvantageScopeSubsystem.getInstance();
     public final AutoFactory autoFactory = AutoFactory.getInstance();
     public final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
+    public final ArmPivotSubsystem armPivot = ArmPivotSubsystem.getInstance();
+    public final ArmRollerSubsystem armRollers = ArmRollerSubsystem.getInstance();
     public final IntakePivotSubsystem intakePivot = IntakePivotSubsystem.getInstance();
     public final IntakeRollerSubsystem intakeRollers = IntakeRollerSubsystem.getInstance();
     public final LedSubsystem leds = LedSubsystem.getInstance();
@@ -105,15 +109,19 @@ public class RobotContainer {
                         new InstantCommand(),
                         new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.INTAKE)),
                         () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE))
-                .whileTrue(ArmRollerCommandFactory.intake())
-                .whileTrue(IntakeRollerCommandFactory.intake());
+                .whileTrue(ArmCommandFactory.intake())
+                .whileTrue(new ConditionalCommand(
+                        new InstantCommand(),
+                        IntakeCommandFactory.intake(),
+                        () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE));
         controlBoard
                 .outtake()
-                .whileTrue(ArmRollerCommandFactory.outtake())
-                .whileTrue(IntakeRollerCommandFactory.outtake())
-                .onFalse(new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.INTAKE)));
+                .whileTrue(ArmCommandFactory.outtake())
+                .onFalse(new InstantCommand(() -> superstructure.stow()));
 
-        controlBoard.rollerTap().whileTrue(ArmRollerCommandFactory.coralIn());
+        controlBoard.rollerTap().whileTrue(ArmCommandFactory.coralIn());
+
+        controlBoard.groundOuttake().whileTrue(IntakeCommandFactory.outtake());
 
         controlBoard
                 .alignWithReefLeft()
@@ -145,11 +153,6 @@ public class RobotContainer {
         controlBoard.setGoalCoralStation().onTrue(superstructure.set(TargetAction.STOW, false));
         controlBoard.homeElevator().onTrue(superstructure.set(TargetAction.HM, false));
 
-        // controlBoard.setSubReefLeft().onTrue(robotState.setAlignOffsetCommand(AlignOffset.LEFT_BRANCH));
-        // controlBoard.setSubReefRight().onTrue(robotState.setAlignOffsetCommand(AlignOffset.RIGHT_BRANCH));
-        controlBoard.setSubReefLeft().onTrue(new InstantCommand(() -> intakePivot.setAngle(0.22)));
-        controlBoard.setSubReefRight().onTrue(new InstantCommand(() -> intakePivot.setAngle(18)));
-
         controlBoard.climbUp().whileTrue(ClimberCommandFactory.climberUp());
         controlBoard.climbDown().whileTrue(ClimberCommandFactory.climberDown());
 
@@ -157,8 +160,10 @@ public class RobotContainer {
         controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.AP, false));
 
         /* SysID */
-        controlBoard.sysIDQuasiForward().whileTrue(intakePivot.sysIdQuasistatic(Direction.kForward));
-        controlBoard.sysIDQuasiReverse().whileTrue(intakePivot.sysIdQuasistatic(Direction.kReverse));
+        controlBoard.sysIDDynamicForward().onTrue(SuperstructureCommandFactory.setCoast());
+        controlBoard.sysIDDynamicReverse().onTrue(SuperstructureCommandFactory.setBrake());
+        // controlBoard.sysIDQuasiForward().whileTrue(intakePivot.sysIdQuasistatic(Direction.kForward));
+        // controlBoard.sysIDQuasiReverse().whileTrue(intakePivot.sysIdQuasistatic(Direction.kReverse));
         // controlBoard.sysIDDynamicForward().whileTrue(intakePivot.sysIdDynamic(Direction.kForward));
         // controlBoard.sysIDDynamicReverse().whileTrue(intakePivot.sysIdDynamic(Direction.kReverse));
         // controlBoard

@@ -2,6 +2,7 @@ package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
@@ -116,6 +117,10 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
                 visionUpdate.estimatedPose.toPose2d(),
                 Utils.fpgaToCurrentTime(visionUpdate.timestampSeconds),
                 visionUpdate.getVisionMeasurementStdDevs());
+    }
+
+    public void setNeutralMode(NeutralModeValue mode) {
+        configNeutralMode(mode);
     }
 
     public void followTrajectory(SwerveSample sample){

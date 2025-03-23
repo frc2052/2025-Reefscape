@@ -235,7 +235,10 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double DEG_TOL = 2.5;
 
-    public static final Angle ENCODER_OFFSET = Rotations.of(-0.47558);
+    public static final double MOTOR_RANGE = 19.568359375; // rotations
+    public static final double ENCODER_RANGE = 0.306; // rotations
+
+    public static final Angle ENCODER_OFFSET = Rotations.of(-0.473512);
 
     public static final double MIN_INTAKE_ARM_ANGLE = 0;
     public static final double MAX_INTAKE_ARM_ANGLE = 20;
@@ -246,7 +249,7 @@ public class Constants {
     public static final double kA = 0.0;
 
     public static final double MAX_VELOCITY = 36 * Math.PI;
-    public static final double MAX_ACCELERATION = 250;
+    public static final double MAX_ACCELERATION = 350;
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
@@ -270,12 +273,12 @@ public class Constants {
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake); 
 
-    public static final FeedbackConfigs FEEDBACK_CONFIG =
-        new FeedbackConfigs()
-            .withFeedbackRemoteSensorID(Ports.INTAKE_ENCODER_ID)
-            .withFeedbackSensorSource(FeedbackSensorSourceValue.SyncCANcoder)
-            .withRotorToSensorRatio(58.333)
-            .withSensorToMechanismRatio(1);
+    // public static final FeedbackConfigs FEEDBACK_CONFIG =
+    //     new FeedbackConfigs()
+    //         .withFeedbackRemoteSensorID(Ports.INTAKE_ENCODER_ID)
+    //         .withFeedbackSensorSource(FeedbackSensorSourceValue.SyncCANcoder)
+    //         .withRotorToSensorRatio(58.333)
+    //         .withSensorToMechanismRatio(1);
     
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
         new SoftwareLimitSwitchConfigs()
@@ -328,9 +331,10 @@ public class Constants {
   }
 
   public static final class SuperstructureConstants {
-    public static final double UPWARDS_MIN_ELEVATOR = 11.0;
-    public static final double ROTATE_DOWN_COLLISION = 215;
-    public static final double ROTATE_UP_COLLISION = 295;
+    public static final double MIN_SAFE_ROTATION = 11.0;
+    public static final double MIN_MOVE_ROTATION = 45.0;
+    public static final double RIGHT_LIMIT = 215;
+    public static final double LEFT_LIMIT = 295;
   }
 
   public static class VisionConstants {

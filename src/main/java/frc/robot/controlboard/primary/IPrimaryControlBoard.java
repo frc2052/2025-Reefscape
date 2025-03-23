@@ -51,6 +51,8 @@ public interface IPrimaryControlBoard {
 
     Trigger rollerTap();
 
+    Trigger groundOuttake();
+
     Trigger sysIDQuasiForward();
 
     Trigger sysIDQuasiReverse();

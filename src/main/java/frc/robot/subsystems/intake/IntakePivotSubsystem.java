@@ -9,10 +9,13 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -33,7 +36,6 @@ public class IntakePivotSubsystem extends SubsystemBase {
     private double goalPosition;
 
     private final PositionTorqueCurrentFOC positionControl = new PositionTorqueCurrentFOC(0.0).withUpdateFreqHz(0.0);
-    // private final PIDController controller;
     private final ArmFeedforward ff;
 
     private TrapezoidProfile profile;
@@ -50,25 +52,21 @@ public class IntakePivotSubsystem extends SubsystemBase {
     }
 
     private IntakePivotSubsystem() {
-        goalPosition = 10; // TargetAction.STOW.getIntakePivotPosition();
+        goalPosition = TargetAction.STOW.getIntakePivotPosition();
         pivotMotor = new TalonFX(Ports.INTAKE_PIVOT_ID);
         pivotMotor.getConfigurator().apply(IntakePivotConstants.MOTOR_CONFIG);
 
-        // controller = new PIDController(
-        //         IntakePivotConstants.SLOT0_CONFIGS.kP,
-        //         IntakePivotConstants.SLOT0_CONFIGS.kI,
-        //         IntakePivotConstants.SLOT0_CONFIGS.kD);
+        encoder = new CANcoder(Ports.INTAKE_ENCODER_ID);
+        CANcoderConfiguration armEncoderConfig = new CANcoderConfiguration();
+        armEncoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1.0;
+        armEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        armEncoderConfig.MagnetSensor.MagnetOffset = IntakePivotConstants.ENCODER_OFFSET.in(Rotations);
+        encoder.getConfigurator().apply(armEncoderConfig, 1.0);
 
-        // encoder = new CANcoder(Ports.INTAKE_ENCODER_ID);
-        // CANcoderConfiguration armEncoderConfig = new CANcoderConfiguration();
-        // armEncoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1.0;
-        // armEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        // armEncoderConfig.MagnetSensor.MagnetOffset = IntakePivotConstants.ENCODER_OFFSET.in(Rotations);
-        // encoder.getConfigurator().apply(armEncoderConfig, 1.0);
+        double motorPos = encoder.getAbsolutePosition().getValueAsDouble()
+                * (IntakePivotConstants.MOTOR_RANGE / IntakePivotConstants.ENCODER_RANGE);
 
-        pivotMotor.getConfigurator().setPosition(00); // TODO: change to 20 when done tuning
-
-        // pivotMotor.getConfigurator().apply(IntakePivotConstants.FEEDBACK_CONFIG);
+        pivotMotor.getConfigurator().setPosition(motorPos);
 
         profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(
                 IntakePivotConstants.MAX_VELOCITY, IntakePivotConstants.MAX_ACCELERATION));
@@ -77,33 +75,14 @@ public class IntakePivotSubsystem extends SubsystemBase {
     }
 
     public void runPivot(Angle setpoint, double feedforward) {
-        // // System.out.println(
-        // //         feedforward + (controller.calculate(getPosition().in(Rotations), setpoint.in(Rotations)) * 12));
-        // pivotMotor.setVoltage(
-        //         feedforward + (controller.calculate(getPosition().in(Rotations), setpoint.in(Rotations)) * 12));
-        pivotMotor.setControl(positionControl
-                .withPosition(setpoint.in(Rotations))
-                .withFeedForward(feedforward)
-                .withSlot(0));
-        // double goalDeg = setpoint.in(Degrees);
-        // double currentDeg = getPosition().in(Degrees);
-        // double diff = goalDeg - currentDeg;
-
-        // if (currentDeg > 100 && goalDeg > 100) {
-        //     pivotMotor.set(0.05);
-        //     return;
-        // }
-
-        // if (Math.abs(diff) > 30) {
-        //     pivotMotor.set(Math.copySign(0.4, diff));
-        // } else if (Math.abs(diff) > 15) {
-        //     pivotMotor.set(Math.copySign(0.3, diff));
-        // } else if (Math.abs(diff) > 4) {
-        //     pivotMotor.set(Math.copySign(0.175, diff));
-        // } else {
-        //     pivotMotor.stopMotor();
-        //     // pivotMotor.setVoltage(ff.calculate(goalDeg, 0));
-        // }
+        if (getPosition() < 1.0 && setpoint.in(Rotations) < 1.0) {
+            pivotMotor.setVoltage(0);
+        } else {
+            pivotMotor.setControl(positionControl
+                    .withPosition(setpoint.in(Rotations))
+                    .withFeedForward(feedforward)
+                    .withSlot(0));
+        }
     }
 
     public void setAngle(double rotations) {
@@ -111,7 +90,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
     }
 
     public void setPosition(TargetAction action) {
-        // goalPosition = action.getIntakePivotPosition().in(Rotations);
+        goalPosition = action.getIntakePivotPosition();
     }
 
     public boolean isAtDesiredPosition() {
@@ -126,9 +105,18 @@ public class IntakePivotSubsystem extends SubsystemBase {
         return Math.abs(getPosition() - goal) <= tol;
     }
 
+    public boolean atPosition(TargetAction action) {
+        return isAtPosition(IntakePivotConstants.DEG_TOL, action.getIntakePivotPosition());
+    }
+
     public double getPosition() {
         double position = pivotMotor.getPosition().getValueAsDouble();
         return position;
+    }
+
+    public void setNeutralMode(NeutralModeValue mode) {
+        System.out.println("INTAKE SET TO: " + mode.toString());
+        pivotMotor.setNeutralMode(mode);
     }
 
     @Override
@@ -143,7 +131,6 @@ public class IntakePivotSubsystem extends SubsystemBase {
             // Reset profile when disabled
             setpoint = new TrapezoidProfile.State(getPosition(), 0);
             goalPosition = setpoint.position;
-            // goalPosition = getPosition();
         }
 
         if (!DriverStation.isDisabled()) {
@@ -159,7 +146,6 @@ public class IntakePivotSubsystem extends SubsystemBase {
         }
 
         runPivot(Rotations.of(setpoint.position), ff.calculate(setpoint.position, setpoint.velocity));
-        // runPivot(goalPosition, 0);
     }
 
     public void voltageDrive(Voltage voltage) {
