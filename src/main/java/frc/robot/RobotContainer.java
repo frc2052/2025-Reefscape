@@ -4,26 +4,30 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.auto.common.AutoFactory;
-import frc.robot.commands.algae.AlgaeCommandFactory;
+import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
-import frc.robot.commands.hand.HandCommandFactory;
+import frc.robot.commands.intake.IntakeCommandFactory;
+import frc.robot.commands.superstructure.SuperstructureCommandFactory;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
-import frc.robot.subsystems.AlgaePivotSubsystem;
-import frc.robot.subsystems.AlgaeShooterSubsystem;
 import frc.robot.subsystems.LedSubsystem;
+import frc.robot.subsystems.arm.ArmPivotSubsystem;
+import frc.robot.subsystems.arm.ArmRollerSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
+import frc.robot.subsystems.intake.IntakePivotSubsystem;
+import frc.robot.subsystems.intake.IntakeRollerSubsystem;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.ActionType;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -42,8 +46,10 @@ public class RobotContainer {
     public final AdvantageScopeSubsystem advantageScope = AdvantageScopeSubsystem.getInstance();
     public final AutoFactory autoFactory = AutoFactory.getInstance();
     public final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
-    public final AlgaeShooterSubsystem algaeShooter = AlgaeShooterSubsystem.getInstance();
-    public final AlgaePivotSubsystem algaePivot = AlgaePivotSubsystem.getInstance();
+    public final ArmPivotSubsystem armPivot = ArmPivotSubsystem.getInstance();
+    public final ArmRollerSubsystem armRollers = ArmRollerSubsystem.getInstance();
+    public final IntakePivotSubsystem intakePivot = IntakePivotSubsystem.getInstance();
+    public final IntakeRollerSubsystem intakeRollers = IntakeRollerSubsystem.getInstance();
     public final LedSubsystem leds = LedSubsystem.getInstance();
 
     public static boolean deadReckoning = false;
@@ -97,119 +103,73 @@ public class RobotContainer {
 
         controlBoard.resetGyro().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
 
-        controlBoard.intake().whileTrue(HandCommandFactory.motorIn());
+        controlBoard
+                .intake()
+                .onTrue(new ConditionalCommand(
+                        new InstantCommand(),
+                        new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.INTAKE)),
+                        () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE))
+                .whileTrue(ArmCommandFactory.intake())
+                .whileTrue(new ConditionalCommand(
+                        new InstantCommand(),
+                        IntakeCommandFactory.intake(),
+                        () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE));
         controlBoard
                 .outtake()
-                .whileTrue(HandCommandFactory.motorOut())
-                .onFalse(new InstantCommand(
-                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HP)));
+                .whileTrue(ArmCommandFactory.outtake())
+                .onFalse(new InstantCommand(() -> superstructure.stow()));
 
-        controlBoard.intakeAlgae().whileTrue(AlgaeCommandFactory.intake());
-        controlBoard.shootAlgae().whileTrue(AlgaeCommandFactory.outtake());
+        controlBoard.rollerTap().whileTrue(ArmCommandFactory.coralIn());
+
+        controlBoard.groundOuttake().whileTrue(IntakeCommandFactory.outtake());
 
         controlBoard
                 .alignWithReefLeft()
-                .onTrue(new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.LEFT_BRANCH)))
-                .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(robotState::getAlignOffset));
+                .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(() -> AlignOffset.LEFT_BRANCH));
 
         controlBoard
                 .alignWithReefRight()
-                .onTrue(new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.RIGHT_BRANCH)))
-                .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(robotState::getAlignOffset));
+                .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(() -> AlignOffset.RIGHT_BRANCH));
 
         /* Secondary Driver */
-        controlBoard.actTrigger().onTrue(new InstantCommand(() -> superstructure.confirmSelectedAction()));
+        controlBoard.actTrigger().onTrue(superstructure.confirm());
 
-        controlBoard.setGoalCL().onTrue(new InstantCommand(() -> {
-            superstructure.setSelectedTargetAction(TargetAction.CL, true);
-
-            robotState.setAlignOffset(AlignOffset.MIDDLE_REEF);
-        }));
-        controlBoard.setGoalL1H().onTrue(new InstantCommand(() -> {
-            superstructure.setSelectedTargetAction(TargetAction.L1H, false);
-
-            robotState.setAlignOffset(AlignOffset.MIDDLE_REEF);
-        }));
+        controlBoard.setGoalCL().onTrue(superstructure.set(TargetAction.CL, true));
         controlBoard
-                .setGoalL2()
-                .onTrue(new InstantCommand(() -> superstructure.setSelectedTargetAction(TargetAction.L2, false)));
-        controlBoard
-                .setGoalL3()
-                .onTrue(new InstantCommand(() -> superstructure.setSelectedTargetAction(TargetAction.L3, false)));
-        controlBoard
-                .setGoalL4()
-                .onTrue(new InstantCommand(() -> superstructure.setSelectedTargetAction(TargetAction.L4, false)));
+                .setGoalL1H()
+                .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
+                .onTrue(superstructure.set(TargetAction.L1H, false));
+        controlBoard.setGoalL2().onTrue(superstructure.set(TargetAction.L2, false));
+        controlBoard.setGoalL3().onTrue(superstructure.set(TargetAction.L3, false));
+        controlBoard.setGoalL4().onTrue(superstructure.set(TargetAction.L4, false));
         controlBoard
                 .setGoalLowerAlgae()
-                .onTrue(new InstantCommand(
-                        () -> AlgaePivotSubsystem.getInstance().setPivotAngle(Degrees.of(180))))
-                .onTrue(new InstantCommand(() -> {
-                    superstructure.setSelectedTargetAction(TargetAction.LA, false);
-
-                    robotState.setAlignOffset(AlignOffset.MIDDLE_REEF);
-                }));
+                .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
+                .onTrue(superstructure.set(TargetAction.LA, false));
         controlBoard
                 .setGoalUpperAlgae()
-                .onTrue(new InstantCommand(
-                        () -> AlgaePivotSubsystem.getInstance().setPivotAngle(Degrees.of(180))))
-                .onTrue(new InstantCommand(() -> {
-                    superstructure.setSelectedTargetAction(TargetAction.UA, false);
-
-                    robotState.setAlignOffset(AlignOffset.MIDDLE_REEF);
-                }));
-        controlBoard
-                .setGoalCoralStation()
-                .onTrue(new InstantCommand(() -> superstructure.setSelectedTargetAction(TargetAction.HP, false)));
-        controlBoard
-                .homeElevator()
-                .onTrue(new InstantCommand(() -> superstructure.setSelectedTargetAction(TargetAction.HM, false)));
-
-        controlBoard
-                .setSubReefLeft()
-                .onTrue(new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.LEFT_BRANCH)));
-        controlBoard
-                .setSubReefRight()
-                .onTrue(new InstantCommand(() -> robotState.setAlignOffset(AlignOffset.RIGHT_BRANCH)));
-
-        controlBoard.algaeScoreAngle().onTrue(new InstantCommand(() -> AlgaePivotSubsystem.getInstance()
-                .setPivotAngle(Degrees.of(250))));
-        controlBoard.algaeLowAngle().onTrue(new InstantCommand(() -> AlgaePivotSubsystem.getInstance()
-                .setPivotAngle(Degrees.of(135))));
-
-        controlBoard
-                .algaeManualUp()
-                .onTrue(new InstantCommand(
-                        () -> AlgaePivotSubsystem.getInstance().setPivotSpeedManual(0.2)))
-                .onFalse(new InstantCommand(
-                        () -> AlgaePivotSubsystem.getInstance().setPivotSpeedManual(0.0)));
-        controlBoard
-                .algaeManualDown()
-                .onTrue(new InstantCommand(
-                        () -> AlgaePivotSubsystem.getInstance().setPivotSpeedManual(-0.2)))
-                .onFalse(new InstantCommand(
-                        () -> AlgaePivotSubsystem.getInstance().setPivotSpeedManual(0.0)));
+                .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
+                .onTrue(superstructure.set(TargetAction.UA, false));
+        controlBoard.setGoalCoralStation().onTrue(superstructure.set(TargetAction.STOW, false));
+        controlBoard.homeElevator().onTrue(superstructure.set(TargetAction.HM, false));
 
         controlBoard.climbUp().whileTrue(ClimberCommandFactory.climberUp());
         controlBoard.climbDown().whileTrue(ClimberCommandFactory.climberDown());
 
-        // controlBoard.sysIDQuasiForward().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        // controlBoard.sysIDQuasiReverse().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-        // controlBoard.sysIDDynamicForward().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        // controlBoard.sysIDDynamicReverse().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        // controlBoard
-        //     .shoot()
-        //     .onTrue(Commands.runOnce(SignalLogger::start))
-        //     .onFalse(Commands.runOnce(SignalLogger::stop));
+        controlBoard.algaeScoreAngle().onTrue(superstructure.set(TargetAction.AS, false));
+        controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.AP, false));
 
+        /* SysID */
+        controlBoard.sysIDDynamicForward().onTrue(SuperstructureCommandFactory.setCoast());
+        controlBoard.sysIDDynamicReverse().onTrue(SuperstructureCommandFactory.setBrake());
+        // controlBoard.sysIDQuasiForward().whileTrue(intakePivot.sysIdQuasistatic(Direction.kForward));
+        // controlBoard.sysIDQuasiReverse().whileTrue(intakePivot.sysIdQuasistatic(Direction.kReverse));
+        // controlBoard.sysIDDynamicForward().whileTrue(intakePivot.sysIdDynamic(Direction.kForward));
+        // controlBoard.sysIDDynamicReverse().whileTrue(intakePivot.sysIdDynamic(Direction.kReverse));
         // controlBoard
-        //     .manualUp()
-        //     .onTrue(ElevatorSubsystem.getInstance().manualUp())
-        //     .onFalse(ElevatorSubsystem.getInstance().stopElevator());
-
-        // controlBoard
-        //     .manualDown()
-        //     .onTrue(ElevatorSubsystem.getInstance().manualDown())
-        //     .onFalse(ElevatorSubsystem.getInstance().stopElevator());
+        //         .outtake()
+        //         .onTrue(Commands.runOnce(SignalLogger::start))
+        //         .onFalse(Commands.runOnce(SignalLogger::stop));
     }
 
     private void configurePOVBindings() {

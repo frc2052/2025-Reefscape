@@ -23,6 +23,7 @@ public class Dashboard {
     // private final LoggedDashboardChooser<Boolean> stationSideChooser =
     //     new LoggedDashboardChooser<Boolean>("Auto Station Side");
 
+    private final LoggedDashboardChooser<Boolean> coastChooser = new LoggedDashboardChooser<Boolean>("Coast Out");
     private final NetworkTableInstance networkTables = NetworkTableInstance.getDefault();
     private final NetworkTable debugTable = networkTables.getTable("debug network tables tab");
     private final DoubleTopic waitTimeTopic = debugTable.getDoubleTopic("waitTime");
@@ -55,6 +56,9 @@ public class Dashboard {
 
         bump.addDefaultOption("No Bump Needed", false);
         bump.addOption("Bump Needed", true);
+
+        coastChooser.addDefaultOption("BRAKE", false);
+        coastChooser.addOption("COAST", true);
 
         // stationSideChooser.addDefaultOption("Right Side", true);
         // stationSideChooser.addOption("Left Side", false);
@@ -90,6 +94,10 @@ public class Dashboard {
 
     public boolean getBumpNeeded() {
         return bump.get();
+    }
+
+    public boolean getCoastOut() {
+        return coastChooser.get();
     }
 
     // Enums for Dashboard elements:

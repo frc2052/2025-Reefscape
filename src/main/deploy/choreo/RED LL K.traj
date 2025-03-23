@@ -1,0 +1,30 @@
+{
+ "name":"RED LL K",
+ "version":1,
+ "snapshot":{
+  "waypoints":[],
+  "constraints":[],
+  "targetDt":0.05
+ },
+ "params":{
+  "waypoints":[
+    {"x":{"exp":"16.172592163085938 m", "val":16.172592163085938}, "y":{"exp":"0.7697957158088684 m", "val":0.7697957158088684}, "heading":{"exp":"2.173085890009617 rad", "val":2.173085890009617}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"14.647533416748047 m", "val":14.647533416748049}, "y":{"exp":"2.047546863555908 m", "val":2.047546863555908}, "heading":{"exp":"2.2367658317995445 rad", "val":2.2367658317995445}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"13.575871467590332 m", "val":13.575871467590332}, "y":{"exp":"2.8306846618652344 m", "val":2.8306846618652344}, "heading":{"exp":"2.1262902408046354 rad", "val":2.1262902408046354}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
+  "constraints":[
+    {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
+    {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
+    {"from":"first", "to":"last", "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"0 m", "val":0.0}, "y":{"exp":"0 m", "val":0.0}, "w":{"exp":"17.548 m", "val":17.548}, "h":{"exp":"8.052 m", "val":8.052}}}, "enabled":false}],
+  "targetDt":{
+   "exp":"0.05 s",
+   "val":0.05
+  }
+ },
+ "trajectory":{
+  "sampleType":null,
+  "waypoints":[],
+  "samples":[],
+  "splits":[]
+ },
+ "events":[]
+}

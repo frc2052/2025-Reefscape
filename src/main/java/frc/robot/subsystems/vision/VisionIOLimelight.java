@@ -55,24 +55,36 @@ public class VisionIOLimelight implements VisionIO {
     }
 
     public void update() {
-        Optional<PoseEstimate> leftEstimate = pollLL(LeftLimelightConstants.CAMERA_NAME, previousLeftEstimate);
-        Optional<PoseEstimate> rightEstimate = pollLL(RightLimelightConstants.CAMERA_NAME, previousRightEstimate);
+        Optional<PoseEstimate> leftEstimate;
+        Optional<PoseEstimate> rightEstimate;
+        if (DriverStation.isDisabled()) {
+            leftEstimate = pollLLMT1(LeftLimelightConstants.CAMERA_NAME, previousLeftEstimate);
+            rightEstimate = pollLLMT1(RightLimelightConstants.CAMERA_NAME, previousRightEstimate);
+        } else {
+            leftEstimate = pollLL(LeftLimelightConstants.CAMERA_NAME, previousLeftEstimate);
+            rightEstimate = pollLL(RightLimelightConstants.CAMERA_NAME, previousRightEstimate);
+        }
 
         double leftStdDev = Double.MAX_VALUE;
         double leftHeadingStdDev = Double.MAX_VALUE;
         double rightStdDev = Double.MAX_VALUE;
         double rightHeadingStdDev = Double.MAX_VALUE;
 
-        if (MathHelpers.chassisSpeedsNorm(robotState.getChassisSpeeds()) < 3.0
-                && (!DriverStation.isAutonomous()
-                        || (robotState
-                                        .getFieldToRobot()
-                                        .getTranslation()
-                                        .getDistance(
-                                                robotState.isRedAlliance()
-                                                        ? FieldConstants.RED_REEF_CENTER
-                                                        : FieldConstants.BLUE_REEF_CENTER)
-                                < 3))) {
+        boolean enabledShouldAccept = DriverStation.isEnabled()
+                && (MathHelpers.chassisSpeedsNorm(robotState.getChassisSpeeds()) < 3.0
+                        && (!DriverStation.isAutonomous()
+                                || (robotState
+                                                .getFieldToRobot()
+                                                .getTranslation()
+                                                .getDistance(
+                                                        robotState.isRedAlliance()
+                                                                ? FieldConstants.RED_REEF_CENTER
+                                                                : FieldConstants.BLUE_REEF_CENTER)
+                                        < 3)));
+
+        boolean disabledShouldAccept = false; // DriverStation.isDisabled();
+
+        if (enabledShouldAccept || disabledShouldAccept) {
             if (leftEstimate.isPresent() && leftEstimate.get().rawFiducials.length > 0) {
                 double closestTagDist = Arrays.stream(leftEstimate.get().rawFiducials)
                         .mapToDouble(fiducial -> fiducial.distToCamera)
@@ -128,7 +140,20 @@ public class VisionIOLimelight implements VisionIO {
         return Optional.empty();
     }
 
-    public boolean hasReefTarget() {
-        return false;
+    public Optional<PoseEstimate> pollLLMT1(String id, PoseEstimate previousEstimate) {
+        if (LimelightHelpers.getTV(id)) {
+            double oldTimestamp = previousEstimate != null ? previousEstimate.timestampSeconds : Double.MAX_VALUE;
+            PoseEstimate newEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(id);
+            if (newEstimate != null) {
+                Logger.recordOutput(id + " MT1 pose", newEstimate.pose);
+                if (newEstimate.timestampSeconds == oldTimestamp) {
+                    return Optional.empty(); // no new data
+                } else {
+                    previousEstimate = newEstimate;
+                    return Optional.of(newEstimate);
+                }
+            }
+        }
+        return Optional.empty();
     }
 }

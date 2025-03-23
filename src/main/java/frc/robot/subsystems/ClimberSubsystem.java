@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.util.io.Ports;
@@ -46,5 +47,9 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public double getSpeed() {
         return motor.get();
+    }
+
+    public void setNeutralMode(NeutralModeValue mode) {
+        motor.setNeutralMode(mode);
     }
 }

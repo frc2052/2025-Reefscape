@@ -45,7 +45,7 @@ public class Constants {
 
     // public static final double ROTATIONS_PER_INCH = (1.0 / 12.0) * 2.0; // wrong
 
-    public static final double TICKS_DEADZONE = 0.5;
+    public static final double TICKS_DEADZONE = 0.25;
 
     public static final double MANUAL_MOTOR_SPEED = 0.2;
     public static final double HOMING_SPEED = -0.1;
@@ -54,12 +54,12 @@ public class Constants {
         new Slot0Configs()
             .withKP(6.0)
             .withKI(0.0)
-            .withKD(3.0)
+            .withKD(1.0)
             .withKS(0.5)
             .withKV(0.0)
             .withKA(0.0)
             .withGravityType(GravityTypeValue.Elevator_Static)
-            .withKG(3.75);
+            .withKG(5.0);
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
@@ -71,9 +71,9 @@ public class Constants {
     // set Motion Magic settings
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(70)
-            .withMotionMagicExpo_kA(0.03)
-            .withMotionMagicExpo_kV(0.01);
+            .withMotionMagicCruiseVelocity(0)
+            .withMotionMagicExpo_kA(0.005)
+            .withMotionMagicExpo_kV(0.025);
             // .withMotionMagicAcceleration(160) 
             // .withMotionMagicJerk(600);
 
@@ -138,7 +138,7 @@ public class Constants {
     public static final Angle HEADING_TOLERANCE = Degrees.of(3);
   }
 
-  public static class CoralArmConstants {
+  public static class ArmPivotConstants {
     public static final boolean ARM_MOTOR_INVERTED = true;
     public static final double DEG_TOL = 2.5;
 
@@ -163,10 +163,17 @@ public class Constants {
             .withKV(11.7) //11.7
             .withKA(0.0);
 
+    
+    public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
+            new MotionMagicConfigs()
+                .withMotionMagicCruiseVelocity(8)
+                .withMotionMagicAcceleration(8) 
+                .withMotionMagicJerk(16);
+
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
             .withInverted(
-                CoralArmConstants.ARM_MOTOR_INVERTED
+                ArmPivotConstants.ARM_MOTOR_INVERTED
                     ? InvertedValue.Clockwise_Positive
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake); 
@@ -194,12 +201,13 @@ public class Constants {
             .withCurrentLimits(CURRENT_LIMIT_CONFIG);
   }
 
-  public static class HandConstants {
-    public static final boolean HAND_MOTOR_INVERTED = true;
-    public static final double IN_HAND_MOTOR_SPEED = 0.33;
-    public static final double SCORE_L1_MOTOR_SPEED = 0.2052;
-    public static final double OUT_HAND_MOTOR_SPEED = 0.35;
-    public static final double HAND_RANGE_CORAL_SEEN = 0.4;
+  public static class ArmRollerConstants {
+    public static final boolean MOTOR_INVERTED = true;
+    public static final double CORAL_IN_SPEED = -0.33;
+    public static final double CORAL_L1_OUT_SPEED = 0.2052;
+    public static final double CORAL_OUT_SPEED = 0.35;
+    public static final double ALGAE_IN_SPEED = 0.5;
+    public static final double ALGAE_OUT_SPEED = -1.00;
 
     public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()
     .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
@@ -208,7 +216,7 @@ public class Constants {
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
             .withInverted(
-              HandConstants.HAND_MOTOR_INVERTED
+              ArmRollerConstants.MOTOR_INVERTED
                     ? InvertedValue.Clockwise_Positive
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake); 
@@ -223,64 +231,91 @@ public class Constants {
     .withAudio(new AudioConfigs().withBeepOnBoot(false));
   }
 
-  public static class AlgaePivotConstants {
+  public static final class IntakePivotConstants {
     public static final boolean MOTOR_INVERTED = true;
-    public static final double TOLERANCE = 1.0;
+    public static final double DEG_TOL = 2.5;
+
+    public static final double MOTOR_RANGE = 19.568359375; // rotations
+    public static final double ENCODER_RANGE = 0.306; // rotations
+
+    public static final Angle ENCODER_OFFSET = Rotations.of(-0.473512);
+
+    public static final double MIN_INTAKE_ARM_ANGLE = 0;
+    public static final double MAX_INTAKE_ARM_ANGLE = 20;
+
+    public static final double kS = 0.0;
+    public static final double kG = 0.3;
+    public static final double kV = 0.0;
+    public static final double kA = 0.0;
+
+    public static final double MAX_VELOCITY = 36 * Math.PI;
+    public static final double MAX_ACCELERATION = 350;
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
-            .withSupplyCurrentLimitEnable(false)
+            .withSupplyCurrentLimitEnable(true)
             .withSupplyCurrentLimit(Amps.of(70))
-            .withSupplyCurrentLowerLimit(Amps.of(40))
-            .withStatorCurrentLimit(Amps.of(120))
+            .withSupplyCurrentLowerLimit(Amps.of(30))
+            .withStatorCurrentLimit(Amps.of(100))
             .withSupplyCurrentLowerTime(Seconds.of(0.2));
-
-    public static final FeedbackConfigs FEEDBACK_CONFIG =
-    new FeedbackConfigs()
-        .withFeedbackRemoteSensorID(Ports.ALGAE_ENCODER_ID)
-        .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-        .withRotorToSensorRatio(100)
-        .withSensorToMechanismRatio(1);
+            
+    public static final Slot0Configs SLOT0_CONFIGS = 
+        new Slot0Configs()
+            .withKP(75.0) // 22.673
+            .withKI(0.0)
+            .withKD(7.0); // 14.89
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
             .withInverted(
-                MOTOR_INVERTED
+                IntakePivotConstants.MOTOR_INVERTED
                     ? InvertedValue.Clockwise_Positive
                     : InvertedValue.CounterClockwise_Positive)
-            .withNeutralMode(NeutralModeValue.Brake);
+            .withNeutralMode(NeutralModeValue.Brake); 
 
+    // public static final FeedbackConfigs FEEDBACK_CONFIG =
+    //     new FeedbackConfigs()
+    //         .withFeedbackRemoteSensorID(Ports.INTAKE_ENCODER_ID)
+    //         .withFeedbackSensorSource(FeedbackSensorSourceValue.SyncCANcoder)
+    //         .withRotorToSensorRatio(58.333)
+    //         .withSensorToMechanismRatio(1);
+    
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
         new SoftwareLimitSwitchConfigs()
-            .withForwardSoftLimitThreshold(Degrees.of(260)) // TODO: adjust as needed
+            .withForwardSoftLimitThreshold(MIN_INTAKE_ARM_ANGLE)
             .withForwardSoftLimitEnable(true)
-            .withReverseSoftLimitThreshold(Degrees.of(115))
+            .withReverseSoftLimitThreshold(MAX_INTAKE_ARM_ANGLE)
             .withReverseSoftLimitEnable(true);
-
-    public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
-      .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-      .withSoftwareLimitSwitch(LIMIT_SWITCH_CONFIGS)
-      .withFeedback(FEEDBACK_CONFIG)
-      .withCurrentLimits(CURRENT_LIMIT_CONFIG);
+    
+    public static final TalonFXConfiguration MOTOR_CONFIG = 
+        new TalonFXConfiguration()
+            .withSlot0(SLOT0_CONFIGS)
+            .withMotorOutput(MOTOR_OUTPUT_CONFIG)
+            .withAudio(new AudioConfigs().withBeepOnBoot(false))
+            .withCurrentLimits(CURRENT_LIMIT_CONFIG);
   }
 
-  public static class AlgaeShooterConstants {
-      public static final double MOTOR_CURRENT_LIMIT = 60.0;
-      public static final double INTAKE_SPEED = 1.0;
-      public static final double SCORE_SPEED = -1.0;
+  public static final class IntakeRollerConstants {
+    public static final boolean MOTOR_INVERTED = false;
+    public static final double INTAKE_SPEED = -1.00;
+    public static final double OUTTAKE_SPEED = 0.35;
 
-      public static final boolean MOTOR_INVERTED = false;
+    public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
+        new MotorOutputConfigs()
+            .withInverted(
+              IntakeRollerConstants.MOTOR_INVERTED
+                    ? InvertedValue.Clockwise_Positive
+                    : InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake); 
 
-      public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
-          new MotorOutputConfigs()
-              .withInverted(
-                  MOTOR_INVERTED
-                      ? InvertedValue.Clockwise_Positive
-                      : InvertedValue.CounterClockwise_Positive)
-              .withNeutralMode(NeutralModeValue.Brake); 
-
-      public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
-        .withMotorOutput(MOTOR_OUTPUT_CONFIG);
+    public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIG = new CurrentLimitsConfigs()
+    .withSupplyCurrentLimit(20.0)
+    .withSupplyCurrentLimitEnable(true);
+    
+    public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
+    .withMotorOutput(MOTOR_OUTPUT_CONFIG)
+    .withCurrentLimits(CURRENT_LIMITS_CONFIG)
+    .withAudio(new AudioConfigs().withBeepOnBoot(false));
   }
   
   public static final class ClimberConstants {
@@ -293,6 +328,13 @@ public class Constants {
     ).withCurrentLimits(
       new CurrentLimitsConfigs()
     );
+  }
+
+  public static final class SuperstructureConstants {
+    public static final double MIN_SAFE_ROTATION = 11.0;
+    public static final double MIN_MOVE_ROTATION = 45.0;
+    public static final double RIGHT_LIMIT = 215;
+    public static final double LEFT_LIMIT = 295;
   }
 
   public static class VisionConstants {
@@ -322,10 +364,10 @@ public class Constants {
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
       public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
       public static final Angle THETA_Z_OFFSET = Degrees.of(23); // yaw
-    }
-    /* CORAL Reef Camera */
+    }  
+
     public static final class CoralReefCameraConstants {
-      public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =  FieldConstants.CORAL_REEF_CAMERA_LAYOUT_TYPE.layout;
+      public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =  FieldConstants.DEFAULT_APRIL_TAG_LAYOUT;
       public static final String CAMERA_NAME = "Arducam_OV2311_USB_Camera_001";
 
       public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
@@ -348,34 +390,7 @@ public class Constants {
             CAMERA_NAME, ROBOT_TO_CAMERA, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
       }
     }
-
-    /* ALGAE Reef Camera */
-    public static final class AlgaeReefCameraConstants {      
-        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = FieldConstants.ALGAE_REEF_CAMERA_LAYOUT_TYPE.layout;
-  
-        public static final String CAMERA_NAME = "Arducam_OV9281_USB_Camera_002";
-  
-        public static final PoseStrategy STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
-  
-        public static final Distance X_OFFSET = Inches.of(4.614); // forward
-        public static final Distance Y_OFFSET = Inches.of(9.995); // left
-        public static final Distance Z_OFFSET = Inches.of(8.418); // up
-  
-        public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
-        public static final Angle THETA_Y_OFFSET = Degrees.of(-21.55352); // pitch
-        public static final Angle THETA_Z_OFFSET = Degrees.of(90); // yaw
-  
-        public static final Transform3d ROBOT_TO_CAMERA_METERS =
-            new Transform3d(
-                new Translation3d(X_OFFSET, Y_OFFSET, Z_OFFSET),
-                new Rotation3d(THETA_X_OFFSET, THETA_Y_OFFSET, THETA_Z_OFFSET));
-  
-        public static TagTrackerConstants TagTrackerConstants() {
-          return new TagTrackerConstants(
-              CAMERA_NAME, ROBOT_TO_CAMERA_METERS, APRIL_TAG_FIELD_LAYOUT, STRATEGY);
-        }
-      }  
-    }
+  }
 
   
   public static final class DashboardConstants {

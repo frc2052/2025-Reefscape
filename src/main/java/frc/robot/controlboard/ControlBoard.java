@@ -126,8 +126,13 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
     }
 
     @Override
-    public Trigger intakeAlgae() {
-        return primaryControlBoard.intakeAlgae();
+    public Trigger rollerTap() {
+        return primaryControlBoard.rollerTap();
+    }
+
+    @Override
+    public Trigger groundOuttake() {
+        return primaryControlBoard.groundOuttake();
     }
 
     @Override

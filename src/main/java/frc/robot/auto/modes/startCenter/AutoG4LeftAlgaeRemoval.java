@@ -8,8 +8,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.auto.common.AutoDescription;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
 @AutoDescription(description = "CENTER Side")
@@ -26,7 +24,7 @@ public class AutoG4LeftAlgaeRemoval extends AutoBase {
         addCommands(getBumpCommand());
         addCommands(delaySelectedTime());
 
-        addCommands(safeReefAlignment(startPath, AlignOffset.MIDDLE_REEF, FieldElementFace.GH));
+        // addCommands(safeReefAlignment(startPath, AlignOffset.MIDDLE_REEF, FieldElementFace.GH));
         addCommands(toPosAndScore(TargetAction.L4));
         addCommands(descoreScoreNetAlgae(Paths.GH_SCORE_TO_DESCORE, TargetAction.LA, Paths.GH_NET));
         addCommands(descoreScoreNetAlgae(Paths.NET_IJ, TargetAction.UA, Paths.IJ_NET));

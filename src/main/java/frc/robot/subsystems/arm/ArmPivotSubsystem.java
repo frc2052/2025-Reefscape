@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.arm;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
@@ -11,36 +11,38 @@ import static edu.wpi.first.units.Units.Volts;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.CoralArmConstants;
+import frc.robot.Constants.ArmPivotConstants;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
-public class CoralArmSubsystem extends SubsystemBase {
+public class ArmPivotSubsystem extends SubsystemBase {
     private final TalonFX pivotMotor;
     private Angle goalPosition;
 
-    private static CoralArmSubsystem INSTANCE;
+    private static ArmPivotSubsystem INSTANCE;
 
-    public static CoralArmSubsystem getInstance() {
+    public static ArmPivotSubsystem getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new CoralArmSubsystem();
+            INSTANCE = new ArmPivotSubsystem();
         }
         return INSTANCE;
     }
 
-    private CoralArmSubsystem() {
-        goalPosition = TargetAction.HP.getCoralArmAngle();
+    private ArmPivotSubsystem() {
+        goalPosition = TargetAction.STOW.getArmPivotAngle();
 
         pivotMotor = new TalonFX(Ports.ARM_TALONFX_ID);
 
-        pivotMotor.getConfigurator().apply(CoralArmConstants.MOTOR_CONFIG);
+        pivotMotor.getConfigurator().apply(ArmPivotConstants.MOTOR_CONFIG);
     }
 
     public Command runPct(double pct) {
@@ -64,17 +66,17 @@ public class CoralArmSubsystem extends SubsystemBase {
     }
 
     public void setArmPosition(TargetAction position) {
-        this.goalPosition = clampPosition(position.getCoralArmAngle());
+        this.goalPosition = clampPosition(position.getArmPivotAngle());
         setPivotAngle(goalPosition);
     }
 
-    private Angle clampPosition(Angle pos) {
-        if (pos.in(Degrees) < CoralArmConstants.MIN_CORAL_ARM_ANGLE.in(Degrees)) {
+    public Angle clampPosition(Angle pos) {
+        if (pos.in(Degrees) < ArmPivotConstants.MIN_CORAL_ARM_ANGLE.in(Degrees)) {
             System.out.println("DESIRED ANGLE BEYOND MIN LIMIT");
-            return CoralArmConstants.MIN_CORAL_ARM_ANGLE;
-        } else if (pos.in(Degrees) > CoralArmConstants.MAX_CORAL_ARM_ANGLE.in(Degrees)) {
+            return ArmPivotConstants.MIN_CORAL_ARM_ANGLE;
+        } else if (pos.in(Degrees) > ArmPivotConstants.MAX_CORAL_ARM_ANGLE.in(Degrees)) {
             System.out.println("DESIRED ANGLE BEYOND MAX LIMIT");
-            return CoralArmConstants.MAX_CORAL_ARM_ANGLE;
+            return ArmPivotConstants.MAX_CORAL_ARM_ANGLE;
         }
 
         return pos;
@@ -89,7 +91,7 @@ public class CoralArmSubsystem extends SubsystemBase {
     }
 
     public boolean isAtDesiredPosition() {
-        return isAtDesiredPosition(CoralArmConstants.DEG_TOL);
+        return isAtDesiredPosition(ArmPivotConstants.DEG_TOL);
     }
 
     public boolean isAtDesiredPosition(double tol) {
@@ -100,17 +102,26 @@ public class CoralArmSubsystem extends SubsystemBase {
         return Math.abs(getPosition().in(Degrees) - goal.in(Degrees)) <= tol;
     }
 
+    public boolean atPosition(TargetAction action) {
+        return isAtPosition(ArmPivotConstants.DEG_TOL, action.getArmPivotAngle());
+    }
+
     public Angle getPosition() {
         return Rotations.of(pivotMotor.getPosition().getValueAsDouble());
+    }
+
+    public void setNeutralMode(NeutralModeValue mode) {
+        pivotMotor.setNeutralMode(mode);
     }
 
     @Override
     public void periodic() {
         Logger.recordOutput("Coral Arm/Angle", getPosition().in(Degrees));
         Logger.recordOutput("Coral Arm/Goal Angle", goalPosition.in(Degrees));
-        // Logger.recordOutput("Coral Arm/Motor Set Speed", pivotMotor.get());
-        // Logger.recordOutput("Coral Arm/Velocity", pivotMotor.getVelocity().getValueAsDouble());
-        // Logger.recordOutput("Coral Arm/At Goal", isAtDesiredPosition(5));
+
+        if (DriverStation.isDisabled()) {
+            goalPosition = getPosition();
+        }
     }
 
     /* SysId routine for characterizing arm. This is used to find PID gains for the arm motor. */

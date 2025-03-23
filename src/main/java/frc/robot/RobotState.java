@@ -5,6 +5,8 @@ import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
@@ -74,6 +76,10 @@ public class RobotState {
                 getAlignPose().getTranslation().getDistance(getFieldToRobot().getTranslation()));
     }
 
+    public Command setAlignOffsetCommand(AlignOffset offset) {
+        return new InstantCommand(() -> setAlignOffset(offset));
+    }
+
     public void setAlignOffset(AlignOffset offset) {
         // System.out.println("NEW OFFSET " + offset.toString());
         selectedAlignOffset = offset;
@@ -91,11 +97,15 @@ public class RobotState {
         desiredReefFace = reefFace;
     }
 
-    public boolean shouldAlign() {
+    public boolean shouldAlign(double dist) { // only used in auto
         return getFieldToRobot()
                         .getTranslation()
                         .getDistance(isRedAlliance() ? FieldConstants.RED_REEF_CENTER : FieldConstants.BLUE_REEF_CENTER)
-                < 3.0;
+                < dist;
+    }
+
+    public boolean shouldAlignAutonomous(double dist) {
+        return desiredReefFaceIsSeen() && shouldAlign(dist);
     }
 
     public Pose2d getAlignPose() {
