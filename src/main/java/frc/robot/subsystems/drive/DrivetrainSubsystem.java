@@ -1,5 +1,9 @@
 package frc.robot.subsystems.drive;
 
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
+
+import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -9,13 +13,9 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team2052.lib.vision.photon.PoseEstimate;
-
-import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -123,21 +123,22 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
         configNeutralMode(mode);
     }
 
-    public void followTrajectory(SwerveSample sample){
+    public void followTrajectory(SwerveSample sample) {
         ChassisSpeeds speeds = new ChassisSpeeds(
-            sample.vx + choreoXController.calculate(getState().Pose.getX(), sample.x), 
-            sample.vy + choreoXController.calculate(getState().Pose.getY(), sample.y), 
-            sample.omega + choreoThetaController.calculate(getState().Pose.getRotation().getRadians(), sample.heading)
-        );
+                sample.vx + choreoXController.calculate(getState().Pose.getX(), sample.x),
+                sample.vy + choreoXController.calculate(getState().Pose.getY(), sample.y),
+                sample.omega
+                        + choreoThetaController.calculate(
+                                getState().Pose.getRotation().getRadians(), sample.heading));
 
         // apply chassis speeds field relative
-        DrivetrainSubsystem
-            .getInstance().setControl(
-                autoRequest.withSpeeds(speeds)
-                // TODO: do we need feedfowards?
-                    // .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-                    // .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
-        );
+        DrivetrainSubsystem.getInstance()
+                .setControl(
+                        autoRequest.withSpeeds(speeds)
+                        // TODO: do we need feedfowards?
+                        // .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+                        // .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
+                        );
     }
 
     @Override

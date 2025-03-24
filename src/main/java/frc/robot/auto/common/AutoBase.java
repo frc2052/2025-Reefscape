@@ -4,16 +4,11 @@
 
 package frc.robot.auto.common;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import com.team2052.lib.helpers.MathHelpers;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,6 +32,9 @@ import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -164,10 +162,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     protected Command safeStationAlignment(Path altAlignPath) {
         return followPathCommand(altAlignPath.getChoreoPath())
-                .alongWith(new InstantCommand(() -> ArmRollerSubsystem.getInstance().coralIn()))
-                .alongWith(
-                    new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
-                .beforeStarting(new WaitCommand(0.5)));
+                .alongWith(new InstantCommand(
+                        () -> ArmRollerSubsystem.getInstance().coralIn()))
+                .alongWith(new InstantCommand(
+                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
+                        .beforeStarting(new WaitCommand(0.5)));
     }
 
     protected Command combinedReefChassisElevatorAlign(
@@ -257,31 +256,26 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 .andThen(new PrintCommand("CLOSE ENOUGH**************"));
     }
 
-    protected Command descoreAlgae(
-        Path toPosition,
-        TargetAction algaeLevel)
-    {
-        return 
-            followPathCommand(toPosition.getChoreoPath())
-            .alongWith(
-                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel))
-                .andThen(new InstantCommand(() -> ArmRollerSubsystem.getInstance().coralIn())))
-            .andThen(new WaitCommand(1.0)); // wait to ensure algae grab
+    protected Command descoreAlgae(Path toPosition, TargetAction algaeLevel) {
+        return followPathCommand(toPosition.getChoreoPath())
+                .alongWith(new InstantCommand(
+                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel))
+                        .andThen(new InstantCommand(
+                                () -> ArmRollerSubsystem.getInstance().coralIn())))
+                .andThen(new WaitCommand(1.0)); // wait to ensure algae grab
     }
 
-    protected Command scoreNet(
-        Path score,
-        TargetAction algaeLevel) 
-    {
+    protected Command scoreNet(Path score, TargetAction algaeLevel) {
         return followPathCommand(score.getChoreoPath())
-                .alongWith(
-                    Commands.waitUntil(() -> true) // TODO: event marker to raise
-                    .andThen(new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))))
-                .andThen(
-                    Commands.waitUntil(() -> SuperstructureSubsystem.getInstance().isAtTargetState())
-                    .andThen(ArmCommandFactory.algaeIn()).withTimeout(0.2)
-                    .andThen(ArmCommandFactory.algaeOut()).withTimeout(1.0)
-                )
+                .alongWith(Commands.waitUntil(() -> true) // TODO: event marker to raise
+                        .andThen(new InstantCommand(
+                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))))
+                .andThen(Commands.waitUntil(
+                                () -> SuperstructureSubsystem.getInstance().isAtTargetState())
+                        .andThen(ArmCommandFactory.algaeIn())
+                        .withTimeout(0.2)
+                        .andThen(ArmCommandFactory.algaeOut())
+                        .withTimeout(1.0))
                 .andThen(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE));
     }
 
@@ -293,7 +287,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
             chorPathName = chorName;
         }
 
-        public String getTrajName(){
+        public String getTrajName() {
             return chorPathName;
         }
 
@@ -322,6 +316,18 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     public static final class PathsBase {
 
+        // L1 backups
+        // TODO: validate pathplanner paths (not going to use but prevent error)
+        public static final Path B_SL_IJ = new Path("SL IJ", "BLUE SL IJ"); //
+        public static final Path R_SL_IJ = new Path("SL IJ", "RED SL IJ"); //
+        public static final Path B_IJ_LL = new Path("IJ LL", "BLUE IJ LL");
+        public static final Path R_IJ_LL = new Path("IJ LL", "RED IJ LL");
+
+        public static final Path B_LL_KL = new Path("LL KL", "BLUE LL KL");
+        public static final Path R_LL_KL = new Path("LL KL", "RED LL KL");
+        public static final Path B_KL_LL = new Path("KL LL", "BLUE KL LL");
+        public static final Path R_KL_LL = new Path("KL LL", "RED KL LL");
+
         // J4K4L4
         public static final Path B_SL_J = new Path("SL J", "BLUE SL J");
         public static final Path B_J_LL = new Path("J LL", "BLUE J LL");
@@ -343,7 +349,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         public static final Path B_RL_D = new Path("RL D", "BLUE RL D");
         public static final Path B_D_RL = new Path("D RL", "BLUE D RL");
         public static final Path B_RL_C = new Path("RL C", "BLUE RL C");
-        
+
         public static final Path R_SR_E = new Path("SR E", "RED SR E");
         public static final Path R_SR_F = new Path("SR F", "RED SR F");
         public static final Path R_E_RL = new Path("E RL", "RED E RL");
@@ -351,13 +357,13 @@ public abstract class AutoBase extends SequentialCommandGroup {
         public static final Path R_RL_D = new Path("RL D", "RED RL D");
         public static final Path R_D_RL = new Path("D RL", "RED D RL");
         public static final Path R_RL_C = new Path("RL C", "RED RL C");
-       
+
         // 5.5 y val for blue net score
-        // 5.5 y val for 
+        // 5.5 y val for
 
         // GH
         public static final Path B_SC_G = new Path("SC G", "BLUE SC G"); //
-        public static final Path B_SC_H = new Path("SC H", "BLUE SC H"); // 
+        public static final Path B_SC_H = new Path("SC H", "BLUE SC H"); //
         public static final Path R_SC_G = new Path("SC G", "RED SC G"); //
         public static final Path R_SC_H = new Path("SC H", "RED SC H"); //
 
@@ -385,14 +391,14 @@ public abstract class AutoBase extends SequentialCommandGroup {
         // score to descore
         // TODO: EVENT MARKERS @ OUTERMOST POINT CALLED OUTERMOST
 
-        public static final Path B_GH_SCORE_TO_DESCORE = new Path("GH Descore Algae", "BLUE GH Reposition"); //
-        public static final Path R_GH_SCORE_TO_DESCORE = new Path("GH Descore Algae", "RED GH Reposition"); //
+        public static final Path B_GH_REPOSITION = new Path("GH Descore Algae", "BLUE GH Reposition"); //
+        public static final Path R_GH_REPOSITION = new Path("GH Descore Algae", "RED GH Reposition"); //
 
-        public static final Path B_KL_SCORE_TO_DESCORE = new Path("KL Descore Algae", "BLUE KL Reposition"); //
-        public static final Path R_KL_SCORE_TO_DESCORE = new Path("KL Descore Algae", "RED KL Reposition"); //
+        public static final Path B_KL_REPOSITION = new Path("KL Descore Algae", "BLUE KL Reposition"); //
+        public static final Path R_KL_REPOSITION = new Path("KL Descore Algae", "RED KL Reposition"); //
 
-        public static final Path B_IJ_SCORE_TO_DESCORE = new Path("IJ Descore Algae", "BLUE IJ Reposition"); //
-        public static final Path R_IJ_SCORE_TO_DESCORE = new Path("IJ Descore Algae", "RED IJ Reposition"); //
+        public static final Path B_IJ_REPOSITION = new Path("IJ Descore Algae", "BLUE IJ Reposition"); //
+        public static final Path R_IJ_REPOSITION = new Path("IJ Descore Algae", "RED IJ Reposition"); //
     }
 
     public static final class Paths {

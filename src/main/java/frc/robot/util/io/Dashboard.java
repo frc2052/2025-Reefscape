@@ -8,12 +8,16 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.common.AutoFactory.Auto;
+import frc.robot.auto.common.AutoFactory.ChoreoAuto;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class Dashboard {
     private final LoggedDashboardChooser<DriveMode> driveModeChooser = new LoggedDashboardChooser<>("Drive Mode");
 
     private final LoggedDashboardChooser<Auto> autoChooser = new LoggedDashboardChooser<Auto>("Auto Mode");
+
+    private final LoggedDashboardChooser<ChoreoAuto> choreoAutoChooser =
+            new LoggedDashboardChooser<ChoreoAuto>("Choreo Auto");
 
     private final LoggedDashboardChooser<Double> waitSecondsChooser =
             new LoggedDashboardChooser<Double>("Wait Seconds");
@@ -60,8 +64,11 @@ public class Dashboard {
         coastChooser.addDefaultOption("BRAKE", false);
         coastChooser.addOption("COAST", true);
 
-        // stationSideChooser.addDefaultOption("Right Side", true);
-        // stationSideChooser.addOption("Left Side", false);
+        // choreo autos
+        choreoAutoChooser.addDefaultOption("NO AUTO", ChoreoAuto.NO_AUTO);
+        for (ChoreoAuto auto : ChoreoAuto.values()) {
+            choreoAutoChooser.addOption(auto.name(), auto);
+        }
     }
 
     public <V> void putData(String key, V value) {
@@ -86,6 +93,10 @@ public class Dashboard {
 
     public Auto getAuto() {
         return autoChooser.get();
+    }
+
+    public ChoreoAuto getChoreoAuto() {
+        return choreoAutoChooser.get();
     }
 
     public double getWaitSeconds() {

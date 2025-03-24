@@ -1,6 +1,14 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Pounds;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
@@ -31,7 +39,12 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.measure.*;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Mass;
 import frc.robot.subsystems.drive.ctre.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import frc.robot.util.FieldConstants;
@@ -396,6 +409,7 @@ public class Constants {
   public static final class DashboardConstants {
     public static final String DRIVE_MODE_KEY = "Drive Mode";
     public static final String AUTO_COMPILED_KEY = "Auto Compiled";
+    public static final String CHOREO_AUTO_COMPILED = "Choreo Auto Compiled";
     public static final String AUTO_DESCRIPTION_KEY = "Auto Description";
     public static final String WAIT_SECONDS_SAVED_KEY = "Wait Seconds Saved";
     public static final String WAIT_SECONDS_DISPLAY_KEY = "Wait Seconds Display";

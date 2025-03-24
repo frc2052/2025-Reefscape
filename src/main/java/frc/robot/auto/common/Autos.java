@@ -4,13 +4,11 @@
 
 package frc.robot.auto.common;
 
-import java.util.function.BooleanSupplier;
-
-import com.team2052.lib.helpers.MathHelpers;
-
+import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,25 +29,38 @@ import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
+import java.util.function.BooleanSupplier;
 
 /** Add your docs here. */
 public class Autos {
 
     private final AutoFactory autoFactory;
+    private final AutoChooser autoChooser;
     private final BooleanSupplier flip = () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
-    
-    public Autos(){
+
+    private static Autos INSTANCE;
+
+    public static Autos getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new Autos();
+        }
+        return INSTANCE;
+    }
+
+    public Autos() {
         autoFactory = new AutoFactory(
-            () -> DrivetrainSubsystem.getInstance().getState().Pose, 
-            DrivetrainSubsystem.getInstance()::resetPose, 
-            // follow trajectory
-            DrivetrainSubsystem.getInstance()::followTrajectory, 
-            flip.getAsBoolean(),
-            DrivetrainSubsystem.getInstance());
+                () -> DrivetrainSubsystem.getInstance().getState().Pose,
+                DrivetrainSubsystem.getInstance()::resetPose,
+                // follow trajectory
+                DrivetrainSubsystem.getInstance()::followTrajectory,
+                flip.getAsBoolean(),
+                DrivetrainSubsystem.getInstance());
+
+        autoChooser = new AutoChooser();
     }
 
     // ---------- AUTO 1: J4K4L4 -------- //
-    public AutoRoutine J4K4L4(){
+    public Command J4K4L4() {
         AutoRoutine J4K4L4 = autoFactory.newRoutine("J4K4L4");
 
         // load trajectories
@@ -59,55 +70,44 @@ public class Autos {
         AutoTrajectory load2 = J4K4L4.trajectory(AutoBase.PathsBase.B_K_LL.getTrajName());
         AutoTrajectory score3 = J4K4L4.trajectory(AutoBase.PathsBase.B_LL_L.getTrajName());
 
+        J4K4L4.active()
+                .onTrue(Commands.sequence(
+                        startPath.resetOdometry(),
 
-        J4K4L4.active().onTrue(
-            Commands.sequence(
-                startPath.resetOdometry(),
+                        // score preload
+                        reefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
+                                .alongWith(prepareForScore(TargetAction.L4))
+                                .andThen(new PrintCommand("AUTO ALIGNMENT DONE")
+                                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
+                                        .andThen(score(TargetAction.L4)))
 
-                // score preload
-                reefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
-                    .alongWith(prepareForScore(TargetAction.L4))
-                    .andThen(
-                        new PrintCommand("AUTO ALIGNMENT DONE")
-                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
-                        .andThen(score(TargetAction.L4))
-                    )
-                
-                // pickup 2nd coral
-                .andThen(loadWithPath(load1))
+                                // pickup 2nd coral
+                                .andThen(loadWithPath(load1))
 
-                // score 2nd coral
-                .andThen(
-                    reefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
-                        .alongWith(prepareForScore(TargetAction.L4))
-                        .andThen(
-                            new PrintCommand("AUTO ALIGNMENT DONE")
-                            .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
-                            .andThen(score(TargetAction.L4))
-                        )
-                )
+                                // score 2nd coral
+                                .andThen(reefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
+                                        .alongWith(prepareForScore(TargetAction.L4))
+                                        .andThen(new PrintCommand("AUTO ALIGNMENT DONE")
+                                                .andThen(ArmCommandFactory.coralIn()
+                                                        .withTimeout(0.05))
+                                                .andThen(score(TargetAction.L4))))
 
-                // pickup 3rd coral
-                .andThen(loadWithPath(load2))
+                                // pickup 3rd coral
+                                .andThen(loadWithPath(load2))
 
-                // score 3rd coral
-                .andThen(
-                    reefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
-                        .alongWith(prepareForScore(TargetAction.L4))
-                        .andThen(
-                            new PrintCommand("AUTO ALIGNMENT DONE")
-                            .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
-                            .andThen(score(TargetAction.L4))
-                        )
-                )
-            )
-        );
-        
-        return J4K4L4;
+                                // score 3rd coral
+                                .andThen(reefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
+                                        .alongWith(prepareForScore(TargetAction.L4))
+                                        .andThen(new PrintCommand("AUTO ALIGNMENT DONE")
+                                                .andThen(ArmCommandFactory.coralIn()
+                                                        .withTimeout(0.05))
+                                                .andThen(score(TargetAction.L4))))));
+
+        return J4K4L4.cmd();
     }
 
     // ---------- AUTO 2: E4D4C4 -------- //
-    public AutoRoutine E4D4C4(){
+    public Command E4D4C4() {
         AutoRoutine E4D4C4 = autoFactory.newRoutine("E4D4C4");
 
         // load trajectories
@@ -117,114 +117,120 @@ public class Autos {
         AutoTrajectory load2 = E4D4C4.trajectory(AutoBase.PathsBase.B_D_RL.getTrajName());
         AutoTrajectory score3 = E4D4C4.trajectory(AutoBase.PathsBase.B_RL_C.getTrajName());
 
+        E4D4C4.active()
+                .onTrue(Commands.sequence(
+                        startPath.resetOdometry(),
 
-        E4D4C4.active().onTrue(
-            Commands.sequence(
-                startPath.resetOdometry(),
+                        // score preload
+                        reefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
+                                .alongWith(prepareForScore(TargetAction.L4))
+                                .andThen(new PrintCommand("AUTO ALIGNMENT DONE")
+                                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
+                                        .andThen(score(TargetAction.L4)))
 
-                // score preload
-                reefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
-                    .alongWith(prepareForScore(TargetAction.L4))
-                    .andThen(
-                        new PrintCommand("AUTO ALIGNMENT DONE")
-                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
-                        .andThen(score(TargetAction.L4))
-                    )
-                
-                // pickup 2nd coral
-                .andThen(loadWithPath(load1))
+                                // pickup 2nd coral
+                                .andThen(loadWithPath(load1))
 
-                // score 2nd coral
-                .andThen(
-                    reefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
-                        .alongWith(prepareForScore(TargetAction.L4))
-                        .andThen(
-                            new PrintCommand("AUTO ALIGNMENT DONE")
-                            .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
-                            .andThen(score(TargetAction.L4))
-                        )
-                )
+                                // score 2nd coral
+                                .andThen(reefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
+                                        .alongWith(prepareForScore(TargetAction.L4))
+                                        .andThen(new PrintCommand("AUTO ALIGNMENT DONE")
+                                                .andThen(ArmCommandFactory.coralIn()
+                                                        .withTimeout(0.05))
+                                                .andThen(score(TargetAction.L4))))
 
-                // pickup 3rd coral
-                .andThen(loadWithPath(load2))
+                                // pickup 3rd coral
+                                .andThen(loadWithPath(load2))
 
-                // score 3rd coral
-                .andThen(
-                    reefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
-                        .alongWith(prepareForScore(TargetAction.L4))
-                        .andThen(
-                            new PrintCommand("AUTO ALIGNMENT DONE")
-                            .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
-                            .andThen(score(TargetAction.L4))
-                        )
-                )
-            )
-        );
-        
-        return E4D4C4;
+                                // score 3rd coral
+                                .andThen(reefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
+                                        .alongWith(prepareForScore(TargetAction.L4))
+                                        .andThen(new PrintCommand("AUTO ALIGNMENT DONE")
+                                                .andThen(ArmCommandFactory.coralIn()
+                                                        .withTimeout(0.05))
+                                                .andThen(score(TargetAction.L4))))));
+
+        return E4D4C4.cmd();
     }
 
+    // ---------- AUTO 3: BACKUP L1 -------- //
+    public Command IJ1KL1() {
+        AutoRoutine IJ1KL1 = autoFactory.newRoutine("IJ1KL1");
 
+        // load trajectories
+        AutoTrajectory startPath = IJ1KL1.trajectory(AutoBase.PathsBase.B_SL_J.getTrajName());
+        AutoTrajectory load1 = IJ1KL1.trajectory(AutoBase.PathsBase.B_J_LL.getTrajName());
+        AutoTrajectory score2 = IJ1KL1.trajectory(AutoBase.PathsBase.B_SL_J.getTrajName());
+        AutoTrajectory load2 = IJ1KL1.trajectory(AutoBase.PathsBase.B_D_RL.getTrajName());
+        AutoTrajectory score3 = IJ1KL1.trajectory(AutoBase.PathsBase.B_RL_C.getTrajName());
 
-    
-    // ---------------------- HELPER METHODS -------------------- // 
+        // score preload
+        reefAlignment(startPath, AlignOffset.MIDDLE_REEF, FieldElementFace.IJ)
+                .alongWith(prepareForScore(TargetAction.L4))
+                .andThen(new PrintCommand("AUTO ALIGNMENT DONE")
+                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
+                        .andThen(score(TargetAction.L1H)));
 
-    public Command reefAlignment(AutoTrajectory startPath, AlignOffset offset, FieldElementFace fieldLoc){
-        double distance; 
+        return IJ1KL1.cmd();
+    }
+
+    // ---------------------- HELPER METHODS -------------------- //
+
+    public Command reefAlignment(AutoTrajectory startPath, AlignOffset offset, FieldElementFace fieldLoc) {
+        double distance;
 
         if (startPath.toString().equals(PathsBase.B_SL_J.getTrajName())) // TODO: add start paths
         { // start paths start align closer
             distance = 2.0;
-        } else{
+        } else {
             distance = 2.5;
         }
 
         return new ParallelCommandGroup(
-            new InstantCommand(() -> ArmRollerSubsystem.getInstance().coralIn())
-                .withTimeout(0.5)
-                .alongWith(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(fieldLoc))),
-            startPath.cmd()
-                .until(() -> RobotState.getInstance().shouldAlignAutonomous(distance))
-                .andThen(AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> offset, fieldLoc)));
+                new InstantCommand(() -> ArmRollerSubsystem.getInstance().coralIn())
+                        .withTimeout(0.5)
+                        .alongWith(new InstantCommand(
+                                () -> RobotState.getInstance().setDesiredReefFace(fieldLoc))),
+                startPath
+                        .cmd()
+                        .until(() -> RobotState.getInstance().shouldAlignAutonomous(distance))
+                        .andThen(AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> offset, fieldLoc)));
     }
 
-    public Command loadWithPath(AutoTrajectory altPath){
+    public Command loadWithPath(AutoTrajectory altPath) {
         return new ParallelCommandGroup(
-            altPath.cmd(),
-            new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW))
-                .beforeStarting(new WaitCommand(1.0))
-        ).until(() -> RobotState.getInstance().getHasCoral());
+                        altPath.cmd(),
+                        new InstantCommand(() ->
+                                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW))
+                                .beforeStarting(new WaitCommand(1.0)))
+                .until(() -> RobotState.getInstance().getHasCoral());
     }
 
-    protected Command descoreAlgae(
-        AutoTrajectory toPosition,
-        TargetAction algaeLevel)
-    {
-        return 
-            toPosition.cmd()
-            .alongWith(
-                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel))
-                .andThen(new InstantCommand(() -> ArmRollerSubsystem.getInstance().coralIn())))
-            .andThen(new WaitCommand(1.0)); // wait to ensure algae grab
+    protected Command descoreAlgae(AutoTrajectory toPosition, TargetAction algaeLevel) {
+        return toPosition
+                .cmd()
+                .alongWith(new InstantCommand(
+                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel))
+                        .andThen(new InstantCommand(
+                                () -> ArmRollerSubsystem.getInstance().coralIn())))
+                .andThen(new WaitCommand(1.0)); // wait to ensure algae grab
     }
 
-    protected Command scoreNet(
-        AutoTrajectory score,
-        TargetAction algaeLevel) 
-    {
+    protected Command scoreNet(AutoTrajectory score, TargetAction algaeLevel) {
         return score.cmd()
-                .alongWith(
-                    Commands.waitUntil(() -> true) // TODO: event marker to raise
-                    .andThen(new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))))
-                .andThen(
-                    Commands.waitUntil(() -> SuperstructureSubsystem.getInstance().isAtTargetState())
-                    .andThen(ArmCommandFactory.algaeIn()).withTimeout(0.2)
-                    .andThen(ArmCommandFactory.algaeOut()).withTimeout(1.0)
-                )
+                .alongWith(Commands.waitUntil(() -> true) // TODO: event marker to raise
+                        .andThen(new InstantCommand(
+                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))))
+                .andThen(Commands.waitUntil(
+                                () -> SuperstructureSubsystem.getInstance().isAtTargetState())
+                        .andThen(ArmCommandFactory.algaeIn())
+                        .withTimeout(0.2)
+                        .andThen(ArmCommandFactory.algaeOut())
+                        .withTimeout(1.0))
                 .andThen(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE));
     }
 
-    public Command prepareForScore(TargetAction action){
+    public Command prepareForScore(TargetAction action) {
         final double maxSpeed;
         final double maxDist;
         TargetAction prepAction = TargetAction.TR;
@@ -256,25 +262,23 @@ public class Autos {
             }
         }
 
-        BooleanSupplier speedOkay = () -> (MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()) < maxSpeed);
+        BooleanSupplier speedOkay =
+                () -> (MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()) < maxSpeed);
         BooleanSupplier distanceCheck = () -> RobotState.getInstance().distanceToAlignPose() < maxDist;
         return elevatorToPos(prepAction)
-            .beforeStarting(Commands.waitUntil(distanceCheck))
-            .andThen(new PrintCommand("CLOSE ENOUGH ***************"));
+                .beforeStarting(Commands.waitUntil(distanceCheck))
+                .andThen(new PrintCommand("CLOSE ENOUGH ***************"));
     }
 
-    public Command elevatorToPos(TargetAction pos){
+    public Command elevatorToPos(TargetAction pos) {
         return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(pos));
     }
 
-    public Command score(TargetAction pos){
+    public Command score(TargetAction pos) {
         return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(pos))
-            .andThen(
-                Commands.waitUntil(
-                    () -> (ElevatorSubsystem.getInstance().atPosition(2.0, pos)
-                    && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0))
-                )
-                .andThen(ArmCommandFactory.coralOut().withTimeout(0.3))
-            );
+                .andThen(Commands.waitUntil(
+                                () -> (ElevatorSubsystem.getInstance().atPosition(2.0, pos)
+                                        && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0)))
+                        .andThen(ArmCommandFactory.coralOut().withTimeout(0.3)));
     }
 }

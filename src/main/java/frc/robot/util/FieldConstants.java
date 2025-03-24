@@ -1,15 +1,15 @@
 package frc.robot.util;
 
-import java.util.List;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meters;
 import edu.wpi.first.units.measure.Distance;
+import java.util.List;
 
 public class FieldConstants {
     // public static final FieldType FIELD_TYPE = FieldType.WELDED;

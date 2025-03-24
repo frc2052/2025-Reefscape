@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.auto.common;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DashboardConstants;
 import frc.robot.RobotState;
 import frc.robot.auto.modes.AutoLLToK4;
@@ -33,6 +34,8 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
+    private final Supplier<ChoreoAuto> choreoAutoSupplier =
+            () -> Dashboard.getInstance().getChoreoAuto();
     private final Supplier<Double> waitSecondsEntrySupplier =
             () -> Dashboard.getInstance().getWaitSeconds();
     private final Supplier<Boolean> bumpNeededSupplier =
@@ -41,6 +44,9 @@ public class AutoFactory {
     private Auto currentAuto;
     private AutoBase compiledAuto;
 
+    private ChoreoAuto currentChoreoAuto;
+    private Command compiledChoreoAuto;
+
     private double selectedWaitSeconds;
     private double savedWaitSeconds;
 
@@ -48,6 +54,9 @@ public class AutoFactory {
 
     private static LoggedNetworkBoolean autoCompiled =
             new LoggedNetworkBoolean(DashboardConstants.AUTO_COMPILED_KEY, false);
+
+    private static LoggedNetworkBoolean choreoAutoCompiled =
+            new LoggedNetworkBoolean(DashboardConstants.CHOREO_AUTO_COMPILED, false);
 
     private static LoggedNetworkString autoDescription =
             new LoggedNetworkString(DashboardConstants.AUTO_DESCRIPTION_KEY, "No Description");
@@ -76,6 +85,12 @@ public class AutoFactory {
                 || isRedAlliance == !RobotState.getInstance().isRedAlliance();
     }
 
+    public boolean choreoRecompileNeeded() {
+        return choreoAutoSupplier.get() != currentChoreoAuto
+                || waitSecondsEntrySupplier.get() != savedWaitSeconds
+                || isRedAlliance == !RobotState.getInstance().isRedAlliance();
+    }
+
     public void recompile() {
         isRedAlliance = RobotState.getInstance().isRedAlliance();
         // update wait seconds
@@ -95,13 +110,26 @@ public class AutoFactory {
         if (compiledAuto == null) {
             autoDescription.set("No Auto Selected");
         } else {
-            compiledAuto.init();
+            compiledAuto.init(); // starts?
         }
         autoCompiled.set(true);
+
+        // update choreo Auto
+        choreoAutoCompiled.set(false);
+        currentChoreoAuto = choreoAutoSupplier.get();
+        if (currentChoreoAuto == null) {
+            currentChoreoAuto = ChoreoAuto.NO_AUTO;
+        }
+        compiledChoreoAuto = currentChoreoAuto.getInstance();
+        choreoAutoCompiled.set(true);
     }
 
     public AutoBase getCompiledAuto() {
         return compiledAuto;
+    }
+
+    public Command getCompiledChoreoAuto() {
+        return compiledChoreoAuto;
     }
 
     public double getSavedWaitSeconds() {
@@ -110,6 +138,30 @@ public class AutoFactory {
 
     public boolean getBumpNeeded() {
         return bumpNeededSupplier.get();
+    }
+
+    public static enum ChoreoAuto {
+        NO_AUTO(null),
+        J4K4L4(Autos.getInstance().J4K4L4()),
+        E4D4C4(Autos.getInstance().E4D4C4());
+
+        private final Command autoCommand;
+
+        private ChoreoAuto(Command autoCommand) {
+            this.autoCommand = autoCommand;
+        }
+
+        public Command getInstance() {
+            if (autoCommand != null) {
+                try {
+                    return autoCommand;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+        }
     }
 
     public static enum Auto {

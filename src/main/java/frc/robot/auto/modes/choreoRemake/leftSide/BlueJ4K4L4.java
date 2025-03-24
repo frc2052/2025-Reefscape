@@ -61,8 +61,6 @@ public class BlueJ4K4L4 extends AutoBase {
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW)));
 
         // TODO: test algae pickup
-        addCommands(
-            new InstantCommand()
-        );
+        addCommands(new InstantCommand());
     }
 }
