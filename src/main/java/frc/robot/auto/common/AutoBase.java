@@ -318,6 +318,12 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     public static final class PathsBase {
 
+        // retry coral grab
+        public static final Path BLUE_LL_RETRY = new Path("BLUE LL RETRY", "BLUE LL RETRY");
+        public static final Path RED_LL_RETRY = new Path("RED LL RETRY", "RED LL RETRY");
+        public static final Path BLUE_RL_RETRY = new Path("BLUE RL RETRY", "BLUE RL RETRY");
+        public static final Path RED_RL_RETRY = new Path("RED RL RETRY", "RED RL RETRY");
+
         public static final Path B_SC_GH_L1 = new Path("SC GH", "BLUE SC GH L1");
         public static final Path R_SC_GH_L1 = new Path("SC GH", "RED SC GH L1");
 

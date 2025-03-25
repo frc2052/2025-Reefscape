@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
@@ -26,7 +27,6 @@ import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
-import frc.robot.subsystems.arm.ArmRollerSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
@@ -37,6 +37,7 @@ import frc.robot.util.AlignmentCalculator.FieldElementFace;
 public class Autos {
 
     private final AutoFactory autoFactory;
+    
     private final BooleanSupplier flip = () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 
     private static Autos INSTANCE;
@@ -101,6 +102,13 @@ public class Autos {
         AutoTrajectory load2 = J4K4L4.trajectory(AutoBase.PathsBase.B_K_LL.getTrajName());
         AutoTrajectory score3 = J4K4L4.trajectory(AutoBase.PathsBase.B_LL_L.getTrajName());
 
+        // retry trajectories
+        AutoTrajectory BLUE_LL_RETRY = J4K4L4.trajectory(AutoBase.PathsBase.BLUE_LL_RETRY.getTrajName());
+        AutoTrajectory RED_LL_RETRY = J4K4L4.trajectory(AutoBase.PathsBase.RED_LL_RETRY.getTrajName());
+
+        // if @ the end of the path we don't have a coral, it could just be stuck in 
+        // checks to make sure we don't snap the intake
+
         J4K4L4.active()
                 .onTrue(Commands.sequence(
                         // startPath.resetOdometry(),
@@ -116,7 +124,7 @@ public class Autos {
                                         .andThen(score(TargetAction.L4)))
 
                                 // pickup 2nd coral
-                                .andThen(loadWithPath(load1))
+                                .andThen(loadWithPath(load1, BLUE_LL_RETRY))
 
                                 // score 2nd coral
                                 .andThen(reefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
@@ -127,7 +135,7 @@ public class Autos {
                                                 .andThen(score(TargetAction.L4))))
 
                                 // pickup 3rd coral
-                                .andThen(loadWithPath(load2))
+                                .andThen(loadWithPath(load2, BLUE_LL_RETRY))
 
                                 // score 3rd coral
                                 .andThen(reefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
@@ -151,6 +159,9 @@ public class Autos {
         AutoTrajectory load2 = E4D4C4.trajectory(AutoBase.PathsBase.B_D_RL.getTrajName());
         AutoTrajectory score3 = E4D4C4.trajectory(AutoBase.PathsBase.B_RL_C.getTrajName());
 
+        AutoTrajectory BLUE_RL_RETRY = E4D4C4.trajectory(AutoBase.PathsBase.BLUE_RL_RETRY.getTrajName());
+        AutoTrajectory RED_RL_RETRY = E4D4C4.trajectory(AutoBase.PathsBase.RED_RL_RETRY.getTrajName());
+
         E4D4C4.active()
                 .onTrue(Commands.sequence(
                         // startPath.resetOdometry(),
@@ -166,7 +177,7 @@ public class Autos {
                                         .andThen(score(TargetAction.L4)))
 
                                 // pickup 2nd coral
-                                .andThen(loadWithPath(load1))
+                                .andThen(loadWithPath(load1, BLUE_RL_RETRY))
 
                                 // score 2nd coral
                                 .andThen(reefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
@@ -177,7 +188,7 @@ public class Autos {
                                                 .andThen(score(TargetAction.L4))))
 
                                 // pickup 3rd coral
-                                .andThen(loadWithPath(load2))
+                                .andThen(loadWithPath(load2, BLUE_RL_RETRY))
 
                                 // score 3rd coral
                                 .andThen(reefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
@@ -293,8 +304,8 @@ public class Autos {
         }
 
         return new ParallelCommandGroup(
-                new InstantCommand(() -> ArmRollerSubsystem.getInstance().coralIn())
-                        .withTimeout(0.5)
+                 ArmCommandFactory.coralIn()
+                        .withTimeout(2.0).onlyWhile(() -> !RobotState.getInstance().getHasCoral())
                         .alongWith(new InstantCommand(
                                 () -> RobotState.getInstance().setDesiredReefFace(fieldLoc))),
                 startPath
@@ -303,11 +314,19 @@ public class Autos {
                         .andThen(AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> offset, fieldLoc)));
     }
 
-    public Command loadWithPath(AutoTrajectory path) {
+    public Command loadWithPath(AutoTrajectory path, AutoTrajectory retry) {
+        BooleanSupplier hasCoral = () -> RobotState.getInstance().getHasCoral();
         return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
+                .andThen(ArmCommandFactory.coralIn())
                 .andThen(
-                        (path.cmd().andThen(new WaitCommand(0.5)))
-                        .until(() -> RobotState.getInstance().getHasCoral()) // either get coral early or give up after path
+                        new ParallelRaceGroup(
+                                path.cmd().andThen(new WaitCommand(1.0)),
+                                Commands.waitUntil(() -> hasCoral.getAsBoolean())
+                        ))
+                .andThen(
+                        hasCoral.getAsBoolean() ? new InstantCommand() : retry.cmd()
+                ).andThen(
+                        hasCoral.getAsBoolean() ? new InstantCommand() : retry.cmd()
                 );
     }
 
@@ -370,6 +389,10 @@ public class Autos {
         BooleanSupplier speedOkay =
                 () -> (MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()) < maxSpeed);
         BooleanSupplier distanceCheck = () -> RobotState.getInstance().distanceToAlignPose() < maxDist;
+
+        if (true) {
+            
+        }
         return elevatorToPos(prepAction)
                 .beforeStarting(Commands.waitUntil(distanceCheck))
                 .andThen(new PrintCommand("CLOSE ENOUGH ***************"));
