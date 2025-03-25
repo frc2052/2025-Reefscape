@@ -21,11 +21,11 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveToPose extends Command {
-    private final double driveP = 0.78;
-    private final double driveD = 0.0;
-    private final double driveMaxSpeed = 1.0;
+    private final double driveP = 0.75;
+    private final double driveD = 0.02;
+    private final double driveMaxSpeed = 1.5;
     private final double driveMaxAcceleration = 4.0;
-    private final double driveTolerance = 0.025;
+    private final double driveTolerance = 0.01;
     private final double ffMinRadius = 0.05;
     private final double ffMaxRadius = 0.1;
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -53,7 +53,7 @@ public class DriveToPose extends Command {
         this.target = target;
 
         driveController = new ProfiledPIDController(
-                driveP, 0.07, driveD, new TrapezoidProfile.Constraints(driveMaxSpeed, driveMaxAcceleration), 0.02);
+                driveP, 0.01, driveD, new TrapezoidProfile.Constraints(driveMaxSpeed, driveMaxAcceleration), 0.02);
         driveController.setTolerance(driveTolerance);
 
         addRequirements(drivetrain);
