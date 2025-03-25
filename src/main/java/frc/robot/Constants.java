@@ -425,18 +425,24 @@ public class Constants {
 
     public static final class SmartDrive {
 
-        public static final List<Translation2d> redReef = Arrays.asList();
+        public static final List<Translation2d> redReef = Arrays.asList(
+                new Translation2d(Inches.of(130), Inches.of(185.489)), // x y
+                new Translation2d(Inches.of(176.746), Inches.of(212.477)), // x y
+                new Translation2d(Inches.of(233.491), Inches.of(185.489)), // x y
+                new Translation2d(Inches.of(233.491), Inches.of(131.511)), // x y
+                new Translation2d(Inches.of(176.746), Inches.of(104.523)), // x
+                new Translation2d(Inches.of(130), Inches.of(131.511))); // x y
         public static final List<Translation2d> redBarge = Arrays.asList();
         public static final List<Translation2d> redProcessor = Arrays.asList();
         public static final List<Translation2d> redTravel = Arrays.asList();
 
         public static final List<Translation2d> blueReef = Arrays.asList(
-                new Translation2d(Inches.of(130), Inches.of(185.489)), // x y
-                new Translation2d(Inches.of(176.746), Inches.of(212.477)), // x y
-                new Translation2d(Inches.of(233.491), Inches.of(185.489)),// x y
-                new Translation2d(Inches.of(233.491), Inches.of(131.511)),// x y
-                new Translation2d(Inches.of(176.746), Inches.of(104.523)),// x 
-                new Translation2d(Inches.of(130), Inches.of(131.511))); // x y
+                new Translation2d(Inches.of(467.384868), Inches.of(185.489)), // x y
+                new Translation2d(Inches.of(514.130868), Inches.of(212.477)), // x y
+                new Translation2d(Inches.of(570.875868), Inches.of(185.489)), // x y
+                new Translation2d(Inches.of(570.875868), Inches.of(131.511)), // x y
+                new Translation2d(Inches.of(514.130868), Inches.of(104.523)), // x
+                new Translation2d(Inches.of(467.384868), Inches.of(131.511)));
         public static final List<Translation2d> blueBarge = Arrays.asList();
         public static final List<Translation2d> blueProcessor = Arrays.asList();
         public static final List<Translation2d> blueTravel = Arrays.asList();

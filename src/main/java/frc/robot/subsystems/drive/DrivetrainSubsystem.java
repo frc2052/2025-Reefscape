@@ -142,6 +142,7 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
 
     private void setFieldLocation() {
         if (FieldLocation.REEF.getArea().withInTheRegion(robotState.getFieldToRobot())) {
+            System.out.println("in reef zone    ");
             robotState.setFieldLocation(FieldLocation.REEF);
 
         } else if (FieldLocation.BARGE.getArea().withInTheRegion(robotState.getFieldToRobot())) {
