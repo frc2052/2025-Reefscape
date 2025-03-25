@@ -145,6 +145,7 @@ public class AutoFactory {
 
     public static enum ChoreoAuto {
         NO_AUTO(null),
+        TEST_AUTO(Autos.getInstance().testPath()),
         DEAD_RECKONING(
             new DefaultDriveCommand(() -> 0.5, () -> 0.0, () -> 0.0, () -> false).withTimeout(2.0)
         ),

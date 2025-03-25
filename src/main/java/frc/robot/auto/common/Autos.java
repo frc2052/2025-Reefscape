@@ -72,6 +72,24 @@ public class Autos {
 
     // ---------------------- BASE AUTOS -------------------- //
 
+    public Command testPath(){ // validate chooser and if choreo goes to start pose first!
+        AutoRoutine TESTPATH = autoFactory.newRoutine("TEST PATH");
+
+        AutoTrajectory traj1 = TESTPATH.trajectory("TEST TRAJECTORY 1");
+        AutoTrajectory traj2 = TESTPATH.trajectory("TEST TRAJECTORY 2");
+
+        TESTPATH.active().onTrue(
+                Commands.sequence(
+                        // traj1.resetOdometry(),
+                        traj1.cmd()
+                        .andThen(new PrintCommand("DONE TRAJ 1"))
+                        .andThen(traj2.cmd())
+                )
+        );
+
+        return TESTPATH.cmd();
+    }
+
     // ---------- AUTO 1: J4K4L4 -------- //
     public Command J4K4L4() {
         AutoRoutine J4K4L4 = autoFactory.newRoutine("J4K4L4");
@@ -285,13 +303,12 @@ public class Autos {
                         .andThen(AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> offset, fieldLoc)));
     }
 
-    public Command loadWithPath(AutoTrajectory altPath) {
-        return new ParallelCommandGroup(
-                        altPath.cmd(),
-                        new InstantCommand(() ->
-                                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW))
-                                .beforeStarting(new WaitCommand(1.0)))
-                .until(() -> RobotState.getInstance().getHasCoral());
+    public Command loadWithPath(AutoTrajectory path) {
+        return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
+                .andThen(
+                        (path.cmd().andThen(new WaitCommand(0.5)))
+                        .until(() -> RobotState.getInstance().getHasCoral()) // either get coral early or give up after path
+                );
     }
 
     protected Command descoreAlgae(AutoTrajectory toPosition, TargetAction algaeLevel) {
@@ -303,7 +320,7 @@ public class Autos {
                 );
     }
 
-    protected Command scoreNet(AutoTrajectory score) { // doesn't return Command, did manually
+    protected Command scoreNet(AutoTrajectory score) {
         return Commands.sequence(
                 score.cmd(),
 
