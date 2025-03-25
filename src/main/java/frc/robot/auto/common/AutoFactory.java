@@ -3,6 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.auto.common;
 
+import java.util.function.Supplier;
+
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkString;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DashboardConstants;
 import frc.robot.RobotState;
@@ -27,10 +32,8 @@ import frc.robot.auto.modes.safety.AutoG4AlgaePrep;
 import frc.robot.auto.modes.safety.DeadReckoning;
 import frc.robot.auto.modes.startCenter.AutoG4LeftAlgaeRemoval;
 import frc.robot.auto.modes.startCenter.AutoH4RightAlgaeRemoval;
+import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.util.io.Dashboard;
-import java.util.function.Supplier;
-import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
@@ -142,8 +145,13 @@ public class AutoFactory {
 
     public static enum ChoreoAuto {
         NO_AUTO(null),
-        J4K4L4(Autos.getInstance().J4K4L4()),
-        E4D4C4(Autos.getInstance().E4D4C4());
+        DEAD_RECKONING(
+            new DefaultDriveCommand(() -> 0.5, () -> 0.0, () -> 0.0, () -> false).withTimeout(2.0)
+        ),
+        J4_K4_L4(Autos.getInstance().J4K4L4()),
+        E4_D4_C4(Autos.getInstance().E4D4C4()),
+        CENTER_L1(Autos.getInstance().CENTERL1()),
+        G4_CLEAN_LEFT_ALGAE(Autos.getInstance().G4_CLEAN_LEFT_ALGAE());
 
         private final Command autoCommand;
 

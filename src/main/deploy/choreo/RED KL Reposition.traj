@@ -51,5 +51,6 @@
     {"t":0.72262, "x":12.40117, "y":5.13888, "heading":-1.08084, "vx":0.0, "vy":0.0, "omega":0.0, "ax":0.0, "ay":0.0, "alpha":0.0, "fx":[0.0,0.0,0.0,0.0], "fy":[0.0,0.0,0.0,0.0]}],
   "splits":[0]
  },
- "events":[]
+ "events":[
+   {"name":"intake", "from":{"target":1, "targetTimestamp":null, "offset":{"exp":"-0.5 s", "val":-0.5}}, "event":null}]
 }

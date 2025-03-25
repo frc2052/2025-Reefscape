@@ -4,11 +4,16 @@
 
 package frc.robot.auto.common;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import com.team2052.lib.helpers.MathHelpers;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,9 +37,6 @@ import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -316,10 +318,13 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     public static final class PathsBase {
 
-        // L1 backups
+        public static final Path B_SC_GH_L1 = new Path("SC GH", "BLUE SC GH L1");
+        public static final Path R_SC_GH_L1 = new Path("SC GH", "RED SC GH L1");
+
+        // left side L1 backups
         // TODO: validate pathplanner paths (not going to use but prevent error)
-        public static final Path B_SL_IJ = new Path("SL IJ", "BLUE SL IJ"); //
-        public static final Path R_SL_IJ = new Path("SL IJ", "RED SL IJ"); //
+        public static final Path B_SL_IJ = new Path("SL IJ", "BLUE SL IJ");
+        public static final Path R_SL_IJ = new Path("SL IJ", "RED SL IJ");
         public static final Path B_IJ_LL = new Path("IJ LL", "BLUE IJ LL");
         public static final Path R_IJ_LL = new Path("IJ LL", "RED IJ LL");
 
@@ -327,6 +332,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
         public static final Path R_LL_KL = new Path("LL KL", "RED LL KL");
         public static final Path B_KL_LL = new Path("KL LL", "BLUE KL LL");
         public static final Path R_KL_LL = new Path("KL LL", "RED KL LL");
+
+        // TODO: right side L1 backups
 
         // J4K4L4
         public static final Path B_SL_J = new Path("SL J", "BLUE SL J");
