@@ -6,17 +6,11 @@ package frc.robot.auto.common;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DashboardConstants;
 import frc.robot.RobotState;
-import frc.robot.auto.modes.AutoLLToK4;
 import frc.robot.auto.modes.StartLeft.AutoJ1K1L1;
 import frc.robot.auto.modes.StartLeft.AutoJ1K4L4;
 import frc.robot.auto.modes.StartLeft.AutoJ4K4L4;
 import frc.robot.auto.modes.StartLeft.AutoK4L4DAK3L3;
-import frc.robot.auto.modes.StartRight.AutoD4C4DAD3C3;
-import frc.robot.auto.modes.StartRight.AutoE1D1C1;
-import frc.robot.auto.modes.StartRight.AutoE1D4C4;
-import frc.robot.auto.modes.StartRight.AutoE2D4C4;
 import frc.robot.auto.modes.StartRight.AutoE4D4C4;
-import frc.robot.auto.modes.StartRight.AutoF4D4C4;
 import frc.robot.auto.modes.choreoRemake.leftSide.BlueJ4K4L4;
 import frc.robot.auto.modes.choreoRemake.leftSide.RedJ4K4L4;
 import frc.robot.auto.modes.choreoRemake.rightSide.BlueE4D4C4;
@@ -180,8 +174,8 @@ public class AutoFactory {
     public static enum Auto {
         DEAD_RECKONING(DeadReckoning.class),
         NO_AUTO(null),
-        LL_K4_VISION_TEST(AutoLLToK4.class),
-        BACKUP_AUTO_H4_DA_NET(AutoG4AlgaePrep.class),
+        // LL_K4_VISION_TEST(AutoLLToK4.class),
+        // BACKUP_AUTO_H4_DA_NET(AutoG4AlgaePrep.class),
 
         // choreo
         C_Blue_J4K4L4(BlueJ4K4L4.class),
@@ -204,12 +198,12 @@ public class AutoFactory {
         LEFT_J1_K4_L4(AutoJ1K4L4.class),
 
         // start right
-        RIGHT_D4_C4_DA_D3_C3(AutoD4C4DAD3C3.class),
-        RIGHT_E1_D1_C1(AutoE1D1C1.class),
-        RIGHT_E4_D4_C4(AutoE4D4C4.class),
-        RIGHT_E2_D4_C4(AutoE2D4C4.class),
-        RIGHT_F4_D4_C4(AutoF4D4C4.class),
-        RIGHT_E1_D4_C4(AutoE1D4C4.class);
+        // RIGHT_D4_C4_DA_D3_C3(AutoD4C4DAD3C3.class),
+        // RIGHT_E1_D1_C1(AutoE1D1C1.class),
+        RIGHT_E4_D4_C4(AutoE4D4C4.class);
+        // RIGHT_E2_D4_C4(AutoE2D4C4.class),
+        // RIGHT_F4_D4_C4(AutoF4D4C4.class),
+        // RIGHT_E1_D4_C4(AutoE1D4C4.class);
 
         private final Class<? extends AutoBase> autoClass;
 

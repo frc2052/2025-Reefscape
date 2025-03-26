@@ -175,7 +175,6 @@ public class RobotState {
         Logger.recordOutput("Current Pose", drivetrainState.Pose);
         Logger.recordOutput("Auto Start Pose", autoStartPose);
         Logger.recordOutput("Goal Align Pose", goalPose);
-        Logger.recordOutput("Auto Start Pose", autoStartPose);
         Logger.recordOutput("Flush Alignment", isFlushAlign);
     }
 }

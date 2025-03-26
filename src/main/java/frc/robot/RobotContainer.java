@@ -169,6 +169,12 @@ public class RobotContainer {
         System.out.println("POV Bindings Configured");
     }
 
+    public void precompileAuto() {
+        if (AutoFactory.getInstance().recompileNeeded()) {
+            AutoFactory.getInstance().recompile();
+        }
+    }
+
     public Command getAutonomousCommand() {
         // return autoFactory.getCompiledChoreoAuto(); // test
         return autoFactory.getCompiledAuto();

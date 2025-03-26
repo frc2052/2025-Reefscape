@@ -8,8 +8,6 @@ import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import com.team2052.lib.helpers.MathHelpers;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -36,7 +34,7 @@ public class Autos {
 
     private final AutoFactory autoFactory;
 
-    private final BooleanSupplier flip = () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
+    //     private final BooleanSupplier flip = () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 
     private static Autos INSTANCE;
 
@@ -53,7 +51,7 @@ public class Autos {
                 DrivetrainSubsystem.getInstance()::resetPose,
                 // follow trajectory
                 DrivetrainSubsystem.getInstance()::followTrajectory,
-                flip.getAsBoolean(),
+                false,
                 DrivetrainSubsystem.getInstance());
     }
 
@@ -80,7 +78,7 @@ public class Autos {
 
         TESTPATH.active()
                 .onTrue(Commands.sequence(
-                        // traj1.resetOdometry(),
+                        traj1.resetOdometry(),
                         traj1.cmd().andThen(new PrintCommand("DONE TRAJ 1")).andThen(traj2.cmd())));
 
         return TESTPATH.cmd();
@@ -91,11 +89,11 @@ public class Autos {
         AutoRoutine J4K4L4 = autoFactory.newRoutine("J4K4L4");
 
         // load trajectories
-        AutoTrajectory startPath = J4K4L4.trajectory(AutoBase.PathsBase.B_SL_J.getTrajName());
-        AutoTrajectory load1 = J4K4L4.trajectory(AutoBase.PathsBase.B_J_LL.getTrajName());
-        AutoTrajectory score2 = J4K4L4.trajectory(AutoBase.PathsBase.B_LL_K.getTrajName());
-        AutoTrajectory load2 = J4K4L4.trajectory(AutoBase.PathsBase.B_K_LL.getTrajName());
-        AutoTrajectory score3 = J4K4L4.trajectory(AutoBase.PathsBase.B_LL_L.getTrajName());
+        AutoTrajectory startPath = J4K4L4.trajectory(AutoBase.PathsBase.R_SL_J2.getTrajName());
+        AutoTrajectory load1 = J4K4L4.trajectory(AutoBase.PathsBase.R_J2_LL.getTrajName());
+        AutoTrajectory score2 = J4K4L4.trajectory(AutoBase.PathsBase.R_LL_K4.getTrajName());
+        AutoTrajectory load2 = J4K4L4.trajectory(AutoBase.PathsBase.R_K4_LL.getTrajName());
+        AutoTrajectory score3 = J4K4L4.trajectory(AutoBase.PathsBase.R_LL_L.getTrajName());
 
         // retry trajectories
         AutoTrajectory BLUE_LL_RETRY = J4K4L4.trajectory(AutoBase.PathsBase.BLUE_LL_RETRY.getTrajName());
@@ -106,8 +104,13 @@ public class Autos {
 
         J4K4L4.active()
                 .onTrue(Commands.sequence(
-                        // startPath.resetOdometry(),
-
+                        startPath.resetOdometry(),
+                        Commands.either(
+                                new InstantCommand(() -> RobotState.getInstance()
+                                        .setAutoStartPose(
+                                                startPath.getInitialPose().get())),
+                                new InstantCommand(),
+                                () -> startPath.getInitialPose().isPresent()),
                         getBumpCommand(),
                         delaySelectedTime(),
 
@@ -119,7 +122,7 @@ public class Autos {
                                         .andThen(score(TargetAction.L4)))
 
                                 // pickup 2nd coral
-                                .andThen(loadWithPath(load1, BLUE_LL_RETRY, true))
+                                .andThen(loadWithPath(load1, RED_LL_RETRY, true))
 
                                 // score 2nd coral
                                 .andThen(reefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
@@ -128,9 +131,10 @@ public class Autos {
                                                 .andThen(ArmCommandFactory.coralIn()
                                                         .withTimeout(0.05))
                                                 .andThen(score(TargetAction.L4))))
+                                .andThen(RobotState.getInstance().setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
 
                                 // pickup 3rd coral
-                                .andThen(loadWithPath(load2, BLUE_LL_RETRY, true))
+                                .andThen(loadWithPath(load2, RED_LL_RETRY, true))
 
                                 // score 3rd coral
                                 .andThen(reefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
@@ -159,8 +163,7 @@ public class Autos {
 
         E4D4C4.active()
                 .onTrue(Commands.sequence(
-                        // startPath.resetOdometry(),
-
+                        startPath.resetOdometry(),
                         getBumpCommand(),
                         delaySelectedTime(),
 
@@ -205,7 +208,7 @@ public class Autos {
 
         CENTERL1.active()
                 .onTrue(Commands.sequence(
-                        // startPath.resetOdometry(),
+                        startPath.resetOdometry(),
                         startPath.cmd().andThen(ArmCommandFactory.coralOut().withTimeout(1.0))));
 
         return CENTERL1.cmd();

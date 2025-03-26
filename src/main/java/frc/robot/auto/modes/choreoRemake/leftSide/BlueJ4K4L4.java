@@ -40,7 +40,7 @@ public class BlueJ4K4L4 extends AutoBase {
                 .andThen(new PrintCommand("alignment done")
                         .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
                         // .andThen(new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> false))
-                        .andThen(score(TargetAction.L4))));
+                        .andThen(score(TargetAction.L4)))); // good
 
         // pickup and score 2nd coral (K)
         addCommands(safeStationAlignment(load1));

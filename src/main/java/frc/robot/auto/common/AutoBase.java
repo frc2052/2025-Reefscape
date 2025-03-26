@@ -27,6 +27,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.arm.ArmRollerSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
+import frc.robot.subsystems.intake.IntakeRollerSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -156,17 +157,16 @@ public abstract class AutoBase extends SequentialCommandGroup {
                                         : 0.35),
                 new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(fieldLoc)),
                 followPathCommand(startPath.getChoreoPath()) // default to choreo path
-                        .until(() -> RobotState.getInstance().shouldAlignAutonomous(distance))
                         .andThen(AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> branchside, fieldLoc)));
     }
 
     protected Command safeStationAlignment(Path altAlignPath) {
-        return followPathCommand(altAlignPath.getChoreoPath())
-                .alongWith(new InstantCommand(
-                        () -> ArmRollerSubsystem.getInstance().coralIn()))
-                .alongWith(new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
-                        .beforeStarting(new WaitCommand(0.5)));
+        return ((followPathCommand(altAlignPath.getChoreoPath()).beforeStarting(new WaitCommand(0.75)))
+                        .alongWith(new InstantCommand(() ->
+                                        IntakeRollerSubsystem.getInstance().intake())
+                                .andThen(new InstantCommand(() ->
+                                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE)))))
+                .until(() -> RobotState.getInstance().getHasCoral());
     }
 
     protected Command combinedReefChassisElevatorAlign(

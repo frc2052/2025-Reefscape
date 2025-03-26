@@ -4,10 +4,6 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-
 import choreo.auto.AutoChooser;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,6 +14,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.auto.common.AutoFactory;
 import frc.robot.auto.common.Autos;
 import frc.robot.util.FieldConstants;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
 
 public class Robot extends LoggedRobot {
     private Command m_autonomousCommand;
@@ -47,7 +46,7 @@ public class Robot extends LoggedRobot {
         autoChooser.addCmd("J4K4L4", this::getJ4K4L4);
         autoChooser.addCmd("E4D4C4", this::getE4D4C4);
         autoChooser.addCmd("CENTER 1", this::center1);
-        // autoChooser.addCmd("Test", this::test);
+        autoChooser.addCmd("Test", this::test);
 
         SmartDashboard.putData("CHOREO AUTO CHOOSER V1", autoChooser);
         Pose2d loadPose = FieldConstants.blueLeftBranchL1.get(0);
@@ -122,7 +121,6 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic() {
         RobotState.getInstance().output();
         CommandScheduler.getInstance().run();
-        // System.out.println(autoChooser.selectedCommand().getName());
     }
 
     @Override
@@ -143,10 +141,10 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void disabledPeriodic() {
-        if (compiledChoreoAuto != null) {
-            System.out.println(compiledChoreoAuto.getName());
-        }
-        precompileAuto();
+        // if (compiledChoreoAuto != null) {
+        //     System.out.println(compiledChoreoAuto.getName());
+        // }
+        m_robotContainer.precompileAuto();
     }
 
     @Override
@@ -154,9 +152,9 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void autonomousInit() {
-        // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
         // m_autonomousCommand = autoChooser.selectedCommand();
-        m_autonomousCommand = compiledChoreoAuto;
+        // m_autonomousCommand = compiledChoreoAuto;
 
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
