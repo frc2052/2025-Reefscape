@@ -145,6 +145,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         return shouldHome;
     }
 
+    public boolean isHoming() {
+        return homing;
+    }
+
     public boolean atHomingLocation() {
         return getPosition() < TargetAction.HM.getElevatorPositionRotations()
                 || MathHelpers.epsilonEquals(getPosition(), TargetAction.HM.getElevatorPositionRotations(), 0.05);

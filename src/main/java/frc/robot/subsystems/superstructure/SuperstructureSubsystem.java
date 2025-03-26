@@ -162,7 +162,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
             if (cancelHome) {
                 elevator.setWantHome(false);
                 cancelHome = false;
-            } else if (target == TargetAction.HM) {
+            } else if (target == TargetAction.HM && !elevator.isHoming()) {
                 elevator.setWantHome(true);
                 System.out.println("HOMING");
                 return;

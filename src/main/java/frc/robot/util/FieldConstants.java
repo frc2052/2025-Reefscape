@@ -79,15 +79,15 @@ public class FieldConstants {
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(60))),
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(120))),
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(180))),
-            new Pose2d(5.25, 5.11, new Rotation2d(Math.toRadians(240))),
-            new Pose2d(3.96, 5.24, new Rotation2d(Math.toRadians(300))));
+            new Pose2d(5.37, 5.12, new Rotation2d(Math.toRadians(240))),
+            new Pose2d(3.95, 5.34, new Rotation2d(Math.toRadians(300))));
     public static final List<Pose2d> blueRightBranches = List.of(
             new Pose2d(3.19, 3.91, new Rotation2d(Math.toRadians(0))),
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(60))),
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(120))),
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(180))),
-            new Pose2d(4.94, 5.22, new Rotation2d(Math.toRadians(240))),
-            new Pose2d(3.70, 5.05, new Rotation2d(Math.toRadians(300))));
+            new Pose2d(5.07, 5.32, new Rotation2d(Math.toRadians(240))),
+            new Pose2d(3.62, 5.16, new Rotation2d(Math.toRadians(300))));
     public static final List<Pose2d> blueLeftBranchL1 = List.of(
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(0))),
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(60))),
