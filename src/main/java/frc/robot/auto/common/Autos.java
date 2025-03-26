@@ -4,13 +4,10 @@
 
 package frc.robot.auto.common;
 
-import java.util.function.BooleanSupplier;
-
-import com.team2052.lib.helpers.MathHelpers;
-
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import com.team2052.lib.helpers.MathHelpers;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,12 +29,13 @@ import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
+import java.util.function.BooleanSupplier;
 
 /** Add your docs here. */
 public class Autos {
 
     private final AutoFactory autoFactory;
-    
+
     private final BooleanSupplier flip = () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 
     private static Autos INSTANCE;
@@ -61,32 +59,29 @@ public class Autos {
 
     public Command getBumpCommand() {
         if (frc.robot.auto.common.AutoFactory.getInstance().getBumpNeeded()) {
-            return new DefaultDriveCommand(() -> 0.6, () -> 0.0, () -> 0.0, () -> true).withDeadline(new WaitCommand(1.5));
+            return new DefaultDriveCommand(() -> 0.6, () -> 0.0, () -> 0.0, () -> true)
+                    .withDeadline(new WaitCommand(1.5));
         } else {
             return new InstantCommand();
         }
     }
 
-    public Command delaySelectedTime(){
+    public Command delaySelectedTime() {
         return new WaitCommand(frc.robot.auto.common.AutoFactory.getInstance().getSavedWaitSeconds());
     }
 
     // ---------------------- BASE AUTOS -------------------- //
 
-    public Command testPath(){ // validate chooser and if choreo goes to start pose first!
+    public Command test() { // validate chooser and if choreo goes to start pose first!
         AutoRoutine TESTPATH = autoFactory.newRoutine("TEST PATH");
 
         AutoTrajectory traj1 = TESTPATH.trajectory("TEST TRAJECTORY 1");
         AutoTrajectory traj2 = TESTPATH.trajectory("TEST TRAJECTORY 2");
 
-        TESTPATH.active().onTrue(
-                Commands.sequence(
+        TESTPATH.active()
+                .onTrue(Commands.sequence(
                         // traj1.resetOdometry(),
-                        traj1.cmd()
-                        .andThen(new PrintCommand("DONE TRAJ 1"))
-                        .andThen(traj2.cmd())
-                )
-        );
+                        traj1.cmd().andThen(new PrintCommand("DONE TRAJ 1")).andThen(traj2.cmd())));
 
         return TESTPATH.cmd();
     }
@@ -106,13 +101,13 @@ public class Autos {
         AutoTrajectory BLUE_LL_RETRY = J4K4L4.trajectory(AutoBase.PathsBase.BLUE_LL_RETRY.getTrajName());
         AutoTrajectory RED_LL_RETRY = J4K4L4.trajectory(AutoBase.PathsBase.RED_LL_RETRY.getTrajName());
 
-        // if @ the end of the path we don't have a coral, it could just be stuck in 
+        // if @ the end of the path we don't have a coral, it could just be stuck in
         // checks to make sure we don't snap the intake
 
         J4K4L4.active()
                 .onTrue(Commands.sequence(
                         // startPath.resetOdometry(),
-                        
+
                         getBumpCommand(),
                         delaySelectedTime(),
 
@@ -124,7 +119,7 @@ public class Autos {
                                         .andThen(score(TargetAction.L4)))
 
                                 // pickup 2nd coral
-                                .andThen(loadWithPath(load1, BLUE_LL_RETRY))
+                                .andThen(loadWithPath(load1, BLUE_LL_RETRY, true))
 
                                 // score 2nd coral
                                 .andThen(reefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
@@ -135,7 +130,7 @@ public class Autos {
                                                 .andThen(score(TargetAction.L4))))
 
                                 // pickup 3rd coral
-                                .andThen(loadWithPath(load2, BLUE_LL_RETRY))
+                                .andThen(loadWithPath(load2, BLUE_LL_RETRY, true))
 
                                 // score 3rd coral
                                 .andThen(reefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
@@ -177,7 +172,7 @@ public class Autos {
                                         .andThen(score(TargetAction.L4)))
 
                                 // pickup 2nd coral
-                                .andThen(loadWithPath(load1, BLUE_RL_RETRY))
+                                .andThen(loadWithPath(load1, BLUE_RL_RETRY, true))
 
                                 // score 2nd coral
                                 .andThen(reefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
@@ -188,7 +183,7 @@ public class Autos {
                                                 .andThen(score(TargetAction.L4))))
 
                                 // pickup 3rd coral
-                                .andThen(loadWithPath(load2, BLUE_RL_RETRY))
+                                .andThen(loadWithPath(load2, BLUE_RL_RETRY, true))
 
                                 // score 3rd coral
                                 .andThen(reefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
@@ -211,18 +206,18 @@ public class Autos {
         CENTERL1.active()
                 .onTrue(Commands.sequence(
                         // startPath.resetOdometry(),
-                        startPath.cmd()
-                        .andThen(ArmCommandFactory.coralOut().withTimeout(1.0))));
+                        startPath.cmd().andThen(ArmCommandFactory.coralOut().withTimeout(1.0))));
 
         return CENTERL1.cmd();
     }
 
     // ---------------------- ALGAE AUTOS -------------------- //
-    public Command G4_CLEAN_LEFT_ALGAE(){
+    public Command G4_CLEAN_LEFT_ALGAE() {
         AutoRoutine G4_DESCORE_SCORE = autoFactory.newRoutine("G4_CLEAN_LEFT_ALGAE");
 
         AutoTrajectory startPath = G4_DESCORE_SCORE.trajectory(AutoBase.PathsBase.B_SC_G.getTrajName());
-        AutoTrajectory repositionDescore = G4_DESCORE_SCORE.trajectory(AutoBase.PathsBase.B_GH_REPOSITION.getTrajName());
+        AutoTrajectory repositionDescore =
+                G4_DESCORE_SCORE.trajectory(AutoBase.PathsBase.B_GH_REPOSITION.getTrajName());
         AutoTrajectory score1 = G4_DESCORE_SCORE.trajectory(AutoBase.PathsBase.B_GH_NET.getTrajName());
         AutoTrajectory descore2 = G4_DESCORE_SCORE.trajectory(AutoBase.PathsBase.B_NET_IJ.getTrajName());
         AutoTrajectory score2 = G4_DESCORE_SCORE.trajectory(AutoBase.PathsBase.B_IJ_NET.getTrajName());
@@ -230,31 +225,32 @@ public class Autos {
         AutoTrajectory score3 = G4_DESCORE_SCORE.trajectory(AutoBase.PathsBase.B_KL_NET.getTrajName());
 
         // start intake + reposition after safe zone
-        repositionDescore.atTime("intake").onTrue(
-                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.LA))
-                .andThen(ArmCommandFactory.algaeIn())
-        );
+        repositionDescore
+                .atTime("intake")
+                .onTrue(new InstantCommand(
+                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.LA))
+                        .andThen(ArmCommandFactory.algaeIn()));
 
         // set up to position / stop intake for score paths
-        score1.atTime("raise").onTrue(
-                Commands.sequence(
-                        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS)),
-                        ArmCommandFactory.algaeIn().withTimeout(0.01)
-        ));
-        score2.atTime("raise").onTrue(
-                Commands.sequence(
-                        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS)),
-                        ArmCommandFactory.algaeIn().withTimeout(0.01)
-        ));
-        score3.atTime("raise").onTrue(
-                Commands.sequence(
-                        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS)),
-                        ArmCommandFactory.algaeIn().withTimeout(0.01)
-        ));
-
-        G4_DESCORE_SCORE.active()
+        score1.atTime("raise")
                 .onTrue(Commands.sequence(
+                        new InstantCommand(
+                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS)),
+                        ArmCommandFactory.algaeIn().withTimeout(0.01)));
+        score2.atTime("raise")
+                .onTrue(Commands.sequence(
+                        new InstantCommand(
+                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS)),
+                        ArmCommandFactory.algaeIn().withTimeout(0.01)));
+        score3.atTime("raise")
+                .onTrue(Commands.sequence(
+                        new InstantCommand(
+                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS)),
+                        ArmCommandFactory.algaeIn().withTimeout(0.01)));
 
+        G4_DESCORE_SCORE
+                .active()
+                .onTrue(Commands.sequence(
                         getBumpCommand(),
                         delaySelectedTime(),
 
@@ -268,7 +264,7 @@ public class Autos {
                         // use event marker to intake
                         repositionDescore.cmd(),
 
-                        // score first algae 
+                        // score first algae
                         scoreNet(score3),
 
                         // descore 2nd
@@ -281,9 +277,7 @@ public class Autos {
                         descoreAlgae(descore3, TargetAction.LA),
 
                         // score 3rd
-                        scoreNet(score3)
-                )
-        );
+                        scoreNet(score3)));
 
         return G4_DESCORE_SCORE.cmd();
     }
@@ -293,19 +287,18 @@ public class Autos {
     public Command reefAlignment(AutoTrajectory startPath, AlignOffset offset, FieldElementFace fieldLoc) {
         double distance;
 
-        if (
-                startPath.toString().equals(PathsBase.B_SL_J.getTrajName())
+        if (startPath.toString().equals(PathsBase.B_SL_J.getTrajName())
                 || startPath.toString().equals(PathsBase.B_SR_E.getTrajName())
-                || startPath.toString().equals(PathsBase.B_SR_F.getTrajName()))
-        { // start paths start align closer
+                || startPath.toString().equals(PathsBase.B_SR_F.getTrajName())) { // start paths start align closer
             distance = 2.0;
         } else {
             distance = 2.5;
         }
 
         return new ParallelCommandGroup(
-                 ArmCommandFactory.coralIn()
-                        .withTimeout(2.0).onlyWhile(() -> !RobotState.getInstance().getHasCoral())
+                ArmCommandFactory.coralIn()
+                        .withTimeout(2.0)
+                        .onlyWhile(() -> !RobotState.getInstance().getHasCoral())
                         .alongWith(new InstantCommand(
                                 () -> RobotState.getInstance().setDesiredReefFace(fieldLoc))),
                 startPath
@@ -314,44 +307,37 @@ public class Autos {
                         .andThen(AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> offset, fieldLoc)));
     }
 
-    public Command loadWithPath(AutoTrajectory path, AutoTrajectory retry) {
-        BooleanSupplier hasCoral = () -> RobotState.getInstance().getHasCoral();
+    public Command loadWithPath(AutoTrajectory path, AutoTrajectory retry, boolean redo) {
+        BooleanSupplier hasCoralSupplier = () -> RobotState.getInstance().getHasCoral();
         return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
                 .andThen(ArmCommandFactory.coralIn())
-                .andThen(
-                        new ParallelRaceGroup(
-                                path.cmd().andThen(new WaitCommand(1.0)),
-                                Commands.waitUntil(() -> hasCoral.getAsBoolean())
-                        ))
-                .andThen(
-                        hasCoral.getAsBoolean() ? new InstantCommand() : retry.cmd()
-                ).andThen(
-                        hasCoral.getAsBoolean() ? new InstantCommand() : retry.cmd()
-                );
+                .andThen(new ParallelRaceGroup(
+                        path.cmd().andThen(new WaitCommand(1.0)),
+                        Commands.waitUntil(() -> hasCoralSupplier.getAsBoolean())))
+                // first fail: try again from human player
+                .andThen(hasCoralSupplier.getAsBoolean() && redo ? new InstantCommand() : retry.cmd())
+                // 2nd fail: try to get coral from nearest lolipop
+                .andThen(hasCoralSupplier.getAsBoolean() && redo ? new InstantCommand() : retry.cmd());
     }
 
     protected Command descoreAlgae(AutoTrajectory toPosition, TargetAction algaeLevel) {
         return Commands.sequence(
-                        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)),
-                        ArmCommandFactory.algaeIn(),
-                        toPosition.cmd(),
-                        new WaitCommand(0.5) // pause to grab
+                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(algaeLevel)),
+                ArmCommandFactory.algaeIn(),
+                toPosition.cmd(),
+                new WaitCommand(0.5) // pause to grab
                 );
     }
 
     protected Command scoreNet(AutoTrajectory score) {
         return Commands.sequence(
                 score.cmd(),
-
-                Commands.waitUntil(
-                                () -> SuperstructureSubsystem.getInstance().isAtTargetState())
+                Commands.waitUntil(() -> SuperstructureSubsystem.getInstance().isAtTargetState())
                         .andThen(ArmCommandFactory.algaeIn())
                         .withTimeout(0.2)
                         .andThen(ArmCommandFactory.algaeOut())
                         .withTimeout(1.0)
-
-                        .andThen(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW))
-        );
+                        .andThen(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW)));
     }
 
     public Command prepareForScore(TargetAction action) {
@@ -390,9 +376,7 @@ public class Autos {
                 () -> (MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()) < maxSpeed);
         BooleanSupplier distanceCheck = () -> RobotState.getInstance().distanceToAlignPose() < maxDist;
 
-        if (true) {
-            
-        }
+        if (true) {}
         return elevatorToPos(prepAction)
                 .beforeStarting(Commands.waitUntil(distanceCheck))
                 .andThen(new PrintCommand("CLOSE ENOUGH ***************"));

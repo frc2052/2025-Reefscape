@@ -5,6 +5,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -160,16 +161,6 @@ public class RobotContainer {
         controlBoard.povUpLeft().whileTrue(new DefaultDriveCommand(() -> 0.2, () -> 0.2, () -> 0.0, () -> false));
 
         System.out.println("POV Bindings Configured");
-    }
-
-    public void forceRecompile() {
-        autoFactory.recompile();
-    }
-
-    public void precompileAuto() {
-        if (autoFactory.recompileNeeded() || autoFactory.choreoRecompileNeeded()) {
-            autoFactory.recompile();
-        }
     }
 
     public Command getAutonomousCommand() {

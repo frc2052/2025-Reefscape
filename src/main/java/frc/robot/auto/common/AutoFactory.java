@@ -3,11 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.auto.common;
 
-import java.util.function.Supplier;
-
-import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-import org.littletonrobotics.junction.networktables.LoggedNetworkString;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DashboardConstants;
 import frc.robot.RobotState;
@@ -32,13 +27,15 @@ import frc.robot.auto.modes.safety.AutoG4AlgaePrep;
 import frc.robot.auto.modes.safety.DeadReckoning;
 import frc.robot.auto.modes.startCenter.AutoG4LeftAlgaeRemoval;
 import frc.robot.auto.modes.startCenter.AutoH4RightAlgaeRemoval;
-import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.util.io.Dashboard;
+import java.util.function.Supplier;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
-    private final Supplier<ChoreoAuto> choreoAutoSupplier =
-            () -> Dashboard.getInstance().getChoreoAuto();
+    // private final Supplier<ChoreoAuto> choreoAutoSupplier =
+    //         () -> Dashboard.getInstance().getChoreoAuto();
     private final Supplier<Double> waitSecondsEntrySupplier =
             () -> Dashboard.getInstance().getWaitSeconds();
     private final Supplier<Boolean> bumpNeededSupplier =
@@ -47,7 +44,7 @@ public class AutoFactory {
     private Auto currentAuto;
     private AutoBase compiledAuto;
 
-    private ChoreoAuto currentChoreoAuto;
+    // private ChoreoAuto currentChoreoAuto;
     private Command compiledChoreoAuto;
 
     private double selectedWaitSeconds;
@@ -89,9 +86,14 @@ public class AutoFactory {
     }
 
     public boolean choreoRecompileNeeded() {
-        return choreoAutoSupplier.get() != currentChoreoAuto
-                || waitSecondsEntrySupplier.get() != savedWaitSeconds
+        return
+        // choreoAutoSupplier.get() != currentChoreoAuto||
+        waitSecondsEntrySupplier.get() != savedWaitSeconds
                 || isRedAlliance == !RobotState.getInstance().isRedAlliance();
+    }
+
+    public void setChoreoAutoCompiled(boolean compiled) {
+        choreoAutoCompiled.set(compiled);
     }
 
     public void recompile() {
@@ -118,13 +120,13 @@ public class AutoFactory {
         autoCompiled.set(true);
 
         // update choreo Auto
-        choreoAutoCompiled.set(false);
-        currentChoreoAuto = choreoAutoSupplier.get();
-        if (currentChoreoAuto == null) {
-            currentChoreoAuto = ChoreoAuto.NO_AUTO;
-        }
-        compiledChoreoAuto = currentChoreoAuto.getInstance();
-        choreoAutoCompiled.set(true);
+        // choreoAutoCompiled.set(false);
+        // currentChoreoAuto = choreoAutoSupplier.get();
+        // if (currentChoreoAuto == null) {
+        //     currentChoreoAuto = ChoreoAuto.NO_AUTO;
+        // }
+        // compiledChoreoAuto = currentChoreoAuto.getInstance();
+        // choreoAutoCompiled.set(true);
     }
 
     public AutoBase getCompiledAuto() {
@@ -143,35 +145,37 @@ public class AutoFactory {
         return bumpNeededSupplier.get();
     }
 
-    public static enum ChoreoAuto {
-        NO_AUTO(null),
-        TEST_AUTO(Autos.getInstance().testPath()),
-        DEAD_RECKONING(
-            new DefaultDriveCommand(() -> 0.5, () -> 0.0, () -> 0.0, () -> false).withTimeout(2.0)
-        ),
-        J4_K4_L4(Autos.getInstance().J4K4L4()),
-        E4_D4_C4(Autos.getInstance().E4D4C4()),
-        CENTER_L1(Autos.getInstance().CENTERL1()),
-        G4_CLEAN_LEFT_ALGAE(Autos.getInstance().G4_CLEAN_LEFT_ALGAE());
-
-        private final Command autoCommand;
-
-        private ChoreoAuto(Command autoCommand) {
-            this.autoCommand = autoCommand;
-        }
-
-        public Command getInstance() {
-            if (autoCommand != null) {
-                try {
-                    return autoCommand;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            return null;
-        }
+    public Command getJ4K4L4() {
+        return Autos.getInstance().J4K4L4();
     }
+
+    // public static enum ChoreoAuto {
+    //     // NO_AUTO(null),
+    //     // TEST_AUTO(Autos.getInstance().testPath()),
+    //     // DEAD_RECKONING(new DefaultDriveCommand(() -> 0.5, () -> 0.0, () -> 0.0, () -> false).withTimeout(2.0)),
+    //     J4_K4_L4(this::getJ4K4L4);
+    //     // E4_D4_C4(Autos.getInstance().E4D4C4()),
+    //     // CENTER_L1(Autos.getInstance().CENTERL1());
+    //     // G4_CLEAN_LEFT_ALGAE(Autos.getInstance().G4_CLEAN_LEFT_ALGAE());
+
+    //     private final Command autoCommand;
+
+    //     private ChoreoAuto(Command autoCommand) {
+    //         this.autoCommand = autoCommand;
+    //     }
+
+    //     public Command getInstance() {
+    //         if (autoCommand != null) {
+    //             try {
+    //                 return autoCommand;
+    //             } catch (Exception e) {
+    //                 e.printStackTrace();
+    //             }
+    //         }
+
+    //         return null;
+    //     }
+    // }
 
     public static enum Auto {
         DEAD_RECKONING(DeadReckoning.class),
