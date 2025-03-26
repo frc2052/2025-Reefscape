@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
@@ -125,11 +126,13 @@ public class RobotContainer {
 
         controlBoard
                 .alignWithReefLeft()
-                .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(() -> AlignOffset.LEFT_BRANCH));
+                .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(() -> AlignOffset.LEFT_BRANCH))
+                .onFalse(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF));
 
         controlBoard
                 .alignWithReefRight()
-                .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(() -> AlignOffset.RIGHT_BRANCH));
+                .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(() -> AlignOffset.RIGHT_BRANCH))
+                .onFalse(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF));
 
         /* Secondary Driver */
         controlBoard.actTrigger().onTrue(superstructure.confirm());
@@ -158,6 +161,9 @@ public class RobotContainer {
 
         controlBoard.algaeScoreAngle().onTrue(superstructure.set(TargetAction.AS, false));
         controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.AP, false));
+
+        controlBoard.set1CoralAway().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(false)));
+        controlBoard.setFlush().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(true)));
 
         /* SysID */
         controlBoard.sysIDDynamicForward().onTrue(SuperstructureCommandFactory.setCoast());

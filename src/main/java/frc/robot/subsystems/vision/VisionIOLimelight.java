@@ -13,6 +13,7 @@ import frc.robot.Constants.VisionConstants.LeftLimelightConstants;
 import frc.robot.Constants.VisionConstants.RightLimelightConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
+import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.FieldConstants;
 import java.util.Arrays;
 import java.util.Optional;
@@ -20,7 +21,9 @@ import org.littletonrobotics.junction.Logger;
 
 public class VisionIOLimelight implements VisionIO {
     private static final double xyStdDevCoefficient = 0.02;
-    private static final double thetaStdDevCoefficient = 0.04;
+    private static final double thetaStdDevCoefficient = Double.MAX_VALUE; // 0.04;
+    private static final double mt1xyStdDevCoefficient = 0.1;
+    private static final double mt1thetaStdDevCoefficient = 0.2;
     private final RobotState robotState = RobotState.getInstance();
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
 
@@ -55,11 +58,26 @@ public class VisionIOLimelight implements VisionIO {
     }
 
     public void update() {
+        boolean shouldAccept = MathHelpers.chassisSpeedsNorm(robotState.getChassisSpeeds()) < 3.0
+                && (!DriverStation.isAutonomous()
+                        || (robotState
+                                        .getFieldToRobot()
+                                        .getTranslation()
+                                        .getDistance(
+                                                robotState.isRedAlliance()
+                                                        ? FieldConstants.RED_REEF_CENTER
+                                                        : FieldConstants.BLUE_REEF_CENTER)
+                                < 3));
+
         Optional<PoseEstimate> leftEstimate;
         Optional<PoseEstimate> rightEstimate;
-        if (DriverStation.isDisabled()) {
-            leftEstimate = pollLLMT1(LeftLimelightConstants.CAMERA_NAME, previousLeftEstimate);
-            rightEstimate = pollLLMT1(RightLimelightConstants.CAMERA_NAME, previousRightEstimate);
+
+        if (RobotState.getInstance().getAlignOffset() == AlignOffset.LEFT_BRANCH) {
+            leftEstimate = pollLL(LeftLimelightConstants.CAMERA_NAME, previousLeftEstimate);
+            rightEstimate = Optional.empty();
+        } else if (RobotState.getInstance().getAlignOffset() == AlignOffset.RIGHT_BRANCH) {
+            leftEstimate = Optional.empty();
+            rightEstimate = pollLL(RightLimelightConstants.CAMERA_NAME, previousRightEstimate);
         } else {
             leftEstimate = pollLL(LeftLimelightConstants.CAMERA_NAME, previousLeftEstimate);
             rightEstimate = pollLL(RightLimelightConstants.CAMERA_NAME, previousRightEstimate);
@@ -70,21 +88,7 @@ public class VisionIOLimelight implements VisionIO {
         double rightStdDev = Double.MAX_VALUE;
         double rightHeadingStdDev = Double.MAX_VALUE;
 
-        boolean enabledShouldAccept = DriverStation.isEnabled()
-                && (MathHelpers.chassisSpeedsNorm(robotState.getChassisSpeeds()) < 3.0
-                        && (!DriverStation.isAutonomous()
-                                || (robotState
-                                                .getFieldToRobot()
-                                                .getTranslation()
-                                                .getDistance(
-                                                        robotState.isRedAlliance()
-                                                                ? FieldConstants.RED_REEF_CENTER
-                                                                : FieldConstants.BLUE_REEF_CENTER)
-                                        < 3)));
-
-        boolean disabledShouldAccept = false; // DriverStation.isDisabled();
-
-        if (enabledShouldAccept || disabledShouldAccept) {
+        if (shouldAccept) {
             if (leftEstimate.isPresent() && leftEstimate.get().rawFiducials.length > 0) {
                 double closestTagDist = Arrays.stream(leftEstimate.get().rawFiducials)
                         .mapToDouble(fiducial -> fiducial.distToCamera)

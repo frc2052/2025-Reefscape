@@ -131,23 +131,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
         Logger.recordOutput("Superstructure/Current = Selected", target == getSelectedTargetAction());
         Logger.recordOutput("Target Superstructure Changing State", isChangingState);
 
-        if (target == TargetAction.AS) {
-            algaeScoreDownNeeded = true;
-        }
-
-        if (!movingFromIntake
-                && RobotState.getInstance().getHasCoral()
-                && (target == TargetAction.INTAKE)
-                && armPivot.atPosition(target)) {
-            System.out.println("GOT CORAL********************");
-            movingFromIntake = true;
-            set(TargetAction.STOW, true).schedule();
-        }
-
-        if (armPivot.atPosition(TargetAction.STOW)) {
-            movingFromIntake = false;
-        }
-
         if (target != previousAction) {
             Logger.recordOutput("Target Superstructure State Has Changed", true);
             isChangingState = true;
@@ -158,11 +141,28 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Logger.recordOutput("Target Superstructure State Has Changed", false);
         }
 
+        if (target == TargetAction.AS) {
+            algaeScoreDownNeeded = true;
+        }
+
+        if (!movingFromIntake
+                && RobotState.getInstance().getHasCoral()
+                && (target == TargetAction.INTAKE)
+                && armPivot.atPosition(target)) {
+            System.out.println("GOT CORAL********************");
+            movingFromIntake = true;
+            setCurrentAction(TargetAction.STOW);
+        }
+
+        if (armPivot.atPosition(TargetAction.STOW)) {
+            movingFromIntake = false;
+        }
+
         if (isChangingState) {
             if (cancelHome) {
                 elevator.setWantHome(false);
                 cancelHome = false;
-            } else if (target == TargetAction.HM) {
+            } else if (target == TargetAction.HM && !elevator.isHoming()) {
                 elevator.setWantHome(true);
                 System.out.println("HOMING");
                 return;
@@ -199,8 +199,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 }
                 if (target.getElevatorPositionRotations() > SuperstructureConstants.MIN_SAFE_ROTATION
                         || elevator.getPosition() > SuperstructureConstants.MIN_MOVE_ROTATION) {
-                    armPivot.setArmPosition(target);
                     elevator.setPositionMotionMagic(target);
+                    armPivot.setArmPosition(target);
                     intakePivot.setPosition(target);
                 } else {
                     armPivot.setArmPosition(target);
@@ -212,8 +212,11 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 }
             } else if (target.getElevatorPositionRotations() > elevator.getPosition()) {
                 elevator.setPositionMotionMagic(target);
-                armPivot.setArmPosition(target);
                 intakePivot.setPosition(target);
+
+                if (elevator.atPosition(5, target)) {
+                    armPivot.setArmPosition(target);
+                }
             }
 
             if (elevator.atPosition(target) && armPivot.isAtPosition(5, target.getArmPivotAngle())) {
