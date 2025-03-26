@@ -9,6 +9,7 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 
 import choreo.auto.AutoChooser;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.auto.common.AutoFactory;
 import frc.robot.auto.common.Autos;
+import frc.robot.util.FieldConstants;
 
 public class Robot extends LoggedRobot {
     private Command m_autonomousCommand;
@@ -25,7 +27,6 @@ public class Robot extends LoggedRobot {
     private Command compiledChoreoAuto;
 
     private final AutoChooser autoChooser;
-    // private Trigger coastTrigger;
 
     private final RobotContainer m_robotContainer;
 
@@ -49,10 +50,10 @@ public class Robot extends LoggedRobot {
         // autoChooser.addCmd("Test", this::test);
 
         SmartDashboard.putData("CHOREO AUTO CHOOSER V1", autoChooser);
-
-        // coastTrigger = new Trigger(Dashboard.getInstance()::getCoastOut);
-        // coastTrigger.onTrue(SuperstructureCommandFactory.setCoast());
-        // coastTrigger.onFalse(SuperstructureCommandFactory.setBrake());
+        Pose2d loadPose = FieldConstants.blueLeftBranchL1.get(0);
+        if (loadPose != null) {
+            System.out.println("Loaded Field Constants");
+        }
     }
 
     public void recompile() {

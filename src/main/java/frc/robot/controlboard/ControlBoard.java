@@ -238,13 +238,13 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
     }
 
     @Override
-    public Trigger setSubReefLeft() {
-        return secondaryControlBoard.setSubReefLeft();
+    public Trigger set1CoralAway() {
+        return secondaryControlBoard.set1CoralAway();
     }
 
     @Override
-    public Trigger setSubReefRight() {
-        return secondaryControlBoard.setSubReefRight();
+    public Trigger setFlush() {
+        return secondaryControlBoard.setFlush();
     }
 
     @Override

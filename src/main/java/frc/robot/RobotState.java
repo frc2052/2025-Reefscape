@@ -23,6 +23,7 @@ public class RobotState {
     private boolean isAlignGoal;
     private boolean hasCoral;
     private boolean isIntaking;
+    private boolean isFlushAlign;
 
     private static RobotState INSTANCE;
 
@@ -42,6 +43,14 @@ public class RobotState {
 
     public boolean getIsIntaking() {
         return isIntaking;
+    }
+
+    public void setIsFlushAlign(boolean isFlushAlign) {
+        this.isFlushAlign = isFlushAlign;
+    }
+
+    public boolean getIsFlushAlign() {
+        return isFlushAlign;
     }
 
     public void setHasCoral(boolean hasCoral) {
@@ -167,5 +176,6 @@ public class RobotState {
         Logger.recordOutput("Auto Start Pose", autoStartPose);
         Logger.recordOutput("Goal Align Pose", goalPose);
         Logger.recordOutput("Auto Start Pose", autoStartPose);
+        Logger.recordOutput("Flush Alignment", isFlushAlign);
     }
 }
