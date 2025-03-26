@@ -1,14 +1,6 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Pounds;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.Seconds;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
@@ -30,6 +22,7 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team2052.lib.vision.photon.TagTracker.TagTrackerConstants;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -39,6 +32,15 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Pounds;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Seconds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -49,7 +51,6 @@ import frc.robot.subsystems.drive.ctre.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import frc.robot.util.FieldConstants;
 import frc.robot.util.io.Ports;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Constants {
     // spotless:off
@@ -251,7 +252,7 @@ public class Constants {
     public static final double MOTOR_RANGE = 19.568359375; // rotations
     public static final double ENCODER_RANGE = 0.306; // rotations
 
-    public static final Angle ENCODER_OFFSET = Rotations.of(-0.45361);
+    public static final Angle ENCODER_OFFSET = Rotations.of(-0.449462); // -0.45361
 
     public static final double MIN_INTAKE_ARM_ANGLE = 0;
     public static final double MAX_INTAKE_ARM_ANGLE = 20;

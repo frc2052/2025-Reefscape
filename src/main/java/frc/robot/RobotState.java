@@ -1,7 +1,10 @@
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.team2052.lib.helpers.MathHelpers;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -11,7 +14,6 @@ import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 import frc.robot.util.FieldConstants;
-import org.littletonrobotics.junction.Logger;
 
 public class RobotState {
     private SwerveDriveState drivetrainState = new SwerveDriveState();
@@ -75,6 +77,10 @@ public class RobotState {
 
     public ChassisSpeeds getChassisSpeeds() {
         return drivetrainState.Speeds;
+    }
+
+    public double getRotationalSpeeds(){
+        return drivetrainState.Speeds.omegaRadiansPerSecond;
     }
 
     public double distanceToAlignPose() {

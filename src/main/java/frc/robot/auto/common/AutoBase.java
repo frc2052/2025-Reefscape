@@ -4,11 +4,16 @@
 
 package frc.robot.auto.common;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import com.team2052.lib.helpers.MathHelpers;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,9 +38,6 @@ import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -158,6 +160,10 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(fieldLoc)),
                 followPathCommand(startPath.getChoreoPath()) // default to choreo path
                         .andThen(AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> branchside, fieldLoc)));
+    }
+
+    protected Command reefAlignment(AlignOffset offset, FieldElementFace face){
+        return AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> offset, face);
     }
 
     protected Command safeStationAlignment(Path altAlignPath) {
@@ -346,6 +352,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
         // TODO: right side L1 backups
 
         // J4K4L4
+        public static final Path EXTENDED_J_LL = new Path("J LL", "EXTENDED J LL");
+
         public static final Path B_SL_J = new Path("SL J", "BLUE SL J");
         public static final Path B_J_LL = new Path("J LL", "BLUE J LL");
         public static final Path B_LL_K = new Path("LL K", "BLUE LL K");
