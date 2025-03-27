@@ -11,6 +11,7 @@ import frc.robot.auto.modes.StartLeft.AutoJ1K4L4;
 import frc.robot.auto.modes.StartLeft.AutoJ4K4L4;
 import frc.robot.auto.modes.StartLeft.AutoK4L4DAK3L3;
 import frc.robot.auto.modes.StartRight.AutoE4D4C4;
+import frc.robot.auto.modes.choreoRemake.V2J4K4L4;
 import frc.robot.auto.modes.choreoRemake.leftSide.BlueJ4K4L4;
 import frc.robot.auto.modes.choreoRemake.leftSide.RedJ4K4L4;
 import frc.robot.auto.modes.choreoRemake.rightSide.BlueE4D4C4;
@@ -172,6 +173,7 @@ public class AutoFactory {
     // }
 
     public static enum Auto {
+        V2_J4K4L4(V2J4K4L4.class),
         DEAD_RECKONING(DeadReckoning.class),
         NO_AUTO(null),
         // LL_K4_VISION_TEST(AutoLLToK4.class),

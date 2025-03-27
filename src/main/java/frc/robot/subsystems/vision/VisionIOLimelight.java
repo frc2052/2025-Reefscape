@@ -1,18 +1,13 @@
 package frc.robot.subsystems.vision;
 
-import java.util.Arrays;
-import java.util.Optional;
-
-import org.littletonrobotics.junction.Logger;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
 
 import com.ctre.phoenix6.Utils;
 import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.vision.limelight.LimelightHelpers;
 import com.team2052.lib.vision.limelight.LimelightHelpers.PoseEstimate;
-
 import edu.wpi.first.math.VecBuilder;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Meters;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.VisionConstants.LeftLimelightConstants;
 import frc.robot.Constants.VisionConstants.RightLimelightConstants;
@@ -20,6 +15,9 @@ import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.FieldConstants;
+import java.util.Arrays;
+import java.util.Optional;
+import org.littletonrobotics.junction.Logger;
 
 public class VisionIOLimelight implements VisionIO {
     private static final double xyStdDevCoefficient = 0.02;
@@ -60,19 +58,17 @@ public class VisionIOLimelight implements VisionIO {
     }
 
     public void update() {
-        boolean shouldAccept = 
-
-            MathHelpers.chassisSpeedsNorm(robotState.getChassisSpeeds()) < 3.0 
-            && robotState.getRotationalSpeeds() < 180.0
-            && (!DriverStation.isAutonomous()
-                    || (robotState
-                                    .getFieldToRobot()
-                                    .getTranslation()
-                                    .getDistance(
-                                            robotState.isRedAlliance()
-                                                    ? FieldConstants.RED_REEF_CENTER
-                                                    : FieldConstants.BLUE_REEF_CENTER)
-                            < 3));
+        boolean shouldAccept = MathHelpers.chassisSpeedsNorm(robotState.getChassisSpeeds()) < 3.0
+                && Math.abs(robotState.getRotationalSpeeds()) < Math.PI
+                && (!DriverStation.isAutonomous()
+                        || (robotState
+                                        .getFieldToRobot()
+                                        .getTranslation()
+                                        .getDistance(
+                                                robotState.isRedAlliance()
+                                                        ? FieldConstants.RED_REEF_CENTER
+                                                        : FieldConstants.BLUE_REEF_CENTER)
+                                < 3));
 
         Optional<PoseEstimate> leftEstimate;
         Optional<PoseEstimate> rightEstimate;

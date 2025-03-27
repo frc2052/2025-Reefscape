@@ -149,7 +149,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 && RobotState.getInstance().getHasCoral()
                 && (target == TargetAction.INTAKE)
                 && armPivot.atPosition(target)) {
-            System.out.println("GOT CORAL********************");
+            // System.out.println("GOT CORAL********************");
             movingFromIntake = true;
             setCurrentAction(TargetAction.STOW);
         }
