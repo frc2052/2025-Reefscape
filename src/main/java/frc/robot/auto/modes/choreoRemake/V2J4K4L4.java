@@ -88,11 +88,15 @@ public class V2J4K4L4 extends AutoBase {
                 () -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.STOW
                         || RobotState.getInstance().getHasCoral())));
 
+        // if scored K, max had time, no wait
+        // if didn't score K, give max more time
         // retry OR reload
-        addCommands((followPathCommand(retryLoad.getPathPlannerPath())
+        addCommands(
+                ((followPathCommand(retryLoad.getPathPlannerPath()).beforeStarting(new WaitCommand(kScored ? 0.0 : 0.5))) // give max time to reload
                         .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
                 .until(() -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.STOW
-                        || RobotState.getInstance().getHasCoral())));
+                        || RobotState.getInstance().getHasCoral()))
+        );
 
         // HAVE SECOND PICKUP CORAL?
         addCommands(new ConditionalCommand(
@@ -111,7 +115,7 @@ public class V2J4K4L4 extends AutoBase {
                 // no? retry load
                 new SequentialCommandGroup(
                         new PrintCommand("FAILED SECOND PICKUP: GOING TO RETRY L L4"),
-                        (followPathCommand(retryLoad.getPathPlannerPath())
+                        ((followPathCommand(retryLoad.getPathPlannerPath()).beforeStarting(new WaitCommand(0.75)))
                                         .deadlineFor(
                                                 IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
                                 .until(() ->
@@ -133,7 +137,7 @@ public class V2J4K4L4 extends AutoBase {
                                                 .andThen(new WaitCommand(0.25))),
                                 // no? run reload
                                 new PrintCommand("FAILED RETRY 2ND PICKUP, PICKUP AGAIN FOR K").andThen(
-                                (followPathCommand(retryLoad.getPathPlannerPath())
+                                ((followPathCommand(retryLoad.getPathPlannerPath()).beforeStarting(new WaitCommand(0.75)))
                                                 .deadlineFor(IntakeCommandFactory.intake()
                                                         .alongWith(ArmCommandFactory.intake())))
                                         .until(() -> (SuperstructureSubsystem.getInstance()
@@ -168,7 +172,7 @@ public class V2J4K4L4 extends AutoBase {
                         new SequentialCommandGroup(
                                 // RELOAD
                                 new PrintCommand("DIDN'T MAKE K AT FIRST, NO CORAL, RELOADING!"),
-                                (followPathCommand(retryLoad.getPathPlannerPath())
+                                ((followPathCommand(retryLoad.getPathPlannerPath()).beforeStarting(new WaitCommand(0.75)))
                                                 .deadlineFor(IntakeCommandFactory.intake()
                                                         .alongWith(ArmCommandFactory.intake())))
                                         .until(() -> (SuperstructureSubsystem.getInstance()
