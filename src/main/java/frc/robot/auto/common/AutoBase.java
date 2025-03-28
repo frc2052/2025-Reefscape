@@ -4,11 +4,16 @@
 
 package frc.robot.auto.common;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import com.team2052.lib.helpers.MathHelpers;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,9 +38,6 @@ import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -195,8 +197,10 @@ public abstract class AutoBase extends SequentialCommandGroup {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
                 Commands.waitUntil(() -> ElevatorSubsystem.getInstance().atPosition(2.0, position)
-                                && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0))
-                        .andThen(ArmCommandFactory.coralOut().withTimeout(0.30)));
+                                && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0)),
+                new WaitCommand(0.3)
+                
+                .andThen(ArmCommandFactory.coralOut().withTimeout(0.30)));
     }
 
     protected Command toPosAndScore(TargetAction position) {
