@@ -11,7 +11,7 @@ public class SuperstructurePosition {
         // spotless:off
         HM(1.5, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Homing
         EXPLODE(5.0, Degrees.of(228.5), IntakePivotPositions.STOW.position, ActionType.NONE),
-        INTAKE(2.0, Degrees.of(307), IntakePivotPositions.INTAKE.position, ActionType.CORAL),
+        INTAKE(2.0, Degrees.of(307), IntakePivotPositions.INTAKE.position, ActionType.CORAL), //307
         L1H(6.0, Degrees.of(190.0), IntakePivotPositions.L1.position, ActionType.CORAL),
         L2(17.7, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 4.0, Degrees.of(157.0), IntakePivotPositions.STOW.position),
         L3(36.0, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 21.0, Degrees.of(157.0), IntakePivotPositions.STOW.position),
@@ -87,7 +87,7 @@ public class SuperstructurePosition {
 
     private enum IntakePivotPositions {
         STOW(17.5),
-        INTAKE(0.8), // was 75
+        INTAKE(1), // was 75
         L1(15),
         MID(9);
 

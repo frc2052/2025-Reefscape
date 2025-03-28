@@ -174,6 +174,7 @@ public class RobotState {
     }
 
     public void output() {
+        Logger.recordOutput("HAS CORAL", hasCoral);
         Logger.recordOutput("Swerve Module States", drivetrainState.ModuleStates);
         Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
         Logger.recordOutput("Current Pose", drivetrainState.Pose);
