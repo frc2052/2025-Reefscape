@@ -109,7 +109,7 @@ public class RobotContainer {
                 .onTrue(new ConditionalCommand(
                         new InstantCommand(),
                         new InstantCommand(() ->
-                                superstructure.setCurrentAction(TargetAction.INTAKE)), // TODO: change this back to intake
+                                superstructure.setCurrentAction(TargetAction.INTAKE)),
                         () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE))
                 .whileTrue(ArmCommandFactory.intake())
                 .whileTrue(new ConditionalCommand(
