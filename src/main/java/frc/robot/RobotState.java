@@ -14,7 +14,6 @@ import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 import frc.robot.util.FieldConstants;
 import org.littletonrobotics.junction.Logger;
-import frc.robot.Area2D;
 
 public class RobotState {
     private SwerveDriveState drivetrainState = new SwerveDriveState();

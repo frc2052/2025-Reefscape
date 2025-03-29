@@ -260,8 +260,14 @@ public class SuperstructureSubsystem extends SubsystemBase {
         previousAction = target;
         setDriverAction(driverAction);
         setTargetAction();
-        System.out.println(
-                "----------------------------------------------------- shouldSmartDrive " + shouldSmartDrive);
+        System.out.println("----------------------------------------------------- shouldSmartDrive " + shouldSmartDrive
+                + " Driver action " + driverAction);
+
+        Logger.recordOutput(
+                "SmartDrive/current position",
+                SuperstructureSubsystem.getInstance().getCurrentAction());
+        Logger.recordOutput("SmartDrive/should smart drive", shouldSmartDrive);
+        Logger.recordOutput("SmartDrive/ driver action", driverAction);
     }
 
     private void setTargetAction() {
@@ -283,7 +289,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
             } else if (RobotState.getFieldLocation() == FieldLocation.BARGE) {
 
             } else if (RobotState.getFieldLocation() == FieldLocation.TRAVEL) {
-                setSmartDriveAction(TargetAction.STOW);
+                // setSmartDriveAction(TargetAction.STOW);
             }
         }
     }

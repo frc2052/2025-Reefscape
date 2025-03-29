@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
-import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 public class AdvantageScopeSubsystem extends SubsystemBase {
@@ -38,10 +37,10 @@ public class AdvantageScopeSubsystem extends SubsystemBase {
     public static void recordDrivetrainData() {}
 
     public static void recordSmartDriveData() {
-        Logger.recordOutput(
-                // folder + smartdrive +
-                "SmartDrive/current action",
-                SuperstructureSubsystem.getInstance().getCurrentAction());
+        // Logger.recordOutput(
+        //         // folder + smartdrive +
+        //         "SmartDrive/current action",
+        //         SuperstructureSubsystem.getInstance().getCurrentAction());
         Logger.recordOutput(
                 // folder + smartdrive +
                 "SmartDrive/current location ", RobotState.getFieldLocation());
