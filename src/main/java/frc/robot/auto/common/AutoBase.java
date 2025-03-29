@@ -4,16 +4,11 @@
 
 package frc.robot.auto.common;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import com.team2052.lib.helpers.MathHelpers;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,6 +33,9 @@ import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -197,10 +195,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
                 Commands.waitUntil(() -> ElevatorSubsystem.getInstance().atPosition(2.0, position)
-                                && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0)),
-                new WaitCommand(0.3)
-                
-                .andThen(ArmCommandFactory.coralOut().withTimeout(0.30)));
+                        && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0)),
+                new WaitCommand(0.1)
+                        .andThen(ArmCommandFactory.intake()
+                                .withTimeout(0.1)
+                                .andThen(ArmCommandFactory.coralOut().withTimeout(0.2))));
     }
 
     protected Command toPosAndScore(TargetAction position) {
@@ -325,6 +324,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         public static final Path RED_LL_RETRY = new Path("RED LL RETRY", "RED LL RETRY");
         public static final Path BLUE_RL_RETRY = new Path("BLUE RL RETRY", "BLUE RL RETRY");
         public static final Path RED_RL_RETRY = new Path("RED RL RETRY", "RED RL RETRY");
+        public static final Path BLUE_LL_RETRY_STRAIGHT = new Path("SLOW BLUE LL RETRY", "BLUE LL RETRY");
 
         public static final Path B_SC_GH_L1 = new Path("SC GH", "BLUE SC GH L1");
         public static final Path R_SC_GH_L1 = new Path("SC GH", "RED SC GH L1");

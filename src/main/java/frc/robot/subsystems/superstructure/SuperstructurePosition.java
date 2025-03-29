@@ -87,7 +87,7 @@ public class SuperstructurePosition {
 
     private enum IntakePivotPositions {
         STOW(17.5),
-        INTAKE(1), // was 75
+        INTAKE(0.8), // was 75
         L1(15),
         MID(9);
 
