@@ -126,7 +126,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     protected Command getBumpCommand() {
         if (autoFactory.getBumpNeeded()) {
-            return new DefaultDriveCommand(() -> 0.6, () -> 0, () -> 0, () -> true).withDeadline(new WaitCommand(1.5));
+            return new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> true).withDeadline(new WaitCommand(1.5));
         } else {
             return new InstantCommand();
         }
@@ -320,6 +320,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     public static final class PathsBase {
+        // MIDDLE BACKUP PATH
+        public static final Path SC_GH_L1 = new Path("SC GH L1" ,"RED SC GH L1");
 
         // retry coral grab
         public static final Path BLUE_LL_RETRY = new Path("BLUE LL RETRY", "BLUE LL RETRY");

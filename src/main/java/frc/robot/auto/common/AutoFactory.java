@@ -11,6 +11,7 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DashboardConstants;
 import frc.robot.RobotState;
+import frc.robot.auto.modes.choreoRemake.V2BackupMiddle;
 import frc.robot.auto.modes.choreoRemake.V2E4D4C4;
 import frc.robot.auto.modes.choreoRemake.V2J4K4L4;
 import frc.robot.auto.modes.safety.DeadReckoning;
@@ -165,6 +166,7 @@ public class AutoFactory {
         LEFT_3_CORAL_JKL(V2J4K4L4.class),
         RIGHT_3_CORAL_EDC(V2E4D4C4.class),
         DEAD_RECKONING(DeadReckoning.class),
+        BACKUP_MIDDLE_L1(V2BackupMiddle.class),
         NO_AUTO(null);
         // LL_K4_VISION_TEST(AutoLLToK4.class),
         // BACKUP_AUTO_H4_DA_NET(AutoG4AlgaePrep.class),

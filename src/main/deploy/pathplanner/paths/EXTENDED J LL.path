@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 1.8820696721311476,
-        "y": 7.075870901639344
+        "x": 1.9586086526593356,
+        "y": 7.000974984571364
       },
       "prevControl": {
-        "x": 2.068922001802062,
-        "y": 7.241961861346824
+        "x": 2.14546098233025,
+        "y": 7.1670659442788445
       },
       "nextControl": {
-        "x": 1.6952173424602328,
-        "y": 6.9097799419318635
+        "x": 1.7717563229884208,
+        "y": 6.834884024863884
       },
       "isLocked": false,
       "linkedName": "LEFT PICKUP"
@@ -84,8 +84,8 @@
       "minWaypointRelativePos": 1.1287764742524917,
       "maxWaypointRelativePos": 2.40109790282392,
       "constraints": {
-        "maxVelocity": 1.8,
-        "maxAcceleration": 2.5,
+        "maxVelocity": 1.85,
+        "maxAcceleration": 2.6,
         "maxAngularVelocity": 480.0,
         "maxAngularAcceleration": 480.0,
         "nominalVoltage": 12.0,
