@@ -1,9 +1,11 @@
 package frc.robot.subsystems.superstructure;
 
-import static edu.wpi.first.units.Units.Degrees;
+import org.littletonrobotics.junction.Logger;
 
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
+
+import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,7 +18,6 @@ import frc.robot.subsystems.intake.IntakePivotSubsystem;
 import frc.robot.subsystems.intake.IntakeRollerSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
-import org.littletonrobotics.junction.Logger;
 
 public class SuperstructureSubsystem extends SubsystemBase {
 
@@ -36,6 +37,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private boolean cancelHome = false;
     private boolean driverAction;
     private boolean shouldSmartDrive;
+    private boolean algaeScoreDownNeeded = false;
+    private boolean movingFromIntake = false;
 
     /** Private constructor to prevent instantiation. */
     private SuperstructureSubsystem() {
@@ -99,6 +102,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
         revealCombination();
     }
 
+    public void stow() {
+        setCurrentAction(getStowFromCurrent());
+    }
+
     public void setCurrentAction(TargetAction target) {
         currentAction = target;
         driverAction = true;
@@ -115,6 +122,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public void confirmSelectedAction() {
         currentAction = selectedTargetAction;
+        movingFromIntake = false;
         revealCombination();
     }
 
@@ -146,11 +154,28 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Logger.recordOutput("Target Superstructure State Has Changed", false);
         }
 
+        if (target == TargetAction.AS) {
+            algaeScoreDownNeeded = true;
+        }
+
+        if (!movingFromIntake
+                && RobotState.getInstance().getHasCoral()
+                && (target == TargetAction.INTAKE)
+                && armPivot.atPosition(target)) {
+            System.out.println("GOT CORAL********************");
+            movingFromIntake = true;
+            setCurrentAction(TargetAction.STOW);
+        }
+
+        if (armPivot.atPosition(TargetAction.STOW)) {
+            movingFromIntake = false;
+        }
+
         if (isChangingState) {
             if (cancelHome) {
                 elevator.setWantHome(false);
                 cancelHome = false;
-            } else if (target == TargetAction.HM) {
+            } else if (target == TargetAction.HM && !elevator.isHoming()) {
                 elevator.setWantHome(true);
                 System.out.println("HOMING");
                 return;
@@ -176,10 +201,19 @@ public class SuperstructureSubsystem extends SubsystemBase {
                     }
                 }
             } else if (target.getElevatorPositionRotations() < elevator.getPosition()) {
+                if (algaeScoreDownNeeded) {
+                    armPivot.setArmPosition(target);
+                    intakePivot.setPosition(target);
+
+                    if (armPivot.isAtPosition(3, target.getArmPivotAngle())) {
+                        elevator.setPositionMotionMagic(target);
+                        algaeScoreDownNeeded = false;
+                    }
+                }
                 if (target.getElevatorPositionRotations() > SuperstructureConstants.MIN_SAFE_ROTATION
                         || elevator.getPosition() > SuperstructureConstants.MIN_MOVE_ROTATION) {
-                    armPivot.setArmPosition(target);
                     elevator.setPositionMotionMagic(target);
+                    armPivot.setArmPosition(target);
                     intakePivot.setPosition(target);
                 } else {
                     armPivot.setArmPosition(target);
@@ -191,8 +225,11 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 }
             } else if (target.getElevatorPositionRotations() > elevator.getPosition()) {
                 elevator.setPositionMotionMagic(target);
-                armPivot.setArmPosition(target);
                 intakePivot.setPosition(target);
+
+                if (elevator.atPosition(5, target)) {
+                    armPivot.setArmPosition(target);
+                }
             }
 
             if (elevator.atPosition(target) && armPivot.isAtPosition(5, target.getArmPivotAngle())) {
@@ -283,5 +320,15 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return elevator.atPosition(goalPosition)
                 && armPivot.atPosition(goalPosition)
                 && intakePivot.atPosition(goalPosition);
+    }
+
+    public TargetAction getStowFromCurrent() {
+        if (currentAction == TargetAction.AS) {
+            return TargetAction.POST_ALGAE_STOW;
+        } else if (currentAction == TargetAction.AP) {
+            return TargetAction.AP;
+        } else {
+            return TargetAction.STOW;
+        }
     }
 }

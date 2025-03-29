@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.team2052.lib.helpers.MathHelpers;
+import com.team2052.lib.util.DelayedBoolean;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,6 +14,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.RobotState;
@@ -21,20 +24,22 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveToPose extends Command {
-    private final double driveP = 0.78;
-    private final double driveD = 0.0;
-    private final double driveMaxSpeed = 1.0;
-    private final double driveMaxAcceleration = 4.0;
-    private final double driveTolerance = 0.025;
+    private final double driveP = 1.5;
+    private final double driveD = 0.17;
+    private final double driveMaxSpeed = 1.25;
+    private final double driveMaxAcceleration = 1.75;
+    private final double driveTolerance = 0.01;
     private final double ffMinRadius = 0.05;
     private final double ffMaxRadius = 0.1;
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
     private final Supplier<Pose2d> target;
 
+    private DelayedBoolean stoppedMovingDelay = new DelayedBoolean(Timer.getFPGATimestamp() + 1.0, 0.25);
+
     private final SwerveRequest.FieldCentricFacingAngle driveChassisSpeeds = new SwerveRequest.FieldCentricFacingAngle()
             .withDesaturateWheelSpeeds(true)
             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
-            .withHeadingPID(3.5, 0, 0);
+            .withHeadingPID(5.0, 0, 0.1);
 
     private boolean running = false;
 
@@ -53,9 +58,8 @@ public class DriveToPose extends Command {
         this.target = target;
 
         driveController = new ProfiledPIDController(
-                driveP, 0.07, driveD, new TrapezoidProfile.Constraints(driveMaxSpeed, driveMaxAcceleration), 0.02);
+                driveP, 0.0, driveD, new TrapezoidProfile.Constraints(driveMaxSpeed, driveMaxAcceleration), 0.02);
         driveController.setTolerance(driveTolerance);
-
         addRequirements(drivetrain);
     }
 
@@ -73,6 +77,7 @@ public class DriveToPose extends Command {
 
     @Override
     public void initialize() {
+        Logger.recordOutput("DriveToPose/At Goal", false);
         Pose2d currentPose = robot.get();
         ChassisSpeeds fieldVelocity = ChassisSpeeds.fromRobotRelativeSpeeds(
                 drivetrain.getCurrentRobotChassisSpeeds(), currentPose.getRotation());
@@ -159,9 +164,11 @@ public class DriveToPose extends Command {
     public void end(boolean interrupted) {
         drivetrain.stop();
         running = false;
+        stoppedMovingDelay.update(Timer.getFPGATimestamp(), false);
         // Clear logs
         Logger.recordOutput("DriveToPose/Setpoint", new Pose2d[] {});
         Logger.recordOutput("DriveToPose/Goal", new Pose2d[] {});
+        Logger.recordOutput("DriveToPose/At Goal", true);
         System.out.println("Drive to Pose is complete********");
         if (interrupted) {
             System.out.println("Drive to pose was interuppted");
@@ -175,7 +182,12 @@ public class DriveToPose extends Command {
 
     /** Checks if the robot is stopped at the final pose. */
     public boolean atGoal() {
-        return running && driveController.atGoal();
+        boolean stoppedMoving = stoppedMovingDelay.update(
+                Timer.getFPGATimestamp(),
+                MathHelpers.epsilonEquals(
+                        MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()), 0.0, 0.05));
+        return running && stoppedMoving;
+        // return running && driveController.atGoal();
     }
 
     /** Checks if the robot pose is within the allowed drive and theta tolerances. */

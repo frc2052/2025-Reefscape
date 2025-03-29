@@ -232,7 +232,10 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double DEG_TOL = 2.5;
 
-    public static final Angle ENCODER_OFFSET = Rotations.of(-0.47558);
+    public static final double MOTOR_RANGE = 19.568359375; // rotations
+    public static final double ENCODER_RANGE = 0.306; // rotations
+
+    public static final Angle ENCODER_OFFSET = Rotations.of(-0.45361);
 
     public static final double MIN_INTAKE_ARM_ANGLE = 0;
     public static final double MAX_INTAKE_ARM_ANGLE = 20;
@@ -267,12 +270,12 @@ public class Constants {
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake); 
 
-    public static final FeedbackConfigs FEEDBACK_CONFIG =
-        new FeedbackConfigs()
-            .withFeedbackRemoteSensorID(Ports.INTAKE_ENCODER_ID)
-            .withFeedbackSensorSource(FeedbackSensorSourceValue.SyncCANcoder)
-            .withRotorToSensorRatio(58.333)
-            .withSensorToMechanismRatio(1);
+    // public static final FeedbackConfigs FEEDBACK_CONFIG =
+    //     new FeedbackConfigs()
+    //         .withFeedbackRemoteSensorID(Ports.INTAKE_ENCODER_ID)
+    //         .withFeedbackSensorSource(FeedbackSensorSourceValue.SyncCANcoder)
+    //         .withRotorToSensorRatio(58.333)
+    //         .withSensorToMechanismRatio(1);
     
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
         new SoftwareLimitSwitchConfigs()
@@ -342,22 +345,22 @@ public class Constants {
 
     public static final class LeftLimelightConstants {
       public static final String CAMERA_NAME = "limelight-left";
-      public static final Distance X_OFFSET = Inches.of(9.949); // forward positive
-      public static final Distance Y_OFFSET = Inches.of(-11.901); // left positive
-      public static final Distance Z_OFFSET = Inches.of(13.205); // up positive
+      public static final Distance X_OFFSET = Inches.of(7.685); // forward positive
+      public static final Distance Y_OFFSET = Inches.of(-8.687); // right positive
+      public static final Distance Z_OFFSET = Inches.of(12.294); // up positive
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
       public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(-30); // yaw
+      public static final Angle THETA_Z_OFFSET = Degrees.of(-22.5); // yaw
     }
 
     public static final class RightLimelightConstants {
       public static final String CAMERA_NAME = "limelight-right";
-      public static final Distance X_OFFSET = Inches.of(4.650); // forward positive
-      public static final Distance Y_OFFSET = Inches.of(11.328); // left positive
-      public static final Distance Z_OFFSET = Inches.of(12.125); // up positive
+      public static final Distance X_OFFSET = Inches.of(4.941); // forward positive
+      public static final Distance Y_OFFSET = Inches.of(10.445); // right positive
+      public static final Distance Z_OFFSET = Inches.of(10.599); // up positive
       public static final Angle THETA_X_OFFSET = Degrees.of(0); // roll
       public static final Angle THETA_Y_OFFSET = Degrees.of(0); // pitch
-      public static final Angle THETA_Z_OFFSET = Degrees.of(23); // yaw
+      public static final Angle THETA_Z_OFFSET = Degrees.of(22.5); // yaw
     }  
 
     public static final class CoralReefCameraConstants {

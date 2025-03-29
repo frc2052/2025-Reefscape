@@ -31,7 +31,7 @@ public interface ISecondaryControlBoard {
 
     Trigger setGoalCoralStation();
 
-    Trigger setSubReefLeft();
+    Trigger set1CoralAway();
 
-    Trigger setSubReefRight();
+    Trigger setFlush();
 }

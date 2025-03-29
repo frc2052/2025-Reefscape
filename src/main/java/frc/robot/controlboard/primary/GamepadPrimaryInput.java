@@ -123,6 +123,11 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
     }
 
     @Override
+    public Trigger groundOuttake() {
+        return new Trigger(() -> false);
+    }
+
+    @Override
     public Trigger alignWithReefLeft() {
         return new Trigger(() -> false);
     }

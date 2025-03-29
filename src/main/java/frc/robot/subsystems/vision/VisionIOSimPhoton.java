@@ -89,7 +89,7 @@ public class VisionIOSimPhoton implements VisionIO {
         visionSim.update(pose);
         Field2d debugField = visionSim.getDebugField();
         if (getCurrentTagID() != 0) {
-            Optional<Pose3d> tagPose = FieldConstants.DEFAULT_APRIL_TAG_LAYOUT.getTagPose(getCurrentTagID());
+            Optional<Pose3d> tagPose = fieldLayout.getTagPose(getCurrentTagID());
             if (tagPose.isPresent()) {
                 lastPose = tagPose.get().toPose2d();
             } else {

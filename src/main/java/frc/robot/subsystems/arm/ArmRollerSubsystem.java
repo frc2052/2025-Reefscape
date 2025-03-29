@@ -5,6 +5,9 @@
 package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.team2052.lib.util.DelayedBoolean;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmRollerConstants;
 import frc.robot.RobotState;
@@ -16,21 +19,26 @@ import org.littletonrobotics.junction.Logger;
 public class ArmRollerSubsystem extends SubsystemBase {
     private final TalonFX motor;
     // private final CANrange range;
+    private final DigitalInput beamBreak;
     private static ArmRollerSubsystem INSTANCE;
     private boolean isIntaking = false;
 
+    private DelayedBoolean hasCoralDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.5);
+    private boolean hasCoral;
+
     public static ArmRollerSubsystem getInstance() {
         if (INSTANCE == null) {
-            return new ArmRollerSubsystem();
+            INSTANCE = new ArmRollerSubsystem();
         }
         return INSTANCE;
     }
 
-    public ArmRollerSubsystem() {
-        motor = new TalonFX(Ports.HAND_TALONFX_ID);
-        // range = new CANrange(Ports.HAND_CAN_RANGE);
+    private ArmRollerSubsystem() {
+        motor = new TalonFX(Ports.ARM_ROLLER_TALONFX_ID);
+        beamBreak = new DigitalInput(Ports.CORAL_BEAM_BREAK_PIN);
+        // range = new CANrange(Ports.ARM_ROLLER_CANRANGE_ID);
 
-        // range.getConfigurator().apply(HandConstants.CANRANGE_CONFIG);
+        // range.getConfigurator().apply(ArmRollerConstants.CANRANGE_CONFIG);
 
         motor.getConfigurator().apply(ArmRollerConstants.MOTOR_CONFIG);
     }
@@ -72,19 +80,20 @@ public class ArmRollerSubsystem extends SubsystemBase {
         return motor.getVelocity().getValueAsDouble();
     }
 
-    public boolean getHasCoral() {
-        // return range.getIsDetected().getValue();
-        return false;
+    public boolean beamBreakHit() {
+        return !beamBreak.get();
     }
 
     @Override
     public void periodic() {
+        hasCoral = hasCoralDelay.update(Timer.getFPGATimestamp(), beamBreakHit());
+
         // This method will be called once per scheduler run
-        Logger.recordOutput("Hand/Motor Velocity", motor.getVelocity().getValueAsDouble());
-        Logger.recordOutput("Hand/Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
-        // Logger.recordOutput("Hand/Has Coral", getHasCoral());
-        // Logger.recordOutput("Hand/ToF Distance", range.getDistance().getValueAsDouble());
-        RobotState.getInstance().setHasCoral(getHasCoral());
+        Logger.recordOutput("Arm Rollers/Motor Velocity", motor.getVelocity().getValueAsDouble());
+        Logger.recordOutput("Arm Rollers/Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
+        Logger.recordOutput("Arm Rollers/Beam Break Hit", beamBreakHit());
+        Logger.recordOutput("Arm Rollers/Has Coral", hasCoral);
+        RobotState.getInstance().setHasCoral(hasCoral);
         RobotState.getInstance().setIsIntaking(isIntaking);
     }
 }

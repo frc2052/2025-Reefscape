@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.util.FieldConstants;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -26,7 +28,10 @@ public class Robot extends LoggedRobot {
         }
 
         Logger.start(); // Start logging
-        // CameraServer.startAutomaticCapture();
+        Pose2d loadPose = FieldConstants.blueLeftBranchL1.get(0);
+        if (loadPose != null) {
+            System.out.println("Loaded Field Constants");
+        }
     }
 
     @Override

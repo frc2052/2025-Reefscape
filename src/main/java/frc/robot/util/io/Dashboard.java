@@ -5,13 +5,9 @@ import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.common.AutoFactory.Auto;
-import frc.robot.commands.superstructure.SuperstructureCommandFactory;
-import java.util.Map;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class Dashboard {
@@ -23,12 +19,11 @@ public class Dashboard {
             new LoggedDashboardChooser<Double>("Wait Seconds");
 
     private final LoggedDashboardChooser<Boolean> bump = new LoggedDashboardChooser<Boolean>("Bump Needed");
-    private final ShuffleboardLayout calibrationMode =
-            Shuffleboard.getTab("Technician").getLayout("Toggle Neutral Mode", BuiltInLayouts.kList);
 
     // private final LoggedDashboardChooser<Boolean> stationSideChooser =
     //     new LoggedDashboardChooser<Boolean>("Auto Station Side");
 
+    private final LoggedDashboardChooser<Boolean> coastChooser = new LoggedDashboardChooser<Boolean>("Coast Out");
     private final NetworkTableInstance networkTables = NetworkTableInstance.getDefault();
     private final NetworkTable debugTable = networkTables.getTable("debug network tables tab");
     private final DoubleTopic waitTimeTopic = debugTable.getDoubleTopic("waitTime");
@@ -62,10 +57,8 @@ public class Dashboard {
         bump.addDefaultOption("No Bump Needed", false);
         bump.addOption("Bump Needed", true);
 
-        calibrationMode.withSize(2, 2).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
-
-        SmartDashboard.putData("BRAKE", SuperstructureCommandFactory.setBrake());
-        SmartDashboard.putData("COAST", SuperstructureCommandFactory.setCoast());
+        coastChooser.addDefaultOption("BRAKE", false);
+        coastChooser.addOption("COAST", true);
 
         // stationSideChooser.addDefaultOption("Right Side", true);
         // stationSideChooser.addOption("Left Side", false);
@@ -101,6 +94,10 @@ public class Dashboard {
 
     public boolean getBumpNeeded() {
         return bump.get();
+    }
+
+    public boolean getCoastOut() {
+        return coastChooser.get();
     }
 
     // Enums for Dashboard elements:
