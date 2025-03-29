@@ -51,16 +51,14 @@ public class V2J4K4L4 extends AutoBase {
         // score preload
         addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.IJ))
                 .andThen(new ParallelCommandGroup(
-                        IntakeCommandFactory.intake().withTimeout(1),
+                        ArmCommandFactory.intake().withTimeout(1),
                         followPathCommand(startPath.getChoreoPath()),
                         ClimberCommandFactory.climberDown().withTimeout(0.7)))
                 // align w/ extra time + raise elevator after delay
-                .andThen((new InstantCommand(() ->
-                                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
-                                .beforeStarting(new WaitCommand(0.1)))
+                .andThen((new InstantCommand(
+                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4)))
                         .alongWith(AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                 () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)))
-                // .andThen(new WaitCommand(0.1))
                 // check position and score --> slight wait for elevator to stop shaking
                 .andThen(score(TargetAction.L4)));
 
@@ -70,13 +68,10 @@ public class V2J4K4L4 extends AutoBase {
                         .andThen(new WaitCommand(0.2)));
 
         // first pickup from coral station
-        addCommands(
-                (followPathCommand(load1.getPathPlannerPath())
-                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
-                        .until(() -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.STOW
-                                || RobotState.getInstance().getHasCoral()))
-                // .andThen(new WaitCommand(0.15))
-                );
+        addCommands((followPathCommand(load1.getPathPlannerPath())
+                        .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
+                .until(() -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.STOW
+                        || RobotState.getInstance().getHasCoral())));
 
         // HAVE FIRST PICKUP CORAL?
         addCommands(new ConditionalCommand(
@@ -86,9 +81,7 @@ public class V2J4K4L4 extends AutoBase {
                         new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.KL)),
                         new ParallelCommandGroup(
                                 AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
-                                // .beforeStarting(new WaitCommand(0.3))
-                                ,
+                                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.KL),
                                 new InstantCommand(() -> SuperstructureSubsystem.getInstance()
                                                 .setCurrentAction(TargetAction.L4))
                                         .beforeStarting(new WaitCommand(0.5))),
@@ -118,7 +111,7 @@ public class V2J4K4L4 extends AutoBase {
                                 new SequentialCommandGroup(AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                         () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)),
                                 new SequentialCommandGroup(
-                                        new WaitCommand(0.8),
+                                        new WaitCommand(0.7),
                                         new InstantCommand(() -> SuperstructureSubsystem.getInstance()
                                                 .setCurrentAction(TargetAction.L4)))),
                         // new WaitCommand(0.2), TODO
