@@ -300,6 +300,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
         } else {
             if (getCurrentAction() == TargetAction.STOW && RobotState.getFieldLocation() == FieldLocation.TRAVEL) {
                 shouldSmartDrive = true;
+                driverAction = false;
             } else {
                 shouldSmartDrive = false;
             }
