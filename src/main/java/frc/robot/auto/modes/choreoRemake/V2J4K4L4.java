@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
 import frc.robot.auto.common.AutoBase;
 import frc.robot.commands.arm.ArmCommandFactory;
+import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.commands.intake.IntakeCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
@@ -49,14 +50,17 @@ public class V2J4K4L4 extends AutoBase {
 
         // score preload
         addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.IJ))
-                .andThen(followPathCommand(startPath.getChoreoPath()))
+                .andThen(new ParallelCommandGroup(
+                        IntakeCommandFactory.intake().withTimeout(1),
+                        followPathCommand(startPath.getChoreoPath()),
+                        ClimberCommandFactory.climberDown().withTimeout(0.7)))
                 // align w/ extra time + raise elevator after delay
                 .andThen((new InstantCommand(() ->
                                         SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
-                                .beforeStarting(new WaitCommand(0.6)))
-                        .alongWith(IntakeCommandFactory.intake().withTimeout(1))
+                                .beforeStarting(new WaitCommand(0.1)))
                         .alongWith(AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                 () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)))
+                // .andThen(new WaitCommand(0.1))
                 // check position and score --> slight wait for elevator to stop shaking
                 .andThen(score(TargetAction.L4)));
 
@@ -66,11 +70,13 @@ public class V2J4K4L4 extends AutoBase {
                         .andThen(new WaitCommand(0.2)));
 
         // first pickup from coral station
-        addCommands((followPathCommand(load1.getPathPlannerPath()) // working @ straightRetry
-                        .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
-                .until(() -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.STOW
-                        || RobotState.getInstance().getHasCoral()))
-                .andThen(new WaitCommand(0.15)));
+        addCommands(
+                (followPathCommand(load1.getPathPlannerPath())
+                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
+                        .until(() -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.STOW
+                                || RobotState.getInstance().getHasCoral()))
+                // .andThen(new WaitCommand(0.15))
+                );
 
         // HAVE FIRST PICKUP CORAL?
         addCommands(new ConditionalCommand(
@@ -78,13 +84,14 @@ public class V2J4K4L4 extends AutoBase {
                 Commands.sequence(
                         new PrintCommand("HAVE FIRST PICKUP CORAL: GOING TO SCORE K L4"),
                         new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.KL)),
-                        (AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
-                                        .beforeStarting(new WaitCommand(0.3))
-                                        .andThen(new WaitCommand(0.1))) // added a wait after alignment
-                                .alongWith(new InstantCommand(() -> SuperstructureSubsystem.getInstance()
+                        new ParallelCommandGroup(
+                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
+                                // .beforeStarting(new WaitCommand(0.3))
+                                ,
+                                new InstantCommand(() -> SuperstructureSubsystem.getInstance()
                                                 .setCurrentAction(TargetAction.L4))
-                                        .beforeStarting(new WaitCommand(0.6))),
+                                        .beforeStarting(new WaitCommand(0.5))),
                         score(TargetAction.L4),
                         new InstantCommand(() -> setKScored(true)),
                         new InstantCommand(() ->
@@ -101,23 +108,20 @@ public class V2J4K4L4 extends AutoBase {
                 .until(() -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.STOW
                         || RobotState.getInstance().getHasCoral())));
 
-        // TODO: lolipop pickup
-
         // HAVE SECOND PICKUP CORAL?
         addCommands(new ConditionalCommand(
                 // yes? score L L4
                 Commands.sequence(
                         new PrintCommand("SUCCESSFUL SECOND PICKUP: GOING TO SCORE L L4"),
-                        //
                         new ParallelCommandGroup(
+                                IntakeCommandFactory.intake().withTimeout(0.5),
+                                new SequentialCommandGroup(AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)),
                                 new SequentialCommandGroup(
-                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
-                                ),
-                                new SequentialCommandGroup(
-                                        new WaitCommand(1.0), // TODO: test longer raising delay
-                                        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
-                                )
-                        ),
+                                        new WaitCommand(0.8),
+                                        new InstantCommand(() -> SuperstructureSubsystem.getInstance()
+                                                .setCurrentAction(TargetAction.L4)))),
+                        // new WaitCommand(0.2), TODO
                         score(TargetAction.L4),
                         new InstantCommand(() ->
                                         SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
@@ -125,8 +129,7 @@ public class V2J4K4L4 extends AutoBase {
                 // no? retry load
                 new SequentialCommandGroup(
                         new PrintCommand("FAILED SECOND PICKUP: GOING TO RETRY L L4"),
-                        ((followPathCommand(retryLoad.getPathPlannerPath())
-                                                .beforeStarting(new WaitCommand(0.2)))
+                        ((followPathCommand(retryLoad.getPathPlannerPath()).beforeStarting(new WaitCommand(0.2)))
                                         .deadlineFor(
                                                 IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
                                 .until(() ->
@@ -140,18 +143,18 @@ public class V2J4K4L4 extends AutoBase {
                                                 "SUCCESSFUL RETRY 2ND PICKUP, HAVE CORAL, GOING TO TRY SCORING L L4"),
                                         new ParallelCommandGroup(
                                                 new SequentialCommandGroup(
-                                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
-                                                ),
+                                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)),
                                                 new SequentialCommandGroup(
-                                                        new WaitCommand(1.0),
-                                                        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
-                                                )
-                                        ),
+                                                        new WaitCommand(0.8),
+                                                        new InstantCommand(
+                                                                () -> SuperstructureSubsystem.getInstance()
+                                                                        .setCurrentAction(TargetAction.L4)))),
                                         score(TargetAction.L4),
                                         new InstantCommand(() -> SuperstructureSubsystem.getInstance()
                                                         .setCurrentAction(TargetAction.INTAKE))
                                                 .andThen(new WaitCommand(0.05))),
-                                // no? run reload and score
+                                // no? run reload
                                 new PrintCommand("FAILED RETRY 2ND PICKUP, PICKUP AGAIN")
                                         .andThen(((followPathCommand(retryLoad.getPathPlannerPath())
                                                                 .beforeStarting(new WaitCommand(0.3)))
@@ -181,13 +184,12 @@ public class V2J4K4L4 extends AutoBase {
                                 new PrintCommand("DIDN'T MAKE K AT FIRST, ALREADY HAVE CORAL, TRYING AGAIN!"),
                                 new ParallelCommandGroup(
                                         new SequentialCommandGroup(
-                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
-                                        ),
+                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(0.7),
-                                                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
-                                        )
-                                ),
+                                                new InstantCommand(() -> SuperstructureSubsystem.getInstance()
+                                                        .setCurrentAction(TargetAction.L4)))),
                                 score(TargetAction.L4),
                                 new InstantCommand(() -> SuperstructureSubsystem.getInstance()
                                                 .setCurrentAction(TargetAction.INTAKE))
@@ -208,14 +210,15 @@ public class V2J4K4L4 extends AutoBase {
                                 new SequentialCommandGroup(
                                         new PrintCommand("DID RELOAD TO RETRY K, GOING TO SCORE!"),
                                         new ParallelCommandGroup(
+                                                IntakeCommandFactory.outtake().withTimeout(0.7),
                                                 new SequentialCommandGroup(
-                                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
-                                                ),
+                                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.KL)),
                                                 new SequentialCommandGroup(
                                                         new WaitCommand(0.7),
-                                                        new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
-                                                )
-                                        ),
+                                                        new InstantCommand(
+                                                                () -> SuperstructureSubsystem.getInstance()
+                                                                        .setCurrentAction(TargetAction.L4)))),
                                         score(TargetAction.L4),
                                         new InstantCommand(() -> SuperstructureSubsystem.getInstance()
                                                         .setCurrentAction(TargetAction.INTAKE))

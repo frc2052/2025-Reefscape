@@ -13,8 +13,8 @@ public class SuperstructurePosition {
         EXPLODE(5.0, Degrees.of(228.5), IntakePivotPositions.STOW.position, ActionType.NONE),
         INTAKE(2.0, Degrees.of(307), IntakePivotPositions.INTAKE.position, ActionType.CORAL), //307
         L1H(6.0, Degrees.of(190.0), IntakePivotPositions.L1.position, ActionType.CORAL),
-        L2(17.7, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 4.0, Degrees.of(157.0), IntakePivotPositions.STOW.position),
-        L3(36.0, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 21.0, Degrees.of(157.0), IntakePivotPositions.STOW.position),
+        L2(17.7, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 3.0, Degrees.of(157.0), IntakePivotPositions.STOW.position),
+        L3(36.0, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 20.0, Degrees.of(157.0), IntakePivotPositions.STOW.position),
         L4(62.5, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 62.5, Degrees.of(186.0), IntakePivotPositions.STOW.position),
         LA(6.0, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Lower Algae
         UA(23.0, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Upper Algae

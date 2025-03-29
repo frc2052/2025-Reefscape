@@ -63,19 +63,19 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.812075169932029,
-      "rotationDegrees": -42.676988944014006
+      "rotationDegrees": -37.01965250929014
     },
     {
       "waypointRelativePos": 0.9944022391043636,
-      "rotationDegrees": -44.73817811043682
+      "rotationDegrees": -37.485597430242315
     },
     {
       "waypointRelativePos": 1.291883246701318,
-      "rotationDegrees": -38.52743413720142
+      "rotationDegrees": -36.11570668274537
     },
     {
       "waypointRelativePos": 2.3906437425029905,
-      "rotationDegrees": -39.81389053233006
+      "rotationDegrees": -33.27257880583584
     }
   ],
   "constraintZones": [
@@ -84,7 +84,7 @@
       "minWaypointRelativePos": 1.1287764742524917,
       "maxWaypointRelativePos": 2.40109790282392,
       "constraints": {
-        "maxVelocity": 1.85,
+        "maxVelocity": 2.1,
         "maxAcceleration": 2.6,
         "maxAngularVelocity": 480.0,
         "maxAngularAcceleration": 480.0,
@@ -108,7 +108,7 @@
     "rotation": -59.53445508054006
   },
   "reversed": false,
-  "folder": "V2 PATHS",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -118.92642583525357

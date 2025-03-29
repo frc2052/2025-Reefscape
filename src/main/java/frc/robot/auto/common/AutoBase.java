@@ -4,16 +4,11 @@
 
 package frc.robot.auto.common;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import com.team2052.lib.helpers.MathHelpers;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,6 +33,9 @@ import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
@@ -321,7 +319,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     public static final class PathsBase {
         // MIDDLE BACKUP PATH
-        public static final Path SC_GH_L1 = new Path("SC GH L1" ,"RED SC GH L1");
+        public static final Path SC_GH_L1 = new Path("SC GH L1", "RED SC GH L1");
 
         // retry coral grab
         public static final Path BLUE_LL_RETRY = new Path("BLUE LL RETRY", "BLUE LL RETRY");

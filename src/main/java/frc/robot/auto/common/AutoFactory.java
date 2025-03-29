@@ -3,11 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.auto.common;
 
-import java.util.function.Supplier;
-
-import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-import org.littletonrobotics.junction.networktables.LoggedNetworkString;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DashboardConstants;
 import frc.robot.RobotState;
@@ -16,6 +11,9 @@ import frc.robot.auto.modes.choreoRemake.V2E4D4C4;
 import frc.robot.auto.modes.choreoRemake.V2J4K4L4;
 import frc.robot.auto.modes.safety.DeadReckoning;
 import frc.robot.util.io.Dashboard;
+import java.util.function.Supplier;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
