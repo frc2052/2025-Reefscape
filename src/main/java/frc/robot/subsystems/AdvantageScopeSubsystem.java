@@ -39,8 +39,11 @@ public class AdvantageScopeSubsystem extends SubsystemBase {
 
     public static void recordSmartDriveData() {
         Logger.recordOutput(
-                folder + smartdrive + "current action",
+                // folder + smartdrive +
+                "SmartDrive/current action",
                 SuperstructureSubsystem.getInstance().getCurrentAction());
-        Logger.recordOutput(folder + smartdrive + "current location ", RobotState.getFieldLocation());
+        Logger.recordOutput(
+                // folder + smartdrive +
+                "SmartDrive/current location ", RobotState.getFieldLocation());
     }
 }

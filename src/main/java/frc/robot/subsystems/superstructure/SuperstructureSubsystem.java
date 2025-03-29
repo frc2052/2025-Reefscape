@@ -260,10 +260,13 @@ public class SuperstructureSubsystem extends SubsystemBase {
         previousAction = target;
         setDriverAction(driverAction);
         setTargetAction();
+        System.out.println(
+                "----------------------------------------------------- shouldSmartDrive " + shouldSmartDrive);
     }
 
     private void setTargetAction() {
-        if (getCurrentAction() == TargetAction.STOW || getCurrentAction() == TargetAction.TR && shouldSmartDrive) {
+        // getCurrentAction() == TargetAction.STOW || getCurrentAction() == TargetAction.TR &&
+        if (shouldSmartDrive) {
             if (RobotState.getFieldLocation() == FieldLocation.REEF
                     && IntakeRollerSubsystem.getInstance().getHasCoral()) {
                 System.out.println("inside the zone");
@@ -279,7 +282,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
             } else if (RobotState.getFieldLocation() == FieldLocation.BARGE) {
 
-            } else {
+            } else if (RobotState.getFieldLocation() == FieldLocation.TRAVEL) {
                 setSmartDriveAction(TargetAction.STOW);
             }
         }
@@ -289,8 +292,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
         if (!driver) {
             shouldSmartDrive = true;
         } else {
-            if (getCurrentAction() == TargetAction.STOW
-                    && robotState.getInstance().getFieldLocation() == FieldLocation.TRAVEL) {
+            if (getCurrentAction() == TargetAction.STOW && RobotState.getFieldLocation() == FieldLocation.TRAVEL) {
                 shouldSmartDrive = true;
             } else {
                 shouldSmartDrive = false;
