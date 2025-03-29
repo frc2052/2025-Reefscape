@@ -1,11 +1,9 @@
 package frc.robot.subsystems.superstructure;
 
-import org.littletonrobotics.junction.Logger;
+import static edu.wpi.first.units.Units.Degrees;
 
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
-
-import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,6 +16,7 @@ import frc.robot.subsystems.intake.IntakePivotSubsystem;
 import frc.robot.subsystems.intake.IntakeRollerSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
+import org.littletonrobotics.junction.Logger;
 
 public class SuperstructureSubsystem extends SubsystemBase {
 
