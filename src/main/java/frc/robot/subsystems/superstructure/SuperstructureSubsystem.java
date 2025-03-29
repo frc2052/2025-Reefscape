@@ -289,7 +289,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
             } else if (RobotState.getFieldLocation() == FieldLocation.BARGE) {
 
             } else if (RobotState.getFieldLocation() == FieldLocation.TRAVEL) {
-                // setSmartDriveAction(TargetAction.STOW);
+                setSmartDriveAction(TargetAction.STOW);
             }
         }
     }
@@ -303,6 +303,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 driverAction = false;
             } else {
                 shouldSmartDrive = false;
+                driverAction = true;
             }
         }
     }
