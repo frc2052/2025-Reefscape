@@ -23,9 +23,10 @@ import frc.robot.util.AlignmentCalculator.FieldElementFace;
 public class V2E4D4C4 extends AutoBase {
 
     private boolean dScored;
-    private static final Path startPath = PathsBase.B_SR_E;
-    private static final Path load1 = PathsBase.EXTENDED_E_RL;
-    private static final Path retryLoad = PathsBase.BLUE_RL_RETRY_STRAIGHT;
+    private static final Path startPath = PathsBase.B_SR_E; // 
+    private static final Path load1 = PathsBase.EXTENDED_E_RL; //
+    private static final Path retryLoad = PathsBase.BLUE_RL_RETRY_STRAIGHT; //
+    private static final Path rightLolipopPickup = PathsBase.BLUE_RL_LOLIPOP;
 
     public V2E4D4C4() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());

@@ -26,6 +26,7 @@ public class V2J4K4L4 extends AutoBase {
     private static final Path startPath = PathsBase.B_SL_J;
     private static final Path load1 = PathsBase.EXTENDED_J_LL;
     private static final Path retryLoad = PathsBase.BLUE_LL_RETRY_STRAIGHT;
+    private static final Path leftLolipopPickup = PathsBase.BLUE_LL_LOLIPOP;
 
     public V2J4K4L4() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());
@@ -70,8 +71,6 @@ public class V2J4K4L4 extends AutoBase {
                         || RobotState.getInstance().getHasCoral()))
                 .andThen(new WaitCommand(0.15)));
 
-        // _______________ START TIME CUT HERE
-
         // HAVE FIRST PICKUP CORAL?
         addCommands(new ConditionalCommand(
                 // yes? align and score K L4
@@ -101,6 +100,8 @@ public class V2J4K4L4 extends AutoBase {
                 .until(() -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.STOW
                         || RobotState.getInstance().getHasCoral())));
 
+        // TODO: lolipop pickup
+
         // HAVE SECOND PICKUP CORAL?
         addCommands(new ConditionalCommand(
                 // yes? score L L4
@@ -108,10 +109,10 @@ public class V2J4K4L4 extends AutoBase {
                         new PrintCommand("SUCCESSFUL SECOND PICKUP: GOING TO SCORE L L4"),
                         (AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                 () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
-                                        .beforeStarting(new WaitCommand(0.3)))
+                                        .beforeStarting(new WaitCommand(0.2)))
                                 .alongWith(new InstantCommand(() -> SuperstructureSubsystem.getInstance()
                                                 .setCurrentAction(TargetAction.L4))
-                                        .beforeStarting(new WaitCommand(0.7))),
+                                        .beforeStarting(new WaitCommand(0.8))),
                         score(TargetAction.L4),
                         new InstantCommand(() ->
                                         SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
@@ -134,7 +135,7 @@ public class V2J4K4L4 extends AutoBase {
                                                 "SUCCESSFUL RETRY 2ND PICKUP, HAVE CORAL, GOING TO TRY SCORING L L4"),
                                         (AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                                 () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
-                                                        .beforeStarting(new WaitCommand(0.3))
+                                                        .beforeStarting(new WaitCommand(.2))
                                                         .andThen(new WaitCommand(0.15)))
                                                 .alongWith(new InstantCommand(
                                                                 () -> SuperstructureSubsystem.getInstance()

@@ -333,11 +333,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
         public static final Path B_SC_GH_L1 = new Path("SC GH", "BLUE SC GH L1");
         public static final Path R_SC_GH_L1 = new Path("SC GH", "RED SC GH L1");
 
-        // TODO: backup algae
-        public static final Path BLUE_LL_LOLIPOP = new Path("BLUE ALGAE LL", "BLUE ALGAE LL");
-        public static final Path RED_LL_LOLIPOP = new Path("BLUE ALGAE LL", "BLUE ALGAE LL");
-        public static final Path BLUE_RL_LOLIPOP = new Path(null, null);
-        public static final Path RED_RL_LOLIPOP = new Path(null, null);
+        public static final Path BLUE_LL_LOLIPOP = new Path("LL LEFT LOLIPOP", null);
+        public static final Path BLUE_RL_LOLIPOP = new Path("RL RIGHT LOLIPOP", null);
 
         // left side L1 backups
         // TODO: validate pathplanner paths (not going to use but prevent error)
