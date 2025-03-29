@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
+import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 import frc.robot.util.FieldConstants;
@@ -216,5 +217,8 @@ public class RobotState {
                 return blueArea;
             }
         }
+    }
+    public void run(){
+        AdvantageScopeSubsystem.getInstance().periodic();
     }
 }

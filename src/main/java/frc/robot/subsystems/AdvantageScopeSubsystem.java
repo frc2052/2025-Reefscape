@@ -4,13 +4,19 @@
 
 package frc.robot.subsystems;
 
+
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
+import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 
 public class AdvantageScopeSubsystem extends SubsystemBase {
     static DrivetrainSubsystem drivetrainSubsystem;
 
     static String folder = "Data_";
+    static String smartdrive = "smartdrive";
+
 
     private static AdvantageScopeSubsystem INSTANCE;
 
@@ -28,7 +34,12 @@ public class AdvantageScopeSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         recordDrivetrainData();
+        recordSmartDriveData();
     }
 
     public static void recordDrivetrainData() {}
+
+    public static void recordSmartDriveData(){
+        Logger.recordOutput(folder+smartdrive+"SmartDrive", SuperstructureSubsystem.getInstance().getCurrentAction());
+    }
 }

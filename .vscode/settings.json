@@ -61,5 +61,6 @@
   "java.jdt.ls.javac.enabled": "off",
   "javascript.referencesCodeLens.showOnAllFunctions": true,
   "javascript.referencesCodeLens.enabled": true,
-  "java.search.scope": "all"
+  "java.search.scope": "all",
+  "java.debug.settings.onBuildFailureProceed": true
 }
