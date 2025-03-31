@@ -178,7 +178,7 @@ public class V2J4K4L4 extends AutoBase {
                                 new ParallelCommandGroup(
                                         new SequentialCommandGroup(
                                                 AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)),
+                                                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.KL)),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(0.7),
                                                 new InstantCommand(() -> SuperstructureSubsystem.getInstance()

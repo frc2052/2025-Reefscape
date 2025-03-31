@@ -8,40 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.3608933738425915,
-        "y": 2.256841724537037
+        "x": 3.8496158854166658,
+        "y": 2.0875611255787034
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.408740957754629,
-        "y": 1.7075969328703695
+        "x": 3.3221498842592583,
+        "y": 1.8352416087962957
       },
       "prevControl": {
-        "x": 4.404101562499999,
-        "y": 2.273379629629629
+        "x": 4.417844328703703,
+        "y": 2.419716796875
       },
       "nextControl": {
-        "x": 3.1008132432786466,
-        "y": 1.5325647165333518
+        "x": 3.0096352360045096,
+        "y": 1.6685372335553883
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.9353468287140934,
-        "y": 1.0213939070915614
+        "x": 1.959,
+        "y": 0.999
       },
       "prevControl": {
-        "x": 2.1188526242879275,
-        "y": 0.8516128039298312
+        "x": 2.1425057955738342,
+        "y": 0.8292188968382697
       },
       "nextControl": {
-        "x": 1.751841033140259,
-        "y": 1.1911750102532914
+        "x": 1.7754942044261655,
+        "y": 1.1687811031617303
       },
       "isLocked": false,
       "linkedName": "RIGHT PICKUP"
@@ -60,7 +60,20 @@
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.071309621710526,
+      "rotationDegrees": 51.47
+    },
+    {
+      "waypointRelativePos": 1.3983244243421065,
+      "rotationDegrees": 51.47
+    },
+    {
+      "waypointRelativePos": 2.569860197368421,
+      "rotationDegrees": 51.47
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
