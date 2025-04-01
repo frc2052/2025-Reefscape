@@ -7,7 +7,6 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
@@ -132,8 +131,9 @@ public class RobotContainer {
         controlBoard.algaeScoreAngle().onTrue(superstructure.set(TargetAction.AS, false));
         controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.AP, false));
 
-        controlBoard.set1CoralAway().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(false)));
-        controlBoard.setFlush().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(true)));
+        controlBoard.setFlush().onTrue(superstructure.set(TargetAction.HP, false));
+        // controlBoard.set1CoralAway().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(false)));
+        // controlBoard.setFlush().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(true)));
 
         /* SysID */
         controlBoard.sysIDDynamicForward().onTrue(SuperstructureCommandFactory.setCoast());

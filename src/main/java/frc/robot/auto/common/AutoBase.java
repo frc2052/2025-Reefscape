@@ -193,13 +193,13 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     protected Command score(TargetAction position) {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
                 Commands.waitUntil(() -> ElevatorSubsystem.getInstance().atPosition(2.0, position)
-                        && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0)),
+                                && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0))
+                        .withTimeout(0.75),
                 new WaitCommand(0.1)
                         .andThen(ArmCommandFactory.intake()
                                 .withTimeout(0.1)
-                                .andThen(ArmCommandFactory.coralOut().withTimeout(0.2))));
+                                .andThen(ArmCommandFactory.coralOut().withTimeout(0.35))));
     }
 
     protected Command toPosAndScore(TargetAction position) {
@@ -328,7 +328,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         public static final Path RED_RL_RETRY = new Path("RED RL RETRY", "RED RL RETRY");
 
         public static final Path BLUE_LL_RETRY_STRAIGHT = new Path("SLOW BLUE LL RETRY", "BLUE LL RETRY");
-        public static final Path BLUE_RL_RETRY_STRAIGHT = new Path("SLOW BLUE RL RETRT", "BLUE RL RETRY");
+        public static final Path BLUE_RL_RETRY_STRAIGHT = new Path("SLOW BLUE RL RETRY", "BLUE RL RETRY");
 
         public static final Path B_SC_GH_L1 = new Path("SC GH", "BLUE SC GH L1");
         public static final Path R_SC_GH_L1 = new Path("SC GH", "RED SC GH L1");

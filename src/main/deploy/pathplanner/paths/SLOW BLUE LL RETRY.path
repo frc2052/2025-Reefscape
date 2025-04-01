@@ -20,8 +20,8 @@
         "y": 7.027920081967213
       },
       "prevControl": {
-        "x": 1.9740572568627162,
-        "y": 7.251526879717191
+        "x": 1.9740572568627153,
+        "y": 7.251526879717193
       },
       "nextControl": {
         "x": 2.1976640546126944,
@@ -92,7 +92,7 @@
     "rotation": -59.03624346792651
   },
   "reversed": false,
-  "folder": null,
+  "folder": "V2 PATHS",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -60.94539590092295

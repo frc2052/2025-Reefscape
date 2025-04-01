@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 1.959,
-        "y": 0.999
+        "x": 1.5104508196721311,
+        "y": 1.5015881147540984
       },
       "prevControl": {
-        "x": 1.782223304703363,
-        "y": 0.8222233047033631
+        "x": 1.3336741243754942,
+        "y": 1.3248114194574614
       },
       "nextControl": {
-        "x": 2.1730204295364204,
-        "y": 1.2130204295364202
+        "x": 1.7244712492085517,
+        "y": 1.7156085442905185
       },
       "isLocked": false,
       "linkedName": "RIGHT PICKUP"
@@ -61,8 +61,8 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.2382682724252492,
-      "maxWaypointRelativePos": 1.270374792358804,
+      "minWaypointRelativePos": 0.2820512820512794,
+      "maxWaypointRelativePos": 1.0569800569800598,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 2.0,

@@ -77,19 +77,19 @@ public class FieldConstants {
      * KL
      */
     public static final List<Pose2d> blueLeftBranches = List.of(
-            new Pose2d(3.20, 4.20, new Rotation2d(Math.toRadians(0))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(60))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(120))),
+            new Pose2d(3.09, 4.24, new Rotation2d(Math.toRadians(0))),
+            new Pose2d(3.60, 2.93, new Rotation2d(Math.toRadians(60))),
+            new Pose2d(4.98, 2.70, new Rotation2d(Math.toRadians(120))),
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(180))),
             new Pose2d(5.37, 5.12, new Rotation2d(Math.toRadians(240))),
             new Pose2d(3.95, 5.34, new Rotation2d(Math.toRadians(300))));
     public static final List<Pose2d> blueRightBranches = List.of(
-            new Pose2d(3.19, 3.91, new Rotation2d(Math.toRadians(0))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(60))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(120))),
+            new Pose2d(3.08, 3.88, new Rotation2d(Math.toRadians(0))),
+            new Pose2d(3.91, 2.73, new Rotation2d(Math.toRadians(60))),
+            new Pose2d(5.29, 2.86, new Rotation2d(Math.toRadians(120))),
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(180))),
             new Pose2d(5.07, 5.32, new Rotation2d(Math.toRadians(240))),
-            new Pose2d(3.62, 5.16, new Rotation2d(Math.toRadians(300)))); //
+            new Pose2d(3.62, 5.16, new Rotation2d(Math.toRadians(300))));
     public static final List<Pose2d> blueLeftBranchL1 = List.of(
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(0))),
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(60))),

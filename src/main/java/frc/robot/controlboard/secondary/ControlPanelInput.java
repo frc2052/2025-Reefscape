@@ -43,12 +43,12 @@ public class ControlPanelInput implements ISecondaryControlBoard {
 
     @Override
     public Trigger climbUp() {
-        return new Trigger(() -> controlPanel.getY() > 0.5);
+        return new Trigger(() -> controlPanel.getY() < -0.5);
     }
 
     @Override
     public Trigger climbDown() {
-        return new Trigger(() -> controlPanel.getY() < -0.5);
+        return new Trigger(() -> controlPanel.getY() > 0.5);
     }
 
     @Override

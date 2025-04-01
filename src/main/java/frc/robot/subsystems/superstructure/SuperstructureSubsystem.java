@@ -214,7 +214,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 elevator.setPositionMotionMagic(target);
                 intakePivot.setPosition(target);
 
-                if (elevator.atPosition(5, target)) {
+                if (elevator.atPosition(20, target)) {
                     armPivot.setArmPosition(target);
                 }
             }

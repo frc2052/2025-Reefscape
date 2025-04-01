@@ -10,6 +10,7 @@ public class SuperstructurePosition {
     public enum TargetAction {
         // spotless:off
         HM(1.5, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Homing
+        HP(1.0, Degrees.of(133.0), IntakePivotPositions.MID.position, ActionType.NONE),
         EXPLODE(5.0, Degrees.of(228.5), IntakePivotPositions.STOW.position, ActionType.NONE),
         INTAKE(2.0, Degrees.of(307), IntakePivotPositions.INTAKE.position, ActionType.CORAL), //307
         L1H(6.0, Degrees.of(190.0), IntakePivotPositions.L1.position, ActionType.CORAL),
@@ -21,10 +22,10 @@ public class SuperstructurePosition {
         SAFE_ARM_HEIGHT(SuperstructureConstants.MIN_SAFE_ROTATION, Degrees.of(228), IntakePivotPositions.STOW.position, ActionType.NONE),
         STOW(12.0, Degrees.of(130.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Coral Station
         POST_ALGAE_STOW(12.0, Degrees.of(305.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Coral Station
-        AS(65.0, Degrees.of(185.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Algae Scoring NET
+        AS(65.0, Degrees.of(185.0), IntakePivotPositions.INTAKE.position, ActionType.ALGAE), // Algae Scoring NET
         AP(5.0, Degrees.of(325.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring Processor
         TR(5.0, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Travel
-        CL(14.0, Degrees.of(265.0), IntakePivotPositions.MID.position, ActionType.NONE); // Climb
+        CL(14.0, Degrees.of(265.0), IntakePivotPositions.L1.position, ActionType.NONE); // Climb
 
         // spotless:on
         private final double elevatorPosition;

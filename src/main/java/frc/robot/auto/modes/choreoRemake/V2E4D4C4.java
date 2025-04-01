@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -28,14 +29,14 @@ public class V2E4D4C4 extends AutoBase {
     private static final Path startPath = PathsBase.B_SR_E; //
     private static final Path load1 = PathsBase.EXTENDED_E_RL; //
     private static final Path retryLoad = PathsBase.BLUE_RL_RETRY_STRAIGHT; //
-    private static final Path rightLolipopPickup = PathsBase.BLUE_RL_LOLIPOP;
+    //     private static final Path rightLolipopPickup = PathsBase.BLUE_RL_LOLIPOP;
 
     public V2E4D4C4() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());
     }
 
     private void setDScored(boolean b) {
-        System.out.println("K SET TO: " + b);
+        System.out.println("D SET TO: " + b);
         dScored = b;
     }
 
@@ -50,16 +51,17 @@ public class V2E4D4C4 extends AutoBase {
 
         // score preload
         addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.EF))
-                .andThen(new ParallelCommandGroup(
-                        ArmCommandFactory.intake().withTimeout(1),
+                .andThen(new ParallelDeadlineGroup(
                         followPathCommand(startPath.getChoreoPath()),
-                        ClimberCommandFactory.climberDown().withTimeout(0.7)))
+                        ArmCommandFactory.intake().withTimeout(1),
+                        ClimberCommandFactory.climberDown().withTimeout(0.5)))
                 // align w/ extra time + raise elevator after delay
-                .andThen((new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4)))
+                .andThen((new InstantCommand(() ->
+                                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
+                                .beforeStarting(new WaitCommand(0.7)))
                         .alongWith(AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                 () -> AlignOffset.LEFT_BRANCH, FieldElementFace.EF)))
-                // check position and score --> slight wait for elevator to stop shaking
+                // check position and score
                 .andThen(score(TargetAction.L4)));
 
         // go down safely
@@ -111,7 +113,7 @@ public class V2E4D4C4 extends AutoBase {
                                 new SequentialCommandGroup(AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                         () -> AlignOffset.LEFT_BRANCH, FieldElementFace.CD)),
                                 new SequentialCommandGroup(
-                                        new WaitCommand(0.7),
+                                        new WaitCommand(0.8),
                                         new InstantCommand(() -> SuperstructureSubsystem.getInstance()
                                                 .setCurrentAction(TargetAction.L4)))),
                         score(TargetAction.L4),
@@ -129,10 +131,10 @@ public class V2E4D4C4 extends AutoBase {
                                                 || RobotState.getInstance().getHasCoral())),
                         // WE TRIED PICKUP FROM HP AGAIN - NOW DO WE HAVE CORAL?
                         new ConditionalCommand(
-                                // yes? score L L4
+                                // yes? score C L4
                                 new SequentialCommandGroup(
                                         new PrintCommand(
-                                                "SUCCESSFUL RETRY 2ND PICKUP, HAVE CORAL, GOING TO TRY SCORING C L4"),
+                                                "SUCCESSFUL RETRY 2ND PICKUP, HAVE CORAL, GOING TO TRY SCORING CL4"),
                                         new ParallelCommandGroup(
                                                 new SequentialCommandGroup(
                                                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
