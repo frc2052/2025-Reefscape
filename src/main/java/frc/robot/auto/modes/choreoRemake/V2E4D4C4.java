@@ -58,7 +58,7 @@ public class V2E4D4C4 extends AutoBase {
                 // align w/ extra time + raise elevator after delay
                 .andThen((new InstantCommand(() ->
                                         SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
-                                .beforeStarting(new WaitCommand(0.7)))
+                                .beforeStarting(new WaitCommand(1)))
                         .alongWith(AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                 () -> AlignOffset.LEFT_BRANCH, FieldElementFace.EF)))
                 // check position and score

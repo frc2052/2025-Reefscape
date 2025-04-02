@@ -122,10 +122,11 @@ public class RobotState {
     }
 
     public Pose2d getAlignPose() {
-        if (selectedAlignOffset == AlignOffset.MIDDLE_REEF) {
-            return getFieldToRobot()
-                    .nearest(isRedAlliance() ? FieldConstants.redLeftBranchL1 : FieldConstants.blueLeftBranchL1);
-        } else if (selectedAlignOffset == AlignOffset.LEFT_BRANCH) {
+        // if (selectedAlignOffset == AlignOffset.MIDDLE_REEF) {
+        //     return getFieldToRobot()
+        //             .nearest(isRedAlliance() ? FieldConstants.redLeftBranchL1 : FieldConstants.blueLeftBranchL1);
+        // } else
+        if (selectedAlignOffset == AlignOffset.LEFT_BRANCH) {
             return getFieldToRobot()
                     .nearest(isRedAlliance() ? FieldConstants.redLeftBranches : FieldConstants.blueLeftBranches);
         } else if (selectedAlignOffset == AlignOffset.RIGHT_BRANCH) {
@@ -179,7 +180,7 @@ public class RobotState {
         Logger.recordOutput("Swerve Module Goals", drivetrainState.ModuleTargets);
         Logger.recordOutput("Current Pose", drivetrainState.Pose);
         Logger.recordOutput("Auto Start Pose", autoStartPose);
-        Logger.recordOutput("Goal Align Pose", goalPose);
+        Logger.recordOutput("Goal Align Pose", getAlignPose());
         Logger.recordOutput("Flush Alignment", isFlushAlign);
     }
 }

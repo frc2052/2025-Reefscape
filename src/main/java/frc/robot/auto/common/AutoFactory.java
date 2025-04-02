@@ -33,6 +33,9 @@ public class AutoFactory {
     private double selectedWaitSeconds;
     private double savedWaitSeconds;
 
+    private boolean selectedBumpNeeded;
+    private boolean savedBumpNeeded;
+
     private boolean isRedAlliance = RobotState.getInstance().isRedAlliance();
 
     private static LoggedNetworkBoolean autoCompiled =
@@ -65,13 +68,12 @@ public class AutoFactory {
     public boolean recompileNeeded() {
         return autoSupplier.get() != currentAuto
                 || waitSecondsEntrySupplier.get() != savedWaitSeconds
-                || isRedAlliance == !RobotState.getInstance().isRedAlliance();
+                || isRedAlliance == !RobotState.getInstance().isRedAlliance()
+                || savedBumpNeeded != bumpNeededSupplier.get();
     }
 
     public boolean choreoRecompileNeeded() {
-        return
-        // choreoAutoSupplier.get() != currentChoreoAuto||
-        waitSecondsEntrySupplier.get() != savedWaitSeconds
+        return waitSecondsEntrySupplier.get() != savedWaitSeconds
                 || isRedAlliance == !RobotState.getInstance().isRedAlliance();
     }
 
@@ -102,14 +104,10 @@ public class AutoFactory {
         }
         autoCompiled.set(true);
 
-        // update choreo Auto
-        // choreoAutoCompiled.set(false);
-        // currentChoreoAuto = choreoAutoSupplier.get();
-        // if (currentChoreoAuto == null) {
-        //     currentChoreoAuto = ChoreoAuto.NO_AUTO;
-        // }
-        // compiledChoreoAuto = currentChoreoAuto.getInstance();
-        // choreoAutoCompiled.set(true);
+        // update bump needed
+        savedBumpNeeded = bumpNeededSupplier.get();
+
+        System.out.println("BUMP NEEDED?: " + savedBumpNeeded);
     }
 
     public AutoBase getCompiledAuto() {
@@ -125,7 +123,8 @@ public class AutoFactory {
     }
 
     public boolean getBumpNeeded() {
-        return bumpNeededSupplier.get();
+        return savedBumpNeeded;
+        // return bumpNeededSupplier.get();
     }
 
     public Command getJ4K4L4() {

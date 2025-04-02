@@ -106,19 +106,19 @@ public class FieldConstants {
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(300))));
 
     public static final List<Pose2d> redLeftBranches = List.of(
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(0))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(60))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(120))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(180))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(240))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(300))));
+            new Pose2d(14.46, 3.82, new Rotation2d(Math.toRadians(180))),
+            new Pose2d(13.94, 5.13, new Rotation2d(Math.toRadians(240))),
+            new Pose2d(12.55, 5.35, new Rotation2d(Math.toRadians(300))),
+            new Pose2d(11.65, 4.20, new Rotation2d(Math.toRadians(0))),
+            new Pose2d(12.18, 2.92, new Rotation2d(Math.toRadians(60))),
+            new Pose2d(13.59, 2.71, new Rotation2d(Math.toRadians(120))));
     public static final List<Pose2d> redRightBranches = List.of(
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(0))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(60))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(120))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(180))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(240))),
-            new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(300))));
+            new Pose2d(14.47, 4.16, new Rotation2d(Math.toRadians(180))),
+            new Pose2d(13.63, 5.32, new Rotation2d(Math.toRadians(240))),
+            new Pose2d(12.23, 5.16, new Rotation2d(Math.toRadians(300))),
+            new Pose2d(11.66, 3.85, new Rotation2d(Math.toRadians(0))),
+            new Pose2d(12.51, 2.73, new Rotation2d(Math.toRadians(60))),
+            new Pose2d(13.91, 2.90, new Rotation2d(Math.toRadians(120))));
     public static final List<Pose2d> redLeftBranchL1 = List.of(
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(0))),
             new Pose2d(0.0, 0, new Rotation2d(Math.toRadians(60))),

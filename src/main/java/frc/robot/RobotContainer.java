@@ -132,7 +132,7 @@ public class RobotContainer {
         controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.AP, false));
 
         controlBoard.setFlush().onTrue(superstructure.set(TargetAction.HP, false));
-        // controlBoard.set1CoralAway().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(false)));
+        controlBoard.set1CoralAway().onTrue(superstructure.set(TargetAction.UN_JAM, false));
         // controlBoard.setFlush().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(true)));
 
         /* SysID */

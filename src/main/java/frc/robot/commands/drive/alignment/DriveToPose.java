@@ -147,10 +147,17 @@ public class DriveToPose extends Command {
                         .times(DrivetrainConstants.DRIVE_MAX_SPEED.in(MetersPerSecond)),
                 linearS);
 
-        drivetrain.setControl(driveChassisSpeeds
-                .withTargetDirection(targetPose.getRotation())
-                .withVelocityX(driveVelocity.getX())
-                .withVelocityY(driveVelocity.getY()));
+        if (RobotState.getInstance().isRedAlliance()) {
+            drivetrain.setControl(driveChassisSpeeds
+                    .withTargetDirection(targetPose.getRotation().plus(Rotation2d.k180deg))
+                    .withVelocityX(-driveVelocity.getX())
+                    .withVelocityY(-driveVelocity.getY()));
+        } else {
+            drivetrain.setControl(driveChassisSpeeds
+                    .withTargetDirection(targetPose.getRotation())
+                    .withVelocityX(driveVelocity.getX())
+                    .withVelocityY(driveVelocity.getY()));
+        }
         // Log data
         Logger.recordOutput("DriveToPose/DistanceMeasured", currentDistance);
         Logger.recordOutput("DriveToPose/DistanceSetpoint", driveController.getSetpoint().position);
