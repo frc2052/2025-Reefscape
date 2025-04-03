@@ -8,11 +8,11 @@ import frc.robot.auto.common.AutoBase;
 import frc.robot.commands.intake.IntakeCommandFactory;
 
 /** Add your docs here. */
-public class V2BackupMiddle extends AutoBase {
+public class V2BackupMiddleL1 extends AutoBase {
 
     private static final Path startPath = PathsBase.SC_GH_L1;
 
-    public V2BackupMiddle() {
+    public V2BackupMiddleL1() {
         super(startPath.getPathPlannerPath().getStartingHolonomicPose());
     }
 

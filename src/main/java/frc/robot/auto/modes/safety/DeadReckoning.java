@@ -20,6 +20,6 @@ public class DeadReckoning extends AutoBase {
     @Override
     public void init() {
         addCommands(manualZero());
-        addCommands(new DefaultDriveCommand(() -> 0.5, () -> 0.0, () -> 0.0, () -> false).withTimeout(2.0));
+        addCommands(new DefaultDriveCommand(() -> -0.5, () -> 0.0, () -> 0.0, () -> false).withTimeout(1.0));
     }
 }

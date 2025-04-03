@@ -55,11 +55,12 @@ public class V2J4K4L4 extends AutoBase {
                         followPathCommand(startPath.getChoreoPath()),
                         ClimberCommandFactory.climberDown().withTimeout(0.5)))
                 // align w/ extra time + raise elevator after delay
-                .andThen((new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
-                                .beforeStarting(new WaitCommand(1)))
-                        .alongWith(AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)))
+                .andThen((new InstantCommand(() ->
+                                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
+                                .beforeStarting(new WaitCommand(1.4)))
+                        .alongWith((AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
+                                .withTimeout(4.5))))
                 // check position and score --> slight wait for elevator to stop shaking
                 .andThen(score(TargetAction.L4)));
 

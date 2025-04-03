@@ -195,7 +195,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         return new SequentialCommandGroup(
                 Commands.waitUntil(() -> ElevatorSubsystem.getInstance().atPosition(2.0, position)
                                 && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0))
-                        .withTimeout(0.6)
+                        .withTimeout(1.0)
                         .andThen(ArmCommandFactory.intake()
                                 .withTimeout(0.1)
                                 .andThen(ArmCommandFactory.coralOut().withTimeout(0.35))));
