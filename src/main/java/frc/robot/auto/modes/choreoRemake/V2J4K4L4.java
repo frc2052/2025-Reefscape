@@ -57,7 +57,7 @@ public class V2J4K4L4 extends AutoBase {
                 // align w/ extra time + raise elevator after delay
                 .andThen((new InstantCommand(() ->
                                         SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
-                                .beforeStarting(new WaitCommand(1.4)))
+                                .beforeStarting(new WaitCommand(1.3)))
                         .alongWith((AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                         () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
                                 .withTimeout(4.5))))
@@ -113,7 +113,7 @@ public class V2J4K4L4 extends AutoBase {
                                 new SequentialCommandGroup(AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                         () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)),
                                 new SequentialCommandGroup(
-                                        new WaitCommand(0.8),
+                                        new WaitCommand(0.7),
                                         new InstantCommand(() -> SuperstructureSubsystem.getInstance()
                                                 .setCurrentAction(TargetAction.L4)))),
                         score(TargetAction.L4),
@@ -140,7 +140,7 @@ public class V2J4K4L4 extends AutoBase {
                                                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                                 () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)),
                                                 new SequentialCommandGroup(
-                                                        new WaitCommand(0.8),
+                                                        new WaitCommand(0.7),
                                                         new InstantCommand(
                                                                 () -> SuperstructureSubsystem.getInstance()
                                                                         .setCurrentAction(TargetAction.L4)))),
