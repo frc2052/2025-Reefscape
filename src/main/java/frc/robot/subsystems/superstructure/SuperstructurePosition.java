@@ -23,7 +23,7 @@ public class SuperstructurePosition {
         SAFE_ARM_HEIGHT(SuperstructureConstants.MIN_SAFE_ROTATION, Degrees.of(228), IntakePivotPositions.STOW.position, ActionType.NONE),
         STOW(12.0, Degrees.of(130.0), IntakePivotPositions.STOW.position, ActionType.NONE), // default state
         POST_ALGAE_STOW(12.0, Degrees.of(305.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Coral Station
-        AS(65.0, Degrees.of(185.0), IntakePivotPositions.INTAKE.position, ActionType.ALGAE), // Algae Scoring NET
+        AS(63.0, Degrees.of(190.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring NET
         AP(3.0, Degrees.of(325.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring Processor
         TR(5.0, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Travel
         CL(14.0, Degrees.of(265.0), IntakePivotPositions.L1.position, ActionType.NONE); // Climb
