@@ -1,7 +1,9 @@
 package frc.robot.subsystems.drive;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
 
+import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -11,6 +13,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team2052.lib.vision.photon.PoseEstimate;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -33,6 +36,10 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier simNotifier = null;
     private double lastSimTime;
+
+    private final PIDController choreoXController = new PIDController(10.0, 0.0, 0.0);
+    private final PIDController choreoYController = new PIDController(10.0, 0.0, 0.0);
+    private final PIDController choreoThetaController = new PIDController(7.5, 0.0, 0.0);
 
     /* Keep track if we've ever applied the driver perspective before or not */
     private boolean hasAppliedOperatorPerspective = false;
@@ -60,6 +67,8 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
                 DrivetrainConstants.TUNER_DRIVETRAIN_CONSTANTS.getModuleConstants());
         // configurePathPlanner();
         configureAutoBuilder();
+
+        choreoThetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         if (Robot.isSimulation()) {
             startSimThread();
@@ -115,6 +124,24 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
 
     public void setNeutralMode(NeutralModeValue mode) {
         configNeutralMode(mode);
+    }
+
+    public void followTrajectory(SwerveSample sample) {
+        ChassisSpeeds speeds = new ChassisSpeeds(
+                sample.vx + choreoXController.calculate(getState().Pose.getX(), sample.x),
+                sample.vy + choreoXController.calculate(getState().Pose.getY(), sample.y),
+                sample.omega
+                        + choreoThetaController.calculate(
+                                getState().Pose.getRotation().getRadians(), sample.heading));
+
+        // apply chassis speeds field relative
+        DrivetrainSubsystem.getInstance()
+                .setControl(
+                        autoRequest.withSpeeds(speeds)
+                        // TODO: do we need feedfowards?
+                        // .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+                        // .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
+                        );
     }
 
     @Override

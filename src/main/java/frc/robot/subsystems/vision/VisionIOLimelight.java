@@ -59,6 +59,7 @@ public class VisionIOLimelight implements VisionIO {
 
     public void update() {
         boolean shouldAccept = MathHelpers.chassisSpeedsNorm(robotState.getChassisSpeeds()) < 3.0
+                && Math.abs(robotState.getRotationalSpeeds()) < Math.PI
                 && (!DriverStation.isAutonomous()
                         || (robotState
                                         .getFieldToRobot()

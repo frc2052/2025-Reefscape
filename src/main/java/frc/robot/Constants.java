@@ -1,6 +1,14 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Pounds;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
@@ -33,7 +41,12 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.measure.*;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Mass;
 import frc.robot.subsystems.drive.ctre.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import frc.robot.util.FieldConstants;
@@ -202,7 +215,7 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double CORAL_IN_SPEED = -0.33;
     public static final double CORAL_L1_OUT_SPEED = 0.2052;
-    public static final double CORAL_OUT_SPEED = 0.35;
+    public static final double CORAL_OUT_SPEED = 0.75; // 35 --> 75
     public static final double ALGAE_IN_SPEED = 0.5;
     public static final double ALGAE_OUT_SPEED = -1.00;
 
@@ -219,7 +232,7 @@ public class Constants {
             .withNeutralMode(NeutralModeValue.Brake); 
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIG = new CurrentLimitsConfigs()
-    .withSupplyCurrentLimit(20.0)
+    .withSupplyCurrentLimit(40.0)
     .withSupplyCurrentLimitEnable(true);
     
     public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
@@ -235,7 +248,7 @@ public class Constants {
     public static final double MOTOR_RANGE = 19.568359375; // rotations
     public static final double ENCODER_RANGE = 0.306; // rotations
 
-    public static final Angle ENCODER_OFFSET = Rotations.of(-0.45361);
+    public static final Angle ENCODER_OFFSET = Rotations.of(-0.4333496); // 1: -0.45361 2:-0.449462
 
     public static final double MIN_INTAKE_ARM_ANGLE = 0;
     public static final double MAX_INTAKE_ARM_ANGLE = 20;
@@ -393,6 +406,7 @@ public class Constants {
   public static final class DashboardConstants {
     public static final String DRIVE_MODE_KEY = "Drive Mode";
     public static final String AUTO_COMPILED_KEY = "Auto Compiled";
+    public static final String CHOREO_AUTO_COMPILED = "Choreo Auto Compiled";
     public static final String AUTO_DESCRIPTION_KEY = "Auto Description";
     public static final String WAIT_SECONDS_SAVED_KEY = "Wait Seconds Saved";
     public static final String WAIT_SECONDS_DISPLAY_KEY = "Wait Seconds Display";
