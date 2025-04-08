@@ -22,7 +22,7 @@ public class RedJ4K4L4 extends AutoBase {
     private static final Path score2 = PathsBase.R_LL_K4;
     ;
     private static final Path load2 = PathsBase.R_K4_LL;
-    private static final Path score3 = PathsBase.R_LL_K4;
+    private static final Path score3 = PathsBase.R_LL_L;
     ;
 
     public RedJ4K4L4() {
@@ -34,7 +34,7 @@ public class RedJ4K4L4 extends AutoBase {
         addCommands(delaySelectedTime());
         addCommands(getBumpCommand());
 
-        // path works, alignment off
+        // score intial coral
         addCommands(safeReefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4))
                 .andThen(new PrintCommand("alignment done")
@@ -42,7 +42,7 @@ public class RedJ4K4L4 extends AutoBase {
                         // .andThen(new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> false))
                         .andThen(score(TargetAction.L4))));
 
-        //
+        // pickup and score 2nd coral
         addCommands(safeStationAlignment(load1));
         addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
@@ -50,7 +50,7 @@ public class RedJ4K4L4 extends AutoBase {
                         .andThen(ArmCommandFactory.coralIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L4)));
 
-        //
+        // pickup and score 3rd coral
         addCommands(safeStationAlignment(load2));
         addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)

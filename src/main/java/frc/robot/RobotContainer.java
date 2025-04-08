@@ -6,9 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
-import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
@@ -17,7 +15,6 @@ import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
-import frc.robot.commands.drive.auto.AutoSnapToLocationAngleCommand;
 import frc.robot.commands.intake.IntakeCommandFactory;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory;
 import frc.robot.controlboard.ControlBoard;
@@ -33,7 +30,6 @@ import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
-import frc.robot.util.AlignmentCalculator.FieldElementFace;
 import frc.robot.util.Telemetry;
 import frc.robot.util.io.Dashboard;
 
@@ -66,34 +62,7 @@ public class RobotContainer {
                 controlBoard::getRotation,
                 dashboard::isFieldCentric));
 
-        configureNamedCommands();
-
         configureBindings();
-    }
-
-    private void configureNamedCommands() {
-        // snap to angle in gui
-        NamedCommands.registerCommand(
-                "Snap Left Coral Station", new AutoSnapToLocationAngleCommand(FieldElementFace.LCS));
-        NamedCommands.registerCommand(
-                "Snap Right Coral Station", new AutoSnapToLocationAngleCommand(FieldElementFace.RCS));
-
-        NamedCommands.registerCommand("Snap to AB", new AutoSnapToLocationAngleCommand(FieldElementFace.AB));
-        NamedCommands.registerCommand("Snap to CD", new AutoSnapToLocationAngleCommand(FieldElementFace.CD));
-        NamedCommands.registerCommand("Snap to EF", new AutoSnapToLocationAngleCommand(FieldElementFace.EF));
-        NamedCommands.registerCommand("Snap to GH", new AutoSnapToLocationAngleCommand(FieldElementFace.GH));
-        NamedCommands.registerCommand("Snap to IJ", new AutoSnapToLocationAngleCommand(FieldElementFace.IJ));
-        NamedCommands.registerCommand("Snap to KL", new AutoSnapToLocationAngleCommand(FieldElementFace.KL));
-
-        // // score in gui
-        // NamedCommands.registerCommand("Score L1", ToLevel.L1.getCommand());
-        // NamedCommands.registerCommand("Score L2", ToLevel.L2.getCommand());
-        // NamedCommands.registerCommand("Score L3", ToLevel.L3.getCommand());
-        // NamedCommands.registerCommand("Score L4", ToLevel.L4.getCommand());
-        // NamedCommands.registerCommand("Score Processor", null); // TODO: auto processor score
-        // NamedCommands.registerCommand("DeScore Algae", null); // TODO: auto descore algae
-        // NamedCommands.registerCommand("Coral Station Intake", null); // TODO: auto coral station
-        // intake
     }
 
     private void configureBindings() {
@@ -162,8 +131,9 @@ public class RobotContainer {
         controlBoard.algaeScoreAngle().onTrue(superstructure.set(TargetAction.AS, false));
         controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.AP, false));
 
-        controlBoard.set1CoralAway().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(false)));
-        controlBoard.setFlush().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(true)));
+        controlBoard.setFlush().onTrue(superstructure.set(TargetAction.HP, false));
+        controlBoard.set1CoralAway().onTrue(superstructure.set(TargetAction.UN_JAM, false));
+        // controlBoard.setFlush().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(true)));
 
         /* SysID */
         controlBoard.sysIDDynamicForward().onTrue(SuperstructureCommandFactory.setCoast());
@@ -199,17 +169,14 @@ public class RobotContainer {
         System.out.println("POV Bindings Configured");
     }
 
-    public void forceRecompile() {
-        autoFactory.recompile();
-    }
-
     public void precompileAuto() {
-        if (autoFactory.recompileNeeded()) {
-            autoFactory.recompile();
+        if (AutoFactory.getInstance().recompileNeeded()) {
+            AutoFactory.getInstance().recompile();
         }
     }
 
     public Command getAutonomousCommand() {
+        // return autoFactory.getCompiledChoreoAuto(); // test
         return autoFactory.getCompiledAuto();
     }
 

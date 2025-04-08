@@ -3,25 +3,14 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.auto.common;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DashboardConstants;
 import frc.robot.RobotState;
-import frc.robot.auto.modes.AutoLLToK4;
-import frc.robot.auto.modes.StartLeft.AutoJ1K1L1;
-import frc.robot.auto.modes.StartLeft.AutoJ1K4L4;
-import frc.robot.auto.modes.StartLeft.AutoJ4K4L4;
-import frc.robot.auto.modes.StartLeft.AutoK4L4DAK3L3;
-import frc.robot.auto.modes.StartRight.AutoD4C4DAD3C3;
-import frc.robot.auto.modes.StartRight.AutoE1D1C1;
-import frc.robot.auto.modes.StartRight.AutoE1D4C4;
-import frc.robot.auto.modes.StartRight.AutoE2D4C4;
-import frc.robot.auto.modes.StartRight.AutoE4D4C4;
-import frc.robot.auto.modes.StartRight.AutoF4D4C4;
-import frc.robot.auto.modes.choreoRemake.leftSide.BlueJ4K4L4;
-import frc.robot.auto.modes.choreoRemake.leftSide.RedJ4K4L4;
-import frc.robot.auto.modes.safety.AutoG4AlgaePrep;
+import frc.robot.auto.modes.choreoRemake.V2BackupMiddleL1;
+import frc.robot.auto.modes.choreoRemake.V2E4D4C4;
+import frc.robot.auto.modes.choreoRemake.V2J4K4L4;
+import frc.robot.auto.modes.choreoRemake.V2MiddleL4;
 import frc.robot.auto.modes.safety.DeadReckoning;
-import frc.robot.auto.modes.startCenter.AutoG4LeftAlgaeRemoval;
-import frc.robot.auto.modes.startCenter.AutoH4RightAlgaeRemoval;
 import frc.robot.util.io.Dashboard;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
@@ -29,6 +18,8 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
+    // private final Supplier<ChoreoAuto> choreoAutoSupplier =
+    //         () -> Dashboard.getInstance().getChoreoAuto();
     private final Supplier<Double> waitSecondsEntrySupplier =
             () -> Dashboard.getInstance().getWaitSeconds();
     private final Supplier<Boolean> bumpNeededSupplier =
@@ -37,13 +28,22 @@ public class AutoFactory {
     private Auto currentAuto;
     private AutoBase compiledAuto;
 
+    // private ChoreoAuto currentChoreoAuto;
+    private Command compiledChoreoAuto;
+
     private double selectedWaitSeconds;
     private double savedWaitSeconds;
+
+    private boolean selectedBumpNeeded;
+    private boolean savedBumpNeeded;
 
     private boolean isRedAlliance = RobotState.getInstance().isRedAlliance();
 
     private static LoggedNetworkBoolean autoCompiled =
             new LoggedNetworkBoolean(DashboardConstants.AUTO_COMPILED_KEY, false);
+
+    private static LoggedNetworkBoolean choreoAutoCompiled =
+            new LoggedNetworkBoolean(DashboardConstants.CHOREO_AUTO_COMPILED, false);
 
     private static LoggedNetworkString autoDescription =
             new LoggedNetworkString(DashboardConstants.AUTO_DESCRIPTION_KEY, "No Description");
@@ -69,7 +69,17 @@ public class AutoFactory {
     public boolean recompileNeeded() {
         return autoSupplier.get() != currentAuto
                 || waitSecondsEntrySupplier.get() != savedWaitSeconds
+                || isRedAlliance == !RobotState.getInstance().isRedAlliance()
+                || savedBumpNeeded != bumpNeededSupplier.get();
+    }
+
+    public boolean choreoRecompileNeeded() {
+        return waitSecondsEntrySupplier.get() != savedWaitSeconds
                 || isRedAlliance == !RobotState.getInstance().isRedAlliance();
+    }
+
+    public void setChoreoAutoCompiled(boolean compiled) {
+        choreoAutoCompiled.set(compiled);
     }
 
     public void recompile() {
@@ -91,13 +101,22 @@ public class AutoFactory {
         if (compiledAuto == null) {
             autoDescription.set("No Auto Selected");
         } else {
-            compiledAuto.init();
+            compiledAuto.init(); // starts?
         }
         autoCompiled.set(true);
+
+        // update bump needed
+        savedBumpNeeded = bumpNeededSupplier.get();
+
+        System.out.println("BUMP NEEDED?: " + savedBumpNeeded);
     }
 
     public AutoBase getCompiledAuto() {
         return compiledAuto;
+    }
+
+    public Command getCompiledChoreoAuto() {
+        return compiledChoreoAuto;
     }
 
     public double getSavedWaitSeconds() {
@@ -105,36 +124,79 @@ public class AutoFactory {
     }
 
     public boolean getBumpNeeded() {
-        return bumpNeededSupplier.get();
+        return savedBumpNeeded;
+        // return bumpNeededSupplier.get();
     }
 
+    public Command getJ4K4L4() {
+        return Autos.getInstance().J4K4L4();
+    }
+
+    // public static enum ChoreoAuto {
+    //     // NO_AUTO(null),
+    //     // TEST_AUTO(Autos.getInstance().testPath()),
+    //     // DEAD_RECKONING(new DefaultDriveCommand(() -> 0.5, () -> 0.0, () -> 0.0, () -> false).withTimeout(2.0)),
+    //     J4_K4_L4(this::getJ4K4L4);
+    //     // E4_D4_C4(Autos.getInstance().E4D4C4()),
+    //     // CENTER_L1(Autos.getInstance().CENTERL1());
+    //     // G4_CLEAN_LEFT_ALGAE(Autos.getInstance().G4_CLEAN_LEFT_ALGAE());
+
+    //     private final Command autoCommand;
+
+    //     private ChoreoAuto(Command autoCommand) {
+    //         this.autoCommand = autoCommand;
+    //     }
+
+    //     public Command getInstance() {
+    //         if (autoCommand != null) {
+    //             try {
+    //                 return autoCommand;
+    //             } catch (Exception e) {
+    //                 e.printStackTrace();
+    //             }
+    //         }
+
+    //         return null;
+    //     }
+    // }
+
     public static enum Auto {
-        DEAD_RECKONING(DeadReckoning.class),
-        NO_AUTO(null),
-        LL_K4_VISION_TEST(AutoLLToK4.class),
-        BACKUP_AUTO_H4_DA_NET(AutoG4AlgaePrep.class),
-        CHORBlue_J4K4L4(BlueJ4K4L4.class),
-        CHORRed_J4KL4(RedJ4K4L4.class),
+        LEFT_3_CORAL_JKL(V2J4K4L4.class),
+        RIGHT_3_CORAL_EDC(V2E4D4C4.class),
+        MIDDLE_L4(V2MiddleL4.class),
+        BACKUP_MIDDLE_L1(V2BackupMiddleL1.class),
+        DRIVE_FORWARD(DeadReckoning.class),
+        NO_AUTO(null);
+        // LL_K4_VISION_TEST(AutoLLToK4.class),
+        // BACKUP_AUTO_H4_DA_NET(AutoG4AlgaePrep.class),
+
+        // choreo
+        // C_Blue_J4K4L4(BlueJ4K4L4.class),
+        // C_Blue_E4D4C4(BlueE4D4C4.class),
+        // C_Blue_F4D4C4(BlueF4D4C4.class),
+        // C_Red_J4KL4(RedJ4K4L4.class),
+        // C_RED_E4D4C4(RedE4D4C4.class),
+        // C_RED_F4D4C4(RedF4D4C4.class),
 
         // start center
-        AUTO_G4_ALGAE_PREP(AutoG4AlgaePrep.class),
-        AUTO_H4_LEFT_ALGAE_REMOVAL(AutoG4LeftAlgaeRemoval.class),
-        AUTO_H4_RIGHT_ALGAE_REMOVAL(AutoH4RightAlgaeRemoval.class),
+        // AUTO_G4_ALGAE_PREP(AutoG4AlgaePrep.class),
+        // AUTO_H4_LEFT_ALGAE_REMOVAL(AutoG4LeftAlgaeRemoval.class),
+        // AUTO_H4_RIGHT_ALGAE_REMOVAL(AutoH4RightAlgaeRemoval.class),
 
         // start left
-        LEFT_J1_K1_L1(AutoJ1K1L1.class),
+        // LEFT_J1_K1_L1(AutoJ1K1L1.class),
         // LEFT_J2_K4_L4(AutoJ2K4L4.class),
-        LEFT_J4_K4_L4(AutoJ4K4L4.class),
-        LEFT_K4_L4_DA_K3_L3(AutoK4L4DAK3L3.class),
-        LEFT_J1_K4_L4(AutoJ1K4L4.class),
+        // LEFT_J4_K4_L4(AutoJ4K4L4.class),
+        // LEFT_K4_L4_DA_K3_L3(AutoK4L4DAK3L3.class),
+        // LEFT_J1_K4_L4(AutoJ1K4L4.class),
 
         // start right
-        RIGHT_D4_C4_DA_D3_C3(AutoD4C4DAD3C3.class),
-        RIGHT_E1_D1_C1(AutoE1D1C1.class),
-        RIGHT_E4_D4_C4(AutoE4D4C4.class),
-        RIGHT_E2_D4_C4(AutoE2D4C4.class),
-        RIGHT_F4_D4_C4(AutoF4D4C4.class),
-        RIGHT_E1_D4_C4(AutoE1D4C4.class);
+        // RIGHT_D4_C4_DA_D3_C3(AutoD4C4DAD3C3.class),
+        // RIGHT_E1_D1_C1(AutoE1D1C1.class),
+        // RIGHT_E4_D4_C4(AutoE4D4C4.class);
+        // RIGHT_E2_D4_C4(AutoE2D4C4.class),
+        // RIGHT_F4_D4_C4(AutoF4D4C4.class),
+        // RIGHT_E1_D4_C4(AutoE1D4C4.class);
 
         private final Class<? extends AutoBase> autoClass;
 
@@ -145,7 +207,6 @@ public class AutoFactory {
         public AutoBase getInstance() {
             if (autoClass != null) {
                 try {
-                    // TODO: does this fix the problem
 
                     // AutoDescription autoDescription =
                     // autoClass.getClass().getAnnotation(AutoDescription.class);

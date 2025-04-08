@@ -24,12 +24,12 @@ public class ArmCommandFactory {
     public static Command outtake() {
         return new ConditionalCommand(
                 algaeOut(),
-                coralIn().withTimeout(0.1).andThen(coralOut()),
+                coralInTap().andThen(coralOut()),
                 () -> SuperstructureSubsystem.getInstance().getCurrentAction().getType() == ActionType.ALGAE);
     }
 
     public static Command coralInTap() {
-        return coralIn().withDeadline(new WaitCommand(0.75));
+        return coralIn().withDeadline(new WaitCommand(0.075));
     }
 
     public static Command coralIn() {

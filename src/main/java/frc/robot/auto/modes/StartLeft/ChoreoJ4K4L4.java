@@ -18,13 +18,13 @@ import frc.robot.util.AlignmentCalculator.FieldElementFace;
 public class ChoreoJ4K4L4 extends AutoBase {
     // we pass in Path and followPath turns them into pp paths
 
-    private static final Path startPath = PathsBase.B_SL_J2;
+    private static final Path startPath = PathsBase.B_SL_J;
     ;
-    private static final Path load1 = PathsBase.B_J2_LL;
-    private static final Path score2 = PathsBase.B_LL_K4;
+    private static final Path load1 = PathsBase.B_J_LL;
+    private static final Path score2 = PathsBase.B_LL_K;
     ;
-    private static final Path load2 = PathsBase.B_K4_LL;
-    private static final Path score3 = PathsBase.B_LL_K4;
+    private static final Path load2 = PathsBase.B_K_LL;
+    private static final Path score3 = PathsBase.B_LL_K;
     ;
 
     public ChoreoJ4K4L4() {

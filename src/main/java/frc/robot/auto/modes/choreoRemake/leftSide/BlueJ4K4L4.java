@@ -19,13 +19,11 @@ import frc.robot.util.AlignmentCalculator.FieldElementFace;
 public class BlueJ4K4L4 extends AutoBase {
     // we pass in Path and followPath turns them into pp paths
 
-    private static final Path startPath = PathsBase.B_SL_J2;
-    private static final Path load1 = PathsBase.B_J2_LL;
-    private static final Path score2 = PathsBase.B_LL_K4;
-    ;
-    private static final Path load2 = PathsBase.B_K4_LL;
-    private static final Path score3 = PathsBase.B_LL_K4;
-    ;
+    private static final Path startPath = PathsBase.B_SL_J;
+    private static final Path load1 = PathsBase.B_J_LL;
+    private static final Path score2 = PathsBase.B_LL_K;
+    private static final Path load2 = PathsBase.B_K_LL;
+    private static final Path score3 = PathsBase.B_LL_L;
 
     public BlueJ4K4L4() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());
@@ -36,15 +34,15 @@ public class BlueJ4K4L4 extends AutoBase {
         addCommands(delaySelectedTime());
         addCommands(getBumpCommand());
 
-        // path works, alignment off
+        // score initial choral (J)
         addCommands(safeReefAlignment(startPath, AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
                 .alongWith(prepareForScoreWhenReady(TargetAction.L4))
                 .andThen(new PrintCommand("alignment done")
                         .andThen(ArmCommandFactory.coralIn().withTimeout(0.05))
                         // .andThen(new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> false))
-                        .andThen(score(TargetAction.L4))));
+                        .andThen(score(TargetAction.L4)))); // good
 
-        //
+        // pickup and score 2nd coral (K)
         addCommands(safeStationAlignment(load1));
         addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score2, AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
@@ -52,7 +50,7 @@ public class BlueJ4K4L4 extends AutoBase {
                         .andThen(ArmCommandFactory.coralIn().withTimeout(0.05)))
                 .andThen(score(TargetAction.L4)));
 
-        //
+        // pickup and score 3rd coral (L)
         addCommands(safeStationAlignment(load2));
         addCommands(new WaitCommand(0.75));
         addCommands(safeReefAlignment(score3, AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
@@ -61,5 +59,8 @@ public class BlueJ4K4L4 extends AutoBase {
                 .andThen(score(TargetAction.L4)));
         addCommands(
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW)));
+
+        // TODO: test algae pickup
+        addCommands(new InstantCommand());
     }
 }
