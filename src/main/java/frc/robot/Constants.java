@@ -77,6 +77,7 @@ public class Constants {
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
             .withSupplyCurrentLimitEnable(true)
+            .withStatorCurrentLimit(Amps.of(120))
             .withSupplyCurrentLimit(Amps.of(80))
             .withSupplyCurrentLowerLimit(Amps.of(40))
             .withSupplyCurrentLowerTime(Seconds.of(0.1));
@@ -85,8 +86,8 @@ public class Constants {
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
             .withMotionMagicCruiseVelocity(0)
-            .withMotionMagicExpo_kA(0.005)
-            .withMotionMagicExpo_kV(0.025);
+            .withMotionMagicExpo_kA(0.1)
+            .withMotionMagicExpo_kV(0.2);
             // .withMotionMagicAcceleration(160) 
             // .withMotionMagicJerk(600);
 
