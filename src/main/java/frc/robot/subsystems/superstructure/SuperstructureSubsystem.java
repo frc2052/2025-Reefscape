@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -151,7 +152,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 && armPivot.atPosition(target)) {
             // System.out.println("GOT CORAL********************");
             movingFromIntake = true;
-            setCurrentAction(TargetAction.STOW);
+            setCurrentAction(DriverStation.isAutonomous() ? TargetAction.L3 : TargetAction.STOW);
         }
 
         if (armPivot.atPosition(TargetAction.STOW)) {

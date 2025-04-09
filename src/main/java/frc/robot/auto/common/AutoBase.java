@@ -24,6 +24,7 @@ import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.SnapToLocationAngleCommand;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
+import frc.robot.commands.intake.IntakeCommandFactory;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.arm.ArmRollerSubsystem;
@@ -198,7 +199,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
                         .withTimeout(1.2)
                         .andThen(ArmCommandFactory.intake()
                                 .withTimeout(0.1)
-                                .andThen(ArmCommandFactory.coralOut().withTimeout(0.35))));
+                                .andThen(ArmCommandFactory.coralOut().withTimeout(0.4))));
     }
 
     protected Command toPosAndScore(TargetAction position) {
@@ -258,6 +259,27 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 .andThen(new PrintCommand("CLOSE ENOUGH**************"));
     }
 
+    protected Command pickup(Path path) {
+        return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
+                .andThen(Commands.waitUntil(
+                                () -> ElevatorSubsystem.getInstance().getPosition() < 50)
+                        .andThen(((followPathCommand(path.getPathPlannerPath()))
+                                        .deadlineFor(
+                                                IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
+                                .until(() ->
+                                        (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3
+                                                || RobotState.getInstance().getHasCoral()))))
+                // interrupted (have coral)? continue
+                // path went all the way through? pause + intake
+                .andThen(
+                        !(SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3
+                                        || RobotState.getInstance().getHasCoral())
+                                ? new WaitCommand(0.5)
+                                        .deadlineFor(IntakeCommandFactory.intake())
+                                        .until(() -> RobotState.getInstance().getHasCoral())
+                                : new InstantCommand());
+    }
+
     protected Command descoreAlgae(Path toPosition, TargetAction algaeLevel) {
         return followPathCommand(toPosition.getChoreoPath())
                 .alongWith(new InstantCommand(
@@ -267,19 +289,25 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 .andThen(new WaitCommand(1.0)); // wait to ensure algae grab
     }
 
-    protected Command scoreNet(Path score, TargetAction algaeLevel) {
-        return followPathCommand(score.getChoreoPath())
-                .alongWith(Commands.waitUntil(() -> true) // TODO: event marker to raise
-                        .andThen(new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))))
-                .andThen(Commands.waitUntil(
-                                () -> SuperstructureSubsystem.getInstance().isAtTargetState())
-                        .andThen(ArmCommandFactory.algaeIn())
-                        .withTimeout(0.2)
-                        .andThen(ArmCommandFactory.algaeOut())
-                        .withTimeout(1.0))
-                .andThen(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE));
+    protected Command scoreNet() {
+        return Commands.sequence(
+                Commands.waitUntil(() -> SuperstructureSubsystem.getInstance().isAtTargetState()),
+                ArmCommandFactory.algaeOut().withTimeout(0.5));
     }
+
+    // protected Command scoreNet(Path score, TargetAction algaeLevel) {
+    //     return followPathCommand(score.getChoreoPath())
+    //             .alongWith(Commands.waitUntil(() -> true) // TODO: event marker to raise
+    //                     .andThen(new InstantCommand(
+    //                             () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))))
+    //             .andThen(Commands.waitUntil(
+    //                             () -> SuperstructureSubsystem.getInstance().isAtTargetState())
+    //                     .andThen(ArmCommandFactory.algaeIn())
+    //                     .withTimeout(0.2)
+    //                     .andThen(ArmCommandFactory.algaeOut())
+    //                     .withTimeout(1.0))
+    //             .andThen(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE));
+    // }
 
     public static class Path { // combines access to pathplanner and choreo
         private String pathPlannerPathName, chorPathName;
@@ -415,7 +443,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
         // score to descore
         // TODO: EVENT MARKERS @ OUTERMOST POINT CALLED OUTERMOST
 
-        public static final Path B_GH_REPOSITION = new Path("GH Descore Algae", "BLUE GH Reposition"); //
+        public static final Path B_GH_REPOSITION_OUT = new Path("GH REPOSITION OUT", "BLUE GH Reposition"); //
+        public static final Path B_GH_REPOSITION_IN = new Path("GH REPOSITION IN", null);
         public static final Path R_GH_REPOSITION = new Path("GH Descore Algae", "RED GH Reposition"); //
 
         public static final Path B_KL_REPOSITION = new Path("KL Descore Algae", "BLUE KL Reposition"); //

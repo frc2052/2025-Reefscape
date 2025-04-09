@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.148830965909091,
-        "y": 5.2590674715909085
+        "x": 5.130737704918032,
+        "y": 5.193801229508197
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.307779119318181,
-        "y": 4.9936569602272725
+        "x": 6.359365755402385,
+        "y": 5.032633348081222
       },
       "isLocked": false,
       "linkedName": "IJ Algae"
@@ -20,8 +20,8 @@
         "y": 4.905408380681817
       },
       "prevControl": {
-        "x": 6.591455255681819,
-        "y": 4.905408380681817
+        "x": 6.617213114754098,
+        "y": 5.061936475409836
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 179.24529480121257
   },
   "reversed": false,
-  "folder": null,
+  "folder": "algae",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 153.61436232010124
+    "rotation": -116.92500433532254
   },
   "useDefaultConstraints": true
 }

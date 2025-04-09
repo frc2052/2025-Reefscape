@@ -220,7 +220,7 @@ public class Autos {
 
         AutoTrajectory startPath = G4_DESCORE_SCORE.trajectory(AutoBase.PathsBase.B_SC_G.getTrajName());
         AutoTrajectory repositionDescore =
-                G4_DESCORE_SCORE.trajectory(AutoBase.PathsBase.B_GH_REPOSITION.getTrajName());
+                G4_DESCORE_SCORE.trajectory(AutoBase.PathsBase.B_GH_REPOSITION_IN.getTrajName());
         AutoTrajectory score1 = G4_DESCORE_SCORE.trajectory(AutoBase.PathsBase.B_GH_NET.getTrajName());
         AutoTrajectory descore2 = G4_DESCORE_SCORE.trajectory(AutoBase.PathsBase.B_NET_IJ.getTrajName());
         AutoTrajectory score2 = G4_DESCORE_SCORE.trajectory(AutoBase.PathsBase.B_IJ_NET.getTrajName());

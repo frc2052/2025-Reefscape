@@ -218,7 +218,7 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double CORAL_IN_SPEED = -0.33;
     public static final double CORAL_L1_OUT_SPEED = 0.2052;
-    public static final double CORAL_OUT_SPEED = 0.75; // 35 --> 75
+    public static final double CORAL_OUT_SPEED = 0.55; // 35 --> 75
     public static final double ALGAE_IN_SPEED = 0.5;
     public static final double ALGAE_OUT_SPEED = -1.00;
 
@@ -251,7 +251,7 @@ public class Constants {
     public static final double MOTOR_RANGE = 19.568359375; // rotations
     public static final double ENCODER_RANGE = 0.306; // rotations
 
-    public static final Angle ENCODER_OFFSET = Rotations.of(-0.4333496); // 1: -0.45361 2:-0.449462
+    public static final Angle ENCODER_OFFSET = Rotations.of(-0.40428); // 1: -0.45361 2:-0.449462
 
     public static final double MIN_INTAKE_ARM_ANGLE = 0;
     public static final double MAX_INTAKE_ARM_ANGLE = 20;
