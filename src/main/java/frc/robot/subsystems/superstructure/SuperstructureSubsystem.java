@@ -165,6 +165,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 cancelHome = false;
             } else if (target == TargetAction.HM && !elevator.isHoming()) {
                 elevator.setWantHome(true);
+                intakePivot.setAngle(TargetAction.HM.getIntakePivotPosition());
+                armPivot.setArmPosition(TargetAction.HM);
                 System.out.println("HOMING");
                 return;
             }

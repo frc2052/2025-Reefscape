@@ -9,24 +9,24 @@ import frc.robot.RobotState;
 public class SuperstructurePosition {
     public enum TargetAction {
         // spotless:off
-        HM(1.5, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Homing
-        HP(1.0, Degrees.of(133.0), IntakePivotPositions.MID.position, ActionType.NONE),
-        EXPLODE(5.0, Degrees.of(228.5), IntakePivotPositions.STOW.position, ActionType.NONE),
-        INTAKE(2.0, Degrees.of(307), IntakePivotPositions.INTAKE.position, ActionType.CORAL), //307
-        UN_JAM(25.0, Degrees.of(150.0), IntakePivotPositions.INTAKE.position, ActionType.CORAL),
-        L1H(6.0, Degrees.of(190.0), IntakePivotPositions.L1.position, ActionType.CORAL),
-        L2(17.7, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 3.0, Degrees.of(157.0), IntakePivotPositions.STOW.position),
-        L3(36.0, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 20.0, Degrees.of(157.0), IntakePivotPositions.STOW.position),
-        L4(62.5, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 62.5, Degrees.of(189.0), IntakePivotPositions.STOW.position),
-        LA(6.0, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Lower Algae
-        UA(23.0, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Upper Algae
+        HM(1.1, Degrees.of(130.0), IntakePivotPositions.MID.position, ActionType.NONE), // Homing
+        HP(0.75, Degrees.of(133.0), IntakePivotPositions.MID.position, ActionType.NONE),
+        EXPLODE(3.75, Degrees.of(130.5), IntakePivotPositions.STOW.position, ActionType.NONE),
+        INTAKE(1.5, Degrees.of(307), IntakePivotPositions.INTAKE.position, ActionType.CORAL), //307
+        UN_JAM(19, Degrees.of(150.0), IntakePivotPositions.INTAKE.position, ActionType.CORAL),
+        L1H(4.5, Degrees.of(190.0), IntakePivotPositions.L1.position, ActionType.CORAL),
+        L2(13.275, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 2.25, Degrees.of(157.0), IntakePivotPositions.STOW.position),
+        L3(27.0, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 15.0, Degrees.of(157.0), IntakePivotPositions.STOW.position),
+        L4(47, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 46, Degrees.of(189.0), IntakePivotPositions.STOW.position),
+        LA(4.5, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Lower Algae
+        UA(17.25, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Upper Algae
         SAFE_ARM_HEIGHT(SuperstructureConstants.MIN_SAFE_ROTATION, Degrees.of(228), IntakePivotPositions.STOW.position, ActionType.NONE),
-        STOW(12.0, Degrees.of(130.0), IntakePivotPositions.STOW.position, ActionType.NONE), // default state
-        POST_ALGAE_STOW(12.0, Degrees.of(305.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Coral Station
-        AS(63.0, Degrees.of(190.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring NET
-        AP(3.0, Degrees.of(325.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring Processor
-        TR(5.0, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Travel
-        CL(14.0, Degrees.of(265.0), IntakePivotPositions.L1.position, ActionType.NONE); // Climb
+        STOW(9.0, Degrees.of(130.0), IntakePivotPositions.STOW.position, ActionType.NONE), // default state
+        POST_ALGAE_STOW(9.0, Degrees.of(305.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Coral Station
+        AS(46, Degrees.of(190.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring NET
+        AP(2.25, Degrees.of(325.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring Processor
+        TR(3.75, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Travel
+        CL(10.5, Degrees.of(265.0), IntakePivotPositions.L1.position, ActionType.NONE); // Climb
 
         // spotless:on
         private final double elevatorPosition;

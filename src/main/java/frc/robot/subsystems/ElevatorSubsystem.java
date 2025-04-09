@@ -23,6 +23,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.SuperstructureConstants;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.io.Ports;
 import org.littletonrobotics.junction.Logger;
 
@@ -173,10 +174,10 @@ public class ElevatorSubsystem extends SubsystemBase {
             setOpenLoop(ElevatorConstants.HOMING_SPEED);
             if (homingDelay.update(
                     Timer.getFPGATimestamp(),
-                    MathHelpers.epsilonEquals(frontMotor.getVelocity().getValueAsDouble(), 0.0, 0.5))) {
+                    MathHelpers.epsilonEquals(frontMotor.getVelocity().getValueAsDouble(), 0.0, 0.25))) {
                 zeroEncoder();
                 System.out.println("Elevator Homed");
-                setPositionMotionMagic(TargetAction.STOW);
+                SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW);
                 homing = false;
                 homingDelay.update(Timer.getFPGATimestamp(), false);
             }

@@ -44,73 +44,51 @@ public class V2HL4Algae extends AutoBase {
                         ArmCommandFactory.intake().withTimeout(1),
                         ClimberCommandFactory.climberDown().withTimeout(0.5),
                         new SequentialCommandGroup(
-                            new InstantCommand(() ->
+                                new InstantCommand(() ->
                                         SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L3)),
-                            new WaitCommand(0.2),
-                            new InstantCommand(() ->
-                                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))
-                        ),
+                                new WaitCommand(0.2),
+                                new InstantCommand(() ->
+                                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))),
                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                         () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.GH)
                                 .withTimeout(3.0)))
                 .andThen(score(TargetAction.L4)));
 
         // pickup GH
-        addCommands(
-            ArmCommandFactory.algaeIn()
-            .withDeadline(followPathCommand(reposition.getPathPlannerPath()).andThen(new WaitCommand(0.5)))
-        );
-        
+        addCommands(ArmCommandFactory.algaeIn()
+                .withDeadline(followPathCommand(reposition.getPathPlannerPath()).andThen(new WaitCommand(0.5))));
+
         // score GH
-        addCommands(
-            followPathCommand(score1.getPathPlannerPath())
-            .alongWith(
-                new InstantCommand(
+        addCommands(followPathCommand(score1.getPathPlannerPath())
+                .alongWith(new InstantCommand(
                                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))
-                        .beforeStarting(new WaitCommand(1.0))
-            ).andThen(scoreNet())
-        );
+                        .beforeStarting(new WaitCommand(1.0)))
+                .andThen(scoreNet()));
 
         // pickup IJ
-        addCommands(
-            new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.UA))
-            .andThen(
-                (followPathCommand(descore2.getPathPlannerPath()).andThen(new WaitCommand(0.5)))
-                .deadlineFor(
-                    ArmCommandFactory.intake().beforeStarting(new WaitCommand(1.0))
-                )
-            )
-        );
+        addCommands(new InstantCommand(
+                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.UA))
+                .andThen((followPathCommand(descore2.getPathPlannerPath()).andThen(new WaitCommand(0.5)))
+                        .deadlineFor(ArmCommandFactory.intake().beforeStarting(new WaitCommand(1.0)))));
 
-        // score IJ 
-        addCommands(
-            followPathCommand(score2.getPathPlannerPath())
-            .alongWith(
-                new InstantCommand(
+        // score IJ
+        addCommands(followPathCommand(score2.getPathPlannerPath())
+                .alongWith(new InstantCommand(
                                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))
-                        .beforeStarting(new WaitCommand(1.0))
-            ).andThen(scoreNet())
-        );
+                        .beforeStarting(new WaitCommand(1.0)))
+                .andThen(scoreNet()));
 
         // pickup KL
-        addCommands(
-            new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.UA))
-            .andThen(
-                (followPathCommand(descore3.getPathPlannerPath()).andThen(new WaitCommand(0.5)))
-                .deadlineFor(
-                    ArmCommandFactory.intake().beforeStarting(new WaitCommand(1.0))
-                )
-            )
-        );
+        addCommands(new InstantCommand(
+                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.UA))
+                .andThen((followPathCommand(descore3.getPathPlannerPath()).andThen(new WaitCommand(0.5)))
+                        .deadlineFor(ArmCommandFactory.intake().beforeStarting(new WaitCommand(1.0)))));
 
         // score KL
-        addCommands(
-            followPathCommand(score3.getPathPlannerPath())
-            .alongWith(
-                new InstantCommand(
+        addCommands(followPathCommand(score3.getPathPlannerPath())
+                .alongWith(new InstantCommand(
                                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))
-                        .beforeStarting(new WaitCommand(1.0))
-            ).andThen(scoreNet())
-        );
+                        .beforeStarting(new WaitCommand(1.0)))
+                .andThen(scoreNet()));
     }
 }

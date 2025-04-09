@@ -58,10 +58,10 @@ public class Constants {
 
     // public static final double ROTATIONS_PER_INCH = (1.0 / 12.0) * 2.0; // wrong
 
-    public static final double TICKS_DEADZONE = 0.25;
+    public static final double TICKS_DEADZONE = 0.1;
 
     public static final double MANUAL_MOTOR_SPEED = 0.2;
-    public static final double HOMING_SPEED = -0.1;
+    public static final double HOMING_SPEED = -0.2;
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
@@ -72,7 +72,7 @@ public class Constants {
             .withKV(0.0)
             .withKA(0.0)
             .withGravityType(GravityTypeValue.Elevator_Static)
-            .withKG(5.0);
+            .withKG(9.5);
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
@@ -86,8 +86,8 @@ public class Constants {
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
             .withMotionMagicCruiseVelocity(0)
-            .withMotionMagicExpo_kA(0.1)
-            .withMotionMagicExpo_kV(0.2);
+            .withMotionMagicExpo_kA(0.009)
+            .withMotionMagicExpo_kV(0.007);
             // .withMotionMagicAcceleration(160) 
             // .withMotionMagicJerk(600);
 
@@ -102,7 +102,7 @@ public class Constants {
     public static final SoftwareLimitSwitchConfigs SOFTWARE_LIMIT_SWITCH_CONFIG =
         new SoftwareLimitSwitchConfigs()
             .withForwardSoftLimitEnable(true)
-            .withForwardSoftLimitThreshold(66);
+            .withForwardSoftLimitThreshold(46.5);
 
     public static final TalonFXConfiguration MOTOR_CONFIG =
         new TalonFXConfiguration()
@@ -171,7 +171,7 @@ public class Constants {
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
             .withKP(75.0)
-            .withKI(0.2)
+            .withKI(0.1)
             .withKD(0.0)
             .withKS(0.0)
             .withKV(11.7) //11.7
@@ -252,7 +252,7 @@ public class Constants {
     public static final double MOTOR_RANGE = 19.568359375; // rotations
     public static final double ENCODER_RANGE = 0.306; // rotations
 
-    public static final Angle ENCODER_OFFSET = Rotations.of(-0.40428); // 1: -0.45361 2:-0.449462
+    public static final Angle ENCODER_OFFSET = Rotations.of(-0.37428); // 1: -0.45361 2:-0.449462
 
     public static final double MIN_INTAKE_ARM_ANGLE = 0;
     public static final double MAX_INTAKE_ARM_ANGLE = 20;
@@ -349,8 +349,8 @@ public class Constants {
   }
 
   public static final class SuperstructureConstants {
-    public static final double MIN_SAFE_ROTATION = 11.0;
-    public static final double MIN_MOVE_ROTATION = 45.0;
+    public static final double MIN_SAFE_ROTATION = 8.25;
+    public static final double MIN_MOVE_ROTATION = 35.0;
     public static final double RIGHT_LIMIT = 215;
     public static final double LEFT_LIMIT = 295;
   }
