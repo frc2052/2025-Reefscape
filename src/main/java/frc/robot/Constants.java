@@ -312,6 +312,7 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = false;
     public static final double INTAKE_SPEED = -1.00;
     public static final double OUTTAKE_SPEED = 0.35;
+    public static final double MAX_RPS = 100;
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
@@ -321,6 +322,8 @@ public class Constants {
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake); 
 
+    public static final Slot0Configs SLOT0_CONFIGS = new Slot0Configs().withKS(2.5).withKP(5).withKI(0).withKD(0);
+
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIG = new CurrentLimitsConfigs()
     .withSupplyCurrentLimit(20.0)
     .withSupplyCurrentLimitEnable(true);
@@ -328,6 +331,7 @@ public class Constants {
     public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
     .withMotorOutput(MOTOR_OUTPUT_CONFIG)
     .withCurrentLimits(CURRENT_LIMITS_CONFIG)
+    .withSlot0(SLOT0_CONFIGS)
     .withAudio(new AudioConfigs().withBeepOnBoot(false));
   }
   
