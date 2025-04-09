@@ -8,6 +8,9 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.common.AutoFactory.Auto;
+import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class Dashboard {
@@ -20,6 +23,11 @@ public class Dashboard {
 
     private final LoggedDashboardChooser<Double> waitSecondsChooser =
             new LoggedDashboardChooser<Double>("Wait Seconds");
+    private final LoggedDashboardChooser<Boolean> smartDriveChooser =
+            new LoggedDashboardChooser<Boolean>("Smart drive wanted");
+    private final LoggedDashboardChooser<TargetAction> smartDriveActionChooser =
+            new LoggedDashboardChooser<TargetAction>("Smart drive action");
+            
 
     private final LoggedDashboardChooser<Boolean> bump = new LoggedDashboardChooser<Boolean>("Bump Needed");
 
@@ -31,6 +39,7 @@ public class Dashboard {
     private final NetworkTable debugTable = networkTables.getTable("debug network tables tab");
     private final DoubleTopic waitTimeTopic = debugTable.getDoubleTopic("waitTime");
     private final DoubleSubscriber waitTimeSubscriber = waitTimeTopic.subscribe(0.0);
+
 
     private static Dashboard INSTANCE;
 
@@ -62,6 +71,18 @@ public class Dashboard {
 
         coastChooser.addDefaultOption("BRAKE", false);
         coastChooser.addOption("COAST", true);
+
+        smartDriveChooser.addDefaultOption("yes", true);
+        smartDriveChooser.addOption("no", false);
+
+        smartDriveActionChooser.addDefaultOption("l3", TargetAction.L3);
+        smartDriveActionChooser.addOption("l4", TargetAction.L4);
+        smartDriveActionChooser.addOption("l2", TargetAction.L2);
+        smartDriveActionChooser.addOption("l1", TargetAction.L1H);
+
+
+
+
 
         // choreo autos
         // choreoAutoChooser.addDefaultOption("NO AUTO", ChoreoAuto.NO_AUTO);
@@ -104,6 +125,14 @@ public class Dashboard {
 
     public boolean getBumpNeeded() {
         return bump.get();
+    }
+
+    public boolean getSmartDrivewanted(){
+        return smartDriveChooser.get();
+    }
+
+    public TargetAction getSmartDriveAction(){
+        return smartDriveActionChooser.get();
     }
 
     public boolean getCoastOut() {

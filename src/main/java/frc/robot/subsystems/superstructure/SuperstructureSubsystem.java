@@ -3,6 +3,7 @@ package frc.robot.subsystems.superstructure;
 import static edu.wpi.first.units.Units.Degrees;
 
 import com.team2052.lib.util.SecondaryImageManager;
+import frc.robot.RobotContainer;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -17,6 +18,7 @@ import frc.robot.subsystems.intake.IntakeRollerSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import org.littletonrobotics.junction.Logger;
+import frc.robot.util.io.Dashboard;
 
 public class SuperstructureSubsystem extends SubsystemBase {
 
@@ -272,13 +274,13 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     private void setTargetAction() {
         // getCurrentAction() == TargetAction.STOW || getCurrentAction() == TargetAction.TR &&
-        if (shouldSmartDrive) {
+        if (shouldSmartDrive && RobotContainer.getSmartDrivewanted()) {
             if (RobotState.getFieldLocation() == FieldLocation.REEF
                     && IntakeRollerSubsystem.getInstance().getHasCoral()) {
                 System.out.println("inside the zone");
                 if (robotState.getAlignOffset() == AlignOffset.LEFT_BRANCH
                         || robotState.getAlignOffset() == AlignOffset.RIGHT_BRANCH) {
-                    setSmartDriveAction(TargetAction.L3);
+                    setSmartDriveAction(Dashboard.getInstance().getSmartDriveAction());
 
                 } else if (robotState.getAlignOffset() == AlignOffset.MIDDLE_REEF) {
                     setSmartDriveAction(TargetAction.L1H);

@@ -32,6 +32,7 @@ import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.Telemetry;
 import frc.robot.util.io.Dashboard;
+import frc.robot.commands.smartdrive.AlgaeIntakeAndScoreCommand;
 
 public class RobotContainer {
     private final ControlBoard controlBoard = ControlBoard.getInstance();
@@ -48,144 +49,154 @@ public class RobotContainer {
     public final IntakePivotSubsystem intakePivot = IntakePivotSubsystem.getInstance();
     public final IntakeRollerSubsystem intakeRollers = IntakeRollerSubsystem.getInstance();
     public final LedSubsystem leds = LedSubsystem.getInstance();
-
-    public static boolean deadReckoning = false;
-
-    private final Telemetry logger = new Telemetry(DrivetrainConstants.DRIVE_MAX_SPEED.in(MetersPerSecond));
-
-    public RobotContainer() {
-        drivetrain.setDefaultCommand(new DefaultDriveCommand(
-                controlBoard::getThrottle,
-                // Sideways velocity supplier.
-                controlBoard::getStrafe,
-                // Rotation velocity supplier.
-                controlBoard::getRotation,
-                dashboard::isFieldCentric));
-
-        configureBindings();
-    }
-
-    private void configureBindings() {
-        /* Primary Driver */
-        configurePOVBindings();
-
-        drivetrain.registerTelemetry(logger::telemeterize);
-
-        controlBoard.resetGyro().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
-
-        controlBoard
-                .intake()
-                .onTrue(new ConditionalCommand(
-                        new InstantCommand(),
-                        new InstantCommand(() ->
-                                superstructure.setCurrentAction(TargetAction.INTAKE)),
-                        () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE))
-                .whileTrue(ArmCommandFactory.intake())
-                .whileTrue(new ConditionalCommand(
-                        new InstantCommand(),
-                        IntakeCommandFactory.intake(),
-                        () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE));
-        controlBoard
-                .outtake()
-                .whileTrue(ArmCommandFactory.outtake())
-                .onFalse(new InstantCommand(() -> superstructure.stow()));
-
-        controlBoard.rollerTap().whileTrue(ArmCommandFactory.coralIn());
-
-        controlBoard.groundOuttake().whileTrue(IntakeCommandFactory.outtake());
-
-        controlBoard
-                .alignWithReefLeft()
-                .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(() -> AlignOffset.LEFT_BRANCH))
-                .onFalse(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF));
-
-        controlBoard
-                .alignWithReefRight()
-                .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(() -> AlignOffset.RIGHT_BRANCH))
-                .onFalse(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF));
-
-        /* Secondary Driver */
-        controlBoard.actTrigger().onTrue(superstructure.confirm());
-
-        controlBoard.setGoalCL().onTrue(superstructure.set(TargetAction.CL, true));
-        controlBoard
-                .setGoalL1H()
-                .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
-                .onTrue(superstructure.set(TargetAction.L1H, false));
-        controlBoard.setGoalL2().onTrue(superstructure.set(TargetAction.L2, false));
-        controlBoard.setGoalL3().onTrue(superstructure.set(TargetAction.L3, false));
-        controlBoard.setGoalL4().onTrue(superstructure.set(TargetAction.L4, false));
-        controlBoard
-                .setGoalLowerAlgae()
-                .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
-                .onTrue(superstructure.set(TargetAction.LA, false));
-        controlBoard
-                .setGoalUpperAlgae()
-                .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
-                .onTrue(superstructure.set(TargetAction.UA, false));
-        controlBoard.setGoalCoralStation().onTrue(superstructure.set(TargetAction.STOW, false));
-        controlBoard.homeElevator().onTrue(superstructure.set(TargetAction.HM, false));
-
-        controlBoard.climbUp().whileTrue(ClimberCommandFactory.climberUp());
-        controlBoard.climbDown().whileTrue(ClimberCommandFactory.climberDown());
-
-        controlBoard.algaeScoreAngle().onTrue(superstructure.set(TargetAction.AS, false));
-        controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.AP, false));
-
-        controlBoard.setFlush().onTrue(superstructure.set(TargetAction.HP, false));
-        controlBoard.set1CoralAway().onTrue(superstructure.set(TargetAction.UN_JAM, false));
-        // controlBoard.setFlush().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(true)));
-
-        /* SysID */
-        controlBoard.sysIDDynamicForward().onTrue(SuperstructureCommandFactory.setCoast());
-        controlBoard.sysIDDynamicReverse().onTrue(SuperstructureCommandFactory.setBrake());
-        // controlBoard.sysIDQuasiForward().whileTrue(intakePivot.sysIdQuasistatic(Direction.kForward));
-        // controlBoard.sysIDQuasiReverse().whileTrue(intakePivot.sysIdQuasistatic(Direction.kReverse));
-        // controlBoard.sysIDDynamicForward().whileTrue(intakePivot.sysIdDynamic(Direction.kForward));
-        // controlBoard.sysIDDynamicReverse().whileTrue(intakePivot.sysIdDynamic(Direction.kReverse));
-        // controlBoard
-        //         .outtake()
-        //         .onTrue(Commands.runOnce(SignalLogger::start))
-        //         .onFalse(Commands.runOnce(SignalLogger::stop));
-    }
-
-    private void configurePOVBindings() {
-        ControlBoard controlBoard = ControlBoard.getInstance();
-
-        controlBoard.povUp().whileTrue(new DefaultDriveCommand(() -> 0.2, () -> 0.0, () -> 0.0, () -> false));
-        controlBoard.povUpRight().whileTrue(new DefaultDriveCommand(() -> 0.2, () -> -0.2, () -> 0.0, () -> false));
-
-        controlBoard.povRight().whileTrue(new DefaultDriveCommand(() -> 0.0, () -> -0.2, () -> 0.0, () -> false));
-
-        controlBoard.povDownRight().whileTrue(new DefaultDriveCommand(() -> -0.2, () -> -0.2, () -> 0.0, () -> false));
-
-        controlBoard.povDown().whileTrue(new DefaultDriveCommand(() -> -0.2, () -> 0.0, () -> 0.0, () -> false));
-
-        controlBoard.povDownLeft().whileTrue(new DefaultDriveCommand(() -> -0.2, () -> 0.2, () -> 0.0, () -> false));
-
-        controlBoard.povLeft().whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.2, () -> 0.0, () -> false));
-
-        controlBoard.povUpLeft().whileTrue(new DefaultDriveCommand(() -> 0.2, () -> 0.2, () -> 0.0, () -> false));
-
-        System.out.println("POV Bindings Configured");
-    }
-
-    public void precompileAuto() {
-        if (AutoFactory.getInstance().recompileNeeded()) {
-            AutoFactory.getInstance().recompile();
+    public static double wantSmartDriveValue =0;
+    
+        public static boolean deadReckoning = false;
+    
+        private final Telemetry logger = new Telemetry(DrivetrainConstants.DRIVE_MAX_SPEED.in(MetersPerSecond));
+    
+        public RobotContainer() {
+            drivetrain.setDefaultCommand(new DefaultDriveCommand(
+                    controlBoard::getThrottle,
+                    // Sideways velocity supplier.
+                    controlBoard::getStrafe,
+                    // Rotation velocity supplier.
+                    controlBoard::getRotation,
+                    dashboard::isFieldCentric));
+    
+            configureBindings();
         }
-    }
+    
+        private void configureBindings() {
+            /* Primary Driver */
+            configurePOVBindings();
+    
+            drivetrain.registerTelemetry(logger::telemeterize);
+    
+            controlBoard.resetGyro().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
+    
+            controlBoard
+                    .intake()
+                    .onTrue(new ConditionalCommand(
+                            new InstantCommand(),
+                            new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.INTAKE)),
+                            () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE))
+                    .whileTrue(ArmCommandFactory.intake())
+                    .whileTrue(new ConditionalCommand(
+                            new InstantCommand(),
+                            IntakeCommandFactory.intake(),
+                            () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE));
+    
+            controlBoard
+                    .outtake()
+                    .whileTrue(ArmCommandFactory.outtake())
+                    .onFalse(new InstantCommand(() -> superstructure.stow()));
+    
+            controlBoard.rollerTap().whileTrue(ArmCommandFactory.coralIn());
+    
+            controlBoard.groundOuttake().whileTrue(IntakeCommandFactory.outtake());
+    
+            controlBoard
+                    .alignWithReefLeft()
+                    .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(() -> AlignOffset.LEFT_BRANCH))
+                    .onFalse(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF));
+    
+            controlBoard
+                    .alignWithReefRight()
+                    .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(() -> AlignOffset.RIGHT_BRANCH))
+                    .onFalse(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF));
+    
+            /* Secondary Driver */
+            controlBoard.actTrigger().onTrue(superstructure.confirm());
+    
+            controlBoard.setGoalCL().onTrue(superstructure.set(TargetAction.CL, true));
+            controlBoard
+                    .setGoalL1H()
+                    .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
+                    .onTrue(superstructure.set(TargetAction.L1H, false));
+            controlBoard.setGoalL2().onTrue(superstructure.set(TargetAction.L2, false));
+            controlBoard.setGoalL3().onTrue(superstructure.set(TargetAction.L3, false));
+            controlBoard.setGoalL4().onTrue(superstructure.set(TargetAction.L4, false));
+            controlBoard
+                    .setGoalLowerAlgae()
+                    .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
+                    .onTrue(superstructure.set(TargetAction.LA, false));
+            controlBoard
+                    .setGoalUpperAlgae()
+                    .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
+                    .onTrue(superstructure.set(TargetAction.UA, false));
+            controlBoard.setGoalCoralStation().onTrue(superstructure.set(TargetAction.STOW, false));
+            controlBoard.homeElevator().onTrue(superstructure.set(TargetAction.HM, false));
+    
+            controlBoard.climbUp().whileTrue(ClimberCommandFactory.climberUp());
+            controlBoard.climbDown().whileTrue(ClimberCommandFactory.climberDown());
+    
+            controlBoard.algaeScoreAngle().onTrue(superstructure.set(TargetAction.AS, false));
+            controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.AP, false));
+    
+            controlBoard.setFlush().onTrue(new InstantCommand(()->wantSmartDriveValue++));
+            controlBoard.set1CoralAway().onTrue(new AlgaeIntakeAndScoreCommand(superstructure));
+            // controlBoard.setFlush().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(true)));
+    
+            /* SysID */
+            controlBoard.sysIDDynamicForward().onTrue(SuperstructureCommandFactory.setCoast());
+            controlBoard.sysIDDynamicReverse().onTrue(SuperstructureCommandFactory.setBrake());
+            // controlBoard.sysIDQuasiForward().whileTrue(intakePivot.sysIdQuasistatic(Direction.kForward));
+            // controlBoard.sysIDQuasiReverse().whileTrue(intakePivot.sysIdQuasistatic(Direction.kReverse));
+            // controlBoard.sysIDDynamicForward().whileTrue(intakePivot.sysIdDynamic(Direction.kForward));
+            // controlBoard.sysIDDynamicReverse().whileTrue(intakePivot.sysIdDynamic(Direction.kReverse));
+            // controlBoard
+            //         .outtake()
+            //         .onTrue(Commands.runOnce(SignalLogger::start))
+            //         .onFalse(Commands.runOnce(SignalLogger::stop));
+        }
+    
+        private void configurePOVBindings() {
+            ControlBoard controlBoard = ControlBoard.getInstance();
+    
+            controlBoard.povUp().whileTrue(new DefaultDriveCommand(() -> 0.2, () -> 0.0, () -> 0.0, () -> false));
+            controlBoard.povUpRight().whileTrue(new DefaultDriveCommand(() -> 0.2, () -> -0.2, () -> 0.0, () -> false));
+    
+            controlBoard.povRight().whileTrue(new DefaultDriveCommand(() -> 0.0, () -> -0.2, () -> 0.0, () -> false));
+    
+            controlBoard.povDownRight().whileTrue(new DefaultDriveCommand(() -> -0.2, () -> -0.2, () -> 0.0, () -> false));
+    
+            controlBoard.povDown().whileTrue(new DefaultDriveCommand(() -> -0.2, () -> 0.0, () -> 0.0, () -> false));
+    
+            controlBoard.povDownLeft().whileTrue(new DefaultDriveCommand(() -> -0.2, () -> 0.2, () -> 0.0, () -> false));
+    
+            controlBoard.povLeft().whileTrue(new DefaultDriveCommand(() -> 0.0, () -> 0.2, () -> 0.0, () -> false));
+    
+            controlBoard.povUpLeft().whileTrue(new DefaultDriveCommand(() -> 0.2, () -> 0.2, () -> 0.0, () -> false));
+    
+            System.out.println("POV Bindings Configured");
+        }
+    
+        public void precompileAuto() {
+            if (AutoFactory.getInstance().recompileNeeded()) {
+                AutoFactory.getInstance().recompile();
+            }
+        }
+    
+        public Command getAutonomousCommand() {
+            // return autoFactory.getCompiledChoreoAuto(); // test
+            return autoFactory.getCompiledAuto();
+        }
+    
+        public static boolean getDeadReckoning() {
+            return deadReckoning;
+        }
+    
+        public static void setDeadReckoning(boolean isDeadReckoning) {
+            deadReckoning = isDeadReckoning;
+        }
+    
+        public static boolean getSmartDrivewanted(){
+            if (Dashboard.getInstance().getSmartDrivewanted() && wantSmartDriveValue <= 1){
+            return true;
+        }else{
+            return false;
+        }
 
-    public Command getAutonomousCommand() {
-        // return autoFactory.getCompiledChoreoAuto(); // test
-        return autoFactory.getCompiledAuto();
-    }
-
-    public static boolean getDeadReckoning() {
-        return deadReckoning;
-    }
-
-    public static void setDeadReckoning(boolean isDeadReckoning) {
-        deadReckoning = isDeadReckoning;
     }
 }
