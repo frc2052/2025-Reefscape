@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.auto.common.AutoFactory;
-import frc.robot.auto.common.Autos;
 import frc.robot.util.FieldConstants;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -42,11 +41,11 @@ public class Robot extends LoggedRobot {
         Logger.start(); // Start logging
 
         autoChooser = new AutoChooser();
-        autoChooser.addCmd("NO AUTO", this::emptyCommandSupplier);
-        autoChooser.addCmd("J4K4L4", this::getJ4K4L4);
-        autoChooser.addCmd("E4D4C4", this::getE4D4C4);
-        autoChooser.addCmd("CENTER 1", this::center1);
-        autoChooser.addCmd("Test", this::test);
+        // autoChooser.addCmd("NO AUTO", this::emptyCommandSupplier);
+        // autoChooser.addCmd("J4K4L4", this::getJ4K4L4);
+        // autoChooser.addCmd("E4D4C4", this::getE4D4C4);
+        // autoChooser.addCmd("CENTER 1", this::center1);
+        // autoChooser.addCmd("Test", this::test);
 
         SmartDashboard.putData("CHOREO AUTO CHOOSER V1", autoChooser);
         Pose2d loadPose = FieldConstants.blueLeftBranchL1.get(0);
@@ -78,40 +77,40 @@ public class Robot extends LoggedRobot {
 
     private Command j4k4l4 = null;
 
-    public Command getJ4K4L4() {
-        if (j4k4l4 == null) {
-            j4k4l4 = Autos.getInstance().J4K4L4();
-        }
+    // public Command getJ4K4L4() {
+    //     if (j4k4l4 == null) {
+    //         j4k4l4 = Autos.getInstance().J4K4L4();
+    //     }
 
-        return j4k4l4;
-    }
+    //     return j4k4l4;
+    // }
 
     private Command e4d4c4 = null;
 
-    public Command getE4D4C4() {
-        if (e4d4c4 == null) {
-            e4d4c4 = Autos.getInstance().E4D4C4();
-        }
-        return e4d4c4;
-    }
+    // public Command getE4D4C4() {
+    //     if (e4d4c4 == null) {
+    //         e4d4c4 = Autos.getInstance().E4D4C4();
+    //     }
+    //     return e4d4c4;
+    // }
 
     private Command center1 = null;
 
-    public Command center1() {
-        if (center1 == null) {
-            center1 = Autos.getInstance().CENTERL1();
-        }
-        return center1;
-    }
+    // public Command center1() {
+    //     if (center1 == null) {
+    //         center1 = Autos.getInstance().CENTERL1();
+    //     }
+    //     return center1;
+    // }
 
     private Command test = null;
 
-    public Command test() {
-        if (test == null) {
-            test = Autos.getInstance().test();
-        }
-        return center1;
-    }
+    // public Command test() {
+    //     if (test == null) {
+    //         test = Autos.getInstance().test();
+    //     }
+    //     return center1;
+    // }
 
     public Command emptyCommandSupplier() {
         return new InstantCommand();

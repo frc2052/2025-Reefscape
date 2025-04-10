@@ -9,7 +9,7 @@ import frc.robot.auto.common.AutoBase;
 /** Add your docs here. */
 public class RedG4LeftAlgae extends AutoBase {
     private static final Path startPath = PathsBase.R_SC_GH;
-    private static final Path descore1 = PathsBase.R_GH_REPOSITION;
+    // private static final Path descore1 = PathsBase.B_GH_REPOSITION_IN;
     private static final Path score1 = PathsBase.R_GH_NET;
     private static final Path descore2 = PathsBase.R_NET_IJ;
     private static final Path score2 = PathsBase.R_IJ_NET;

@@ -4,10 +4,12 @@
 package frc.robot.auto.common;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DashboardConstants;
 import frc.robot.RobotState;
 import frc.robot.auto.modes.choreoRemake.V2BackupMiddleL1;
 import frc.robot.auto.modes.choreoRemake.V2E4D4C4;
+import frc.robot.auto.modes.choreoRemake.V2HL4Algae;
 import frc.robot.auto.modes.choreoRemake.V2J4K4L4;
 import frc.robot.auto.modes.choreoRemake.V2MiddleL4;
 import frc.robot.auto.modes.safety.DeadReckoning;
@@ -129,7 +131,8 @@ public class AutoFactory {
     }
 
     public Command getJ4K4L4() {
-        return Autos.getInstance().J4K4L4();
+        return new InstantCommand();
+        // return Autos.getInstance().J4K4L4();
     }
 
     // public static enum ChoreoAuto {
@@ -166,6 +169,7 @@ public class AutoFactory {
         MIDDLE_L4(V2MiddleL4.class),
         BACKUP_MIDDLE_L1(V2BackupMiddleL1.class),
         DRIVE_FORWARD(DeadReckoning.class),
+        MIDDLE_ALGAE(V2HL4Algae.class),
         NO_AUTO(null);
         // LL_K4_VISION_TEST(AutoLLToK4.class),
         // BACKUP_AUTO_H4_DA_NET(AutoG4AlgaePrep.class),

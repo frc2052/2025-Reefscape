@@ -199,7 +199,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
                         .withTimeout(1.2)
                         .andThen(ArmCommandFactory.intake()
                                 .withTimeout(0.1)
-                                .andThen(ArmCommandFactory.coralOut().withTimeout(0.4))));
+                                .andThen(ArmCommandFactory.coralOut().withTimeout(0.5))));
     }
 
     protected Command toPosAndScore(TargetAction position) {
@@ -345,6 +345,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     public static final class PathsBase {
+
+        public static final Path BLUE_NET_FORWARD = new Path("none", "BLUE NET FORWARD");
         // MIDDLE BACKUP PATH
         public static final Path SC_GH_L1 = new Path("SC GH L1", "RED SC GH L1");
 
@@ -443,9 +445,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
         // score to descore
         // TODO: EVENT MARKERS @ OUTERMOST POINT CALLED OUTERMOST
 
-        public static final Path B_GH_REPOSITION_OUT = new Path("GH REPOSITION OUT", "BLUE GH Reposition"); //
-        public static final Path B_GH_REPOSITION_IN = new Path("GH REPOSITION IN", null);
-        public static final Path R_GH_REPOSITION = new Path("GH Descore Algae", "RED GH Reposition"); //
+        // public static final Path B_GH_REPOSITION_OUT = new Path("GH REPOSITION OUT", "BLUE GH Reposition"); //
+        public static final Path B_GH_REPOSITION_IN = new Path("GH REPOSITION IN", "BLUE GH REP");
 
         public static final Path B_KL_REPOSITION = new Path("KL Descore Algae", "BLUE KL Reposition"); //
         public static final Path R_KL_REPOSITION = new Path("KL Descore Algae", "RED KL Reposition"); //

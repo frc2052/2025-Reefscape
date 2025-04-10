@@ -18,7 +18,7 @@ public class SuperstructurePosition {
         L2(13.275, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 2.25, Degrees.of(157.0), IntakePivotPositions.STOW.position),
         L3(27.0, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 15.0, Degrees.of(157.0), IntakePivotPositions.STOW.position),
         L4(47, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 46, Degrees.of(189.0), IntakePivotPositions.STOW.position),
-        LA(4.5, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Lower Algae
+        LA(3.5, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Lower Algae
         UA(17.25, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Upper Algae
         SAFE_ARM_HEIGHT(SuperstructureConstants.MIN_SAFE_ROTATION, Degrees.of(228), IntakePivotPositions.STOW.position, ActionType.NONE),
         STOW(9.0, Degrees.of(130.0), IntakePivotPositions.STOW.position, ActionType.NONE), // default state
