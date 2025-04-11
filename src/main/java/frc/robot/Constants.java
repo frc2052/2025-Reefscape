@@ -312,7 +312,7 @@ public class Constants {
   public static final class IntakeRollerConstants {
     public static final boolean MOTOR_INVERTED = false;
     public static final double INTAKE_SPEED = -1.00;
-    public static final double OUTTAKE_SPEED = 0.35;
+    public static final double OUTTAKE_SPEED = 1.00;
     public static final double MAX_RPS = 100;
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
