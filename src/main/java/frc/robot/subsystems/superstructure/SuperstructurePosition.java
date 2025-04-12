@@ -15,7 +15,7 @@ public class SuperstructurePosition {
         INTAKE(1.5, Degrees.of(307), IntakePivotPositions.INTAKE.position, ActionType.CORAL), //307
         UN_JAM(19, Degrees.of(150.0), IntakePivotPositions.INTAKE.position, ActionType.CORAL),
         L1H(4.5, Degrees.of(190.0), IntakePivotPositions.L1.position, ActionType.CORAL),
-        L2(13.275, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 2.75, Degrees.of(154.0), IntakePivotPositions.STOW.position),
+        L2(13.275, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 3.0, Degrees.of(158.0), IntakePivotPositions.STOW.position),
         L3(27.0, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 15.25, Degrees.of(154.0), IntakePivotPositions.STOW.position),
         L4(47.5, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 47.5, Degrees.of(186.0), IntakePivotPositions.STOW.position),
         LA(3.5, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Lower Algae
