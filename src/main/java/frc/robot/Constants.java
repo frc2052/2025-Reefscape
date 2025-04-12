@@ -449,8 +449,19 @@ public class Constants {
                 new Translation2d(Inches.of(233.491), Inches.of(131.511)), // x y
                 new Translation2d(Inches.of(176.746), Inches.of(104.523)), // x
                 new Translation2d(Inches.of(130), Inches.of(131.511))); // x y
-        public static final List<Translation2d> redBarge = Arrays.asList();
-        public static final List<Translation2d> redProcessor = Arrays.asList();
+
+        public static final List<Translation2d> redBarge = Arrays.asList(
+                new Translation2d(Inches.of(353.726), Inches.of(156.060000)),
+                new Translation2d(Inches.of(353.726),Inches.of(8.646900)), 
+                new Translation2d(Inches.of(396.591),Inches.of(8.646900)), 
+                new Translation2d(Inches.of(396.591),Inches.of(156.060000)));
+
+        public static final List<Translation2d> redProcessor = Arrays.asList(
+                new Translation2d(Inches.of(), Inches.of()),
+                new Translation2d(Inches.of(),Inches.of()),
+                new Translation2d(Inches.of(),Inches.of()), 
+                new Translation2d(Inches.of(),Inches.of()));
+
         public static final List<Translation2d> redTravel = Arrays.asList();
 
         public static final List<Translation2d> blueReef = Arrays.asList(
@@ -460,8 +471,19 @@ public class Constants {
                 new Translation2d(Inches.of(570.875868), Inches.of(131.511)), // x y
                 new Translation2d(Inches.of(514.130868), Inches.of(104.523)), // x
                 new Translation2d(Inches.of(467.384868), Inches.of(131.511)));
-        public static final List<Translation2d> blueBarge = Arrays.asList();
-        public static final List<Translation2d> blueProcessor = Arrays.asList();
+
+        public static final List<Translation2d> blueBarge = Arrays.asList(
+                new Translation2d(Inches.of(339.740479), Inches.of(323.473100)),
+                new Translation2d(Inches.of(339.740479),Inches.of(167.060)), 
+                new Translation2d(Inches.of(296.875479),Inches.of(167.060)), 
+                new Translation2d(Inches.of(296.875479),Inches.of(323.473100)));
+
+        public static final List<Translation2d> blueProcessor = Arrays.asList(
+                new Translation2d(Inches.of(470.431104), Inches.of(322.255000)),
+                new Translation2d(Inches.of(470.431104),Inches.of(262.255000)), 
+                new Translation2d(Inches.of(380.655),Inches.of(262.255000)), 
+                new Translation2d(Inches.of(380.655),Inches.of(322.255000)));
+
         public static final List<Translation2d> blueTravel = Arrays.asList();
 
         public static final Rotation2d bestRotation = new Rotation2d();
