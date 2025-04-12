@@ -264,6 +264,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return false;
     }
 
+    public boolean canHandoffAlgae() {
+        return elevator.atPosition(1.5, TargetAction.GROUND_ALGAE_HANDOFF)
+                && armPivot.isAtPosition(1.0, TargetAction.GROUND_ALGAE_HANDOFF.getArmPivotAngle())
+                && intakePivot.isAtPosition(1.0, TargetAction.GROUND_ALGAE_HANDOFF.getIntakePivotPosition());
+    }
+
     public boolean atConfirmedPosition() {
         return atPosition(currentAction);
     }

@@ -15,6 +15,10 @@ public class IntakeCommandFactory {
         return Commands.runEnd(() -> rollers.intake(), () -> rollers.stopMotor(), rollers);
     }
 
+    public static Command intakeAlgae() {
+        return Commands.runEnd(() -> rollers.intakeAlgae(), () -> rollers.stopMotor(), rollers);
+    }
+
     public static Command outtake() {
         return Commands.runEnd(() -> rollers.outtake(), () -> rollers.stopMotor(), rollers);
     }

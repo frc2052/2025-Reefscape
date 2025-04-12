@@ -11,21 +11,17 @@ import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.configs.AudioConfigs;
-import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.ProximityParamsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.ToFParamsConfigs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.UpdateModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -65,14 +61,14 @@ public class Constants {
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
-            .withKP(6.0)
+            .withKP(5.0)
             .withKI(0.0)
-            .withKD(1.0)
-            .withKS(0.5)
+            .withKD(1.1)
+            .withKS(1.0)
             .withKV(0.0)
             .withKA(0.0)
             .withGravityType(GravityTypeValue.Elevator_Static)
-            .withKG(9.5);
+            .withKG(9.0);
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
@@ -86,7 +82,7 @@ public class Constants {
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
             .withMotionMagicCruiseVelocity(0)
-            .withMotionMagicExpo_kA(0.009)
+            .withMotionMagicExpo_kA(0.0175)
             .withMotionMagicExpo_kV(0.007);
             // .withMotionMagicAcceleration(160) 
             // .withMotionMagicJerk(600);
@@ -170,8 +166,8 @@ public class Constants {
             
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
-            .withKP(75.0)
-            .withKI(0.1)
+            .withKP(85.0)
+            .withKI(0.15)
             .withKD(0.0)
             .withKS(0.0)
             .withKV(11.7) //11.7
@@ -223,9 +219,9 @@ public class Constants {
     public static final double ALGAE_IN_SPEED = 0.5;
     public static final double ALGAE_OUT_SPEED = -1.00;
 
-    public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()
-    .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
-    .withProximityParams(new ProximityParamsConfigs().withMinSignalStrengthForValidMeasurement(0.2).withProximityThreshold(0.38));
+    // public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()
+    // .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
+    // .withProximityParams(new ProximityParamsConfigs().withMinSignalStrengthForValidMeasurement(0.2).withProximityThreshold(0.38));
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
@@ -326,7 +322,7 @@ public class Constants {
     public static final Slot0Configs SLOT0_CONFIGS = new Slot0Configs().withKS(2.5).withKP(5).withKI(0).withKD(0);
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIG = new CurrentLimitsConfigs()
-    .withSupplyCurrentLimit(20.0)
+    .withSupplyCurrentLimit(30.0)
     .withSupplyCurrentLimitEnable(true);
     
     public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()

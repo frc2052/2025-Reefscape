@@ -194,12 +194,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     protected Command score(TargetAction position) {
         return new SequentialCommandGroup(
-                Commands.waitUntil(() -> ElevatorSubsystem.getInstance().atPosition(2.0, position)
-                                && ArmPivotSubsystem.getInstance().isAtDesiredPosition(4.0))
-                        .withTimeout(1.2)
-                        .andThen(ArmCommandFactory.intake()
-                                .withTimeout(0.1)
-                                .andThen(ArmCommandFactory.coralOut().withTimeout(0.5))));
+                IntakeCommandFactory.outtake().withTimeout(0.3),
+                ArmCommandFactory.coralOut().withTimeout(0.5));
     }
 
     protected Command toPosAndScore(TargetAction position) {

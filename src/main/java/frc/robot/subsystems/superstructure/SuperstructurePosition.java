@@ -15,9 +15,9 @@ public class SuperstructurePosition {
         INTAKE(1.5, Degrees.of(307), IntakePivotPositions.INTAKE.position, ActionType.CORAL), //307
         UN_JAM(19, Degrees.of(150.0), IntakePivotPositions.INTAKE.position, ActionType.CORAL),
         L1H(4.5, Degrees.of(190.0), IntakePivotPositions.L1.position, ActionType.CORAL),
-        L2(13.275, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 2.25, Degrees.of(157.0), IntakePivotPositions.STOW.position),
-        L3(27.0, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 15.0, Degrees.of(157.0), IntakePivotPositions.STOW.position),
-        L4(47, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 46, Degrees.of(189.0), IntakePivotPositions.STOW.position),
+        L2(13.275, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 2.75, Degrees.of(154.0), IntakePivotPositions.STOW.position),
+        L3(27.0, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 15.25, Degrees.of(154.0), IntakePivotPositions.STOW.position),
+        L4(47.5, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 47.5, Degrees.of(186.0), IntakePivotPositions.STOW.position),
         LA(3.5, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Lower Algae
         UA(17.25, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Upper Algae
         SAFE_ARM_HEIGHT(SuperstructureConstants.MIN_SAFE_ROTATION, Degrees.of(228), IntakePivotPositions.STOW.position, ActionType.NONE),
@@ -25,6 +25,9 @@ public class SuperstructurePosition {
         POST_ALGAE_STOW(9.0, Degrees.of(305.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Coral Station
         AS(46, Degrees.of(190.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring NET
         AP(2.25, Degrees.of(325.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring Processor
+        // GROUND_ALGAE_INTAKE(9.0, Degrees.of(130.0), IntakePivotPositions.GROUND_ALGAE.position, ActionType.ALGAE),
+        GROUND_ALGAE_INTAKE(0.0, Degrees.of(322.0), IntakePivotPositions.MID.position, ActionType.ALGAE),
+        GROUND_ALGAE_HANDOFF(13.0, Degrees.of(100.0), IntakePivotPositions.ALGAE_HANDOFF.position, ActionType.ALGAE),
         TR(3.75, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Travel
         CL(10.5, Degrees.of(265.0), IntakePivotPositions.L1.position, ActionType.NONE); // Climb
 
@@ -91,7 +94,9 @@ public class SuperstructurePosition {
         STOW(17.5),
         INTAKE(0.8), // was 75
         L1(15),
-        MID(7);
+        MID(7),
+        GROUND_ALGAE(3.5),
+        ALGAE_HANDOFF(17.5);
 
         private double position;
 

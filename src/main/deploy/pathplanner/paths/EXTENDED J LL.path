@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 1.9586086526593356,
-        "y": 7.000974984571364
+        "x": 2.361577868852459,
+        "y": 7.159784836065573
       },
       "prevControl": {
-        "x": 2.14546098233025,
-        "y": 7.1670659442788445
+        "x": 2.5484301985233735,
+        "y": 7.325875795773054
       },
       "nextControl": {
-        "x": 1.7717563229884208,
-        "y": 6.834884024863884
+        "x": 2.1747255391815443,
+        "y": 6.993693876358093
       },
       "isLocked": false,
       "linkedName": "LEFT PICKUP"
@@ -52,8 +52,8 @@
         "y": 5.63734631147541
       },
       "prevControl": {
-        "x": 2.7571721311475406,
-        "y": 6.15281762295082
+        "x": 2.84108606557377,
+        "y": 6.176793032786884
       },
       "nextControl": null,
       "isLocked": false,
@@ -67,11 +67,11 @@
     },
     {
       "waypointRelativePos": 0.9944022391043636,
-      "rotationDegrees": -44.73817811043682
+      "rotationDegrees": -23.203018018902856
     },
     {
       "waypointRelativePos": 1.291883246701318,
-      "rotationDegrees": -38.52743413720142
+      "rotationDegrees": -21.059853585000596
     },
     {
       "waypointRelativePos": 2.3906437425029905,
@@ -84,7 +84,7 @@
       "minWaypointRelativePos": 1.2124039659468437,
       "maxWaypointRelativePos": 2.40109790282392,
       "constraints": {
-        "maxVelocity": 1.85,
+        "maxVelocity": 2.2,
         "maxAcceleration": 2.6,
         "maxAngularVelocity": 480.0,
         "maxAngularAcceleration": 480.0,

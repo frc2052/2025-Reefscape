@@ -46,6 +46,10 @@ public class IntakeRollerSubsystem extends SubsystemBase {
         setMotorPct(IntakeRollerConstants.INTAKE_SPEED);
     }
 
+    public void intakeAlgae() {
+        setMotorPct(-0.75);
+    }
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
