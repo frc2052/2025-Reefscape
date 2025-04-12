@@ -59,7 +59,7 @@ public class V2HL4Algae extends AutoBase {
 
         // score GH
         addCommands(followPathCommand(score1.getChoreoPath())
-                .deadlineFor(ArmCommandFactory.algaeIn().repeatedly())
+                .deadlineFor(ArmCommandFactory.algaeIn())
                 .alongWith(new InstantCommand(
                                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))
                         .beforeStarting(new WaitCommand(1.5)))
@@ -73,7 +73,7 @@ public class V2HL4Algae extends AutoBase {
                                 .deadlineFor(ArmCommandFactory.algaeIn().beforeStarting(new WaitCommand(0.2)))));
 
         // score IJ
-        addCommands(followPathCommand(score2.getChoreoPath())
+        addCommands((followPathCommand(score2.getChoreoPath()).deadlineFor(ArmCommandFactory.algaeIn()))
                 .alongWith(new InstantCommand(
                                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))
                         .beforeStarting(new WaitCommand(1.0)))

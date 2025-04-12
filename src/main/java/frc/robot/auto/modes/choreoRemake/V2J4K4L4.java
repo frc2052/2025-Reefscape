@@ -182,11 +182,5 @@ public class V2J4K4L4 extends AutoBase {
 
         // scored all three, final pickup
         addCommands(pickup(retryLoad));
-        // addCommands(
-        //         new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.LA))
-        //                 .andThen(new WaitCommand(0.2)));
-
-        // addCommands(ArmCommandFactory.algaeIn()
-        //         .withDeadline(followPathCommand(KLreposition.getChoreoPath()).andThen(new WaitCommand(0.5))));
     }
 }

@@ -128,12 +128,10 @@ public class AutoFactory {
 
     public boolean getBumpNeeded() {
         return savedBumpNeeded;
-        // return bumpNeededSupplier.get();
     }
 
     public Command getJ4K4L4() {
         return new InstantCommand();
-        // return Autos.getInstance().J4K4L4();
     }
 
     // public static enum ChoreoAuto {

@@ -257,7 +257,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     protected Command pickup(Path path) {
         return (new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
-                        .beforeStarting(new WaitCommand(0.15)))
+                        .beforeStarting(new WaitCommand(0.1)))
                 .alongWith(((followPathCommand(path.getPathPlannerPath()))
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
                         .until(() -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3
@@ -284,7 +284,10 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     protected Command scoreNet() {
         return Commands.sequence(
-                Commands.waitUntil(() -> SuperstructureSubsystem.getInstance().isAtTargetState()),
+                (Commands.waitUntil(() -> ArmPivotSubsystem.getInstance()
+                                        .isAtPosition(2.0, TargetAction.AS.getArmPivotAngle()))
+                                .andThen(new WaitCommand(0.3)))
+                        .deadlineFor(ArmCommandFactory.algaeIn()),
                 ArmCommandFactory.algaeOut().withTimeout(0.5));
     }
 
