@@ -48,7 +48,7 @@ public class Robot extends LoggedRobot {
         // autoChooser.addCmd("Test", this::test);
 
         SmartDashboard.putData("CHOREO AUTO CHOOSER V1", autoChooser);
-        Pose2d loadPose = FieldConstants.blueLeftBranchL1.get(0);
+        Pose2d loadPose = FieldConstants.blueLeftBranches.get(0);
         if (loadPose != null) {
             System.out.println("Loaded Field Constants");
         }
