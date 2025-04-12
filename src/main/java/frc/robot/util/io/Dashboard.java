@@ -15,16 +15,10 @@ public class Dashboard {
 
     private final LoggedDashboardChooser<Auto> autoChooser = new LoggedDashboardChooser<Auto>("Auto Mode");
 
-    // private final LoggedDashboardChooser<ChoreoAuto> choreoAutoChooser =
-    //         new LoggedDashboardChooser<ChoreoAuto>("Choreo Auto");
-
     private final LoggedDashboardChooser<Double> waitSecondsChooser =
             new LoggedDashboardChooser<Double>("Wait Seconds");
 
     private final LoggedDashboardChooser<Boolean> bump = new LoggedDashboardChooser<Boolean>("Bump Needed");
-
-    // private final LoggedDashboardChooser<Boolean> stationSideChooser =
-    //     new LoggedDashboardChooser<Boolean>("Auto Station Side");
 
     private final LoggedDashboardChooser<Boolean> coastChooser = new LoggedDashboardChooser<Boolean>("Coast Out");
     private final NetworkTableInstance networkTables = NetworkTableInstance.getDefault();

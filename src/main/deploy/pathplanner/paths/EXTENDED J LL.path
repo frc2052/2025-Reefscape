@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 5.010860655737704,
-        "y": 5.277715163934426
+        "y": 5.481506147540983
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4404713114754095,
-        "y": 6.536424180327868
+        "x": 3.44047131147541,
+        "y": 6.5484118852459
       },
       "isLocked": false,
       "linkedName": null
@@ -32,35 +32,19 @@
     },
     {
       "anchor": {
-        "x": 2.2297131147540985,
-        "y": 7.027920081967213
+        "x": 2.2656762295081965,
+        "y": 6.955993852459016
       },
       "prevControl": {
-        "x": 2.637295081967214,
-        "y": 6.944006147540985
+        "x": 2.5685314316649333,
+        "y": 7.24137663910671
       },
       "nextControl": {
-        "x": 1.984848853939937,
-        "y": 7.078333312134834
+        "x": 1.6423155737704915,
+        "y": 6.36859631147541
       },
       "isLocked": false,
       "linkedName": "LEFT PICKUP"
-    },
-    {
-      "anchor": {
-        "x": 1.8221311475409834,
-        "y": 6.6563012295081965
-      },
-      "prevControl": {
-        "x": 1.6338725615701042,
-        "y": 6.9107047240634385
-      },
-      "nextControl": {
-        "x": 2.2656762295081974,
-        "y": 6.056915983606556
-      },
-      "isLocked": false,
-      "linkedName": null
     },
     {
       "anchor": {
@@ -68,8 +52,8 @@
         "y": 5.481506147540983
       },
       "prevControl": {
-        "x": 2.6492827868852458,
-        "y": 5.973002049180327
+        "x": 2.6612704918032786,
+        "y": 5.996977459016393
       },
       "nextControl": null,
       "isLocked": false,
@@ -79,10 +63,10 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1.291883246701318,
-      "rotationDegrees": -23.7546295036431
+      "rotationDegrees": -0.6700916554038453
     },
     {
-      "waypointRelativePos": 2.611755297880843,
+      "waypointRelativePos": 2.3,
       "rotationDegrees": 0.7998250626365094
     }
   ],
@@ -90,7 +74,7 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 1.2124039659468437,
-      "maxWaypointRelativePos": 2.40109790282392,
+      "maxWaypointRelativePos": 2.2,
       "constraints": {
         "maxVelocity": 2.2,
         "maxAcceleration": 2.6,

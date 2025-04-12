@@ -13,7 +13,6 @@ import frc.robot.auto.modes.H4AlgaeGHEFIJ;
 import frc.robot.auto.modes.Left3CoralJKL;
 import frc.robot.auto.modes.MiddleH4;
 import frc.robot.auto.modes.Right3CoralEDC;
-import frc.robot.auto.modes.V2HL4Algae;
 import frc.robot.util.io.Dashboard;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
@@ -140,7 +139,6 @@ public class AutoFactory {
         MIDDLE_L4(MiddleH4.class),
         BACKUP_MIDDLE_L1(BackupMiddleL1.class),
         DRIVE_FORWARD(DeadReckoning.class),
-        MIDDLE_ALGAE_GH_IJ(V2HL4Algae.class),
         MIDDLE_ALGAE_GH_EF_IJ(H4AlgaeGHEFIJ.class),
         NO_AUTO(null);
 

@@ -209,13 +209,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     public static final class PathsBase {
 
-        public static final Path BLUE_NET_FORWARD = new Path("none", "BLUE NET FORWARD");
-        // MIDDLE BACKUP PATH
-
-        // retry coral grab
-        public static final Path BLUE_LL_RETRY = new Path("BLUE LL RETRY", "BLUE LL RETRY");
-        public static final Path BLUE_RL_RETRY = new Path("BLUE RL RETRY", "BLUE RL RETRY");
-
         public static final Path BLUE_LL_RETRY_STRAIGHT = new Path("SLOW BLUE LL RETRY", "BLUE LL RETRY");
         public static final Path BLUE_RL_RETRY_STRAIGHT = new Path("SLOW BLUE RL RETRY", "BLUE RL RETRY");
 
