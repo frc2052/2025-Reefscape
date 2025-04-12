@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.auto.modes.choreoRemake;
+package frc.robot.auto.modes;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -18,11 +18,11 @@ import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
-public class V2MiddleL4 extends AutoBase {
+public class MiddleH4 extends AutoBase {
 
     private static final Path centerPath = PathsBase.B_SC_GH;
 
-    public V2MiddleL4() {
+    public MiddleH4() {
         super(centerPath.getChoreoPath().getStartingHolonomicPose());
     }
 

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.auto.modes.choreoRemake;
+package frc.robot.auto.modes;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -22,7 +22,7 @@ import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
-public class V2J4K4L4 extends AutoBase {
+public class Left3CoralJKL extends AutoBase {
 
     private boolean kScored;
     private static final Path startPath = PathsBase.B_SL_J;
@@ -31,7 +31,7 @@ public class V2J4K4L4 extends AutoBase {
 
     private static final Path KLreposition = PathsBase.B_KL_REPOSITION;
 
-    public V2J4K4L4() {
+    public Left3CoralJKL() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());
     }
 
