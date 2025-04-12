@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DashboardConstants;
 import frc.robot.RobotState;
+import frc.robot.auto.modes.choreoRemake.H4AlgaeGHEFIJ;
 import frc.robot.auto.modes.choreoRemake.V2BackupMiddleL1;
 import frc.robot.auto.modes.choreoRemake.V2E4D4C4;
 import frc.robot.auto.modes.choreoRemake.V2HL4Algae;
@@ -169,8 +170,10 @@ public class AutoFactory {
         MIDDLE_L4(V2MiddleL4.class),
         BACKUP_MIDDLE_L1(V2BackupMiddleL1.class),
         DRIVE_FORWARD(DeadReckoning.class),
-        MIDDLE_ALGAE(V2HL4Algae.class),
+        MIDDLE_ALGAE_GH_IJ(V2HL4Algae.class),
+        MIDDLE_ALGAE_GH_EF_IJ(H4AlgaeGHEFIJ.class),
         NO_AUTO(null);
+
         // LL_K4_VISION_TEST(AutoLLToK4.class),
         // BACKUP_AUTO_H4_DA_NET(AutoG4AlgaePrep.class),
 

@@ -34,7 +34,7 @@ public class DriveToPose extends Command {
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
     private final Supplier<Pose2d> target;
 
-    private DelayedBoolean stoppedMovingDelay = new DelayedBoolean(Timer.getFPGATimestamp() + 0.25, 0.1);
+    private DelayedBoolean stoppedMovingDelay = new DelayedBoolean(Timer.getFPGATimestamp() + 0.25, 0.2);
 
     private final SwerveRequest.FieldCentricFacingAngle driveChassisSpeeds = new SwerveRequest.FieldCentricFacingAngle()
             .withDesaturateWheelSpeeds(true)
@@ -189,14 +189,10 @@ public class DriveToPose extends Command {
 
     /** Checks if the robot is stopped at the final pose. */
     public boolean atGoal() {
-        boolean stoppedMoving = driveController.atGoal()
-                || stoppedMovingDelay.update(
-                        Timer.getFPGATimestamp(),
-                        MathHelpers.epsilonEquals(
-                                MathHelpers.chassisSpeedsNorm(
-                                        RobotState.getInstance().getChassisSpeeds()),
-                                0.0,
-                                0.5));
+        boolean stoppedMoving = stoppedMovingDelay.update(
+                Timer.getFPGATimestamp(),
+                MathHelpers.epsilonEquals(
+                        MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()), 0.0, 0.05));
         return running && stoppedMoving;
         // return running && driveController.atGoal();
     }

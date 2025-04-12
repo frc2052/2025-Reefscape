@@ -193,7 +193,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     protected Command score(TargetAction position) {
-        return new SequentialCommandGroup(
+        return new ParallelCommandGroup(
                 IntakeCommandFactory.outtake().withTimeout(0.3),
                 ArmCommandFactory.coralOut().withTimeout(0.5));
     }
@@ -256,15 +256,12 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     protected Command pickup(Path path) {
-        return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
-                .andThen(Commands.waitUntil(
-                                () -> ElevatorSubsystem.getInstance().getPosition() < 50)
-                        .andThen(((followPathCommand(path.getPathPlannerPath()))
-                                        .deadlineFor(
-                                                IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
-                                .until(() ->
-                                        (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3
-                                                || RobotState.getInstance().getHasCoral()))))
+        return (new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
+                        .beforeStarting(new WaitCommand(0.15)))
+                .alongWith(((followPathCommand(path.getPathPlannerPath()))
+                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
+                        .until(() -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3
+                                || RobotState.getInstance().getHasCoral())))
                 // interrupted (have coral)? continue
                 // path went all the way through? pause + intake
                 .andThen(
@@ -437,6 +434,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
         public static final Path B_NET_IJ = new Path("Net IJ", "BLUE NET IJ"); //
         public static final Path R_IJ_NET = new Path("IJ NET", "RED IJ NET"); //
         public static final Path R_NET_IJ = new Path("NET IJ", "RED NET IJ"); //
+
+        public static final Path B_NET_EF = new Path(null, "BLUE NET EF");
+        public static final Path B_EF_NET = new Path(null, "BLUE EF NET");
 
         // score to descore
         // TODO: EVENT MARKERS @ OUTERMOST POINT CALLED OUTERMOST

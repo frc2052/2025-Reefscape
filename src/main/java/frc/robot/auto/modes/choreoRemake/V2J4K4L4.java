@@ -26,7 +26,7 @@ public class V2J4K4L4 extends AutoBase {
 
     private boolean kScored;
     private static final Path startPath = PathsBase.B_SL_J;
-    private static final Path load1 = PathsBase.EXTENDED_J_LL;
+    private static final Path firstPickup = PathsBase.EXTENDED_J_LL;
     private static final Path retryLoad = PathsBase.BLUE_LL_RETRY_STRAIGHT;
 
     private static final Path KLreposition = PathsBase.B_KL_REPOSITION;
@@ -45,9 +45,7 @@ public class V2J4K4L4 extends AutoBase {
         // setup
         addCommands(getBumpCommand());
         addCommands(delaySelectedTime());
-        addCommands(new InstantCommand(() -> setKScored(false))); // rest kScored to false
-        addCommands(
-                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW)));
+        addCommands(new InstantCommand(() -> setKScored(false)));
 
         // score preload
         addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.IJ))
@@ -56,7 +54,7 @@ public class V2J4K4L4 extends AutoBase {
                                 .deadlineFor(ArmCommandFactory.intake().withTimeout(1)),
                         ClimberCommandFactory.climberDown().withTimeout(0.5),
                         new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L3))))
+                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HM))))
                 .andThen((new InstantCommand(
                                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4)))
                         .alongWith((AlignmentCommandFactory.getSpecificReefAlignmentCommand(
@@ -65,8 +63,7 @@ public class V2J4K4L4 extends AutoBase {
                 .andThen(new InstantCommand(() -> System.out.println("start scoring")))
                 .andThen(score(TargetAction.L4)));
 
-        // pickup first coral
-        addCommands(pickup(load1));
+        addCommands(pickup(firstPickup));
 
         // HAVE FIRST PICKUP CORAL?
         addCommands(new ConditionalCommand(
@@ -169,8 +166,6 @@ public class V2J4K4L4 extends AutoBase {
                                 new SequentialCommandGroup(
                                         new PrintCommand("DID RELOAD TO RETRY K, GOING TO SCORE!"),
                                         new ParallelCommandGroup(
-                                                        IntakeCommandFactory.outtake()
-                                                                .withTimeout(0.4),
                                                         new SequentialCommandGroup(
                                                                 AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                                         () -> AlignOffset.LEFT_BRANCH,
@@ -181,14 +176,11 @@ public class V2J4K4L4 extends AutoBase {
                                                                         () -> SuperstructureSubsystem.getInstance()
                                                                                 .setCurrentAction(TargetAction.L4))))
                                                 .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
-                                        score(TargetAction.L4),
-                                        new InstantCommand(() -> SuperstructureSubsystem.getInstance()
-                                                        .setCurrentAction(TargetAction.INTAKE))
-                                                .andThen(new WaitCommand(0.15)))),
+                                        score(TargetAction.L4))),
                         () -> RobotState.getInstance().getHasCoral()),
                 () -> kScored));
 
-        // scored all three, moving to remove algae
+        // scored all three, final pickup
         addCommands(pickup(retryLoad));
         // addCommands(
         //         new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.LA))
