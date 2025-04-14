@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.intake;
 
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeRollerConstants;
@@ -11,8 +12,8 @@ import frc.robot.util.io.Ports;
 
 public class IntakeRollerSubsystem extends SubsystemBase {
     private TalonFX motor;
+    private final VelocityTorqueCurrentFOC m_velocityTorque = new VelocityTorqueCurrentFOC(0).withSlot(0);
 
-    /** Public method to provide access to the instance. */
     private static IntakeRollerSubsystem INSTANCE;
 
     public static IntakeRollerSubsystem getInstance() {
@@ -27,8 +28,10 @@ public class IntakeRollerSubsystem extends SubsystemBase {
         motor.getConfigurator().apply(IntakeRollerConstants.MOTOR_CONFIG);
     }
 
-    private void setMotor(double speed) {
-        motor.set(speed);
+    private void setMotorPct(double pct) {
+        double desiredRPS = pct *= IntakeRollerConstants.MAX_RPS;
+        motor.setControl(m_velocityTorque.withVelocity(desiredRPS));
+        // motor.set(speed);
     }
 
     public void stopMotor() {
@@ -36,11 +39,15 @@ public class IntakeRollerSubsystem extends SubsystemBase {
     }
 
     public void outtake() {
-        setMotor(IntakeRollerConstants.OUTTAKE_SPEED);
+        setMotorPct(IntakeRollerConstants.OUTTAKE_SPEED);
     }
 
     public void intake() {
-        setMotor(IntakeRollerConstants.INTAKE_SPEED);
+        setMotorPct(IntakeRollerConstants.INTAKE_SPEED);
+    }
+
+    public void intakeAlgae() {
+        setMotorPct(-0.75);
     }
 
     @Override

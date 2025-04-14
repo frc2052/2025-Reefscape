@@ -82,8 +82,18 @@ public class RobotContainer {
                 .whileTrue(ArmCommandFactory.intake())
                 .whileTrue(new ConditionalCommand(
                         new InstantCommand(),
+                        // IntakeCommandFactory.intakeAlgae(),
                         IntakeCommandFactory.intake(),
                         () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE));
+        // .onFalse(new ConditionalCommand(
+        //         new WaitUntilCommand(superstructure::canHandoffAlgae)
+        //                 .deadlineFor(new InstantCommand(() ->
+        //                                 superstructure.setCurrentAction(TargetAction.GROUND_ALGAE_HANDOFF))
+        //                         .alongWith(IntakeCommandFactory.intake()))
+        //                 .andThen((ArmCommandFactory.algaeIn().alongWith(IntakeCommandFactory.intake()))
+        //                         .withTimeout(0.5)),
+        //         new InstantCommand(),
+        //         () -> superstructure.getCurrentAction() == TargetAction.GROUND_ALGAE_INTAKE));
         controlBoard
                 .outtake()
                 .whileTrue(ArmCommandFactory.outtake())
@@ -132,7 +142,7 @@ public class RobotContainer {
         controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.AP, false));
 
         controlBoard.setFlush().onTrue(superstructure.set(TargetAction.HP, false));
-        controlBoard.set1CoralAway().onTrue(superstructure.set(TargetAction.UN_JAM, false));
+        controlBoard.set1CoralAway().onTrue(superstructure.set(TargetAction.GROUND_ALGAE_INTAKE, false));
         // controlBoard.setFlush().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(true)));
 
         /* SysID */

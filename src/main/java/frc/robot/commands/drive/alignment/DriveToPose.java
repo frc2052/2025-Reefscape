@@ -34,7 +34,7 @@ public class DriveToPose extends Command {
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
     private final Supplier<Pose2d> target;
 
-    private DelayedBoolean stoppedMovingDelay = new DelayedBoolean(Timer.getFPGATimestamp() + 1.0, 0.25);
+    private DelayedBoolean stoppedMovingDelay = new DelayedBoolean(Timer.getFPGATimestamp() + 0.25, 0.2);
 
     private final SwerveRequest.FieldCentricFacingAngle driveChassisSpeeds = new SwerveRequest.FieldCentricFacingAngle()
             .withDesaturateWheelSpeeds(true)

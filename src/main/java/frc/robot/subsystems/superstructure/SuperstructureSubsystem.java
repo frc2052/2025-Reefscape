@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import com.team2052.lib.util.SecondaryImageManager;
 import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -151,7 +152,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 && armPivot.atPosition(target)) {
             // System.out.println("GOT CORAL********************");
             movingFromIntake = true;
-            setCurrentAction(TargetAction.STOW);
+            setCurrentAction(DriverStation.isAutonomous() ? TargetAction.L3 : TargetAction.STOW);
         }
 
         if (armPivot.atPosition(TargetAction.STOW)) {
@@ -164,6 +165,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 cancelHome = false;
             } else if (target == TargetAction.HM && !elevator.isHoming()) {
                 elevator.setWantHome(true);
+                intakePivot.setAngle(TargetAction.HM.getIntakePivotPosition());
+                armPivot.setArmPosition(TargetAction.HM);
                 System.out.println("HOMING");
                 return;
             }
@@ -259,6 +262,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
         }
 
         return false;
+    }
+
+    public boolean canHandoffAlgae() {
+        return elevator.atPosition(1.5, TargetAction.GROUND_ALGAE_HANDOFF)
+                && armPivot.isAtPosition(1.0, TargetAction.GROUND_ALGAE_HANDOFF.getArmPivotAngle())
+                && intakePivot.isAtPosition(1.0, TargetAction.GROUND_ALGAE_HANDOFF.getIntakePivotPosition());
     }
 
     public boolean atConfirmedPosition() {

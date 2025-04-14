@@ -4,13 +4,15 @@
 package frc.robot.auto.common;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DashboardConstants;
 import frc.robot.RobotState;
-import frc.robot.auto.modes.choreoRemake.V2BackupMiddleL1;
-import frc.robot.auto.modes.choreoRemake.V2E4D4C4;
-import frc.robot.auto.modes.choreoRemake.V2J4K4L4;
-import frc.robot.auto.modes.choreoRemake.V2MiddleL4;
-import frc.robot.auto.modes.safety.DeadReckoning;
+import frc.robot.auto.modes.BackupMiddleL1;
+import frc.robot.auto.modes.DeadReckoning;
+import frc.robot.auto.modes.H4AlgaeGHEFIJ;
+import frc.robot.auto.modes.Left3CoralJKL;
+import frc.robot.auto.modes.MiddleH4;
+import frc.robot.auto.modes.Right3CoralEDC;
 import frc.robot.util.io.Dashboard;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
@@ -125,78 +127,20 @@ public class AutoFactory {
 
     public boolean getBumpNeeded() {
         return savedBumpNeeded;
-        // return bumpNeededSupplier.get();
     }
 
     public Command getJ4K4L4() {
-        return Autos.getInstance().J4K4L4();
+        return new InstantCommand();
     }
 
-    // public static enum ChoreoAuto {
-    //     // NO_AUTO(null),
-    //     // TEST_AUTO(Autos.getInstance().testPath()),
-    //     // DEAD_RECKONING(new DefaultDriveCommand(() -> 0.5, () -> 0.0, () -> 0.0, () -> false).withTimeout(2.0)),
-    //     J4_K4_L4(this::getJ4K4L4);
-    //     // E4_D4_C4(Autos.getInstance().E4D4C4()),
-    //     // CENTER_L1(Autos.getInstance().CENTERL1());
-    //     // G4_CLEAN_LEFT_ALGAE(Autos.getInstance().G4_CLEAN_LEFT_ALGAE());
-
-    //     private final Command autoCommand;
-
-    //     private ChoreoAuto(Command autoCommand) {
-    //         this.autoCommand = autoCommand;
-    //     }
-
-    //     public Command getInstance() {
-    //         if (autoCommand != null) {
-    //             try {
-    //                 return autoCommand;
-    //             } catch (Exception e) {
-    //                 e.printStackTrace();
-    //             }
-    //         }
-
-    //         return null;
-    //     }
-    // }
-
     public static enum Auto {
-        LEFT_3_CORAL_JKL(V2J4K4L4.class),
-        RIGHT_3_CORAL_EDC(V2E4D4C4.class),
-        MIDDLE_L4(V2MiddleL4.class),
-        BACKUP_MIDDLE_L1(V2BackupMiddleL1.class),
+        LEFT_3_CORAL_JKL(Left3CoralJKL.class),
+        RIGHT_3_CORAL_EDC(Right3CoralEDC.class),
+        MIDDLE_L4(MiddleH4.class),
+        BACKUP_MIDDLE_L1(BackupMiddleL1.class),
         DRIVE_FORWARD(DeadReckoning.class),
+        MIDDLE_ALGAE_GH_EF_IJ(H4AlgaeGHEFIJ.class),
         NO_AUTO(null);
-        // LL_K4_VISION_TEST(AutoLLToK4.class),
-        // BACKUP_AUTO_H4_DA_NET(AutoG4AlgaePrep.class),
-
-        // choreo
-        // C_Blue_J4K4L4(BlueJ4K4L4.class),
-        // C_Blue_E4D4C4(BlueE4D4C4.class),
-        // C_Blue_F4D4C4(BlueF4D4C4.class),
-        // C_Red_J4KL4(RedJ4K4L4.class),
-        // C_RED_E4D4C4(RedE4D4C4.class),
-        // C_RED_F4D4C4(RedF4D4C4.class),
-
-        // start center
-        // AUTO_G4_ALGAE_PREP(AutoG4AlgaePrep.class),
-        // AUTO_H4_LEFT_ALGAE_REMOVAL(AutoG4LeftAlgaeRemoval.class),
-        // AUTO_H4_RIGHT_ALGAE_REMOVAL(AutoH4RightAlgaeRemoval.class),
-
-        // start left
-        // LEFT_J1_K1_L1(AutoJ1K1L1.class),
-        // LEFT_J2_K4_L4(AutoJ2K4L4.class),
-        // LEFT_J4_K4_L4(AutoJ4K4L4.class),
-        // LEFT_K4_L4_DA_K3_L3(AutoK4L4DAK3L3.class),
-        // LEFT_J1_K4_L4(AutoJ1K4L4.class),
-
-        // start right
-        // RIGHT_D4_C4_DA_D3_C3(AutoD4C4DAD3C3.class),
-        // RIGHT_E1_D1_C1(AutoE1D1C1.class),
-        // RIGHT_E4_D4_C4(AutoE4D4C4.class);
-        // RIGHT_E2_D4_C4(AutoE2D4C4.class),
-        // RIGHT_F4_D4_C4(AutoF4D4C4.class),
-        // RIGHT_E1_D4_C4(AutoE1D4C4.class);
 
         private final Class<? extends AutoBase> autoClass;
 
