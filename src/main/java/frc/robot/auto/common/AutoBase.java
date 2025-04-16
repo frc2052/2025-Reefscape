@@ -166,7 +166,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     protected Command scoreNet() {
         return Commands.sequence(
                 (Commands.waitUntil(() -> ArmPivotSubsystem.getInstance()
-                                        .isAtPosition(2.0, TargetAction.AS.getArmPivotAngle()))
+                                        .isAtPosition(2.0, TargetAction.ALGAE_NET.getArmPivotAngle()))
                                 .andThen(new WaitCommand(0.3)))
                         .deadlineFor(ArmCommandFactory.algaeIn()),
                 ArmCommandFactory.algaeOut().withTimeout(0.5));

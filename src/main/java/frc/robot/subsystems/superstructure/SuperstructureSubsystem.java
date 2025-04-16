@@ -13,6 +13,7 @@ import frc.robot.RobotState;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.intake.IntakePivotSubsystem;
+import frc.robot.subsystems.intake.IntakeRollerSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import org.littletonrobotics.junction.Logger;
 
@@ -24,8 +25,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private ArmPivotSubsystem armPivot = ArmPivotSubsystem.getInstance();
     private IntakePivotSubsystem intakePivot = IntakePivotSubsystem.getInstance();
 
-    private TargetAction selectedTargetAction = TargetAction.TR;
-    private TargetAction currentAction = TargetAction.TR;
+    private TargetAction selectedTargetAction = TargetAction.TRAVEL;
+    private TargetAction currentAction = TargetAction.TRAVEL;
 
     private TargetAction previousAction;
     private boolean isChangingState;
@@ -71,10 +72,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
             case L4:
                 SecondaryImageManager.setCurrentImage(SecondaryImage.L4);
                 break;
-            case UA:
+            case UPPER_ALGAE:
                 SecondaryImageManager.setCurrentImage(SecondaryImage.A2);
                 break;
-            case LA:
+            case LOWER_ALGAE:
                 SecondaryImageManager.setCurrentImage(SecondaryImage.A1);
                 break;
             default:
@@ -128,29 +129,30 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        TargetAction target = getCurrentAction();
-        Logger.recordOutput("Superstructure/Current = Selected", target == getSelectedTargetAction());
+        TargetAction goalTargetAction = getCurrentAction();
+        Logger.recordOutput("Superstructure/Current = Selected", goalTargetAction == getSelectedTargetAction());
         Logger.recordOutput("Target Superstructure Changing State", isChangingState);
 
-        if (target != previousAction) {
+        if (goalTargetAction != previousAction) {
             Logger.recordOutput("Target Superstructure State Has Changed", true);
             isChangingState = true;
-            if (target != TargetAction.HM) {
+            if (goalTargetAction != TargetAction.HOME) {
                 cancelHome = true;
             }
         } else {
             Logger.recordOutput("Target Superstructure State Has Changed", false);
         }
 
-        if (target == TargetAction.AS) {
+        if (goalTargetAction == TargetAction.ALGAE_NET) {
             algaeScoreDownNeeded = true;
         }
 
-        if (!movingFromIntake
+        if (IntakeRollerSubsystem.getInstance().isHoldingCoral()) {
+            setCurrentAction(TargetAction.TRAVEL);
+        } else if (!movingFromIntake
                 && RobotState.getInstance().getHasCoral()
-                && (target == TargetAction.INTAKE)
-                && armPivot.atPosition(target)) {
-            // System.out.println("GOT CORAL********************");
+                && (goalTargetAction == TargetAction.INTAKE)
+                && armPivot.atPosition(goalTargetAction)) {
             movingFromIntake = true;
             setCurrentAction(DriverStation.isAutonomous() ? TargetAction.L3 : TargetAction.STOW);
         }
@@ -163,92 +165,75 @@ public class SuperstructureSubsystem extends SubsystemBase {
             if (cancelHome) {
                 elevator.setWantHome(false);
                 cancelHome = false;
-            } else if (target == TargetAction.HM && !elevator.isHoming()) {
+            } else if (goalTargetAction == TargetAction.HOME && !elevator.isHoming()) {
                 elevator.setWantHome(true);
-                intakePivot.setAngle(TargetAction.HM.getIntakePivotPosition());
-                armPivot.setArmPosition(TargetAction.HM);
+                intakePivot.setAngle(TargetAction.HOME.getIntakePivotPosition());
+                armPivot.setArmPosition(TargetAction.HOME);
                 System.out.println("HOMING");
                 return;
             }
 
             boolean armCrossingDanger = willArmCrossDangerZone(
                     armPivot.getArmAngle().in(Degrees),
-                    target.getArmPivotAngle().in(Degrees));
+                    goalTargetAction.getArmPivotAngle().in(Degrees));
 
-            if (target.getElevatorPositionRotations() < SuperstructureConstants.MIN_SAFE_ROTATION
+            if (goalTargetAction.getElevatorPositionRotations() < SuperstructureConstants.MIN_SAFE_ROTATION
                     && elevator.getPosition() < SuperstructureConstants.MIN_SAFE_ROTATION
                     && armCrossingDanger) {
-                intakePivot.setPosition(target);
+                intakePivot.setPosition(goalTargetAction);
 
-                if (!armPivot.isAtPosition(5, target.getArmPivotAngle())) {
+                if (!armPivot.isAtPosition(5, goalTargetAction.getArmPivotAngle())) {
                     elevator.setPositionMotionMagic(TargetAction.SAFE_ARM_HEIGHT);
                 }
 
                 if (elevator.atPosition(1.0, TargetAction.SAFE_ARM_HEIGHT)) {
-                    armPivot.setArmPosition(target);
-                    if (armPivot.isAtPosition(5, target.getArmPivotAngle())) {
-                        elevator.setPositionMotionMagic(target);
+                    armPivot.setArmPosition(goalTargetAction);
+                    if (armPivot.isAtPosition(5, goalTargetAction.getArmPivotAngle())) {
+                        elevator.setPositionMotionMagic(goalTargetAction);
                     }
                 }
-            } else if (target.getElevatorPositionRotations() < elevator.getPosition()) {
+            } else if (goalTargetAction.getElevatorPositionRotations() < elevator.getPosition()) {
                 if (algaeScoreDownNeeded) {
-                    armPivot.setArmPosition(target);
-                    intakePivot.setPosition(target);
+                    armPivot.setArmPosition(goalTargetAction);
+                    intakePivot.setPosition(goalTargetAction);
 
-                    if (armPivot.isAtPosition(3, target.getArmPivotAngle())) {
-                        elevator.setPositionMotionMagic(target);
+                    if (armPivot.isAtPosition(3, goalTargetAction.getArmPivotAngle())) {
+                        elevator.setPositionMotionMagic(goalTargetAction);
                         algaeScoreDownNeeded = false;
                     }
                 }
-                if (target.getElevatorPositionRotations() > SuperstructureConstants.MIN_SAFE_ROTATION
+                if (goalTargetAction.getElevatorPositionRotations() > SuperstructureConstants.MIN_SAFE_ROTATION
                         || elevator.getPosition() > SuperstructureConstants.MIN_MOVE_ROTATION) {
-                    elevator.setPositionMotionMagic(target);
-                    armPivot.setArmPosition(target);
-                    intakePivot.setPosition(target);
+                    elevator.setPositionMotionMagic(goalTargetAction);
+                    armPivot.setArmPosition(goalTargetAction);
+                    intakePivot.setPosition(goalTargetAction);
                 } else {
-                    armPivot.setArmPosition(target);
-                    intakePivot.setPosition(target);
+                    armPivot.setArmPosition(goalTargetAction);
+                    intakePivot.setPosition(goalTargetAction);
 
-                    if (armPivot.isAtPosition(10, target.getArmPivotAngle())) {
-                        elevator.setPositionMotionMagic(target);
+                    if (armPivot.isAtPosition(10, goalTargetAction.getArmPivotAngle())) {
+                        elevator.setPositionMotionMagic(goalTargetAction);
                     }
                 }
-            } else if (target.getElevatorPositionRotations() > elevator.getPosition()) {
-                elevator.setPositionMotionMagic(target);
-                intakePivot.setPosition(target);
+            } else if (goalTargetAction.getElevatorPositionRotations() > elevator.getPosition()) {
+                elevator.setPositionMotionMagic(goalTargetAction);
+                intakePivot.setPosition(goalTargetAction);
 
-                if (elevator.atPosition(20, target)) {
-                    armPivot.setArmPosition(target);
+                if (elevator.atPosition(20, goalTargetAction)) {
+                    armPivot.setArmPosition(goalTargetAction);
                 }
             }
 
-            if (elevator.atPosition(target) && armPivot.isAtPosition(5, target.getArmPivotAngle())) {
+            if (elevator.atPosition(goalTargetAction)
+                    && armPivot.isAtPosition(5, goalTargetAction.getArmPivotAngle())) {
                 isChangingState = false;
                 Logger.recordOutput("Arrived at Target State", true);
             } else {
                 Logger.recordOutput("Arrived at Target State", false);
             }
         }
-        // else {
-        //     if (RobotState.getInstance().getHasCoral()
-        //             && (getCurrentAction() == TargetAction.STOW)
-        //             && !RobotState.getInstance().getIsIntaking()) {
-        //         if (getSelectedTargetAction() == TargetAction.L2
-        //                 || getSelectedTargetAction() == TargetAction.L3
-        //                 || getSelectedTargetAction() == TargetAction.L4) {
-        //             setCurrentAction(TargetAction.L2);
-        //         } else if (getSelectedTargetAction() == TargetAction.L1H
-        //                 && (getCurrentAction() == TargetAction.STOW)
-        //                 && !RobotState.getInstance().getIsIntaking()) {
-        //             setCurrentAction(TargetAction.L1H);
-        //         } else if ((getCurrentAction() == TargetAction.STOW)
-        //                 && !RobotState.getInstance().getIsIntaking()) {
-        //             setCurrentAction(TargetAction.TR);
-        //         }
-        //     }
-        // }
 
-        previousAction = target;
+        previousAction = goalTargetAction;
     }
 
     public boolean willArmCrossDangerZone(double currentDeg, double goalDeg) {
@@ -264,12 +249,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return false;
     }
 
-    public boolean canHandoffAlgae() {
-        return elevator.atPosition(1.5, TargetAction.GROUND_ALGAE_HANDOFF)
-                && armPivot.isAtPosition(1.0, TargetAction.GROUND_ALGAE_HANDOFF.getArmPivotAngle())
-                && intakePivot.isAtPosition(1.0, TargetAction.GROUND_ALGAE_HANDOFF.getIntakePivotPosition());
-    }
-
     public boolean atConfirmedPosition() {
         return atPosition(currentAction);
     }
@@ -281,10 +260,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
 
     public TargetAction getStowFromCurrent() {
-        if (currentAction == TargetAction.AS) {
+        if (currentAction == TargetAction.ALGAE_NET) {
             return TargetAction.POST_ALGAE_STOW;
-        } else if (currentAction == TargetAction.AP) {
-            return TargetAction.AP;
+        } else if (currentAction == TargetAction.ALGAE_PROCESS) {
+            return TargetAction.ALGAE_PROCESS;
         } else {
             return TargetAction.STOW;
         }

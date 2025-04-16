@@ -11,7 +11,6 @@ public class Ports {
     public static final int ARM_TALONFX_ID = 2;
 
     public static final int ARM_ROLLER_TALONFX_ID = 3;
-    // public static final int ARM_ROLLER_CANRANGE_ID = 8;
 
     public static final int INTAKE_ROLLER_ID = 5;
     public static final int INTAKE_PIVOT_ID = 6;
@@ -29,6 +28,7 @@ public class Ports {
      *  DIO
      */
     public static final int CORAL_BEAM_BREAK_PIN = 4;
+    public static final int INTAKE_BEAM_BREAK_ID = 3;
 
     public static final int LED_CHANNEL_1_PIN = 5;
     public static final int LED_CHANNEL_2_PIN = 6;

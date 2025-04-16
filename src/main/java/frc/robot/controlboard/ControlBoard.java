@@ -101,16 +101,6 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
     }
 
     @Override
-    public Trigger algaeManualUp() {
-        return primaryControlBoard.algaeManualUp();
-    }
-
-    @Override
-    public Trigger algaeManualDown() {
-        return primaryControlBoard.algaeManualDown();
-    }
-
-    @Override
     public Trigger resetGyro() {
         return primaryControlBoard.resetGyro();
     }
@@ -126,8 +116,8 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
     }
 
     @Override
-    public Trigger rollerTap() {
-        return primaryControlBoard.rollerTap();
+    public Trigger armRollerTapIn() {
+        return primaryControlBoard.armRollerTapIn();
     }
 
     @Override
@@ -136,8 +126,8 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
     }
 
     @Override
-    public Trigger shootAlgae() {
-        return primaryControlBoard.shootAlgae();
+    public Trigger groundIntakeHold() {
+        return primaryControlBoard.groundIntakeHold();
     }
 
     @Override
@@ -238,13 +228,13 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
     }
 
     @Override
-    public Trigger set1CoralAway() {
-        return secondaryControlBoard.set1CoralAway();
+    public Trigger unJam() {
+        return secondaryControlBoard.unJam();
     }
 
     @Override
-    public Trigger setFlush() {
-        return secondaryControlBoard.setFlush();
+    public Trigger loadingStation() {
+        return secondaryControlBoard.loadingStation();
     }
 
     @Override

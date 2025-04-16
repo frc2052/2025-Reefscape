@@ -71,6 +71,11 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
+        controlBoard
+                .groundIntakeHold()
+                .onTrue(IntakeCommandFactory.setHoldCoral(true))
+                .onFalse(IntakeCommandFactory.setHoldCoral(false));
+
         controlBoard.resetGyro().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
 
         controlBoard
@@ -85,21 +90,13 @@ public class RobotContainer {
                         // IntakeCommandFactory.intakeAlgae(),
                         IntakeCommandFactory.intake(),
                         () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE));
-        // .onFalse(new ConditionalCommand(
-        //         new WaitUntilCommand(superstructure::canHandoffAlgae)
-        //                 .deadlineFor(new InstantCommand(() ->
-        //                                 superstructure.setCurrentAction(TargetAction.GROUND_ALGAE_HANDOFF))
-        //                         .alongWith(IntakeCommandFactory.intake()))
-        //                 .andThen((ArmCommandFactory.algaeIn().alongWith(IntakeCommandFactory.intake()))
-        //                         .withTimeout(0.5)),
-        //         new InstantCommand(),
-        //         () -> superstructure.getCurrentAction() == TargetAction.GROUND_ALGAE_INTAKE));
+
         controlBoard
                 .outtake()
                 .whileTrue(ArmCommandFactory.outtake())
                 .onFalse(new InstantCommand(() -> superstructure.stow()));
 
-        controlBoard.rollerTap().whileTrue(ArmCommandFactory.coralIn());
+        controlBoard.armRollerTapIn().whileTrue(ArmCommandFactory.coralIn());
 
         controlBoard.groundOuttake().whileTrue(IntakeCommandFactory.outtake());
 
@@ -116,7 +113,7 @@ public class RobotContainer {
         /* Secondary Driver */
         controlBoard.actTrigger().onTrue(superstructure.confirm());
 
-        controlBoard.setGoalCL().onTrue(superstructure.set(TargetAction.CL, true));
+        controlBoard.setGoalCL().onTrue(superstructure.set(TargetAction.CLIMB, true));
         controlBoard
                 .setGoalL1H()
                 .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
@@ -127,23 +124,22 @@ public class RobotContainer {
         controlBoard
                 .setGoalLowerAlgae()
                 .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
-                .onTrue(superstructure.set(TargetAction.LA, false));
+                .onTrue(superstructure.set(TargetAction.LOWER_ALGAE, false));
         controlBoard
                 .setGoalUpperAlgae()
                 .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
-                .onTrue(superstructure.set(TargetAction.UA, false));
+                .onTrue(superstructure.set(TargetAction.UPPER_ALGAE, false));
         controlBoard.setGoalCoralStation().onTrue(superstructure.set(TargetAction.STOW, false));
-        controlBoard.homeElevator().onTrue(superstructure.set(TargetAction.HM, false));
+        controlBoard.homeElevator().onTrue(superstructure.set(TargetAction.HOME, false));
 
         controlBoard.climbUp().whileTrue(ClimberCommandFactory.climberUp());
         controlBoard.climbDown().whileTrue(ClimberCommandFactory.climberDown());
 
-        controlBoard.algaeScoreAngle().onTrue(superstructure.set(TargetAction.AS, false));
-        controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.AP, false));
+        controlBoard.algaeScoreAngle().onTrue(superstructure.set(TargetAction.ALGAE_NET, false));
+        controlBoard.algaeLowAngle().onTrue(superstructure.set(TargetAction.ALGAE_PROCESS, false));
 
-        controlBoard.setFlush().onTrue(superstructure.set(TargetAction.HP, false));
-        controlBoard.set1CoralAway().onTrue(superstructure.set(TargetAction.GROUND_ALGAE_INTAKE, false));
-        // controlBoard.setFlush().whileTrue(Commands.runOnce(() -> robotState.setIsFlushAlign(true)));
+        controlBoard.loadingStation().onTrue(superstructure.set(TargetAction.HP, false));
+        controlBoard.unJam().onTrue(superstructure.set(TargetAction.UN_JAM, false));
 
         /* SysID */
         controlBoard.sysIDDynamicForward().onTrue(SuperstructureCommandFactory.setCoast());

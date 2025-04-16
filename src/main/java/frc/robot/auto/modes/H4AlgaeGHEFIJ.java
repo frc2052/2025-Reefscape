@@ -48,7 +48,7 @@ public class H4AlgaeGHEFIJ extends AutoBase {
                         ClimberCommandFactory.climberDown().withTimeout(0.5),
                         Commands.sequence(
                                 new InstantCommand(() ->
-                                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HM)),
+                                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HOME)),
                                 Commands.waitUntil(
                                         () -> !ElevatorSubsystem.getInstance().isHoming()),
                                 new WaitCommand(0.3),
@@ -60,43 +60,43 @@ public class H4AlgaeGHEFIJ extends AutoBase {
                 .andThen(score(TargetAction.L4)));
 
         // pickup GH
-        addCommands(
-                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.LA))
-                        .andThen(new WaitCommand(0.2)));
+        addCommands(new InstantCommand(
+                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.LOWER_ALGAE))
+                .andThen(new WaitCommand(0.2)));
         addCommands(ArmCommandFactory.algaeIn()
                 .withDeadline(followPathCommand(reposition.getChoreoPath()).andThen(new WaitCommand(0.2))));
 
         // score GH
         addCommands((followPathCommand(scoreGH.getChoreoPath()).deadlineFor(ArmCommandFactory.algaeIn()))
                 .alongWith(new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS))
+                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.ALGAE_NET))
                         .beforeStarting(new WaitCommand(0.5)))
                 .andThen(scoreNet()));
 
         // pickup EF
-        addCommands(
-                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.UA))
-                        .andThen(((followPathCommand(descoreEF.getChoreoPath()).andThen(new WaitCommand(0.5)))
-                                        .beforeStarting(new WaitCommand(0.2)))
-                                .deadlineFor(ArmCommandFactory.algaeIn().beforeStarting(new WaitCommand(0.2)))));
+        addCommands(new InstantCommand(
+                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.UPPER_ALGAE))
+                .andThen(((followPathCommand(descoreEF.getChoreoPath()).andThen(new WaitCommand(0.5)))
+                                .beforeStarting(new WaitCommand(0.2)))
+                        .deadlineFor(ArmCommandFactory.algaeIn().beforeStarting(new WaitCommand(0.2)))));
 
         // score EF
         addCommands((followPathCommand(scoreEF.getChoreoPath()).deadlineFor(ArmCommandFactory.algaeIn()))
                 .andThen(new InstantCommand(
-                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS)))
+                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.ALGAE_NET)))
                 .andThen(scoreNet()));
 
         // pickup IJ
-        addCommands(
-                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.UA))
-                        .andThen(((followPathCommand(pickupIJ.getChoreoPath()).andThen(new WaitCommand(0.5)))
-                                        .beforeStarting(new WaitCommand(0.2)))
-                                .deadlineFor(ArmCommandFactory.algaeIn().beforeStarting(new WaitCommand(0.2)))));
+        addCommands(new InstantCommand(
+                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.UPPER_ALGAE))
+                .andThen(((followPathCommand(pickupIJ.getChoreoPath()).andThen(new WaitCommand(0.5)))
+                                .beforeStarting(new WaitCommand(0.2)))
+                        .deadlineFor(ArmCommandFactory.algaeIn().beforeStarting(new WaitCommand(0.2)))));
 
         // score IJ
         addCommands((followPathCommand(scoreIJ.getChoreoPath()).deadlineFor(ArmCommandFactory.algaeIn()))
                 .andThen(new InstantCommand(
-                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS)))
+                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.ALGAE_NET)))
                 .andThen(scoreNet()));
     }
 }

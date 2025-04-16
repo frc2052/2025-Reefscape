@@ -52,7 +52,7 @@ public class Right3CoralEDC extends AutoBase {
                                 .deadlineFor(ArmCommandFactory.intake().withTimeout(1)),
                         ClimberCommandFactory.climberDown().withTimeout(0.5),
                         new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HM))))
+                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HOME))))
                 .andThen((new InstantCommand(
                                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4)))
                         .alongWith((AlignmentCommandFactory.getSpecificReefAlignmentCommand(
