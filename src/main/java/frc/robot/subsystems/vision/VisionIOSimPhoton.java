@@ -103,14 +103,12 @@ public class VisionIOSimPhoton implements VisionIO {
         visionSim.getDebugField();
     }
 
-    @SuppressWarnings("removal")
     public boolean isSeeingTarget() {
         PhotonPipelineResult result = reefCam.getLatestResult();
         if (result.hasTargets()) return true;
         return false;
     }
 
-    @SuppressWarnings("removal")
     public Optional<PhotonPipelineResult> getReefCamClosestTarget() {
         PhotonPipelineResult result = reefCam.getLatestResult();
         return Optional.ofNullable(result);

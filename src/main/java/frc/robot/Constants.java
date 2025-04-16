@@ -197,7 +197,7 @@ public class Constants {
     
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
         new SoftwareLimitSwitchConfigs()
-            .withForwardSoftLimitThreshold(Degrees.of(30)) // TODO: adjust as needed
+            .withForwardSoftLimitThreshold(Degrees.of(30))
             .withForwardSoftLimitEnable(false)
             .withReverseSoftLimitThreshold(Degrees.of(330))
             .withReverseSoftLimitEnable(false);
