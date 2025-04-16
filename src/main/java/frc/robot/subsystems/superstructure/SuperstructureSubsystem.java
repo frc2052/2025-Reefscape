@@ -25,8 +25,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private ArmPivotSubsystem armPivot = ArmPivotSubsystem.getInstance();
     private IntakePivotSubsystem intakePivot = IntakePivotSubsystem.getInstance();
 
-    private TargetAction selectedTargetAction = TargetAction.TRAVEL;
-    private TargetAction currentAction = TargetAction.TRAVEL;
+    private TargetAction selectedTargetAction = TargetAction.EXPLODE;
+    private TargetAction currentAction = TargetAction.EXPLODE;
 
     private TargetAction previousAction;
     private boolean isChangingState;

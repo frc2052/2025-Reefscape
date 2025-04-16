@@ -149,9 +149,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         return (new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
                         .beforeStarting(new WaitCommand(0.1)))
                 .alongWith(((followPathCommand(path.getPathPlannerPath()))
-                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
-                        .until(() -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3
-                                || RobotState.getInstance().getHasCoral())))
+                        .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.coralIn()))))
                 // interrupted (have coral)? continue
                 // path went all the way through? pause + intake
                 .andThen(
@@ -208,6 +206,8 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     public static final class PathsBase {
+
+        public static final Path BLUE_NET_FINAL = new Path(null, "BLUE NET FORWARD");
 
         public static final Path BLUE_LL_RETRY_STRAIGHT = new Path("SLOW BLUE LL RETRY", "BLUE LL RETRY");
         public static final Path BLUE_RL_RETRY_STRAIGHT = new Path("SLOW BLUE RL RETRY", "BLUE RL RETRY");

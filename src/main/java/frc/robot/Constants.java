@@ -218,7 +218,6 @@ public class Constants {
     public static final double CORAL_OUT_SPEED = 0.45; // 35 --> 75
     public static final double ALGAE_IN_SPEED = 0.5;
     public static final double ALGAE_OUT_SPEED = -1.00;
-
     // public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()
     // .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
     // .withProximityParams(new ProximityParamsConfigs().withMinSignalStrengthForValidMeasurement(0.2).withProximityThreshold(0.38));

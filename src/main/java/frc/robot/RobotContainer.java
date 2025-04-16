@@ -84,10 +84,13 @@ public class RobotContainer {
                         new InstantCommand(),
                         new InstantCommand(() -> superstructure.setCurrentAction(TargetAction.INTAKE)),
                         () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE))
-                .whileTrue(ArmCommandFactory.intake())
+                .whileTrue(new ConditionalCommand(
+                        ArmCommandFactory.algaeIn(),
+                        ArmCommandFactory.intake(),
+                        () -> intakeRollers.tryingToHoldCoral()
+                                || superstructure.getCurrentAction().getType() == ActionType.ALGAE))
                 .whileTrue(new ConditionalCommand(
                         new InstantCommand(),
-                        // IntakeCommandFactory.intakeAlgae(),
                         IntakeCommandFactory.intake(),
                         () -> superstructure.getCurrentAction().getType() == ActionType.ALGAE));
 
@@ -98,7 +101,10 @@ public class RobotContainer {
 
         controlBoard.armRollerTapIn().whileTrue(ArmCommandFactory.coralIn());
 
-        controlBoard.groundOuttake().whileTrue(IntakeCommandFactory.outtake());
+        controlBoard
+                .groundOuttake()
+                .whileTrue(IntakeCommandFactory.outtake())
+                .onFalse(new InstantCommand(() -> superstructure.stow()));
 
         controlBoard
                 .alignWithReefLeft()
@@ -129,7 +135,8 @@ public class RobotContainer {
                 .setGoalUpperAlgae()
                 .onTrue(robotState.setAlignOffsetCommand(AlignOffset.MIDDLE_REEF))
                 .onTrue(superstructure.set(TargetAction.UPPER_ALGAE, false));
-        controlBoard.setGoalCoralStation().onTrue(superstructure.set(TargetAction.STOW, false));
+
+        controlBoard.setGoalCoralStation().onTrue(superstructure.set(TargetAction.SPOOKY_STOW, false));
         controlBoard.homeElevator().onTrue(superstructure.set(TargetAction.HOME, false));
 
         controlBoard.climbUp().whileTrue(ClimberCommandFactory.climberUp());

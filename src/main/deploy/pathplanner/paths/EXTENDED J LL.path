@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 2.2656762295081965,
-        "y": 6.955993852459016
+        "x": 2.0618852459016392,
+        "y": 7.195747950819672
       },
       "prevControl": {
-        "x": 2.5879184999672735,
-        "y": 7.219289366126798
+        "x": 2.3780650638548595,
+        "y": 7.466293568243562
       },
       "nextControl": {
-        "x": 1.282684426229508,
-        "y": 6.152817622950819
+        "x": 0.899077868852459,
+        "y": 6.20076844262295
       },
       "isLocked": false,
       "linkedName": "LEFT PICKUP"
@@ -74,7 +74,7 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 1.2124039659468437,
-      "maxWaypointRelativePos": 2.2,
+      "maxWaypointRelativePos": 2.212250712250706,
       "constraints": {
         "maxVelocity": 2.2,
         "maxAcceleration": 2.6,
@@ -97,7 +97,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -59.53445508054006
+    "rotation": -56.976132444203344
   },
   "reversed": false,
   "folder": "V2 PATHS",

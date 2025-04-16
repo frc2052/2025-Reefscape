@@ -15,16 +15,17 @@ public class SuperstructurePosition {
         UN_JAM(10.0, Degrees.of(307.0), IntakePivotPositions.INTAKE.position, ActionType.CORAL),
         L1H(4.5, Degrees.of(190.0), IntakePivotPositions.L1.position, ActionType.CORAL),
         L2(3.0, Degrees.of(158.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
-        L3(15.25, Degrees.of(154.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
+        L3(15.25, Degrees.of(158.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
         L4(47.5, Degrees.of(186.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
-        LOWER_ALGAE(3.5, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE),
-        UPPER_ALGAE(17.25, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE),
+        LOWER_ALGAE(3.5, Degrees.of(265.0), IntakePivotPositions.L1.position, ActionType.ALGAE),
+        UPPER_ALGAE(17.25, Degrees.of(265.0), IntakePivotPositions.L1.position, ActionType.ALGAE),
         SAFE_ARM_HEIGHT(SuperstructureConstants.MIN_SAFE_ROTATION, Degrees.of(228), IntakePivotPositions.STOW.position, ActionType.NONE),
         STOW(9.0, Degrees.of(130.0), IntakePivotPositions.L1.position, ActionType.NONE), // default state
-        POST_ALGAE_STOW(9.0, Degrees.of(305.0), IntakePivotPositions.STOW.position, ActionType.NONE),
+        SPOOKY_STOW(9.0, Degrees.of(130.0), IntakePivotPositions.STOW.position, ActionType.NONE), // default state
+        POST_ALGAE_STOW(9.0, Degrees.of(305.0), IntakePivotPositions.L1.position, ActionType.NONE),
         ALGAE_NET(46, Degrees.of(190.0), IntakePivotPositions.MID.position, ActionType.ALGAE),
         ALGAE_PROCESS(2.25, Degrees.of(325.0), IntakePivotPositions.MID.position, ActionType.ALGAE),
-        TRAVEL(3.75, Degrees.of(228.0), IntakePivotPositions.L1.position, ActionType.NONE),
+        TRAVEL(3.75, Degrees.of(255.0), IntakePivotPositions.L1.position, ActionType.ALGAE),
         CLIMB(10.5, Degrees.of(265.0), IntakePivotPositions.L1.position, ActionType.NONE);
 
         // spotless:on

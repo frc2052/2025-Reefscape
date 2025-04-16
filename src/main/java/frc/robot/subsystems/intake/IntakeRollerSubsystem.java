@@ -60,6 +60,10 @@ public class IntakeRollerSubsystem extends SubsystemBase {
         this.holdCoral = holdCoral;
     }
 
+    public boolean tryingToHoldCoral() {
+        return holdCoral;
+    }
+
     public boolean isHoldingCoral() {
         return isBeamBreakHit() && holdCoral;
     }
@@ -72,5 +76,6 @@ public class IntakeRollerSubsystem extends SubsystemBase {
     public void periodic() {
         Logger.recordOutput("Intake Rollers/Beam Break Hit", isBeamBreakHit());
         Logger.recordOutput("Intake Rollers/Holding Coral", isHoldingCoral());
+        Logger.recordOutput("Intake Rollers/Trying toHolding Coral", tryingToHoldCoral());
     }
 }

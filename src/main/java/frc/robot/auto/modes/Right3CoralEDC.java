@@ -49,7 +49,7 @@ public class Right3CoralEDC extends AutoBase {
         addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.EF))
                 .andThen(new ParallelCommandGroup(
                         (followPathCommand(startPath.getChoreoPath()))
-                                .deadlineFor(ArmCommandFactory.intake().withTimeout(1)),
+                                .deadlineFor(ArmCommandFactory.coralIn().withTimeout(1)),
                         ClimberCommandFactory.climberDown().withTimeout(0.5),
                         new InstantCommand(
                                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HOME))))
