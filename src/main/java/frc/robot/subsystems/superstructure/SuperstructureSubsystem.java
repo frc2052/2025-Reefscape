@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DashboardConstants;
 import frc.robot.Constants.SuperstructureConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -15,11 +16,23 @@ import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.intake.IntakePivotSubsystem;
 import frc.robot.subsystems.intake.IntakeRollerSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
+import frc.robot.util.io.Dashboard;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class SuperstructureSubsystem extends SubsystemBase {
 
     private static SuperstructureSubsystem INSTANCE;
+
+    private Supplier<Double> elevatorNudgeSupplier =
+            () -> Dashboard.getInstance().getElevatorNudgeValue();
+    private static LoggedNetworkString elevatorNudgeDisplay =
+            new LoggedNetworkString(DashboardConstants.ELVATOR_NUDGE_VALUE_DISPLAY_KEY, "DEFAULT - 0.0");
+
+    private static LoggedNetworkBoolean elevatorNudgeSaved =
+            new LoggedNetworkBoolean(DashboardConstants.ELEVATOR_NUDGE_SAVED_KEY, false);
 
     private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
     private ArmPivotSubsystem armPivot = ArmPivotSubsystem.getInstance();
@@ -35,6 +48,9 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private boolean algaeScoreDownNeeded = false;
     private boolean movingFromIntake = false;
 
+    private double selectedElevatorNudge;
+    private double savedElevatorNudge;
+
     /** Private constructor to prevent instantiation. */
     private SuperstructureSubsystem() {
         previousAction = getSelectedTargetAction();
@@ -48,6 +64,22 @@ public class SuperstructureSubsystem extends SubsystemBase {
             INSTANCE = new SuperstructureSubsystem();
         }
         return INSTANCE;
+    }
+
+    public boolean elevatorNudgeRecompileNeeded() {
+        return elevatorNudgeSupplier.get().doubleValue() != savedElevatorNudge;
+    }
+
+    public void elevatorNudgeRecompile() {
+        elevatorNudgeSaved.set(false);
+        selectedElevatorNudge = elevatorNudgeSupplier.get().doubleValue();
+        savedElevatorNudge = selectedElevatorNudge;
+        elevatorNudgeDisplay.set("Elevator nudge: " + savedElevatorNudge);
+        elevatorNudgeSaved.set(true);
+    }
+
+    public double getElevatorNudgeValue() {
+        return savedElevatorNudge;
     }
 
     public boolean isAtTargetState() {

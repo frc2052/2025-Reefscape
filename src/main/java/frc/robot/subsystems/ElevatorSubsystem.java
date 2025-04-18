@@ -75,7 +75,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setPositionMotionMagic(TargetAction elevatorAction) {
-        setPositionMotionMagic(elevatorAction.getElevatorPositionRotations());
+        setPositionMotionMagic(elevatorAction.getElevatorPositionRotations()
+                + SuperstructureSubsystem.getInstance().getElevatorNudgeValue());
     }
 
     public void setPositionMotionMagic(double elevatorPositionRotations) {

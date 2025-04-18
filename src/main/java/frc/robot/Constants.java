@@ -215,7 +215,8 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double CORAL_IN_SPEED = -0.33;
     public static final double CORAL_L1_OUT_SPEED = 0.2052;
-    public static final double CORAL_OUT_SPEED = 0.45; // 35 --> 75
+    public static final double CORAL_L4_OUT_SPEED = 0.35; // 35 --> 75
+    public static final double CORAL_L2_L3_OUT_SPEED = 0.35; // 35 --> 75
     public static final double ALGAE_IN_SPEED = 0.5;
     public static final double ALGAE_OUT_SPEED = -1.00;
     // public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()
@@ -247,7 +248,7 @@ public class Constants {
     public static final double MOTOR_RANGE = 19.568359375; // rotations
     public static final double ENCODER_RANGE = 0.306; // rotations
 
-    public static final Angle ENCODER_OFFSET = Rotations.of(-0.37428); // 1: -0.45361 2:-0.449462
+    public static final Angle ENCODER_OFFSET = Rotations.of(-0.21); 
 
     public static final double MIN_INTAKE_ARM_ANGLE = 0;
     public static final double MAX_INTAKE_ARM_ANGLE = 20;
@@ -413,6 +414,9 @@ public class Constants {
     public static final String AUTO_DESCRIPTION_KEY = "Auto Description";
     public static final String WAIT_SECONDS_SAVED_KEY = "Wait Seconds Saved";
     public static final String WAIT_SECONDS_DISPLAY_KEY = "Wait Seconds Display";
+
+    public static final String ELVATOR_NUDGE_VALUE_DISPLAY_KEY = "Nudge Value";
+    public static final String ELEVATOR_NUDGE_SAVED_KEY = "Elevator Nudge Value Saved";
   }
 
   public static final class PathPlannerConstants {

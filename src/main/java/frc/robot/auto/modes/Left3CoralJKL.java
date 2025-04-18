@@ -73,7 +73,8 @@ public class Left3CoralJKL extends AutoBase {
                         new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.KL)),
                         new ParallelCommandGroup(
                                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.KL),
+                                                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
+                                                .deadlineFor(IntakeCommandFactory.outtake()),
                                         new InstantCommand(() -> SuperstructureSubsystem.getInstance()
                                                         .setCurrentAction(TargetAction.L4))
                                                 .beforeStarting(new WaitCommand(0.5)))
@@ -96,10 +97,9 @@ public class Left3CoralJKL extends AutoBase {
                         new InstantCommand(
                                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L3)),
                         new ParallelCommandGroup(
-                                        IntakeCommandFactory.intake().withTimeout(0.5),
-                                        new SequentialCommandGroup(
-                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)),
+                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
+                                                .deadlineFor(IntakeCommandFactory.outtake()),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(0.4),
                                                 new InstantCommand(() -> SuperstructureSubsystem.getInstance()
@@ -117,10 +117,10 @@ public class Left3CoralJKL extends AutoBase {
                                         new PrintCommand(
                                                 "SUCCESSFUL RETRY 2ND PICKUP, HAVE CORAL, GOING TO TRY SCORING L L4"),
                                         new ParallelCommandGroup(
-                                                        new SequentialCommandGroup(
-                                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                                         () -> AlignOffset.RIGHT_BRANCH,
-                                                                        FieldElementFace.KL)),
+                                                                        FieldElementFace.KL)
+                                                                .deadlineFor(IntakeCommandFactory.outtake()),
                                                         new SequentialCommandGroup(
                                                                 new WaitCommand(0.4),
                                                                 new InstantCommand(
@@ -148,9 +148,9 @@ public class Left3CoralJKL extends AutoBase {
                         new SequentialCommandGroup(
                                 new PrintCommand("DIDN'T MAKE K AT FIRST, ALREADY HAVE CORAL, TRYING AGAIN!"),
                                 new ParallelCommandGroup(
-                                                new SequentialCommandGroup(
-                                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.KL)),
+                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
+                                                        .deadlineFor(IntakeCommandFactory.outtake()),
                                                 new SequentialCommandGroup(
                                                         new WaitCommand(0.4),
                                                         new InstantCommand(() -> SuperstructureSubsystem.getInstance()
@@ -166,10 +166,10 @@ public class Left3CoralJKL extends AutoBase {
                                 new SequentialCommandGroup(
                                         new PrintCommand("DID RELOAD TO RETRY K, GOING TO SCORE!"),
                                         new ParallelCommandGroup(
-                                                        new SequentialCommandGroup(
-                                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                                         () -> AlignOffset.LEFT_BRANCH,
-                                                                        FieldElementFace.KL)),
+                                                                        FieldElementFace.KL)
+                                                                .deadlineFor(IntakeCommandFactory.outtake()),
                                                         new SequentialCommandGroup(
                                                                 new WaitCommand(0.4),
                                                                 new InstantCommand(

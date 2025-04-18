@@ -23,8 +23,12 @@ public class Dashboard {
     private final LoggedDashboardChooser<Boolean> coastChooser = new LoggedDashboardChooser<Boolean>("Coast Out");
     private final NetworkTableInstance networkTables = NetworkTableInstance.getDefault();
     private final NetworkTable debugTable = networkTables.getTable("debug network tables tab");
+
     private final DoubleTopic waitTimeTopic = debugTable.getDoubleTopic("waitTime");
     private final DoubleSubscriber waitTimeSubscriber = waitTimeTopic.subscribe(0.0);
+
+    private final DoubleTopic nudgeElevator = debugTable.getDoubleTopic("elevator nudge value");
+    private final DoubleSubscriber nudgeElevatorSub = nudgeElevator.subscribe(0.0);
 
     private static Dashboard INSTANCE;
 
@@ -42,6 +46,7 @@ public class Dashboard {
         driveModeChooser.addOption(DriveMode.ROBOT_CENTRIC.name(), DriveMode.ROBOT_CENTRIC);
 
         waitTimeTopic.publish().accept(0.0);
+        nudgeElevator.publish().accept(0.0);
 
         autoChooser.addDefaultOption(Auto.NO_AUTO.name(), Auto.NO_AUTO);
 
@@ -94,6 +99,10 @@ public class Dashboard {
 
     public double getWaitSeconds() {
         return waitTimeSubscriber.get();
+    }
+
+    public double getElevatorNudgeValue() {
+        return nudgeElevatorSub.get();
     }
 
     public boolean getBumpNeeded() {

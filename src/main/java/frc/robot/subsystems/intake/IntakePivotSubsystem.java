@@ -58,7 +58,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
         encoder = new CANcoder(Ports.INTAKE_ENCODER_ID);
         CANcoderConfiguration armEncoderConfig = new CANcoderConfiguration();
-        armEncoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1.0;
+        armEncoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
         armEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         armEncoderConfig.MagnetSensor.MagnetOffset = IntakePivotConstants.ENCODER_OFFSET.in(Rotations);
         encoder.getConfigurator().apply(armEncoderConfig, 1.0);

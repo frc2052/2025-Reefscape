@@ -71,7 +71,8 @@ public class Right3CoralEDC extends AutoBase {
                         new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.CD)),
                         new ParallelCommandGroup(
                                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.CD),
+                                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.CD)
+                                                .deadlineFor(IntakeCommandFactory.outtake()),
                                         new InstantCommand(() -> SuperstructureSubsystem.getInstance()
                                                         .setCurrentAction(TargetAction.L4))
                                                 .beforeStarting(new WaitCommand(0.5)))
@@ -94,15 +95,14 @@ public class Right3CoralEDC extends AutoBase {
                         new InstantCommand(
                                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L3)),
                         new ParallelCommandGroup(
-                                        IntakeCommandFactory.intake().withTimeout(0.5),
-                                        new SequentialCommandGroup(
-                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.CD)),
-                                        new SequentialCommandGroup(
+                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.CD)
+                                        .deadlineFor(IntakeCommandFactory.outtake()),
+                                new SequentialCommandGroup(
                                                 new WaitCommand(0.4),
                                                 new InstantCommand(() -> SuperstructureSubsystem.getInstance()
-                                                        .setCurrentAction(TargetAction.L4))))
-                                .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
+                                                        .setCurrentAction(TargetAction.L4)))
+                                        .andThen(new InstantCommand(() -> System.out.println("start scoring")))),
                         score(TargetAction.L4)),
                 // no? retry load
                 new SequentialCommandGroup(
@@ -115,10 +115,10 @@ public class Right3CoralEDC extends AutoBase {
                                         new PrintCommand(
                                                 "SUCCESSFUL RETRY 2ND PICKUP, HAVE CORAL, GOING TO TRY SCORING C L4"),
                                         new ParallelCommandGroup(
-                                                        new SequentialCommandGroup(
-                                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                                         () -> AlignOffset.LEFT_BRANCH,
-                                                                        FieldElementFace.CD)),
+                                                                        FieldElementFace.CD)
+                                                                .deadlineFor(IntakeCommandFactory.outtake()),
                                                         new SequentialCommandGroup(
                                                                 new WaitCommand(0.4),
                                                                 new InstantCommand(
@@ -146,9 +146,9 @@ public class Right3CoralEDC extends AutoBase {
                         new SequentialCommandGroup(
                                 new PrintCommand("DIDN'T MAKE D AT FIRST, ALREADY HAVE CORAL, TRYING AGAIN!"),
                                 new ParallelCommandGroup(
-                                                new SequentialCommandGroup(
-                                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.CD)),
+                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.CD)
+                                                        .deadlineFor(IntakeCommandFactory.outtake()),
                                                 new SequentialCommandGroup(
                                                         new WaitCommand(0.4),
                                                         new InstantCommand(() -> SuperstructureSubsystem.getInstance()
@@ -164,10 +164,10 @@ public class Right3CoralEDC extends AutoBase {
                                 new SequentialCommandGroup(
                                         new PrintCommand("DID RELOAD TO RETRY D, GOING TO SCORE!"),
                                         new ParallelCommandGroup(
-                                                        new SequentialCommandGroup(
-                                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                                         () -> AlignOffset.RIGHT_BRANCH,
-                                                                        FieldElementFace.CD)),
+                                                                        FieldElementFace.CD)
+                                                                .deadlineFor(IntakeCommandFactory.outtake()),
                                                         new SequentialCommandGroup(
                                                                 new WaitCommand(0.4),
                                                                 new InstantCommand(

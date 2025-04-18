@@ -192,7 +192,7 @@ public class DriveToPose extends Command {
         boolean stoppedMoving = stoppedMovingDelay.update(
                 Timer.getFPGATimestamp(),
                 MathHelpers.epsilonEquals(
-                        MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()), 0.0, 0.05));
+                        MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()), 0.0, 0.1));
         return running && stoppedMoving;
         // return running && driveController.atGoal();
     }

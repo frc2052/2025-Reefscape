@@ -188,6 +188,12 @@ public class RobotContainer {
         }
     }
 
+    public void precompileElevatorNudge() {
+        if (SuperstructureSubsystem.getInstance().elevatorNudgeRecompileNeeded()) {
+            SuperstructureSubsystem.getInstance().elevatorNudgeRecompile();
+        }
+    }
+
     public Command getAutonomousCommand() {
         // return autoFactory.getCompiledChoreoAuto(); // test
         return autoFactory.getCompiledAuto();
