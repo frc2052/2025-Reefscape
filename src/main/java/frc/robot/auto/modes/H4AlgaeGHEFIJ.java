@@ -44,7 +44,6 @@ public class H4AlgaeGHEFIJ extends AutoBase {
 
         // score preload
         addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.GH))
-                .andThen()
                 .andThen(new ParallelCommandGroup(
                         ArmCommandFactory.coralIn().withTimeout(1),
                         ClimberCommandFactory.climberDown().withTimeout(0.5),

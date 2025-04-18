@@ -29,6 +29,8 @@ public class Left3CoralJKL extends AutoBase {
     private static final Path firstPickup = PathsBase.EXTENDED_J_LL;
     private static final Path retryLoad = PathsBase.BLUE_LL_RETRY_STRAIGHT;
 
+    private static final Path alignRepos = PathsBase.LEFT_ALIGN_REPOS;
+
     private static final Path KLreposition = PathsBase.B_KL_REPOSITION;
 
     public Left3CoralJKL() {
@@ -48,22 +50,24 @@ public class Left3CoralJKL extends AutoBase {
         addCommands(new InstantCommand(() -> setKScored(false)));
 
         // score preload
-        addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.IJ))
-                .andThen(new ParallelCommandGroup(
-                        (followPathCommand(startPath.getChoreoPath()))
-                                .deadlineFor(ArmCommandFactory.coralIn().withTimeout(1)),
-                        ClimberCommandFactory.climberDown().withTimeout(0.5),
-                        new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HOME))))
-                .andThen((new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4)))
+        addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.IJ)));
+        addCommands(new ParallelCommandGroup(
+                (followPathCommand(startPath.getChoreoPath()))
+                        .deadlineFor(ArmCommandFactory.coralIn().withTimeout(1)),
+                ClimberCommandFactory.climberDown().withTimeout(0.5),
+                superstructure.set(TargetAction.HOME, true)));
+        addCommands(
+                (new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4)))
                         .alongWith((AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                         () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
-                                .withTimeout(3))))
-                .andThen(new InstantCommand(() -> System.out.println("start scoring")))
-                .andThen(score(TargetAction.L4)));
+                                .withTimeout(3))));
 
-        addCommands(pickup(firstPickup));
+        addCommands(new InstantCommand(() -> System.out.println("start scoring")));
+        addCommands(score(TargetAction.L4));
+
+        addCommands(pickup(firstPickup).until(haveCoral()));
+        addCommands(new ConditionalCommand(
+                followPathCommand(alignRepos.getChoreoPath()), new InstantCommand(), haveCoral()));
 
         // HAVE FIRST PICKUP CORAL?
         addCommands(new ConditionalCommand(
@@ -87,7 +91,9 @@ public class Left3CoralJKL extends AutoBase {
                         || RobotState.getInstance().getHasCoral())));
 
         // retry OR reload
-        addCommands(pickup(retryLoad));
+        addCommands(pickup(retryLoad).until(haveCoral()));
+        addCommands(new ConditionalCommand(
+                followPathCommand(alignRepos.getChoreoPath()), new InstantCommand(), haveCoral()));
 
         // HAVE SECOND PICKUP CORAL?
         addCommands(new ConditionalCommand(
@@ -109,7 +115,9 @@ public class Left3CoralJKL extends AutoBase {
                 // no? retry load
                 new SequentialCommandGroup(
                         new PrintCommand("FAILED SECOND PICKUP: GOING TO RETRY L L4"),
-                        pickup(retryLoad),
+                        pickup(retryLoad).until(haveCoral()),
+                        new ConditionalCommand(
+                                followPathCommand(alignRepos.getChoreoPath()), new InstantCommand(), haveCoral()),
                         // WE TRIED PICKUP FROM HP AGAIN - NOW DO WE HAVE CORAL?
                         new ConditionalCommand(
                                 // yes? score L L4
@@ -129,7 +137,13 @@ public class Left3CoralJKL extends AutoBase {
                                                 .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
                                         score(TargetAction.L4)),
                                 // no? run reload
-                                new PrintCommand("FAILED RETRY 2ND PICKUP, PICKUP AGAIN").andThen(pickup(retryLoad)),
+                                new PrintCommand("FAILED RETRY 2ND PICKUP, PICKUP AGAIN")
+                                        .andThen(
+                                                pickup(retryLoad).until(haveCoral()),
+                                                new ConditionalCommand(
+                                                        followPathCommand(alignRepos.getChoreoPath()),
+                                                        new InstantCommand(),
+                                                        haveCoral())),
                                 // do we have coral? (retry)
                                 () -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3))),
                 // conditional for first conditional
@@ -161,7 +175,11 @@ public class Left3CoralJKL extends AutoBase {
                         new SequentialCommandGroup(
                                 // RELOAD
                                 new PrintCommand("DIDN'T MAKE K AT FIRST, NO CORAL, RELOADING!"),
-                                pickup(retryLoad),
+                                pickup(retryLoad).until(haveCoral()),
+                                new ConditionalCommand(
+                                        followPathCommand(alignRepos.getChoreoPath()),
+                                        new InstantCommand(),
+                                        haveCoral()),
                                 // SCORE
                                 new SequentialCommandGroup(
                                         new PrintCommand("DID RELOAD TO RETRY K, GOING TO SCORE!"),
@@ -181,6 +199,8 @@ public class Left3CoralJKL extends AutoBase {
                 () -> kScored));
 
         // scored all three, final pickup
-        addCommands(pickup(retryLoad));
+        addCommands(pickup(retryLoad).until(haveCoral()));
+        addCommands(new ConditionalCommand(
+                followPathCommand(alignRepos.getChoreoPath()), new InstantCommand(), haveCoral()));
     }
 }

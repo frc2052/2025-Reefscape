@@ -9,6 +9,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeRollerConstants;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.io.Ports;
@@ -18,6 +19,7 @@ public class IntakeRollerSubsystem extends SubsystemBase {
     private final TalonFX motor;
     private final DigitalInput beamBreak;
     private boolean holdCoral = false;
+    private boolean attemptingToIntake = false;
     private final VelocityTorqueCurrentFOC m_velocityTorque = new VelocityTorqueCurrentFOC(0).withSlot(0);
 
     private static IntakeRollerSubsystem INSTANCE;
@@ -41,7 +43,7 @@ public class IntakeRollerSubsystem extends SubsystemBase {
     }
 
     public void stopMotor() {
-        motor.stopMotor();
+        attemptingToIntake = false;
     }
 
     public void outtake() {
@@ -49,11 +51,7 @@ public class IntakeRollerSubsystem extends SubsystemBase {
     }
 
     public void intake() {
-        if (!isHoldingCoral() && ArmPivotSubsystem.getInstance().atPosition(TargetAction.INTAKE)) {
-            setMotorPct(IntakeRollerConstants.INTAKE_SPEED);
-        } else {
-            stopMotor();
-        }
+        attemptingToIntake = true;
     }
 
     public void setHoldCoral(boolean holdCoral) {
@@ -77,5 +75,17 @@ public class IntakeRollerSubsystem extends SubsystemBase {
         Logger.recordOutput("Intake Rollers/Beam Break Hit", isBeamBreakHit());
         Logger.recordOutput("Intake Rollers/Holding Coral", isHoldingCoral());
         Logger.recordOutput("Intake Rollers/Trying toHolding Coral", tryingToHoldCoral());
+        if (attemptingToIntake) {
+            if (isHoldingCoral()
+                    || (isBeamBreakHit()
+                            && !ArmPivotSubsystem.getInstance().isAtPosition(3, TargetAction.INTAKE.getArmPivotAngle())
+                            && !ElevatorSubsystem.getInstance().atPosition(3, TargetAction.INTAKE))) {
+                motor.stopMotor();
+            } else {
+                setMotorPct(IntakeRollerConstants.INTAKE_SPEED);
+            }
+        } else {
+            motor.stopMotor();
+        }
     }
 }

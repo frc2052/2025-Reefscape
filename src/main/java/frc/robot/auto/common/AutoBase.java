@@ -30,8 +30,10 @@ import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
+    protected final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
     private final VisionSubsystem vision = VisionSubsystem.getInstance();
     private final AutoFactory autoFactory = AutoFactory.getInstance();
@@ -133,6 +135,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 ArmCommandFactory.coralOut().withTimeout(0.5));
     }
 
+    protected BooleanSupplier haveCoral() {
+        return () -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.STOW
+                || RobotState.getInstance().getHasCoral());
+    }
+
     protected Command toPosAndScore(TargetAction position) {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
@@ -206,6 +213,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     public static final class PathsBase {
+
+        public static final Path LEFT_ALIGN_REPOS = new Path(null, "LEFT ALIGNMENT REPOSITION");
+        public static final Path RIGHT_ALIGN_REPOS = new Path(null, "RIGHT ALIGNMENT REPOSITION");
 
         public static final Path BLUE_NET_FINAL = new Path(null, "BLUE NET FORWARD");
 
