@@ -74,10 +74,11 @@ public class IntakeRollerSubsystem extends SubsystemBase {
     public void periodic() {
         Logger.recordOutput("Intake Rollers/Beam Break Hit", isBeamBreakHit());
         Logger.recordOutput("Intake Rollers/Holding Coral", isHoldingCoral());
-        Logger.recordOutput("Intake Rollers/Trying toHolding Coral", tryingToHoldCoral());
+        Logger.recordOutput("Intake Rollers/Trying to hold Coral", tryingToHoldCoral());
         if (attemptingToIntake) {
             if (isHoldingCoral()
-                    || (isBeamBreakHit()
+                    || (!tryingToHoldCoral()
+                            && isBeamBreakHit()
                             && !ArmPivotSubsystem.getInstance().isAtPosition(3, TargetAction.INTAKE.getArmPivotAngle())
                             && !ElevatorSubsystem.getInstance().atPosition(3, TargetAction.INTAKE))) {
                 motor.stopMotor();
