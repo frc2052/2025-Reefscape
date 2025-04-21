@@ -49,7 +49,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     private ElevatorSubsystem() {
-        goalPositionRotations = TargetAction.HM.getElevatorPositionRotations();
+        goalPositionRotations = TargetAction.HOME.getElevatorPositionRotations();
 
         frontMotor = new TalonFX(Ports.ELEVATOR_FRONT_ID, "Krawlivore");
         backMotor = new TalonFX(Ports.ELEVATOR_BACK_ID, "Krawlivore");
@@ -75,7 +75,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setPositionMotionMagic(TargetAction elevatorAction) {
-        setPositionMotionMagic(elevatorAction.getElevatorPositionRotations());
+        setPositionMotionMagic(elevatorAction.getElevatorPositionRotations()
+                + SuperstructureSubsystem.getInstance().getElevatorNudgeValue());
     }
 
     public void setPositionMotionMagic(double elevatorPositionRotations) {
@@ -84,7 +85,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             return;
         }
 
-        if (elevatorPositionRotations != TargetAction.HM.getElevatorPositionRotations()) {
+        if (elevatorPositionRotations != TargetAction.HOME.getElevatorPositionRotations()) {
             shouldHome = true;
         }
 
@@ -151,8 +152,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public boolean atHomingLocation() {
-        return getPosition() < TargetAction.HM.getElevatorPositionRotations()
-                || MathHelpers.epsilonEquals(getPosition(), TargetAction.HM.getElevatorPositionRotations(), 0.05);
+        return getPosition() < TargetAction.HOME.getElevatorPositionRotations()
+                || MathHelpers.epsilonEquals(getPosition(), TargetAction.HOME.getElevatorPositionRotations(), 0.05);
     }
 
     public void setNeutralMode(NeutralModeValue mode) {

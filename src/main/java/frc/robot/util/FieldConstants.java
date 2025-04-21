@@ -78,64 +78,64 @@ public class FieldConstants {
      */
 
     // OFFICIAL FIELD
-    //     public static final List<Pose2d> blueLeftBranches = List.of(
-    //             new Pose2d(3.09, 4.27, new Rotation2d(Math.toRadians(0))), //
-    //             new Pose2d(3.58, 2.94, new Rotation2d(Math.toRadians(60))), //
-    //             new Pose2d(4.97, 2.69, new Rotation2d(Math.toRadians(120))), //
-    //             new Pose2d(5.9, 3.8, new Rotation2d(Math.toRadians(180))), //
-    //             new Pose2d(5.4, 5.12, new Rotation2d(Math.toRadians(240))), //
-    //             new Pose2d(3.98, 5.36, new Rotation2d(Math.toRadians(300)))); //
-    //     public static final List<Pose2d> blueRightBranches = List.of(
-    //             new Pose2d(3.07, 3.89, new Rotation2d(Math.toRadians(0))), //
-    //             new Pose2d(3.92, 2.72, new Rotation2d(Math.toRadians(60))), //
-    //             new Pose2d(5.32, 2.86, new Rotation2d(Math.toRadians(120))), //
-    //             new Pose2d(5.91, 4.18, new Rotation2d(Math.toRadians(180))), //
-    //             new Pose2d(5.07, 5.33, new Rotation2d(Math.toRadians(240))), //
-    //             new Pose2d(3.65, 5.18, new Rotation2d(Math.toRadians(300)))); //
-
-    //     public static final List<Pose2d> redLeftBranches = List.of(
-    //             new Pose2d(14.43, 3.82, new Rotation2d(Math.toRadians(180))), //
-    //             new Pose2d(13.95, 5.14, new Rotation2d(Math.toRadians(240))), //
-    //             new Pose2d(12.54, 5.35, new Rotation2d(Math.toRadians(300))), //
-    //             new Pose2d(11.65, 4.23, new Rotation2d(Math.toRadians(0))), //
-    //             new Pose2d(12.17, 2.91, new Rotation2d(Math.toRadians(60))), //
-    //             new Pose2d(13.59, 2.71, new Rotation2d(Math.toRadians(120)))); //
-    //     public static final List<Pose2d> redRightBranches = List.of(
-    //             new Pose2d(14.47, 4.21, new Rotation2d(Math.toRadians(180))), //
-    //             new Pose2d(13.61, 5.33, new Rotation2d(Math.toRadians(240))), //
-    //             new Pose2d(12.2, 5.16, new Rotation2d(Math.toRadians(300))), //
-    //             new Pose2d(11.65, 3.88, new Rotation2d(Math.toRadians(0))), //
-    //             new Pose2d(12.5, 2.72, new Rotation2d(Math.toRadians(60))), //
-    //             new Pose2d(13.91, 2.89, new Rotation2d(Math.toRadians(120)))); //
-
-    // HOME FIELD
     public static final List<Pose2d> blueLeftBranches = List.of(
-            new Pose2d(3.09, 4.24, new Rotation2d(Math.toRadians(0))),
-            new Pose2d(3.60, 2.93, new Rotation2d(Math.toRadians(60))),
-            new Pose2d(4.98, 2.70, new Rotation2d(Math.toRadians(120))),
-            new Pose2d(5.9, 3.8, new Rotation2d(Math.toRadians(180))), //
-            new Pose2d(5.37, 5.12, new Rotation2d(Math.toRadians(240))),
-            new Pose2d(3.95, 5.34, new Rotation2d(Math.toRadians(300))));
+            new Pose2d(3.09, 4.25, new Rotation2d(Math.toRadians(0))), // A
+            new Pose2d(3.6, 2.92, new Rotation2d(Math.toRadians(60))), // C
+            new Pose2d(4.99, 2.7, new Rotation2d(Math.toRadians(120))), // E
+            new Pose2d(5.89, 3.81, new Rotation2d(Math.toRadians(180))), // G
+            new Pose2d(5.39, 5.13, new Rotation2d(Math.toRadians(240))), // I
+            new Pose2d(3.96, 5.34, new Rotation2d(Math.toRadians(300)))); // K
     public static final List<Pose2d> blueRightBranches = List.of(
-            new Pose2d(3.08, 3.88, new Rotation2d(Math.toRadians(0))),
-            new Pose2d(3.91, 2.73, new Rotation2d(Math.toRadians(60))),
-            new Pose2d(5.29, 2.86, new Rotation2d(Math.toRadians(120))),
-            new Pose2d(5.91, 4.18, new Rotation2d(Math.toRadians(180))),
-            new Pose2d(5.07, 5.32, new Rotation2d(Math.toRadians(240))),
-            new Pose2d(3.62, 5.16, new Rotation2d(Math.toRadians(300))));
+            new Pose2d(3.08, 3.88, new Rotation2d(Math.toRadians(0))), // B
+            new Pose2d(3.91, 2.73, new Rotation2d(Math.toRadians(60))), // D
+            new Pose2d(5.31, 2.89, new Rotation2d(Math.toRadians(120))), // F
+            new Pose2d(5.9, 4.18, new Rotation2d(Math.toRadians(180))), // H
+            new Pose2d(5.05, 5.33, new Rotation2d(Math.toRadians(240))), // J
+            new Pose2d(3.65, 5.17, new Rotation2d(Math.toRadians(300)))); // L
 
     public static final List<Pose2d> redLeftBranches = List.of(
-            new Pose2d(14.46, 3.82, new Rotation2d(Math.toRadians(180))),
-            new Pose2d(13.92, 5.14, new Rotation2d(Math.toRadians(240))),
-            new Pose2d(12.55, 5.35, new Rotation2d(Math.toRadians(300))),
-            new Pose2d(11.65, 4.20, new Rotation2d(Math.toRadians(0))),
-            new Pose2d(12.18, 2.92, new Rotation2d(Math.toRadians(60))),
-            new Pose2d(13.59, 2.71, new Rotation2d(Math.toRadians(120))));
+            new Pose2d(14.46, 3.81, new Rotation2d(Math.toRadians(180))), // A
+            new Pose2d(13.94, 5.14, new Rotation2d(Math.toRadians(240))), // C
+            new Pose2d(12.54, 5.35, new Rotation2d(Math.toRadians(300))), // E
+            new Pose2d(11.65, 4.23, new Rotation2d(Math.toRadians(0))), // G
+            new Pose2d(12.17, 2.91, new Rotation2d(Math.toRadians(60))), // I
+            new Pose2d(13.58, 2.71, new Rotation2d(Math.toRadians(120)))); // K
     public static final List<Pose2d> redRightBranches = List.of(
-            new Pose2d(14.47, 4.16, new Rotation2d(Math.toRadians(180))),
-            new Pose2d(13.61, 5.34, new Rotation2d(Math.toRadians(240))),
-            new Pose2d(12.23, 5.16, new Rotation2d(Math.toRadians(300))),
-            new Pose2d(11.66, 3.85, new Rotation2d(Math.toRadians(0))),
-            new Pose2d(12.51, 2.73, new Rotation2d(Math.toRadians(60))),
-            new Pose2d(13.91, 2.90, new Rotation2d(Math.toRadians(120))));
+            new Pose2d(14.47, 4.19, new Rotation2d(Math.toRadians(180))), // B
+            new Pose2d(13.62, 5.33, new Rotation2d(Math.toRadians(240))), // D
+            new Pose2d(12.21, 5.16, new Rotation2d(Math.toRadians(300))), // F
+            new Pose2d(11.65, 3.86, new Rotation2d(Math.toRadians(0))), // H
+            new Pose2d(12.49, 2.73, new Rotation2d(Math.toRadians(60))), // J
+            new Pose2d(13.9, 2.88, new Rotation2d(Math.toRadians(120)))); // L
+
+    // HOME FIELD
+    //     public static final List<Pose2d> blueLeftBranches = List.of(
+    //             new Pose2d(3.09, 4.24, new Rotation2d(Math.toRadians(0))),
+    //             new Pose2d(3.60, 2.93, new Rotation2d(Math.toRadians(60))),
+    //             new Pose2d(4.98, 2.70, new Rotation2d(Math.toRadians(120))),
+    //             new Pose2d(5.9, 3.8, new Rotation2d(Math.toRadians(180))), //
+    //             new Pose2d(5.37, 5.12, new Rotation2d(Math.toRadians(240))),
+    //             new Pose2d(3.95, 5.34, new Rotation2d(Math.toRadians(300))));
+    //     public static final List<Pose2d> blueRightBranches = List.of(
+    //             new Pose2d(3.08, 3.88, new Rotation2d(Math.toRadians(0))),
+    //             new Pose2d(3.91, 2.73, new Rotation2d(Math.toRadians(60))),
+    //             new Pose2d(5.29, 2.86, new Rotation2d(Math.toRadians(120))),
+    //             new Pose2d(5.91, 4.18, new Rotation2d(Math.toRadians(180))),
+    //             new Pose2d(5.07, 5.32, new Rotation2d(Math.toRadians(240))),
+    //             new Pose2d(3.62, 5.16, new Rotation2d(Math.toRadians(300))));
+
+    //     public static final List<Pose2d> redLeftBranches = List.of(
+    //             new Pose2d(14.46, 3.82, new Rotation2d(Math.toRadians(180))),
+    //             new Pose2d(13.92, 5.14, new Rotation2d(Math.toRadians(240))),
+    //             new Pose2d(12.55, 5.35, new Rotation2d(Math.toRadians(300))),
+    //             new Pose2d(11.65, 4.20, new Rotation2d(Math.toRadians(0))),
+    //             new Pose2d(12.18, 2.92, new Rotation2d(Math.toRadians(60))),
+    //             new Pose2d(13.59, 2.71, new Rotation2d(Math.toRadians(120))));
+    //     public static final List<Pose2d> redRightBranches = List.of(
+    //             new Pose2d(14.47, 4.16, new Rotation2d(Math.toRadians(180))),
+    //             new Pose2d(13.61, 5.34, new Rotation2d(Math.toRadians(240))),
+    //             new Pose2d(12.23, 5.16, new Rotation2d(Math.toRadians(300))),
+    //             new Pose2d(11.66, 3.85, new Rotation2d(Math.toRadians(0))),
+    //             new Pose2d(12.51, 2.73, new Rotation2d(Math.toRadians(60))),
+    //             new Pose2d(13.91, 2.90, new Rotation2d(Math.toRadians(120))));
 }

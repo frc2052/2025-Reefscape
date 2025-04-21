@@ -31,7 +31,7 @@ public interface ISecondaryControlBoard {
 
     Trigger setGoalCoralStation();
 
-    Trigger set1CoralAway();
+    Trigger unJam();
 
-    Trigger setFlush();
+    Trigger loadingStation();
 }

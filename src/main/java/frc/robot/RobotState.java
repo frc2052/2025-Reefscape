@@ -45,14 +45,6 @@ public class RobotState {
         return isIntaking;
     }
 
-    public void setIsFlushAlign(boolean isFlushAlign) {
-        this.isFlushAlign = isFlushAlign;
-    }
-
-    public boolean getIsFlushAlign() {
-        return isFlushAlign;
-    }
-
     public void setHasCoral(boolean hasCoral) {
         this.hasCoral = hasCoral;
     }

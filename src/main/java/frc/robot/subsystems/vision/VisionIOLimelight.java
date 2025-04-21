@@ -35,7 +35,6 @@ public class VisionIOLimelight implements VisionIO {
     }
 
     private void configureLimelights() {
-        // TODO: set camera poses up
         LimelightHelpers.setCameraPose_RobotSpace(
                 LeftLimelightConstants.CAMERA_NAME,
                 LeftLimelightConstants.X_OFFSET.in(Meters),

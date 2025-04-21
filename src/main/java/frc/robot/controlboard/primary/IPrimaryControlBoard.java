@@ -33,10 +33,6 @@ public interface IPrimaryControlBoard {
 
     Trigger povRotRight();
 
-    Trigger algaeManualUp();
-
-    Trigger algaeManualDown();
-
     Trigger resetGyro();
 
     Trigger alignWithReefLeft();
@@ -47,9 +43,9 @@ public interface IPrimaryControlBoard {
 
     Trigger intake();
 
-    Trigger shootAlgae();
+    Trigger groundIntakeHold();
 
-    Trigger rollerTap();
+    Trigger armRollerTapIn();
 
     Trigger groundOuttake();
 

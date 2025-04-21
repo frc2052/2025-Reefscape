@@ -33,7 +33,7 @@ public class MiddleH4 extends AutoBase {
         //
         addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.GH))
                 .andThen(new ParallelCommandGroup(
-                        ArmCommandFactory.intake().withTimeout(1),
+                        ArmCommandFactory.coralIn().withTimeout(1),
                         ClimberCommandFactory.climberDown().withTimeout(0.5),
                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                         () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.GH)

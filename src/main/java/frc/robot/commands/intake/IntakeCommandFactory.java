@@ -15,12 +15,12 @@ public class IntakeCommandFactory {
         return Commands.runEnd(() -> rollers.intake(), () -> rollers.stopMotor(), rollers);
     }
 
-    public static Command intakeAlgae() {
-        return Commands.runEnd(() -> rollers.intakeAlgae(), () -> rollers.stopMotor(), rollers);
-    }
-
     public static Command outtake() {
         return Commands.runEnd(() -> rollers.outtake(), () -> rollers.stopMotor(), rollers);
+    }
+
+    public static Command setHoldCoral(boolean holdCoral) {
+        return new InstantCommand(() -> rollers.setHoldCoral(holdCoral), rollers);
     }
 
     public static Command setCoast() {

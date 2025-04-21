@@ -27,7 +27,9 @@ public class Right3CoralEDC extends AutoBase {
     private boolean dScored;
     private static final Path startPath = PathsBase.B_SR_E; //
     private static final Path firstPickup = PathsBase.EXTENDED_E_RL; //
-    private static final Path retryLoad = PathsBase.BLUE_RL_RETRY_STRAIGHT; //
+    private static final Path retryLoad = PathsBase.BLUE_RL_RETRY_STRAIGHT;
+
+    private static final Path alignRepos = PathsBase.RIGHT_ALIGN_REPOS;
 
     public Right3CoralEDC() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());
@@ -46,22 +48,23 @@ public class Right3CoralEDC extends AutoBase {
         addCommands(new InstantCommand(() -> setDScored(false)));
 
         // score preload
-        addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.EF))
-                .andThen(new ParallelCommandGroup(
-                        (followPathCommand(startPath.getChoreoPath()))
-                                .deadlineFor(ArmCommandFactory.intake().withTimeout(1)),
-                        ClimberCommandFactory.climberDown().withTimeout(0.5),
-                        new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HM))))
-                .andThen((new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4)))
+        addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.EF)));
+        addCommands(new ParallelCommandGroup(
+                (followPathCommand(startPath.getChoreoPath()))
+                        .deadlineFor(ArmCommandFactory.coralIn().withTimeout(1)),
+                ClimberCommandFactory.climberDown().withTimeout(0.5),
+                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HOME))));
+        addCommands(
+                (new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4)))
                         .alongWith((AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                         () -> AlignOffset.LEFT_BRANCH, FieldElementFace.EF)
-                                .withTimeout(3))))
-                .andThen(new InstantCommand(() -> System.out.println("start scoring")))
-                .andThen(score(TargetAction.L4)));
+                                .withTimeout(3))));
+        addCommands(new InstantCommand(() -> System.out.println("start scoring")));
+        addCommands(score(TargetAction.L4));
 
-        addCommands(pickup(firstPickup));
+        addCommands(pickup(firstPickup).until(haveCoral()));
+        addCommands(new ConditionalCommand(
+                followPathCommand(alignRepos.getChoreoPath()), new InstantCommand(), haveCoral()));
 
         // HAVE FIRST PICKUP CORAL?
         addCommands(new ConditionalCommand(
@@ -71,7 +74,8 @@ public class Right3CoralEDC extends AutoBase {
                         new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.CD)),
                         new ParallelCommandGroup(
                                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.CD),
+                                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.CD)
+                                                .deadlineFor(IntakeCommandFactory.outtake()),
                                         new InstantCommand(() -> SuperstructureSubsystem.getInstance()
                                                         .setCurrentAction(TargetAction.L4))
                                                 .beforeStarting(new WaitCommand(0.5)))
@@ -84,7 +88,9 @@ public class Right3CoralEDC extends AutoBase {
                         || RobotState.getInstance().getHasCoral())));
 
         // retry OR reload
-        addCommands(pickup(retryLoad));
+        addCommands(pickup(retryLoad).until(haveCoral()));
+        addCommands(new ConditionalCommand(
+                followPathCommand(alignRepos.getChoreoPath()), new InstantCommand(), haveCoral()));
 
         // HAVE SECOND PICKUP CORAL?
         addCommands(new ConditionalCommand(
@@ -94,20 +100,21 @@ public class Right3CoralEDC extends AutoBase {
                         new InstantCommand(
                                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L3)),
                         new ParallelCommandGroup(
-                                        IntakeCommandFactory.intake().withTimeout(0.5),
-                                        new SequentialCommandGroup(
-                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.CD)),
-                                        new SequentialCommandGroup(
+                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.CD)
+                                        .deadlineFor(IntakeCommandFactory.outtake()),
+                                new SequentialCommandGroup(
                                                 new WaitCommand(0.4),
                                                 new InstantCommand(() -> SuperstructureSubsystem.getInstance()
-                                                        .setCurrentAction(TargetAction.L4))))
-                                .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
+                                                        .setCurrentAction(TargetAction.L4)))
+                                        .andThen(new InstantCommand(() -> System.out.println("start scoring")))),
                         score(TargetAction.L4)),
                 // no? retry load
                 new SequentialCommandGroup(
                         new PrintCommand("FAILED SECOND PICKUP: GOING TO RETRY C L4"),
-                        pickup(retryLoad),
+                        pickup(retryLoad).until(haveCoral()),
+                        new ConditionalCommand(
+                                followPathCommand(alignRepos.getChoreoPath()), new InstantCommand(), haveCoral()),
                         // WE TRIED PICKUP FROM HP AGAIN - NOW DO WE HAVE CORAL?
                         new ConditionalCommand(
                                 // yes? score C L4
@@ -115,10 +122,10 @@ public class Right3CoralEDC extends AutoBase {
                                         new PrintCommand(
                                                 "SUCCESSFUL RETRY 2ND PICKUP, HAVE CORAL, GOING TO TRY SCORING C L4"),
                                         new ParallelCommandGroup(
-                                                        new SequentialCommandGroup(
-                                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                                         () -> AlignOffset.LEFT_BRANCH,
-                                                                        FieldElementFace.CD)),
+                                                                        FieldElementFace.CD)
+                                                                .deadlineFor(IntakeCommandFactory.outtake()),
                                                         new SequentialCommandGroup(
                                                                 new WaitCommand(0.4),
                                                                 new InstantCommand(
@@ -127,7 +134,13 @@ public class Right3CoralEDC extends AutoBase {
                                                 .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
                                         score(TargetAction.L4)),
                                 // no? run reload
-                                new PrintCommand("FAILED RETRY 2ND PICKUP, PICKUP AGAIN").andThen(pickup(retryLoad)),
+                                new PrintCommand("FAILED RETRY 2ND PICKUP, PICKUP AGAIN")
+                                        .andThen(
+                                                pickup(retryLoad).until(haveCoral()),
+                                                new ConditionalCommand(
+                                                        followPathCommand(alignRepos.getChoreoPath()),
+                                                        new InstantCommand(),
+                                                        haveCoral())),
                                 // do we have coral? (retry)
                                 () -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3))),
                 // conditional for first conditional
@@ -146,9 +159,9 @@ public class Right3CoralEDC extends AutoBase {
                         new SequentialCommandGroup(
                                 new PrintCommand("DIDN'T MAKE D AT FIRST, ALREADY HAVE CORAL, TRYING AGAIN!"),
                                 new ParallelCommandGroup(
-                                                new SequentialCommandGroup(
-                                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.CD)),
+                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.CD)
+                                                        .deadlineFor(IntakeCommandFactory.outtake()),
                                                 new SequentialCommandGroup(
                                                         new WaitCommand(0.4),
                                                         new InstantCommand(() -> SuperstructureSubsystem.getInstance()
@@ -159,15 +172,19 @@ public class Right3CoralEDC extends AutoBase {
                         new SequentialCommandGroup(
                                 // RELOAD
                                 new PrintCommand("DIDN'T MAKE D AT FIRST, NO CORAL, RELOADING!"),
-                                pickup(retryLoad),
+                                pickup(retryLoad).until(haveCoral()),
+                                new ConditionalCommand(
+                                        followPathCommand(alignRepos.getChoreoPath()),
+                                        new InstantCommand(),
+                                        haveCoral()),
                                 // SCORE
                                 new SequentialCommandGroup(
                                         new PrintCommand("DID RELOAD TO RETRY D, GOING TO SCORE!"),
                                         new ParallelCommandGroup(
-                                                        new SequentialCommandGroup(
-                                                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                                         () -> AlignOffset.RIGHT_BRANCH,
-                                                                        FieldElementFace.CD)),
+                                                                        FieldElementFace.CD)
+                                                                .deadlineFor(IntakeCommandFactory.outtake()),
                                                         new SequentialCommandGroup(
                                                                 new WaitCommand(0.4),
                                                                 new InstantCommand(
@@ -179,6 +196,8 @@ public class Right3CoralEDC extends AutoBase {
                 () -> dScored));
 
         // scored all three, final pickup
-        addCommands(pickup(retryLoad));
+        addCommands(pickup(retryLoad).until(haveCoral()));
+        addCommands(new ConditionalCommand(
+                followPathCommand(alignRepos.getChoreoPath()), new InstantCommand(), haveCoral()));
     }
 }

@@ -144,6 +144,7 @@ public class Robot extends LoggedRobot {
         //     System.out.println(compiledChoreoAuto.getName());
         // }
         m_robotContainer.precompileAuto();
+        m_robotContainer.precompileElevatorNudge();
     }
 
     @Override
@@ -174,7 +175,9 @@ public class Robot extends LoggedRobot {
     }
 
     @Override
-    public void teleopPeriodic() {}
+    public void teleopPeriodic() {
+        m_robotContainer.precompileElevatorNudge();
+    }
 
     @Override
     public void teleopExit() {}

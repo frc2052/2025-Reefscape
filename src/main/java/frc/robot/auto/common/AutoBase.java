@@ -30,8 +30,10 @@ import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
+    protected final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
     private final VisionSubsystem vision = VisionSubsystem.getInstance();
     private final AutoFactory autoFactory = AutoFactory.getInstance();
@@ -133,6 +135,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 ArmCommandFactory.coralOut().withTimeout(0.5));
     }
 
+    protected BooleanSupplier haveCoral() {
+        return () -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.STOW
+                || RobotState.getInstance().getHasCoral());
+    }
+
     protected Command toPosAndScore(TargetAction position) {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
@@ -149,9 +156,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
         return (new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
                         .beforeStarting(new WaitCommand(0.1)))
                 .alongWith(((followPathCommand(path.getPathPlannerPath()))
-                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
-                        .until(() -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3
-                                || RobotState.getInstance().getHasCoral())))
+                        .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.coralIn()))))
                 // interrupted (have coral)? continue
                 // path went all the way through? pause + intake
                 .andThen(
@@ -166,7 +171,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     protected Command scoreNet() {
         return Commands.sequence(
                 (Commands.waitUntil(() -> ArmPivotSubsystem.getInstance()
-                                        .isAtPosition(2.0, TargetAction.AS.getArmPivotAngle()))
+                                        .isAtPosition(2.0, TargetAction.ALGAE_NET.getArmPivotAngle()))
                                 .andThen(new WaitCommand(0.3)))
                         .deadlineFor(ArmCommandFactory.algaeIn()),
                 ArmCommandFactory.algaeOut().withTimeout(0.5));
@@ -208,6 +213,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     public static final class PathsBase {
+
+        public static final Path LEFT_ALIGN_REPOS = new Path(null, "LEFT ALIGNMENT REPOSITION");
+        public static final Path RIGHT_ALIGN_REPOS = new Path(null, "RIGHT ALIGNMENT REPOSITION");
+
+        public static final Path BLUE_NET_FINAL = new Path(null, "BLUE NET FORWARD");
 
         public static final Path BLUE_LL_RETRY_STRAIGHT = new Path("SLOW BLUE LL RETRY", "BLUE LL RETRY");
         public static final Path BLUE_RL_RETRY_STRAIGHT = new Path("SLOW BLUE RL RETRY", "BLUE RL RETRY");

@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 1.8940573770491804,
-        "y": 1.4056864754098353
+        "x": 1.7382172131147542,
+        "y": 1.1299692622950817
       },
       "prevControl": {
-        "x": 2.1631509088408576,
-        "y": 1.0434451826133464
+        "x": 2.007310744906431,
+        "y": 0.7677279694985928
       },
       "nextControl": {
-        "x": 1.582377049180328,
-        "y": 1.8252561475409834
+        "x": 1.4265368852459017,
+        "y": 1.5495389344262298
       },
       "isLocked": false,
       "linkedName": "RIGHT PICKUP"
@@ -74,7 +74,7 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 1.3917378917378822,
-      "maxWaypointRelativePos": 2.337606837606842,
+      "maxWaypointRelativePos": 2.121082621082632,
       "constraints": {
         "maxVelocity": 2.2,
         "maxAcceleration": 2.6,
