@@ -4,15 +4,10 @@
 
 package frc.robot.auto.common;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,6 +28,9 @@ import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public abstract class AutoBase extends SequentialCommandGroup {
     protected final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
@@ -170,7 +168,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
                                 : new InstantCommand());
     }
 
-    protected Command toPos(TargetAction pos){
+    protected Command toPosition(TargetAction pos) {
         return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(pos));
     }
 

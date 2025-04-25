@@ -53,9 +53,9 @@ public class Right3CoralEDC extends AutoBase {
                 (followPathCommand(startPath.getChoreoPath()))
                         .deadlineFor(ArmCommandFactory.coralIn().withTimeout(1)),
                 ClimberCommandFactory.climberDown().withTimeout(0.5),
-                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HOME))));
+                toPosition(TargetAction.HOME)));
         addCommands(
-                (new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4)))
+                (toPosition(TargetAction.L4))
                         .alongWith((AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                         () -> AlignOffset.LEFT_BRANCH, FieldElementFace.EF)
                                 .withTimeout(3))));
@@ -76,8 +76,7 @@ public class Right3CoralEDC extends AutoBase {
                                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                         () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.CD)
                                                 .deadlineFor(IntakeCommandFactory.outtake()),
-                                        new InstantCommand(() -> SuperstructureSubsystem.getInstance()
-                                                        .setCurrentAction(TargetAction.L4))
+                                                toPosition(TargetAction.L4)
                                                 .beforeStarting(new WaitCommand(0.5)))
                                 .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
                         score(TargetAction.L4),
@@ -97,16 +96,14 @@ public class Right3CoralEDC extends AutoBase {
                 // yes? score C L4
                 Commands.sequence(
                         new PrintCommand("SUCCESSFUL SECOND PICKUP: GOING TO SCORE C L4"),
-                        new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L3)),
+                        toPosition(TargetAction.L3),
                         new ParallelCommandGroup(
                                 AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                 () -> AlignOffset.LEFT_BRANCH, FieldElementFace.CD)
                                         .deadlineFor(IntakeCommandFactory.outtake()),
                                 new SequentialCommandGroup(
                                                 new WaitCommand(0.4),
-                                                new InstantCommand(() -> SuperstructureSubsystem.getInstance()
-                                                        .setCurrentAction(TargetAction.L4)))
+                                                toPosition(TargetAction.L4))
                                         .andThen(new InstantCommand(() -> System.out.println("start scoring")))),
                         score(TargetAction.L4)),
                 // no? retry load
@@ -128,9 +125,7 @@ public class Right3CoralEDC extends AutoBase {
                                                                 .deadlineFor(IntakeCommandFactory.outtake()),
                                                         new SequentialCommandGroup(
                                                                 new WaitCommand(0.4),
-                                                                new InstantCommand(
-                                                                        () -> SuperstructureSubsystem.getInstance()
-                                                                                .setCurrentAction(TargetAction.L4))))
+                                                                toPosition(TargetAction.L4)))
                                                 .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
                                         score(TargetAction.L4)),
                                 // no? run reload
@@ -164,8 +159,7 @@ public class Right3CoralEDC extends AutoBase {
                                                         .deadlineFor(IntakeCommandFactory.outtake()),
                                                 new SequentialCommandGroup(
                                                         new WaitCommand(0.4),
-                                                        new InstantCommand(() -> SuperstructureSubsystem.getInstance()
-                                                                .setCurrentAction(TargetAction.L4))))
+                                                        toPosition(TargetAction.ALGAE_NET)))
                                         .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
                                 score(TargetAction.L4)),
                         // no, don't have coral? --> reload then score
@@ -187,9 +181,7 @@ public class Right3CoralEDC extends AutoBase {
                                                                 .deadlineFor(IntakeCommandFactory.outtake()),
                                                         new SequentialCommandGroup(
                                                                 new WaitCommand(0.4),
-                                                                new InstantCommand(
-                                                                        () -> SuperstructureSubsystem.getInstance()
-                                                                                .setCurrentAction(TargetAction.L4))))
+                                                                toPosition(TargetAction.L4)))
                                                 .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
                                         score(TargetAction.L4))),
                         () -> RobotState.getInstance().getHasCoral()),
