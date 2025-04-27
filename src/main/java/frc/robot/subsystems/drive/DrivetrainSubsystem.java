@@ -13,12 +13,14 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team2052.lib.vision.photon.PoseEstimate;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -102,9 +104,16 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
         }
     }
 
-    // public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
-    //     return run(() -> this.setControl(requestSupplier.get()));
-    // }
+    @Override
+    public void resetPose(Pose2d pose) {
+        if (Robot.isSimulation()) {
+            if (this.mapleSimSwerveDrivetrain != null) {
+                mapleSimSwerveDrivetrain.mapleSimDrive.setSimulationWorldPose(pose);
+            }
+            Timer.delay(0.1); // wait for simulation to update
+        }
+        super.resetPose(pose);
+    }
 
     public void stop() {
         setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds()));

@@ -81,7 +81,7 @@ public class RobotContainer {
         controlBoard
                 .resetGyro()
                 .onTrue(new ConditionalCommand(
-                        new InstantCommand(() -> drivetrain.resetPose(new Pose2d(0, 0, new Rotation2d()))),
+                        new InstantCommand(() -> drivetrain.resetPose(new Pose2d(2, 2, new Rotation2d()))),
                         new InstantCommand(() -> drivetrain.seedFieldCentric()),
                         () -> Robot.isSimulation()));
 
