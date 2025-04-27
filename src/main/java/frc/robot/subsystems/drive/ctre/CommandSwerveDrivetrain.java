@@ -2,6 +2,7 @@ package frc.robot.subsystems.drive.ctre;
 
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+import frc.robot.subsystems.drive.sim.MapleSimSwerveDrivetrain;
 
 /**
  * This is a simple container for holding CTRE drive creation constants. This is done so that we can
@@ -24,6 +25,6 @@ public class CommandSwerveDrivetrain {
     }
 
     public SwerveModuleConstants<?, ?, ?>[] getModuleConstants() {
-        return moduleConstants;
+        return MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(moduleConstants); // ignores if real
     }
 }

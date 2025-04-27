@@ -67,7 +67,7 @@ public class VisionIOSimPhoton implements VisionIO {
     @Override
     public void update() {
         Pose2d newOdometryPose = state.getFieldToRobot();
-        updateVisionSimWithPose(newOdometryPose);
+        // updateVisionSimWithPose(newOdometryPose);
         Logger.recordOutput("Vision Sim Sees Target", isSeeingTarget());
         Logger.recordOutput("Current Sim ID", getAllVisibleTagIDs());
         if (getCurrentTagID() != 0) {
@@ -104,12 +104,17 @@ public class VisionIOSimPhoton implements VisionIO {
     }
 
     public boolean isSeeingTarget() {
-        PhotonPipelineResult result = reefCam.getAllUnreadResults().get(0); // messy grab, but don't really care
-        if (result.hasTargets()) return true;
-        return false;
+        if (reefCam.getAllUnreadResults().size() == 0) {
+            return false;
+        }
+
+        return true;
     }
 
     public Optional<PhotonPipelineResult> getReefCamClosestTarget() {
+        if (!isSeeingTarget()) {
+            return Optional.empty();
+        }
         PhotonPipelineResult result = reefCam.getAllUnreadResults().get(0); // messy grab, but don't really care
         return Optional.ofNullable(result);
     }

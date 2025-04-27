@@ -112,7 +112,7 @@ public class Constants {
 
   public static class DriverConstants {
     public static final boolean DEV_CONTROLS = false;
-    public static final boolean FORCE_GAMEPAD = false;
+    public static final boolean FORCE_GAMEPAD = true;
     public static final double STEER_DEADBAND = 0.075;
     public static final double JOYSTICK_DEADBAND = 0.075;
     public static final double GAMEPAD_DEADBAND = 0.025; // add deadband here if there is drift
@@ -134,8 +134,7 @@ public class Constants {
 
     public static final Current DRIVE_CURRENT_LIMIT_AMPS = Amps.of(80.0);
 
-    public static final Distance WHEEL_RADIUS =
-        Meters.of(TUNER_DRIVETRAIN_CONSTANTS.getModuleConstants()[0].WheelRadius);
+    public static final Distance WHEEL_RADIUS = TunerConstants.kWheelRadius;
     // Left-to-right distance between drivetrain wheels
     public static final Distance DRIVETRAIN_TRACKWIDTH = Inches.of(23.5);
     // Front-to-back distance between drivetrain wheels

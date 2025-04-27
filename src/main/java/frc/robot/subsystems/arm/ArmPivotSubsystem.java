@@ -40,7 +40,7 @@ public class ArmPivotSubsystem extends SubsystemBase {
     private ArmPivotSubsystem() {
         goalPosition = TargetAction.STOW.getArmPivotAngle();
 
-        pivotMotor = new TalonFX(Ports.ARM_TALONFX_ID);
+        pivotMotor = new TalonFX(Ports.ARM_TALONFX_ID, "rio");
 
         pivotMotor.getConfigurator().apply(ArmPivotConstants.MOTOR_CONFIG);
     }

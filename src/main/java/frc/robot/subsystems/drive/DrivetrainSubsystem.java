@@ -1,7 +1,6 @@
 package frc.robot.subsystems.drive;
 
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.*;
 
 import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.SignalLogger;
@@ -16,10 +15,10 @@ import com.team2052.lib.vision.photon.PoseEstimate;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -27,16 +26,19 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
 import frc.robot.RobotState;
+import frc.robot.subsystems.drive.ctre.generated.TunerConstants;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.subsystems.drive.sim.MapleSimSwerveDrivetrain;
+import org.littletonrobotics.junction.Logger;
 
 public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier simNotifier = null;
-    private double lastSimTime;
-
     private final PIDController choreoXController = new PIDController(10.0, 0.0, 0.0);
     private final PIDController choreoYController = new PIDController(10.0, 0.0, 0.0);
     private final PIDController choreoThetaController = new PIDController(7.5, 0.0, 0.0);
+
+    private MapleSimSwerveDrivetrain mapleSimSwerveDrivetrain = null;
 
     /* Keep track if we've ever applied the driver perspective before or not */
     private boolean hasAppliedOperatorPerspective = false;
@@ -161,20 +163,30 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
         }
 
         robotState.addDrivetrainState(super.getState());
+        if (mapleSimSwerveDrivetrain != null)
+            Logger.recordOutput(
+                    "Drive/SimulationPose", mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose());
     }
 
+    @SuppressWarnings("unchecked")
     private void startSimThread() {
-        lastSimTime = Utils.getCurrentTimeSeconds();
+        mapleSimSwerveDrivetrain = new MapleSimSwerveDrivetrain(
+                Seconds.of(kSimLoopPeriod),
+                Pounds.of(115),
+                Inches.of(30),
+                Inches.of(30),
+                DCMotor.getKrakenX60(1),
+                DCMotor.getKrakenX60(1),
+                1.2,
+                getModuleLocations(),
+                getPigeon2(),
+                getModules(),
+                TunerConstants.FrontLeft,
+                TunerConstants.FrontRight,
+                TunerConstants.BackLeft,
+                TunerConstants.BackRight);
 
-        /* Run simulation at a faster rate so PID gains behave more reasonably */
-        simNotifier = new Notifier(() -> {
-            final double currentTime = Utils.getCurrentTimeSeconds();
-            double deltaTime = currentTime - lastSimTime;
-            lastSimTime = currentTime;
-
-            /* use the measured time delta, get battery voltage from WPILib */
-            updateSimState(deltaTime, RobotController.getBatteryVoltage());
-        });
+        simNotifier = new Notifier(mapleSimSwerveDrivetrain::update);
 
         simNotifier.startPeriodic(kSimLoopPeriod);
     }

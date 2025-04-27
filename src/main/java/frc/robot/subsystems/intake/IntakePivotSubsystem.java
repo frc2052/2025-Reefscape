@@ -53,7 +53,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
     private IntakePivotSubsystem() {
         goalPosition = TargetAction.STOW.getIntakePivotPosition();
-        pivotMotor = new TalonFX(Ports.INTAKE_PIVOT_ID);
+        pivotMotor = new TalonFX(Ports.INTAKE_PIVOT_ID, "rio");
         pivotMotor.getConfigurator().apply(IntakePivotConstants.MOTOR_CONFIG);
 
         encoder = new CANcoder(Ports.INTAKE_ENCODER_ID);

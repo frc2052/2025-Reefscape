@@ -6,13 +6,16 @@ package frc.robot;
 
 import choreo.auto.AutoChooser;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.auto.common.AutoFactory;
+import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.util.FieldConstants;
+import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -192,4 +195,21 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void testExit() {}
+
+    @Override
+    public void simulationInit() {
+        SimulatedArena.getInstance();
+        // Overrides the default simulation
+        // SimulatedArena.overrideInstance(new Arena2025Reefscape());
+        SimulatedArena.getInstance().resetFieldForAuto();
+        DrivetrainSubsystem.getInstance().resetPose(new Pose2d(2, 2, new Rotation2d()));
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        Logger.recordOutput(
+                "Simulation/CoralPoses", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
+        Logger.recordOutput(
+                "Simulation/AlgaePoses", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
+    }
 }

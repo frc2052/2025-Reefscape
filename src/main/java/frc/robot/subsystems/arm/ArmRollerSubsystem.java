@@ -34,7 +34,7 @@ public class ArmRollerSubsystem extends SubsystemBase {
     }
 
     private ArmRollerSubsystem() {
-        motor = new TalonFX(Ports.ARM_ROLLER_TALONFX_ID);
+        motor = new TalonFX(Ports.ARM_ROLLER_TALONFX_ID, "rio");
         beamBreak = new DigitalInput(Ports.CORAL_BEAM_BREAK_PIN);
         // range = new CANrange(Ports.ARM_ROLLER_CANRANGE_ID);
 

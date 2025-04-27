@@ -33,7 +33,7 @@ public class IntakeRollerSubsystem extends SubsystemBase {
 
     private IntakeRollerSubsystem() {
         beamBreak = new DigitalInput(Ports.INTAKE_BEAM_BREAK_ID);
-        motor = new TalonFX(Ports.INTAKE_ROLLER_ID);
+        motor = new TalonFX(Ports.INTAKE_ROLLER_ID, "rio");
         motor.getConfigurator().apply(IntakeRollerConstants.MOTOR_CONFIG);
     }
 

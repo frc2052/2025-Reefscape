@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -76,7 +78,12 @@ public class RobotContainer {
                 .onTrue(IntakeCommandFactory.setHoldCoral(true))
                 .onFalse(IntakeCommandFactory.setHoldCoral(false));
 
-        controlBoard.resetGyro().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
+        controlBoard
+                .resetGyro()
+                .onTrue(new ConditionalCommand(
+                        new InstantCommand(() -> drivetrain.resetPose(new Pose2d(0, 0, new Rotation2d()))),
+                        new InstantCommand(() -> drivetrain.seedFieldCentric()),
+                        () -> Robot.isSimulation()));
 
         controlBoard
                 .intake()
