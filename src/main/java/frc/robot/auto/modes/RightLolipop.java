@@ -22,7 +22,9 @@ import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
 public class RightLolipop extends AutoBase {
+    // spotless:off
 
+    boolean aScored;
     private static final Path startPath = PathsBase.SR_B;
     private static final Path loadCenter = PathsBase.AB_LOLIPOP_C;
     private static final Path loadLeft = PathsBase.AB_LOLIPOP_L;
@@ -32,7 +34,10 @@ public class RightLolipop extends AutoBase {
         super(startPath.getChoreoPath().getStartingHolonomicPose());
     }
 
-    // still not canceling, close to the 2nd one
+    private void setAScored(boolean b) {
+        System.out.println("aScored SET TO: " + b);
+        aScored = b;
+    }
 
     @Override
     public void init() {
@@ -40,6 +45,7 @@ public class RightLolipop extends AutoBase {
         addCommands(getBumpCommand());
         addCommands(delaySelectedTime());
         addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.AB)));
+        addCommands(new InstantCommand(() -> setAScored(true)));
 
         // home, then raise to L3 on your way to B
         addCommands(new ParallelCommandGroup(
@@ -75,7 +81,7 @@ public class RightLolipop extends AutoBase {
                                         .withTimeout(2.25),
                                 toPosition(TargetAction.L4)),
                         score(TargetAction.L4)),
-                new PrintCommand("DIDN'T GET CENTER"),
+                new PrintCommand("DIDN'T GET CENTER").andThen(new InstantCommand(() -> setAScored(false))),
                 haveCoral()));
 
         // 2nd pickup
@@ -85,17 +91,24 @@ public class RightLolipop extends AutoBase {
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
                         .until(haveCoral()));
 
-        // score 2nd pickup
-        addCommands(new ConditionalCommand(
-                Commands.sequence(
+        // score 2nd pickup - if have coral and L4 not scored, score L4
+        addCommands(
+            new ConditionalCommand(
+                new ConditionalCommand(
+                    Commands.sequence(
                         Commands.parallel(
-                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB)
-                                        .withTimeout(2.25),
-                                toPosition(TargetAction.L2)),
-                        score(TargetAction.L2)),
-                new PrintCommand("DIDN'T GET LEFT"),
-                haveCoral()));
+                            AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
+                            toPosition(TargetAction.L2)),
+                        score(TargetAction.L2)), 
+                    Commands.sequence(
+                        Commands.parallel(
+                            AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
+                            toPosition(TargetAction.L4)),
+                        score(TargetAction.L4),
+                        new InstantCommand(() -> setAScored(true))), 
+                    () -> aScored),
+            new PrintCommand("DIDN'T GET LEFT"),
+            haveCoral()));
 
         // 3rd pickup
         addCommands(
@@ -104,16 +117,24 @@ public class RightLolipop extends AutoBase {
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
                         .until(haveCoral()));
 
-        // score 3rd pickup
-        addCommands(new ConditionalCommand(
-                Commands.sequence(
+        // score 3rd pickup - if L4 still hasn't been scored, do it
+        addCommands(
+            new ConditionalCommand(
+                new ConditionalCommand(
+                    Commands.sequence(
                         Commands.parallel(
-                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB)
-                                        .withTimeout(2.25),
-                                toPosition(TargetAction.L2)),
-                        score(TargetAction.L2)),
-                new PrintCommand("DIDN'T GET RIGHT"),
-                haveCoral()));
+                            AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
+                            toPosition(TargetAction.L2)),
+                        score(TargetAction.L2)), 
+                    Commands.sequence(
+                        Commands.parallel(
+                            AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
+                            toPosition(TargetAction.L4)),
+                        score(TargetAction.L4),
+                        new InstantCommand(() -> setAScored(true))), 
+                    () -> aScored),
+            new PrintCommand("DIDN'T GET RIGHT"),
+            haveCoral()));
     }
+    // spotless:on
 }
