@@ -28,6 +28,7 @@ import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.util.AlignmentCalculator.AlignOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -131,8 +132,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     protected Command score(TargetAction position) {
         return new ParallelCommandGroup(
-                IntakeCommandFactory.outtake().withTimeout(0.3),
-                ArmCommandFactory.coralOut().withTimeout(0.5));
+                        IntakeCommandFactory.outtake().withTimeout(0.3),
+                        ArmCommandFactory.coralOut().withTimeout(0.5))
+                .andThen(() -> RobotState.getInstance().setAlignOffset(AlignOffset.MIDDLE_REEF));
     }
 
     protected BooleanSupplier haveCoral() {

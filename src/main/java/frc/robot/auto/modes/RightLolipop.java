@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
 import frc.robot.auto.common.AutoBase;
@@ -31,6 +32,8 @@ public class RightLolipop extends AutoBase {
         super(startPath.getChoreoPath().getStartingHolonomicPose());
     }
 
+    // still not canceling, close to the 2nd one
+
     @Override
     public void init() {
         // setup
@@ -49,81 +52,68 @@ public class RightLolipop extends AutoBase {
                         toPosition(TargetAction.L3))));
 
         // align and score preload
-        addCommands(new ConditionalCommand(
-                Commands.sequence(
-                    Commands.parallel(
+        addCommands(Commands.sequence(
+                Commands.parallel(
                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                            () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
-                            toPosition(TargetAction.L4)
-                    ),
-                    score(TargetAction.L4)
-                ), 
-                new InstantCommand(), 
-                haveCoral()));
+                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB)
+                                .withTimeout(2.25),
+                        toPosition(TargetAction.L4)),
+                score(TargetAction.L4)));
 
         addCommands(
-                // intake pos, short delay to follow path
-                Commands.parallel(
-                        followPathCommand(loadCenter.getChoreoPath())
-                                .beforeStarting(new WaitCommand(0.3))
-                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())),
-                        toPosition(TargetAction.INTAKE)));
+                toPosition(TargetAction.INTAKE),
+                ((followPathCommand(loadCenter.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
+                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
+                        .until(haveCoral()));
 
         // score 1st pickup
         addCommands(new ConditionalCommand(
-            Commands.sequence(
-                Commands.parallel(
-                    AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
-                        toPosition(TargetAction.L4)
-                ),
-                score(TargetAction.L4)
-            ), 
-            new InstantCommand(), 
-            haveCoral()));
+                Commands.sequence(
+                        Commands.parallel(
+                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB)
+                                        .withTimeout(2.25),
+                                toPosition(TargetAction.L4)),
+                        score(TargetAction.L4)),
+                new PrintCommand("DIDN'T GET CENTER"),
+                haveCoral()));
 
         // 2nd pickup
         addCommands(
-                // intake pos, short delay to follow path
-                Commands.parallel(
-                        followPathCommand(loadLeft.getChoreoPath())
-                                .beforeStarting(new WaitCommand(0.3))
-                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())),
-                        toPosition(TargetAction.INTAKE)));
+                toPosition(TargetAction.INTAKE),
+                ((followPathCommand(loadLeft.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
+                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
+                        .until(haveCoral()));
 
         // score 2nd pickup
         addCommands(new ConditionalCommand(
-            Commands.sequence(
-                Commands.parallel(
-                    AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
-                        toPosition(TargetAction.L2)
-                ),
-                score(TargetAction.L2)
-            ), 
-            new InstantCommand(), 
-            haveCoral()));
+                Commands.sequence(
+                        Commands.parallel(
+                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB)
+                                        .withTimeout(2.25),
+                                toPosition(TargetAction.L2)),
+                        score(TargetAction.L2)),
+                new PrintCommand("DIDN'T GET LEFT"),
+                haveCoral()));
 
         // 3rd pickup
         addCommands(
-                // intake pos, short delay to follow path
-                Commands.parallel(
-                        followPathCommand(loadRight.getChoreoPath())
-                                .beforeStarting(new WaitCommand(0.3))
-                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())),
-                        toPosition(TargetAction.INTAKE)));
+                toPosition(TargetAction.INTAKE),
+                ((followPathCommand(loadRight.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
+                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
+                        .until(haveCoral()));
 
         // score 3rd pickup
         addCommands(new ConditionalCommand(
-            Commands.sequence(
-                Commands.parallel(
-                    AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
-                        toPosition(TargetAction.L2)
-                ),
-                score(TargetAction.L2)
-            ), 
-            new InstantCommand(), 
-            haveCoral()));
+                Commands.sequence(
+                        Commands.parallel(
+                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB)
+                                        .withTimeout(2.25),
+                                toPosition(TargetAction.L2)),
+                        score(TargetAction.L2)),
+                new PrintCommand("DIDN'T GET RIGHT"),
+                haveCoral()));
     }
 }

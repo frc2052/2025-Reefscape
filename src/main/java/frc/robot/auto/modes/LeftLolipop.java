@@ -49,19 +49,16 @@ public class LeftLolipop extends AutoBase {
                         toPosition(TargetAction.L3))));
 
         // align and score preload
-        addCommands(
-            new ConditionalCommand(
+        addCommands(new ConditionalCommand(
                 Commands.sequence(
-                    Commands.parallel(
-                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                            () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
-                            toPosition(TargetAction.L4)
-                    ),
-                    score(TargetAction.L4)
-                ), 
-                new InstantCommand(), 
-                haveCoral())
-        );
+                        Commands.parallel(
+                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB)
+                                        .withTimeout(2.25),
+                                toPosition(TargetAction.L4)),
+                        score(TargetAction.L4)),
+                new InstantCommand(),
+                haveCoral()));
 
         addCommands(
                 // intake pos, short delay to follow path
@@ -72,17 +69,15 @@ public class LeftLolipop extends AutoBase {
                         toPosition(TargetAction.INTAKE)));
 
         // score 1st pickup
-        addCommands(
-            new ConditionalCommand(
+        addCommands(new ConditionalCommand(
                 Commands.sequence(
-                    Commands.parallel(
-                        AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                            () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
-                            toPosition(TargetAction.L4)
-                    ),
-                    score(TargetAction.L4)
-                ), 
-                new InstantCommand(), 
+                        Commands.parallel(
+                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB)
+                                        .withTimeout(2.25),
+                                toPosition(TargetAction.L4)),
+                        score(TargetAction.L4)),
+                new InstantCommand(),
                 haveCoral()));
 
         // 2nd pickup
@@ -96,16 +91,15 @@ public class LeftLolipop extends AutoBase {
 
         // score 2nd pickup
         addCommands(new ConditionalCommand(
-            Commands.sequence(
-                Commands.parallel(
-                    AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
-                        toPosition(TargetAction.L2)
-                ),
-                score(TargetAction.L2)
-            ), 
-            new InstantCommand(), 
-            haveCoral()));
+                Commands.sequence(
+                        Commands.parallel(
+                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB)
+                                        .withTimeout(2.25),
+                                toPosition(TargetAction.L2)),
+                        score(TargetAction.L2)),
+                new InstantCommand(),
+                haveCoral()));
 
         // 3rd pickup
         addCommands(
@@ -118,15 +112,14 @@ public class LeftLolipop extends AutoBase {
 
         // score 3rd pickup
         addCommands(new ConditionalCommand(
-            Commands.sequence(
-                Commands.parallel(
-                    AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
-                        toPosition(TargetAction.L2)
-                ),
-                score(TargetAction.L2)
-            ), 
-            new InstantCommand(), 
-            haveCoral()));
+                Commands.sequence(
+                        Commands.parallel(
+                                AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB)
+                                        .withTimeout(2.25),
+                                toPosition(TargetAction.L2)),
+                        score(TargetAction.L2)),
+                new InstantCommand(),
+                haveCoral()));
     }
 }

@@ -11,8 +11,10 @@ import frc.robot.auto.modes.BackupMiddleL1;
 import frc.robot.auto.modes.DeadReckoning;
 import frc.robot.auto.modes.H4AlgaeGHEFIJ;
 import frc.robot.auto.modes.Left3CoralJKL;
+import frc.robot.auto.modes.LeftLolipop;
 import frc.robot.auto.modes.MiddleH4;
 import frc.robot.auto.modes.Right3CoralEDC;
+import frc.robot.auto.modes.RightLolipop;
 import frc.robot.util.io.Dashboard;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
@@ -136,6 +138,9 @@ public class AutoFactory {
     public static enum Auto {
         LEFT_3_CORAL_JKL(Left3CoralJKL.class),
         RIGHT_3_CORAL_EDC(Right3CoralEDC.class),
+
+        LEFT_LOLIPOP(LeftLolipop.class),
+        RIGHT_LOLIPOP(RightLolipop.class),
         MIDDLE_L4(MiddleH4.class),
         BACKUP_MIDDLE_L1(BackupMiddleL1.class),
         DRIVE_FORWARD(DeadReckoning.class),

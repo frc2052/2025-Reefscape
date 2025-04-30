@@ -94,7 +94,7 @@ public class FieldConstants {
             new Pose2d(3.65, 5.17, new Rotation2d(Math.toRadians(300)))); // L
 
     public static final List<Pose2d> redLeftBranches = List.of(
-            new Pose2d(14.46, 3.81, new Rotation2d(Math.toRadians(180))), // A
+            new Pose2d(14.43, 3.81, new Rotation2d(Math.toRadians(180))), // A
             new Pose2d(13.94, 5.14, new Rotation2d(Math.toRadians(240))), // C
             new Pose2d(12.54, 5.35, new Rotation2d(Math.toRadians(300))), // E
             new Pose2d(11.65, 4.23, new Rotation2d(Math.toRadians(0))), // G
