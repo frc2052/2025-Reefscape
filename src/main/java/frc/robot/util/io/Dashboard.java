@@ -19,6 +19,7 @@ public class Dashboard {
             new LoggedDashboardChooser<Double>("Wait Seconds");
 
     private final LoggedDashboardChooser<Boolean> bump = new LoggedDashboardChooser<Boolean>("Bump Needed");
+    private final LoggedDashboardChooser<Boolean> lollipop = new LoggedDashboardChooser<Boolean>("Lollipop Order");
 
     private final LoggedDashboardChooser<Boolean> coastChooser = new LoggedDashboardChooser<Boolean>("Coast Out");
     private final NetworkTableInstance networkTables = NetworkTableInstance.getDefault();
@@ -59,6 +60,9 @@ public class Dashboard {
         bump.addDefaultOption("No Bump Needed", false);
         bump.addOption("Bump Needed", true);
 
+        lollipop.addDefaultOption("LEFT LOLLIPOP FIRST", true);
+        lollipop.addOption("RIGHT LOLLIPOP FIRST", false);
+
         coastChooser.addDefaultOption("BRAKE", false);
         coastChooser.addOption("COAST", true);
 
@@ -93,9 +97,9 @@ public class Dashboard {
         return autoChooser.get();
     }
 
-    // public ChoreoAuto getChoreoAuto() {
-    //     return choreoAutoChooser.get();
-    // }
+    public boolean getLeftLollipopFirst() {
+        return lollipop.get();
+    }
 
     public double getWaitSeconds() {
         return waitTimeSubscriber.get();
