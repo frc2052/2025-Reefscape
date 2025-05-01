@@ -25,6 +25,7 @@ public class RightLolipop extends AutoBase {
     // spotless:off
 
     boolean aScored;
+    boolean leftFirst;
     private static final Path startPath = PathsBase.SR_B;
     private static final Path loadCenter = PathsBase.AB_LOLIPOP_C;
     private static final Path loadLeft = PathsBase.AB_LOLIPOP_L;
@@ -39,6 +40,11 @@ public class RightLolipop extends AutoBase {
         aScored = b;
     }
 
+    private void setLeftLollipopFirst(boolean b){
+        System.out.println("left lollipop first SET TO: " + b);
+        leftFirst = b;
+    }
+
     @Override
     public void init() {
         // setup
@@ -46,6 +52,12 @@ public class RightLolipop extends AutoBase {
         addCommands(delaySelectedTime());
         addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.AB)));
         addCommands(new InstantCommand(() -> setAScored(true)));
+        addCommands(
+            new ConditionalCommand(
+                new InstantCommand(() -> setLeftLollipopFirst(true)),
+                new InstantCommand(() -> setLeftLollipopFirst(false)), 
+                 () -> autoFactory.getLeftLollipopFirst())
+        );
 
         // home, then raise to L3 on your way to B
         addCommands(new ParallelCommandGroup(
@@ -87,7 +99,7 @@ public class RightLolipop extends AutoBase {
         // 2nd pickup
         addCommands(
                 toPosition(TargetAction.INTAKE),
-                ((followPathCommand(loadLeft.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
+                ((followPathCommand(leftFirst ? loadLeft.getChoreoPath(): loadRight.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
                         .until(haveCoral()));
 
@@ -113,7 +125,7 @@ public class RightLolipop extends AutoBase {
         // 3rd pickup
         addCommands(
                 toPosition(TargetAction.INTAKE),
-                ((followPathCommand(loadRight.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
+                ((followPathCommand(leftFirst ? loadRight.getChoreoPath(): loadLeft.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
                         .until(haveCoral()));
 
