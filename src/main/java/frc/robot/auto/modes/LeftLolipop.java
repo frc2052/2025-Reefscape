@@ -69,8 +69,8 @@ public class LeftLolipop extends AutoBase {
         addCommands(
                 toPosition(TargetAction.INTAKE),
                 ((followPathCommand(loadCenter.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
-                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
-                        .until(haveCoral()));
+                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake()))));
+                        // .until(haveCoral()));
 
         // score 1st pickup
         addCommands(new ConditionalCommand(
@@ -88,8 +88,8 @@ public class LeftLolipop extends AutoBase {
         addCommands(
                 toPosition(TargetAction.INTAKE),
                 ((followPathCommand(loadLeft.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
-                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
-                        .until(haveCoral()));
+                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake()))));
+                        // .until(haveCoral()));
 
         // score 2nd pickup - if have coral and L4 not scored, score L4
         addCommands(
@@ -114,8 +114,8 @@ public class LeftLolipop extends AutoBase {
         addCommands(
                 toPosition(TargetAction.INTAKE),
                 ((followPathCommand(loadRight.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
-                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
-                        .until(haveCoral()));
+                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake()))));
+                        // .until(haveCoral()));
 
         // score 3rd pickup - if L4 still hasn't been scored, do it
         addCommands(

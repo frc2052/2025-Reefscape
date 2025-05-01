@@ -23,7 +23,7 @@ public class ArmRollerSubsystem extends SubsystemBase {
     private static ArmRollerSubsystem INSTANCE;
     private boolean isIntaking = false;
 
-    private DelayedBoolean hasCoralDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.5);
+    private DelayedBoolean hasCoralDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.1);
     private boolean hasCoral;
 
     public static ArmRollerSubsystem getInstance() {

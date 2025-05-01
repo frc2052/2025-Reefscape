@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
@@ -138,7 +139,9 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     protected BooleanSupplier haveCoral() {
-        return () -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.STOW
+        new PrintCommand("STOWED: " + (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3));
+        new PrintCommand("HAVE CORAL: " + (RobotState.getInstance().getHasCoral()));
+        return () -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3
                 || RobotState.getInstance().getHasCoral());
     }
 
