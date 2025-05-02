@@ -38,7 +38,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     protected final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
     private final VisionSubsystem vision = VisionSubsystem.getInstance();
-    private final AutoFactory autoFactory = AutoFactory.getInstance();
+    protected final AutoFactory autoFactory = AutoFactory.getInstance();
     private Pose2d startPose;
 
     protected AutoBase(Optional<Pose2d> pathStartPose) {

@@ -3,6 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.auto.common;
 
+import java.util.function.Supplier;
+
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkString;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DashboardConstants;
@@ -16,29 +21,25 @@ import frc.robot.auto.modes.MiddleH4;
 import frc.robot.auto.modes.Right3CoralEDC;
 import frc.robot.auto.modes.RightLolipop;
 import frc.robot.util.io.Dashboard;
-import java.util.function.Supplier;
-import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
-    // private final Supplier<ChoreoAuto> choreoAutoSupplier =
-    //         () -> Dashboard.getInstance().getChoreoAuto();
     private final Supplier<Double> waitSecondsEntrySupplier =
             () -> Dashboard.getInstance().getWaitSeconds();
     private final Supplier<Boolean> bumpNeededSupplier =
             () -> Dashboard.getInstance().getBumpNeeded();
+    private final Supplier<Boolean> lollipopOrder =
+            () -> Dashboard.getInstance().getLeftLollipopFirst();
 
     private Auto currentAuto;
     private AutoBase compiledAuto;
 
-    // private ChoreoAuto currentChoreoAuto;
     private Command compiledChoreoAuto;
 
     private double selectedWaitSeconds;
     private double savedWaitSeconds;
 
-    private boolean selectedBumpNeeded;
+    private boolean savedLollipopOrder;
     private boolean savedBumpNeeded;
 
     private boolean isRedAlliance = RobotState.getInstance().isRedAlliance();
@@ -74,7 +75,8 @@ public class AutoFactory {
         return autoSupplier.get() != currentAuto
                 || waitSecondsEntrySupplier.get() != savedWaitSeconds
                 || isRedAlliance == !RobotState.getInstance().isRedAlliance()
-                || savedBumpNeeded != bumpNeededSupplier.get();
+                || savedBumpNeeded != bumpNeededSupplier.get()
+                || savedLollipopOrder != lollipopOrder.get();
     }
 
     public boolean choreoRecompileNeeded() {
@@ -112,6 +114,9 @@ public class AutoFactory {
         // update bump needed
         savedBumpNeeded = bumpNeededSupplier.get();
 
+        // update lollipop auto order
+        savedLollipopOrder = lollipopOrder.get();
+
         System.out.println("BUMP NEEDED?: " + savedBumpNeeded);
     }
 
@@ -129,6 +134,10 @@ public class AutoFactory {
 
     public boolean getBumpNeeded() {
         return savedBumpNeeded;
+    }
+
+    public boolean getLeftLollipopFirst() {
+        return savedLollipopOrder;
     }
 
     public Command getJ4K4L4() {
