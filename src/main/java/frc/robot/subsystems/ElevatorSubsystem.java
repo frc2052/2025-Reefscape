@@ -8,7 +8,7 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team2052.lib.helpers.MathHelpers;
@@ -37,6 +37,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     private boolean shouldHome = true;
     private final DelayedBoolean homingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.05);
 
+    private final PositionTorqueCurrentFOC positionTorqueCurrentRequest =
+            new PositionTorqueCurrentFOC(0).withUpdateFreqHz(0);
+
     private double goalPositionRotations;
 
     private static ElevatorSubsystem INSTANCE;
@@ -56,8 +59,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         backMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
         frontMotor.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
-
-        frontMotor.clearStickyFault_SupplyCurrLimit();
 
         backMotor.setControl(new Follower(frontMotor.getDeviceID(), true));
     }
@@ -90,8 +91,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         }
 
         goalPositionRotations = elevatorPositionRotations;
-
-        frontMotor.setControl(new MotionMagicExpoTorqueCurrentFOC(elevatorPositionRotations));
     }
 
     public void setOpenLoop(double speed) {
@@ -163,8 +162,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        frontMotor.setControl(
+                positionTorqueCurrentRequest.withPosition(goalPositionRotations).withFeedForward(0.0));
         Logger.recordOutput("Elevator/Position", getPosition());
         Logger.recordOutput("Elevator/Goal Position", goalPositionRotations);
+        Logger.recordOutput("Elevator/Distance to Goal", goalPositionRotations - getPosition());
 
         if (DriverStation.isDisabled()) {
             goalPositionRotations = getPosition();

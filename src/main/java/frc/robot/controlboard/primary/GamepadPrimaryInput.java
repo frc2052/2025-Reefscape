@@ -118,6 +118,11 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
     }
 
     @Override
+    public Trigger confirmSuperstructure() {
+        return new Trigger(() -> false);
+    }
+
+    @Override
     public Trigger alignWithReefLeft() {
         return new Trigger(() -> false);
     }

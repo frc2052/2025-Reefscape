@@ -49,6 +49,8 @@ public interface IPrimaryControlBoard {
 
     Trigger groundOuttake();
 
+    Trigger confirmSuperstructure();
+
     Trigger sysIDQuasiForward();
 
     Trigger sysIDQuasiReverse();
