@@ -184,12 +184,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
         } else if (!movingFromIntake
                 && RobotState.getInstance().getHasCoral()
                 && (goalTargetAction == TargetAction.INTAKE)
-                && armPivot.atPosition(goalTargetAction)) {
+                && armPivot.isAtPosition(2.0, goalTargetAction.getArmPivotAngle())) {
             movingFromIntake = true;
             setCurrentAction(DriverStation.isAutonomous() ? TargetAction.L3 : TargetAction.STOW);
         }
 
-        if (armPivot.atPosition(TargetAction.STOW)) {
+        if (armPivot.isAtPosition(TargetAction.STOW.getArmPivotAngle())) {
             movingFromIntake = false;
         }
 
@@ -287,7 +287,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public boolean atPosition(TargetAction goalPosition) {
         return elevator.atPosition(goalPosition)
-                && armPivot.atPosition(goalPosition)
+                && armPivot.isAtPosition(goalPosition.getArmPivotAngle())
                 && intakePivot.atPosition(goalPosition);
     }
 

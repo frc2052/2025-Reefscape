@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ArmPivotConstants;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.util.io.Ports;
+import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.Logger;
 
 public class ArmPivotSubsystem extends SubsystemBase {
@@ -91,19 +92,19 @@ public class ArmPivotSubsystem extends SubsystemBase {
     }
 
     public boolean isAtDesiredPosition() {
-        return isAtDesiredPosition(ArmPivotConstants.DEG_TOL);
+        return isAtPosition(ArmPivotConstants.DEG_TOL, goalPosition);
     }
 
-    public boolean isAtDesiredPosition(double tol) {
-        return isAtPosition(tol, goalPosition);
+    public boolean isAtPosition(Angle goal) {
+        return isAtPosition(ArmPivotConstants.DEG_TOL, goal);
     }
 
     public boolean isAtPosition(double tol, Angle goal) {
         return Math.abs(getPosition().in(Degrees) - goal.in(Degrees)) <= tol;
     }
 
-    public boolean atPosition(TargetAction action) {
-        return isAtPosition(ArmPivotConstants.DEG_TOL, action.getArmPivotAngle());
+    public BooleanSupplier atPositionSupplier() {
+        return () -> isAtPosition(2.0, TargetAction.ALGAE_NET.getArmPivotAngle());
     }
 
     public Angle getPosition() {

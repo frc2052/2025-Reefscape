@@ -14,20 +14,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
 import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.drive.DefaultDriveCommand;
+import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.commands.intake.IntakeCommandFactory;
-import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
-import frc.robot.subsystems.arm.ArmRollerSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.util.AlignmentCalculator.AlignOffset;
+import frc.robot.util.AlignmentCalculator.FieldElementFace;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -35,6 +34,7 @@ import java.util.function.BooleanSupplier;
 public abstract class AutoBase extends SequentialCommandGroup {
     protected final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
+    private final ArmPivotSubsystem armPivot = ArmPivotSubsystem.getInstance();
     private final VisionSubsystem vision = VisionSubsystem.getInstance();
     private final AutoFactory autoFactory = AutoFactory.getInstance();
     private Pose2d startPose;
@@ -66,10 +66,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     protected Command followPathCommand(PathPlannerPath path) {
         return AutoBuilder.followPath(path);
-    }
-
-    protected Command startHP() {
-        return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.STOW));
     }
 
     protected static PathPlannerPath getPathFromFile(String pathName) {
@@ -116,21 +112,18 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     protected Command getBumpCommand() {
         return new ConditionalCommand(
-                new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> true).withDeadline(new WaitCommand(0.4)),
+                new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> true)
+                        .withDeadline(Commands.waitSeconds(0.4)),
                 new InstantCommand(),
                 () -> autoFactory.getBumpNeeded());
     }
 
     protected Command delaySelectedTime() {
-        return new WaitCommand(autoFactory.getSavedWaitSeconds());
-    }
-
-    protected Command elevatorToPos(TargetAction position) {
-        return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position));
+        return Commands.waitSeconds(autoFactory.getSavedWaitSeconds());
     }
 
     protected Command score(TargetAction position) {
-        return new ParallelCommandGroup(
+        return Commands.parallel(
                 IntakeCommandFactory.outtake().withTimeout(0.3),
                 ArmCommandFactory.coralOut().withTimeout(0.5));
     }
@@ -140,41 +133,35 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 || RobotState.getInstance().getHasCoral());
     }
 
-    protected Command toPosAndScore(TargetAction position) {
-        return new SequentialCommandGroup(
-                new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position)),
-                new InstantCommand(() -> ArmRollerSubsystem.getInstance().stopMotor()),
-                Commands.waitUntil(() -> ElevatorSubsystem.getInstance().atPosition(2.0, position)
-                                && ArmPivotSubsystem.getInstance().isAtDesiredPosition())
-                        .andThen(ArmCommandFactory.coralIn().withTimeout(0.2))
-                        .andThen(new InstantCommand(
-                                () -> ArmRollerSubsystem.getInstance().stopMotor()))
-                        .andThen(ArmCommandFactory.coralOut().withTimeout(0.55)));
-    }
-
     protected Command pickup(Path path) {
-        return (new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.INTAKE))
-                        .beforeStarting(new WaitCommand(0.1)))
-                .alongWith(((followPathCommand(path.getPathPlannerPath()))
-                        .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.coralIn()))))
-                // interrupted (have coral)? continue
-                // path went all the way through? pause + intake
-                .andThen(
-                        !(SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3
-                                        || RobotState.getInstance().getHasCoral())
-                                ? new WaitCommand(0.5)
-                                        .deadlineFor(IntakeCommandFactory.intake())
-                                        .until(() -> RobotState.getInstance().getHasCoral())
-                                : new InstantCommand());
+        return Commands.deadline(
+                followPathCommand(path.getPathPlannerPath()),
+                superstructure.set(TargetAction.INTAKE, true).beforeStarting(Commands.waitSeconds(0.1)),
+                IntakeCommandFactory.intake(),
+                ArmCommandFactory.coralIn());
     }
 
     protected Command scoreNet() {
         return Commands.sequence(
-                (Commands.waitUntil(() -> ArmPivotSubsystem.getInstance()
-                                        .isAtPosition(2.0, TargetAction.ALGAE_NET.getArmPivotAngle()))
-                                .andThen(new WaitCommand(0.3)))
-                        .deadlineFor(ArmCommandFactory.algaeIn()),
+                Commands.deadline(waitForAndSettle(armPivot.atPositionSupplier(), 0.3), ArmCommandFactory.algaeIn()),
                 ArmCommandFactory.algaeOut().withTimeout(0.5));
+    }
+
+    protected Command alignAndScore(AlignOffset alignOffset, FieldElementFace face, TargetAction action) {
+        return Commands.sequence(
+                Commands.deadline(
+                        alignment(AlignOffset.LEFT_BRANCH, FieldElementFace.KL), IntakeCommandFactory.outtake()),
+                Commands.waitSeconds(0.4),
+                superstructure.set(action, true),
+                score(action));
+    }
+
+    protected Command alignment(AlignOffset offset, FieldElementFace face) {
+        return AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> offset, face);
+    }
+
+    protected Command waitForAndSettle(BooleanSupplier waitFor, double settleTime) {
+        return Commands.sequence(Commands.waitUntil(waitFor), Commands.waitSeconds(settleTime));
     }
 
     public static class Path { // combines access to pathplanner and choreo
