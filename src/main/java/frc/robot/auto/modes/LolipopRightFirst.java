@@ -82,7 +82,6 @@ public class LolipopRightFirst extends AutoBase {
                 toPosition(TargetAction.INTAKE),
                 ((followPathCommand(loadCenter.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake()))));
-                        // .until(haveCoral()));
                         
        // score 1st pickup
         addCommands(new ConditionalCommand(
@@ -99,7 +98,7 @@ public class LolipopRightFirst extends AutoBase {
         // 2nd pickup
         addCommands(
                 toPosition(TargetAction.INTAKE),
-                ((followPathCommand(loadRight.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
+                ((followPathCommand(loadRight.getChoreoPath()).beforeStarting(new WaitCommand(0.2)))
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
         );
 
@@ -125,7 +124,7 @@ public class LolipopRightFirst extends AutoBase {
         // 3rd pickup
         addCommands(
                 toPosition(TargetAction.INTAKE),
-                ((followPathCommand(loadLeft.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
+                ((followPathCommand(loadLeft.getChoreoPath()).beforeStarting(new WaitCommand(0.2)))
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
         );
 

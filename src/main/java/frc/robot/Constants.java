@@ -212,8 +212,8 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double CORAL_IN_SPEED = -0.33;
     public static final double CORAL_L1_OUT_SPEED = 0.2052;
-    public static final double CORAL_L4_OUT_SPEED = 0.35; // 35 --> 75
-    public static final double CORAL_L2_L3_OUT_SPEED = 0.35; // 35 --> 75
+    public static final double CORAL_L4_OUT_SPEED = 0.30; // 35 --> 75
+    public static final double CORAL_L2_L3_OUT_SPEED = 0.30; // 35 --> 75
     public static final double ALGAE_IN_SPEED = 0.5;
     public static final double ALGAE_OUT_SPEED = -1.00;
     // public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()

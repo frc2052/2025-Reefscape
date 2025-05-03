@@ -12,7 +12,7 @@ public class SuperstructurePosition {
         HP(0.75, Degrees.of(133.0), IntakePivotPositions.MID.position, ActionType.NONE),
         EXPLODE(3.75, Degrees.of(130.5), IntakePivotPositions.STOW.position, ActionType.NONE),
         INTAKE(1.5, Degrees.of(307), IntakePivotPositions.INTAKE.position, ActionType.CORAL),
-        UN_JAM(12.0, Degrees.of(200.0), IntakePivotPositions.MID.position, ActionType.CORAL),
+        UN_JAM(12.0, Degrees.of(200.0), IntakePivotPositions.INTAKE.position, ActionType.CORAL),
         L1H(4.5, Degrees.of(255.0), IntakePivotPositions.L1.position, ActionType.CORAL),
         L2(4.75, Degrees.of(166.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
         L3(17.5, Degrees.of(166.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
