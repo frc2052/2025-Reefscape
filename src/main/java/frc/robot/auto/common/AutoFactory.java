@@ -3,11 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.auto.common;
 
-import java.util.function.Supplier;
-
-import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-import org.littletonrobotics.junction.networktables.LoggedNetworkString;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DashboardConstants;
@@ -16,11 +11,14 @@ import frc.robot.auto.modes.BackupMiddleL1;
 import frc.robot.auto.modes.DeadReckoning;
 import frc.robot.auto.modes.H4AlgaeGHEFIJ;
 import frc.robot.auto.modes.Left3CoralJKL;
-import frc.robot.auto.modes.LeftLolipop;
+import frc.robot.auto.modes.LolipopLeftFirst;
+import frc.robot.auto.modes.LolipopRightFirst;
 import frc.robot.auto.modes.MiddleH4;
 import frc.robot.auto.modes.Right3CoralEDC;
-import frc.robot.auto.modes.RightLolipop;
 import frc.robot.util.io.Dashboard;
+import java.util.function.Supplier;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
@@ -148,8 +146,8 @@ public class AutoFactory {
         LEFT_3_CORAL_JKL(Left3CoralJKL.class),
         RIGHT_3_CORAL_EDC(Right3CoralEDC.class),
 
-        LEFT_LOLIPOP(LeftLolipop.class),
-        RIGHT_LOLIPOP(RightLolipop.class),
+        LOLIPOP_RIGHT_FIRST(LolipopRightFirst.class),
+        LOLIPOP_LEFT_FIRST(LolipopLeftFirst.class),
         MIDDLE_L4(MiddleH4.class),
         BACKUP_MIDDLE_L1(BackupMiddleL1.class),
         DRIVE_FORWARD(DeadReckoning.class),

@@ -21,7 +21,7 @@ import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
-public class RightLolipop extends AutoBase {
+public class LolipopRightFirst extends AutoBase {
     // spotless:off
 
     boolean aScored;
@@ -31,7 +31,7 @@ public class RightLolipop extends AutoBase {
     private static final Path loadLeft = PathsBase.AB_LOLIPOP_L;
     private static final Path loadRight = PathsBase.AB_LOLIPOP_R;
 
-    public RightLolipop() {
+    public LolipopRightFirst() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());
     }
 
@@ -99,9 +99,9 @@ public class RightLolipop extends AutoBase {
         // 2nd pickup
         addCommands(
                 toPosition(TargetAction.INTAKE),
-                ((followPathCommand(leftFirst ? loadLeft.getChoreoPath(): loadRight.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
-                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake()))));
-                        // .until(haveCoral()));
+                ((followPathCommand(loadRight.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
+                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
+        );
 
         // score 2nd pickup - if have coral and L4 not scored, score L4
         addCommands(
@@ -119,15 +119,15 @@ public class RightLolipop extends AutoBase {
                         score(TargetAction.L4),
                         new InstantCommand(() -> setAScored(true))), 
                     () -> aScored),
-            new PrintCommand("DIDN'T GET LEFT"),
+            new PrintCommand("DIDN'T GET 1st LOLLIPOP"),
             haveCoral()));
 
         // 3rd pickup
         addCommands(
                 toPosition(TargetAction.INTAKE),
-                ((followPathCommand(leftFirst ? loadRight.getChoreoPath(): loadLeft.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
-                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake()))));
-                        // .until(haveCoral()));
+                ((followPathCommand(loadLeft.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
+                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
+        );
 
         // score 3rd pickup - if L4 still hasn't been scored, do it
         addCommands(
@@ -145,7 +145,7 @@ public class RightLolipop extends AutoBase {
                         score(TargetAction.L4),
                         new InstantCommand(() -> setAScored(true))), 
                     () -> aScored),
-            new PrintCommand("DIDN'T GET RIGHT"),
+            new PrintCommand("DIDN'T GET 2nd LOLLIPOP"),
             haveCoral()));
     }
     // spotless:on

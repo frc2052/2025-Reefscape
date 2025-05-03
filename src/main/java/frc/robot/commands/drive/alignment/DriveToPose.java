@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveToPose extends Command {
-    private final double driveP = 0.9;
+    private final double driveP = 1.1;
     private final double driveD = 0.0;
     private final double driveMaxSpeed = 1.5;
     private final double driveMaxAcceleration = 2.0;

@@ -123,6 +123,14 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 () -> autoFactory.getBumpNeeded());
     }
 
+    protected Command chosenLoliPath(boolean leftFirst, boolean firstPickup, Path leftLoli, Path rightLoli) {
+        return new ConditionalCommand(
+                        ((followPathCommand(leftLoli.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))),
+                        ((followPathCommand(rightLoli.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))),
+                        () -> ((leftFirst && firstPickup) || (!leftFirst && !firstPickup)))
+                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake()));
+    }
+
     protected Command delaySelectedTime() {
         return new WaitCommand(autoFactory.getSavedWaitSeconds());
     }
