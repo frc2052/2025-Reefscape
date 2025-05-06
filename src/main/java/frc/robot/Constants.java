@@ -68,7 +68,7 @@ public class Constants {
             // .withKV(0.0)
             // .withKA(0.0)
             .withGravityType(GravityTypeValue.Elevator_Static)
-            .withKG(10.15);
+            .withKG(8.5); //10.15
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
