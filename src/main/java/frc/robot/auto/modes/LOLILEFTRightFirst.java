@@ -21,17 +21,17 @@ import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
-public class LolipopLeftFirst extends AutoBase {
+public class LOLILEFTRightFirst extends AutoBase {
     // spotless:off
 
     boolean aScored;
     boolean leftFirst;
-    private static final Path startPath = PathsBase.SR_B;
+    private static final Path startPath = PathsBase.SL_A;
     private static final Path loadCenter = PathsBase.AB_LOLIPOP_C;
     private static final Path loadLeft = PathsBase.AB_LOLIPOP_L;
     private static final Path loadRight = PathsBase.AB_LOLIPOP_R;
 
-    public LolipopLeftFirst() {
+    public LOLILEFTRightFirst() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());
     }
 
@@ -82,7 +82,6 @@ public class LolipopLeftFirst extends AutoBase {
                 toPosition(TargetAction.INTAKE),
                 ((followPathCommand(loadCenter.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake()))));
-                        // .until(haveCoral()));
                         
        // score 1st pickup
         addCommands(new ConditionalCommand(
@@ -99,7 +98,7 @@ public class LolipopLeftFirst extends AutoBase {
         // 2nd pickup
         addCommands(
                 toPosition(TargetAction.INTAKE),
-                ((followPathCommand(loadLeft.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
+                ((followPathCommand(loadRight.getChoreoPath()).beforeStarting(new WaitCommand(0.2)))
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
         );
 
@@ -125,7 +124,7 @@ public class LolipopLeftFirst extends AutoBase {
         // 3rd pickup
         addCommands(
                 toPosition(TargetAction.INTAKE),
-                ((followPathCommand(loadRight.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
+                ((followPathCommand(loadLeft.getChoreoPath()).beforeStarting(new WaitCommand(0.2)))
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
         );
 

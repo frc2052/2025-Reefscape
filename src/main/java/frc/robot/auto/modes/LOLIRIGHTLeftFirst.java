@@ -21,7 +21,7 @@ import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
 /** Add your docs here. */
-public class LolipopRightFirst extends AutoBase {
+public class LOLIRIGHTLeftFirst extends AutoBase {
     // spotless:off
 
     boolean aScored;
@@ -31,7 +31,7 @@ public class LolipopRightFirst extends AutoBase {
     private static final Path loadLeft = PathsBase.AB_LOLIPOP_L;
     private static final Path loadRight = PathsBase.AB_LOLIPOP_R;
 
-    public LolipopRightFirst() {
+    public LOLIRIGHTLeftFirst() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());
     }
 
@@ -82,6 +82,7 @@ public class LolipopRightFirst extends AutoBase {
                 toPosition(TargetAction.INTAKE),
                 ((followPathCommand(loadCenter.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake()))));
+                        // .until(haveCoral()));
                         
        // score 1st pickup
         addCommands(new ConditionalCommand(
@@ -98,7 +99,7 @@ public class LolipopRightFirst extends AutoBase {
         // 2nd pickup
         addCommands(
                 toPosition(TargetAction.INTAKE),
-                ((followPathCommand(loadRight.getChoreoPath()).beforeStarting(new WaitCommand(0.2)))
+                ((followPathCommand(loadLeft.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
         );
 
@@ -124,7 +125,7 @@ public class LolipopRightFirst extends AutoBase {
         // 3rd pickup
         addCommands(
                 toPosition(TargetAction.INTAKE),
-                ((followPathCommand(loadLeft.getChoreoPath()).beforeStarting(new WaitCommand(0.2)))
+                ((followPathCommand(loadRight.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
                                 .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
         );
 
