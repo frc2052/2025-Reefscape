@@ -73,15 +73,16 @@ public class LOLILEFTLeftFirst extends AutoBase {
         addCommands(Commands.sequence(
                 Commands.parallel(
                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB)
+                                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB)
                                 .withTimeout(2.25),
                         toPosition(TargetAction.L4)),
                 score(TargetAction.L4)));
 
+                // 1st pickup
         addCommands(
                 toPosition(TargetAction.INTAKE),
                 ((followPathCommand(loadCenter.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
-                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake()))));
+                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.coralIn()))));
                         // .until(haveCoral()));
                         
        // score 1st pickup
@@ -89,9 +90,9 @@ public class LOLILEFTLeftFirst extends AutoBase {
                 Commands.sequence(
                         Commands.parallel(
                                 AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB)
+                                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB)
                                         .withTimeout(2.25),
-                                toPosition(TargetAction.L4)),
+                                toPosition(TargetAction.L4)).beforeStarting(new WaitCommand(0.3)),
                         score(TargetAction.L4)),
                 new PrintCommand("DIDN'T GET CENTER").andThen(new InstantCommand(() -> setAScored(false))),
                 haveCoral()));
@@ -100,7 +101,7 @@ public class LOLILEFTLeftFirst extends AutoBase {
         addCommands(
                 toPosition(TargetAction.INTAKE),
                 ((followPathCommand(loadLeft.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))
-                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake())))
+                                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.coralIn())))
         );
 
         // score 2nd pickup - if have coral and L4 not scored, score L4

@@ -73,7 +73,7 @@ public class LOLILEFTRightFirst extends AutoBase {
         addCommands(Commands.sequence(
                 Commands.parallel(
                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB)
+                                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB)
                                 .withTimeout(2.25),
                         toPosition(TargetAction.L4)),
                 score(TargetAction.L4)));
@@ -88,9 +88,9 @@ public class LOLILEFTRightFirst extends AutoBase {
                 Commands.sequence(
                         Commands.parallel(
                                 AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                                () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB)
+                                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB)
                                         .withTimeout(2.25),
-                                toPosition(TargetAction.L4)),
+                                toPosition(TargetAction.L4)).beforeStarting(new WaitCommand(0.3)),
                         score(TargetAction.L4)),
                 new PrintCommand("DIDN'T GET CENTER").andThen(new InstantCommand(() -> setAScored(false))),
                 haveCoral()));
@@ -135,7 +135,7 @@ public class LOLILEFTRightFirst extends AutoBase {
                     Commands.sequence(
                         Commands.parallel(
                             AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
-                            toPosition(TargetAction.L2)),
+                            toPosition(TargetAction.L2)).beforeStarting(new WaitCommand(0.3)),
                         score(TargetAction.L2)), 
                     Commands.sequence(
                         Commands.parallel(

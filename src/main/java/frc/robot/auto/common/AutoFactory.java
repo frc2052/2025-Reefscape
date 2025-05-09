@@ -10,9 +10,11 @@ import frc.robot.RobotState;
 import frc.robot.auto.modes.BackupMiddleL1;
 import frc.robot.auto.modes.DeadReckoning;
 import frc.robot.auto.modes.H4AlgaeGHEFIJ;
-import frc.robot.auto.modes.Left3CoralJKL;
+import frc.robot.auto.modes.LOLILEFTLeftFirst;
+import frc.robot.auto.modes.LOLILEFTRightFirst;
 import frc.robot.auto.modes.LOLIRIGHTLeftFirst;
 import frc.robot.auto.modes.LOLIRIGHTRightFirst;
+import frc.robot.auto.modes.Left3CoralJKL;
 import frc.robot.auto.modes.MiddleH4;
 import frc.robot.auto.modes.Right3CoralEDC;
 import frc.robot.util.io.Dashboard;
@@ -146,8 +148,10 @@ public class AutoFactory {
         LEFT_3_CORAL_JKL(Left3CoralJKL.class),
         RIGHT_3_CORAL_EDC(Right3CoralEDC.class),
 
-        LOLIPOP_RIGHT_FIRST(LOLIRIGHTRightFirst.class),
-        LOLIPOP_LEFT_FIRST(LOLIRIGHTLeftFirst.class),
+        RIGHT_LOLI_RIGHT_FIRST(LOLIRIGHTRightFirst.class),
+        RIGHT_LOLI_LEFT_FIRST(LOLIRIGHTLeftFirst.class),
+        LEFT_LOLI_RIGHT_FIRST(LOLILEFTRightFirst.class),
+        LEFT_LOLI_LEFT_FIRST(LOLILEFTLeftFirst.class),
         MIDDLE_L4(MiddleH4.class),
         BACKUP_MIDDLE_L1(BackupMiddleL1.class),
         DRIVE_FORWARD(DeadReckoning.class),
