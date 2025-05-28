@@ -75,7 +75,7 @@ public class LOLILEFTLeftFirst extends AutoBase {
                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                         () -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB)
                                 .withTimeout(2.25),
-                        toPosition(TargetAction.L4)),
+                        toPosition(TargetAction.L4)).beforeStarting(new WaitCommand(0.3)),
                 score(TargetAction.L4)));
 
                 // 1st pickup

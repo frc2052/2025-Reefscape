@@ -75,7 +75,7 @@ public class LOLIRIGHTRightFirst extends AutoBase {
                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                         () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB)
                                 .withTimeout(2.25),
-                        toPosition(TargetAction.L4)),
+                        toPosition(TargetAction.L4)).beforeStarting(new WaitCommand(0.3)),
                 score(TargetAction.L4)));
 
         addCommands(
@@ -108,7 +108,7 @@ public class LOLIRIGHTRightFirst extends AutoBase {
                 new ConditionalCommand(
                     Commands.sequence(
                         Commands.parallel(
-                            AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> AlignOffset.LEFT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
+                            AlignmentCommandFactory.getSpecificReefAlignmentCommand(() -> AlignOffset.RIGHT_BRANCH, FieldElementFace.AB).withTimeout(2.25),
                             toPosition(TargetAction.L2)),
                         score(TargetAction.L2)), 
                     Commands.sequence(

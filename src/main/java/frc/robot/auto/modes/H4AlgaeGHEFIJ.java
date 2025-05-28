@@ -53,7 +53,7 @@ public class H4AlgaeGHEFIJ extends AutoBase {
                                 new WaitCommand(0.3),
                                 toPosition(TargetAction.L4)),
                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.GH)
+                                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.GH)
                                 .withTimeout(2.25)))
                 .andThen(score(TargetAction.L4)));
 
