@@ -31,7 +31,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private static TalonFX frontMotor;
     private static TalonFX backMotor;
 
-    private ControlState controlState;
+    private ControlState controlState = ControlState.MOTION_MAGIC;
 
     private boolean homing;
     private boolean shouldHome = true;
@@ -167,6 +167,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         Logger.recordOutput("Elevator/Position", getPosition());
         Logger.recordOutput("Elevator/Goal Position", goalPositionRotations);
         Logger.recordOutput("Elevator/Distance to Goal", goalPositionRotations - getPosition());
+        Logger.recordOutput("Elevator/Control State", controlState.name());
 
         if (DriverStation.isDisabled()) {
             goalPositionRotations = getPosition();

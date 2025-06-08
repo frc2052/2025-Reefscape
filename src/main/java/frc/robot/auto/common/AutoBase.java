@@ -28,7 +28,6 @@ import frc.robot.subsystems.arm.ArmRollerSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
-import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +36,6 @@ import java.util.function.BooleanSupplier;
 public abstract class AutoBase extends SequentialCommandGroup {
     protected final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
-    private final VisionSubsystem vision = VisionSubsystem.getInstance();
     protected final AutoFactory autoFactory = AutoFactory.getInstance();
     private Pose2d startPose;
 
@@ -230,8 +228,6 @@ public abstract class AutoBase extends SequentialCommandGroup {
     }
 
     public static final class PathsBase {
-
-        // TODO: make paths
         public static final Path SL_A = new Path(null, "SL A");
         public static final Path SR_B = new Path(null, "SR B");
         public static final Path AB_LOLIPOP_C = new Path(null, "AB LOLIPOP-C");

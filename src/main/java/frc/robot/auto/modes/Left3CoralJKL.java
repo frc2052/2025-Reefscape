@@ -31,7 +31,7 @@ public class Left3CoralJKL extends AutoBase {
 
     private static final Path alignRepos = PathsBase.LEFT_ALIGN_REPOS;
 
-    private static final Path KLreposition = PathsBase.B_KL_REPOSITION;
+    // private static final Path KLreposition = PathsBase.B_KL_REPOSITION;
 
     public Left3CoralJKL() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());

@@ -28,9 +28,9 @@ public class H4AlgaeGHEFIJ extends AutoBase {
     private static final Path descoreEF = PathsBase.B_NET_EF;
     private static final Path scoreEF = PathsBase.B_EF_NET;
 
-    private static final Path pickupIJ = PathsBase.B_NET_IJ;
+    //     private static final Path pickupIJ = PathsBase.B_NET_IJ;
     private static final Path moveOffLine = PathsBase.BLUE_NET_FINAL;
-    private static final Path scoreIJ = PathsBase.B_IJ_NET;
+    //     private static final Path scoreIJ = PathsBase.B_IJ_NET;
 
     public H4AlgaeGHEFIJ() {
         super(startPath.getChoreoPath().getStartingHolonomicPose());

@@ -2,8 +2,6 @@ package frc.robot.subsystems.superstructure;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import com.team2052.lib.util.SecondaryImageManager;
-import com.team2052.lib.util.SecondaryImageManager.SecondaryImage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -90,31 +88,31 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return previousAction;
     }
 
-    private void pushChangedValueToShuffleboard(TargetAction action) {
-        switch (action) {
-            case L1H:
-                SecondaryImageManager.setCurrentImage(SecondaryImage.L1);
-                break;
-            case L2:
-                SecondaryImageManager.setCurrentImage(SecondaryImage.L2);
-                break;
-            case L3:
-                SecondaryImageManager.setCurrentImage(SecondaryImage.L3);
-                break;
-            case L4:
-                SecondaryImageManager.setCurrentImage(SecondaryImage.L4);
-                break;
-            case UPPER_ALGAE:
-                SecondaryImageManager.setCurrentImage(SecondaryImage.A2);
-                break;
-            case LOWER_ALGAE:
-                SecondaryImageManager.setCurrentImage(SecondaryImage.A1);
-                break;
-            default:
-                SecondaryImageManager.setCurrentImage(SecondaryImage.NONE);
-                break;
-        }
-    }
+    // private void pushChangedValueToShuffleboard(TargetAction action) {
+    //     switch (action) {
+    //         case L1H:
+    //             SecondaryImageManager.setCurrentImage(SecondaryImage.L1);
+    //             break;
+    //         case L2:
+    //             SecondaryImageManager.setCurrentImage(SecondaryImage.L2);
+    //             break;
+    //         case L3:
+    //             SecondaryImageManager.setCurrentImage(SecondaryImage.L3);
+    //             break;
+    //         case L4:
+    //             SecondaryImageManager.setCurrentImage(SecondaryImage.L4);
+    //             break;
+    //         case UPPER_ALGAE:
+    //             SecondaryImageManager.setCurrentImage(SecondaryImage.A2);
+    //             break;
+    //         case LOWER_ALGAE:
+    //             SecondaryImageManager.setCurrentImage(SecondaryImage.A1);
+    //             break;
+    //         default:
+    //             SecondaryImageManager.setCurrentImage(SecondaryImage.NONE);
+    //             break;
+    //     }
+    // }
 
     public Command set(TargetAction target, boolean confirm) {
         return new InstantCommand(() -> setSelectedTargetAction(target, confirm));

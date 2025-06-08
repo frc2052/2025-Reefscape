@@ -16,7 +16,6 @@ import org.littletonrobotics.junction.Logger;
 public class RobotState {
     private SwerveDriveState drivetrainState = new SwerveDriveState();
     private AlignOffset selectedAlignOffset = AlignOffset.MIDDLE_REEF;
-    private Pose2d goalPose;
     private Pose2d autoStartPose;
     private FieldElementFace seenReefFace;
     private FieldElementFace desiredReefFace;
@@ -135,10 +134,6 @@ public class RobotState {
         }
 
         return desiredReefFace.getTagID() == seenReefFace.getTagID();
-    }
-
-    public void setGoalAlignment(Pose2d goalPose) {
-        this.goalPose = goalPose;
     }
 
     public void setAutoStartPose(Pose2d startPose) {
