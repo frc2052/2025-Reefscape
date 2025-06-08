@@ -13,7 +13,6 @@ import frc.robot.commands.arm.ArmCommandFactory;
 import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
@@ -38,8 +37,7 @@ public class MiddleH4 extends AutoBase {
                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                         () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.GH)
                                 .withTimeout(5.0)))
-                .andThen(new InstantCommand(
-                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4)))
+                .andThen(toPosition(TargetAction.L4))
                 .andThen(new WaitCommand(1.3))
                 .andThen(score(TargetAction.L4)));
     }

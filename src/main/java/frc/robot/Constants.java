@@ -54,21 +54,21 @@ public class Constants {
 
     // public static final double ROTATIONS_PER_INCH = (1.0 / 12.0) * 2.0; // wrong
 
-    public static final double TICKS_DEADZONE = 0.1;
+    public static final double TICKS_DEADZONE = 0.25;
 
     public static final double MANUAL_MOTOR_SPEED = 0.2;
     public static final double HOMING_SPEED = -0.2;
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
-            .withKP(5.0)
+            .withKP(55.0)
             .withKI(0.0)
-            .withKD(1.1)
-            .withKS(1.0)
-            .withKV(0.0)
-            .withKA(0.0)
+            .withKD(3.6)
+            // .withKS(0.0)
+            // .withKV(0.0)
+            // .withKA(0.0)
             .withGravityType(GravityTypeValue.Elevator_Static)
-            .withKG(9.0);
+            .withKG(8.5); //10.15
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
@@ -78,14 +78,11 @@ public class Constants {
             .withSupplyCurrentLowerLimit(Amps.of(40))
             .withSupplyCurrentLowerTime(Seconds.of(0.1));
 
-    // set Motion Magic settings
-    public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
-        new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(0)
-            .withMotionMagicExpo_kA(0.0175)
-            .withMotionMagicExpo_kV(0.007);
-            // .withMotionMagicAcceleration(160) 
-            // .withMotionMagicJerk(600);
+    // // set Motion Magic settings
+    // public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
+    //     new MotionMagicConfigs()
+    //         .withMotionMagicExpo_kA(0.1)
+    //         .withMotionMagicExpo_kV(0.1);
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
@@ -105,7 +102,7 @@ public class Constants {
             .withCurrentLimits(CURRENT_LIMIT_CONFIG)
             .withSoftwareLimitSwitch(SOFTWARE_LIMIT_SWITCH_CONFIG)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-            .withMotionMagic(MOTION_MAGIC_CONFIG)
+            .withMotionMagic(new MotionMagicConfigs())
             .withSlot0(SLOT0_CONFIGS)
             .withAudio(new AudioConfigs().withBeepOnBoot(false));
   }
@@ -215,8 +212,8 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double CORAL_IN_SPEED = -0.33;
     public static final double CORAL_L1_OUT_SPEED = 0.2052;
-    public static final double CORAL_L4_OUT_SPEED = 0.35; // 35 --> 75
-    public static final double CORAL_L2_L3_OUT_SPEED = 0.35; // 35 --> 75
+    public static final double CORAL_L4_OUT_SPEED = 0.30; // 35 --> 75
+    public static final double CORAL_L2_L3_OUT_SPEED = 0.30; // 35 --> 75
     public static final double ALGAE_IN_SPEED = 0.5;
     public static final double ALGAE_OUT_SPEED = -1.00;
     // public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()

@@ -274,7 +274,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
         } else if (goalDeg < SuperstructureConstants.RIGHT_LIMIT && currentDeg > SuperstructureConstants.LEFT_LIMIT) {
             return true;
         } else if (currentDeg > SuperstructureConstants.RIGHT_LIMIT
-                && currentDeg < SuperstructureConstants.LEFT_LIMIT) {
+                && currentDeg < SuperstructureConstants.LEFT_LIMIT
+                && (goalDeg > SuperstructureConstants.LEFT_LIMIT || goalDeg < SuperstructureConstants.RIGHT_LIMIT)) {
             return true;
         }
 

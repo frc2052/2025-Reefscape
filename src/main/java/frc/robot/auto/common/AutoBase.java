@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
@@ -28,6 +29,7 @@ import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.util.AlignmentCalculator.AlignOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -36,7 +38,7 @@ public abstract class AutoBase extends SequentialCommandGroup {
     protected final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
     private final VisionSubsystem vision = VisionSubsystem.getInstance();
-    private final AutoFactory autoFactory = AutoFactory.getInstance();
+    protected final AutoFactory autoFactory = AutoFactory.getInstance();
     private Pose2d startPose;
 
     protected AutoBase(Optional<Pose2d> pathStartPose) {
@@ -121,6 +123,14 @@ public abstract class AutoBase extends SequentialCommandGroup {
                 () -> autoFactory.getBumpNeeded());
     }
 
+    protected Command chosenLoliPath(boolean leftFirst, boolean firstPickup, Path leftLoli, Path rightLoli) {
+        return new ConditionalCommand(
+                        ((followPathCommand(leftLoli.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))),
+                        ((followPathCommand(rightLoli.getChoreoPath()).beforeStarting(new WaitCommand(0.3)))),
+                        () -> ((leftFirst && firstPickup) || (!leftFirst && !firstPickup)))
+                .deadlineFor(IntakeCommandFactory.intake().alongWith(ArmCommandFactory.intake()));
+    }
+
     protected Command delaySelectedTime() {
         return new WaitCommand(autoFactory.getSavedWaitSeconds());
     }
@@ -131,12 +141,15 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     protected Command score(TargetAction position) {
         return new ParallelCommandGroup(
-                IntakeCommandFactory.outtake().withTimeout(0.3),
-                ArmCommandFactory.coralOut().withTimeout(0.5));
+                        IntakeCommandFactory.outtake().withTimeout(0.3),
+                        ArmCommandFactory.coralOut().withTimeout(0.5))
+                .andThen(() -> RobotState.getInstance().setAlignOffset(AlignOffset.MIDDLE_REEF));
     }
 
     protected BooleanSupplier haveCoral() {
-        return () -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.STOW
+        new PrintCommand("STOWED: " + (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3));
+        new PrintCommand("HAVE CORAL: " + (RobotState.getInstance().getHasCoral()));
+        return () -> (SuperstructureSubsystem.getInstance().getCurrentAction() == TargetAction.L3
                 || RobotState.getInstance().getHasCoral());
     }
 
@@ -166,6 +179,10 @@ public abstract class AutoBase extends SequentialCommandGroup {
                                         .deadlineFor(IntakeCommandFactory.intake())
                                         .until(() -> RobotState.getInstance().getHasCoral())
                                 : new InstantCommand());
+    }
+
+    protected Command toPosition(TargetAction pos) {
+        return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(pos));
     }
 
     protected Command scoreNet() {
@@ -214,6 +231,13 @@ public abstract class AutoBase extends SequentialCommandGroup {
 
     public static final class PathsBase {
 
+        // TODO: make paths
+        public static final Path SL_A = new Path(null, "SL A");
+        public static final Path SR_B = new Path(null, "SR B");
+        public static final Path AB_LOLIPOP_C = new Path(null, "AB LOLIPOP-C");
+        public static final Path AB_LOLIPOP_L = new Path(null, "AB LOLIPOP-L");
+        public static final Path AB_LOLIPOP_R = new Path(null, "AB LOLIPOP-R");
+
         public static final Path LEFT_ALIGN_REPOS = new Path(null, "LEFT ALIGNMENT REPOSITION");
         public static final Path RIGHT_ALIGN_REPOS = new Path(null, "RIGHT ALIGNMENT REPOSITION");
 
@@ -228,14 +252,11 @@ public abstract class AutoBase extends SequentialCommandGroup {
         public static final Path BLUE_RL_LOLIPOP = new Path("RL RIGHT LOLIPOP", null);
 
         // left side L1 backups
-        // TODO: validate pathplanner paths (not going to use but prevent error)
         public static final Path B_SL_IJ = new Path("SL IJ", "BLUE SL IJ");
         public static final Path B_IJ_LL = new Path("IJ LL", "BLUE IJ LL");
 
         public static final Path B_LL_KL = new Path("LL KL", "BLUE LL KL");
         public static final Path B_KL_LL = new Path("KL LL", "BLUE KL LL");
-
-        // TODO: right side L1 backups
 
         // EXTENDED STARTS
         public static final Path EXTENDED_J_LL = new Path("EXTENDED J LL", "EXTENDED J LL");

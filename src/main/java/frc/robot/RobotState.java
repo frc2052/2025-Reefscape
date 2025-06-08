@@ -173,6 +173,14 @@ public class RobotState {
         Logger.recordOutput("Current Pose", drivetrainState.Pose);
         Logger.recordOutput("Auto Start Pose", autoStartPose);
         Logger.recordOutput("Goal Align Pose", getAlignPose());
+        Logger.recordOutput(
+                "Goal Left Alignment",
+                getFieldToRobot()
+                        .nearest(isRedAlliance() ? FieldConstants.redLeftBranches : FieldConstants.blueLeftBranches));
+        Logger.recordOutput(
+                "Goal Right Alignment",
+                getFieldToRobot()
+                        .nearest(isRedAlliance() ? FieldConstants.redRightBranches : FieldConstants.blueRightBranches));
         Logger.recordOutput("Flush Alignment", isFlushAlign);
     }
 }

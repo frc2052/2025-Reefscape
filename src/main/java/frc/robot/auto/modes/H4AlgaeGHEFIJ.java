@@ -15,7 +15,6 @@ import frc.robot.commands.climber.ClimberCommandFactory;
 import frc.robot.commands.drive.alignment.AlignmentCommandFactory;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import frc.robot.util.AlignmentCalculator.FieldElementFace;
 
@@ -48,61 +47,39 @@ public class H4AlgaeGHEFIJ extends AutoBase {
                         ArmCommandFactory.coralIn().withTimeout(1),
                         ClimberCommandFactory.climberDown().withTimeout(0.5),
                         Commands.sequence(
-                                new InstantCommand(() ->
-                                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.HOME)),
+                                toPosition(TargetAction.HOME),
                                 Commands.waitUntil(
                                         () -> !ElevatorSubsystem.getInstance().isHoming()),
                                 new WaitCommand(0.3),
-                                new InstantCommand(() ->
-                                        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4))),
+                                toPosition(TargetAction.L4)),
                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.GH)
+                                        () -> AlignOffset.LEFT_BRANCH, FieldElementFace.GH)
                                 .withTimeout(2.25)))
                 .andThen(score(TargetAction.L4)));
 
         // pickup GH
-        addCommands(new InstantCommand(
-                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.LOWER_ALGAE))
-                .andThen(new WaitCommand(0.2)));
+        addCommands(toPosition(TargetAction.LOWER_ALGAE).andThen(new WaitCommand(0.2)));
         addCommands(ArmCommandFactory.algaeIn()
                 .withDeadline(followPathCommand(reposition.getChoreoPath()).andThen(new WaitCommand(0.2))));
 
         // score GH
         addCommands((followPathCommand(scoreGH.getChoreoPath()).deadlineFor(ArmCommandFactory.algaeIn()))
-                .alongWith(new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.ALGAE_NET))
-                        .beforeStarting(new WaitCommand(0.5)))
+                .alongWith(toPosition(TargetAction.ALGAE_NET).beforeStarting(new WaitCommand(0.5)))
                 .andThen(scoreNet()));
 
         // pickup EF
-        addCommands(new InstantCommand(
-                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.UPPER_ALGAE))
+        addCommands(toPosition(TargetAction.UPPER_ALGAE)
                 .andThen(((followPathCommand(descoreEF.getChoreoPath()).andThen(new WaitCommand(0.5)))
                                 .beforeStarting(new WaitCommand(0.2)))
                         .deadlineFor(ArmCommandFactory.algaeIn().beforeStarting(new WaitCommand(0.2)))));
 
         // score EF
         addCommands((followPathCommand(scoreEF.getChoreoPath()).deadlineFor(ArmCommandFactory.algaeIn()))
-                .andThen(new InstantCommand(
-                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.ALGAE_NET)))
+                .andThen(toPosition(TargetAction.ALGAE_NET))
                 .andThen(scoreNet()));
 
         // move off the line
         addCommands((followPathCommand(moveOffLine.getChoreoPath()).beforeStarting(new WaitCommand(0.2)))
-                .alongWith(new InstantCommand(
-                        () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.POST_ALGAE_STOW))));
-
-        // pickup IJ
-        // addCommands(new InstantCommand(
-        //                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.UPPER_ALGAE))
-        //         .andThen(((followPathCommand(pickupIJ.getChoreoPath()).andThen(new WaitCommand(0.5)))
-        //                         .beforeStarting(new WaitCommand(0.2)))
-        //                 .deadlineFor(ArmCommandFactory.algaeIn().beforeStarting(new WaitCommand(0.2)))));
-
-        // score IJ
-        // addCommands((followPathCommand(scoreIJ.getChoreoPath()).deadlineFor(ArmCommandFactory.algaeIn()))
-        //         .andThen(new InstantCommand(
-        //                 () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.ALGAE_NET)))
-        //         .andThen(scoreNet()));
+                .alongWith(toPosition(TargetAction.POST_ALGAE_STOW)));
     }
 }

@@ -106,6 +106,8 @@ public class RobotContainer {
                 .whileTrue(IntakeCommandFactory.outtake())
                 .onFalse(new InstantCommand(() -> superstructure.stow()));
 
+        controlBoard.confirmSuperstructure().onTrue(superstructure.confirm());
+
         controlBoard
                 .alignWithReefLeft()
                 .whileTrue(AlignmentCommandFactory.getReefAlignmentCommand(() -> AlignOffset.LEFT_BRANCH))

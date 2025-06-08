@@ -10,6 +10,10 @@ import frc.robot.RobotState;
 import frc.robot.auto.modes.BackupMiddleL1;
 import frc.robot.auto.modes.DeadReckoning;
 import frc.robot.auto.modes.H4AlgaeGHEFIJ;
+import frc.robot.auto.modes.LOLILEFTLeftFirst;
+import frc.robot.auto.modes.LOLILEFTRightFirst;
+import frc.robot.auto.modes.LOLIRIGHTLeftFirst;
+import frc.robot.auto.modes.LOLIRIGHTRightFirst;
 import frc.robot.auto.modes.Left3CoralJKL;
 import frc.robot.auto.modes.MiddleH4;
 import frc.robot.auto.modes.Right3CoralEDC;
@@ -20,23 +24,22 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
-    // private final Supplier<ChoreoAuto> choreoAutoSupplier =
-    //         () -> Dashboard.getInstance().getChoreoAuto();
     private final Supplier<Double> waitSecondsEntrySupplier =
             () -> Dashboard.getInstance().getWaitSeconds();
     private final Supplier<Boolean> bumpNeededSupplier =
             () -> Dashboard.getInstance().getBumpNeeded();
+    private final Supplier<Boolean> lollipopOrder =
+            () -> Dashboard.getInstance().getLeftLollipopFirst();
 
     private Auto currentAuto;
     private AutoBase compiledAuto;
 
-    // private ChoreoAuto currentChoreoAuto;
     private Command compiledChoreoAuto;
 
     private double selectedWaitSeconds;
     private double savedWaitSeconds;
 
-    private boolean selectedBumpNeeded;
+    private boolean savedLollipopOrder;
     private boolean savedBumpNeeded;
 
     private boolean isRedAlliance = RobotState.getInstance().isRedAlliance();
@@ -72,7 +75,8 @@ public class AutoFactory {
         return autoSupplier.get() != currentAuto
                 || waitSecondsEntrySupplier.get() != savedWaitSeconds
                 || isRedAlliance == !RobotState.getInstance().isRedAlliance()
-                || savedBumpNeeded != bumpNeededSupplier.get();
+                || savedBumpNeeded != bumpNeededSupplier.get()
+                || savedLollipopOrder != lollipopOrder.get();
     }
 
     public boolean choreoRecompileNeeded() {
@@ -110,6 +114,9 @@ public class AutoFactory {
         // update bump needed
         savedBumpNeeded = bumpNeededSupplier.get();
 
+        // update lollipop auto order
+        savedLollipopOrder = lollipopOrder.get();
+
         System.out.println("BUMP NEEDED?: " + savedBumpNeeded);
     }
 
@@ -129,6 +136,10 @@ public class AutoFactory {
         return savedBumpNeeded;
     }
 
+    public boolean getLeftLollipopFirst() {
+        return savedLollipopOrder;
+    }
+
     public Command getJ4K4L4() {
         return new InstantCommand();
     }
@@ -136,6 +147,11 @@ public class AutoFactory {
     public static enum Auto {
         LEFT_3_CORAL_JKL(Left3CoralJKL.class),
         RIGHT_3_CORAL_EDC(Right3CoralEDC.class),
+
+        RIGHT_LOLI_RIGHT_FIRST(LOLIRIGHTRightFirst.class),
+        RIGHT_LOLI_LEFT_FIRST(LOLIRIGHTLeftFirst.class),
+        LEFT_LOLI_RIGHT_FIRST(LOLILEFTRightFirst.class),
+        LEFT_LOLI_LEFT_FIRST(LOLILEFTLeftFirst.class),
         MIDDLE_L4(MiddleH4.class),
         BACKUP_MIDDLE_L1(BackupMiddleL1.class),
         DRIVE_FORWARD(DeadReckoning.class),

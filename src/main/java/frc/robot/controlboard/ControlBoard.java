@@ -131,6 +131,11 @@ public class ControlBoard implements IPrimaryControlBoard, ISecondaryControlBoar
     }
 
     @Override
+    public Trigger confirmSuperstructure() {
+        return primaryControlBoard.confirmSuperstructure();
+    }
+
+    @Override
     public Trigger alignWithReefLeft() {
         return primaryControlBoard.alignWithReefLeft();
     }

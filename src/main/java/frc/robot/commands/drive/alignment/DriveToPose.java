@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.team2052.lib.helpers.MathHelpers;
 import com.team2052.lib.util.DelayedBoolean;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -14,6 +13,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivetrainConstants;
@@ -24,22 +24,22 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveToPose extends Command {
-    private final double driveP = 1.2;
-    private final double driveD = 0.05;
-    private final double driveMaxSpeed = 1.25;
-    private final double driveMaxAcceleration = 1.75;
-    private final double driveTolerance = 0.01;
+    private final double driveP = 1.1; // 1.2
+    private final double driveD = 0.01; // 0.05
+    private final double driveMaxSpeed = 3.0; // 1.5
+    private final double driveMaxAcceleration = 3.5; // 2.0
+    private final double driveTolerance = 0.015; // 0.01
     private final double ffMinRadius = 0.05;
     private final double ffMaxRadius = 0.1;
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
     private final Supplier<Pose2d> target;
 
-    private DelayedBoolean stoppedMovingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.25);
+    private DelayedBoolean stoppedMovingDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.75);
 
     private final SwerveRequest.FieldCentricFacingAngle driveChassisSpeeds = new SwerveRequest.FieldCentricFacingAngle()
             .withDesaturateWheelSpeeds(true)
             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
-            .withHeadingPID(5.0, 0, 0.1);
+            .withHeadingPID(4.0, 0, 0.1);
 
     private boolean running = false;
 
@@ -159,7 +159,7 @@ public class DriveToPose extends Command {
                     .withVelocityY(driveVelocity.getY()));
         }
         // Log data
-        Logger.recordOutput("DriveToPose/DistanceMeasured", currentDistance);
+        Logger.recordOutput("DriveToPose/DistanceMeasuredInches", Units.metersToInches(currentDistance));
         Logger.recordOutput("DriveToPose/DistanceSetpoint", driveController.getSetpoint().position);
         Logger.recordOutput(
                 "DriveToPose/Setpoint", new Pose2d[] {new Pose2d(lastSetpointTranslation, targetPose.getRotation())});
@@ -189,14 +189,23 @@ public class DriveToPose extends Command {
 
     /** Checks if the robot is stopped at the final pose. */
     public boolean atGoal() {
-        boolean stoppedMoving = stoppedMovingDelay.update(
-                Timer.getFPGATimestamp(),
-                MathHelpers.epsilonEquals(
-                        MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()), 0.0, 0.05));
-        return running && stoppedMoving;
-        // return running && driveController.atGoal();
+        // boolean stoppedMoving = stoppedMovingDelay.update(
+        //         Timer.getFPGATimestamp(),
+        //         MathHelpers.epsilonEquals(
+        //                 MathHelpers.chassisSpeedsNorm(RobotState.getInstance().getChassisSpeeds()), 0.0, 0.05));
+        // return running && stoppedMoving;
+        return running
+                && driveController.atGoal()
+                && MathUtil.inputModulus(
+                                Math.abs(RobotState.getInstance()
+                                                .getFieldToRobot()
+                                                .getRotation()
+                                                .getDegrees()
+                                        - targetPose.getRotation().getDegrees()),
+                                0,
+                                360)
+                        < 1.0;
     }
-
     /** Checks if the robot pose is within the allowed drive and theta tolerances. */
     public boolean withinTolerance(double driveTolerance, Rotation2d thetaTolerance) {
         return running && Math.abs(driveErrorAbs) < driveTolerance;

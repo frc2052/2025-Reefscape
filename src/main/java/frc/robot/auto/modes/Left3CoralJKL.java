@@ -56,11 +56,10 @@ public class Left3CoralJKL extends AutoBase {
                         .deadlineFor(ArmCommandFactory.coralIn().withTimeout(1)),
                 ClimberCommandFactory.climberDown().withTimeout(0.5),
                 superstructure.set(TargetAction.HOME, true)));
-        addCommands(
-                (new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L4)))
-                        .alongWith((AlignmentCommandFactory.getSpecificReefAlignmentCommand(
-                                        () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
-                                .withTimeout(3))));
+        addCommands((toPosition(TargetAction.L4))
+                .alongWith((AlignmentCommandFactory.getSpecificReefAlignmentCommand(
+                                () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.IJ)
+                        .withTimeout(3))));
 
         addCommands(new InstantCommand(() -> System.out.println("start scoring")));
         addCommands(score(TargetAction.L4));
@@ -79,9 +78,7 @@ public class Left3CoralJKL extends AutoBase {
                                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                         () -> AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
                                                 .deadlineFor(IntakeCommandFactory.outtake()),
-                                        new InstantCommand(() -> SuperstructureSubsystem.getInstance()
-                                                        .setCurrentAction(TargetAction.L4))
-                                                .beforeStarting(new WaitCommand(0.5)))
+                                        toPosition(TargetAction.L4).beforeStarting(new WaitCommand(0.5)))
                                 .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
                         score(TargetAction.L4),
                         new InstantCommand(() -> setKScored(true))),
@@ -100,16 +97,12 @@ public class Left3CoralJKL extends AutoBase {
                 // yes? score L L4
                 Commands.sequence(
                         new PrintCommand("SUCCESSFUL SECOND PICKUP: GOING TO SCORE L L4"),
-                        new InstantCommand(
-                                () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.L3)),
+                        toPosition(TargetAction.L3),
                         new ParallelCommandGroup(
                                         AlignmentCommandFactory.getSpecificReefAlignmentCommand(
                                                         () -> AlignOffset.RIGHT_BRANCH, FieldElementFace.KL)
                                                 .deadlineFor(IntakeCommandFactory.outtake()),
-                                        new SequentialCommandGroup(
-                                                new WaitCommand(0.4),
-                                                new InstantCommand(() -> SuperstructureSubsystem.getInstance()
-                                                        .setCurrentAction(TargetAction.L4))))
+                                        new SequentialCommandGroup(new WaitCommand(0.4), toPosition(TargetAction.L4)))
                                 .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
                         score(TargetAction.L4)),
                 // no? retry load
@@ -130,10 +123,7 @@ public class Left3CoralJKL extends AutoBase {
                                                                         FieldElementFace.KL)
                                                                 .deadlineFor(IntakeCommandFactory.outtake()),
                                                         new SequentialCommandGroup(
-                                                                new WaitCommand(0.4),
-                                                                new InstantCommand(
-                                                                        () -> SuperstructureSubsystem.getInstance()
-                                                                                .setCurrentAction(TargetAction.L4))))
+                                                                new WaitCommand(0.4), toPosition(TargetAction.L4)))
                                                 .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
                                         score(TargetAction.L4)),
                                 // no? run reload
@@ -166,9 +156,7 @@ public class Left3CoralJKL extends AutoBase {
                                                                 () -> AlignOffset.LEFT_BRANCH, FieldElementFace.KL)
                                                         .deadlineFor(IntakeCommandFactory.outtake()),
                                                 new SequentialCommandGroup(
-                                                        new WaitCommand(0.4),
-                                                        new InstantCommand(() -> SuperstructureSubsystem.getInstance()
-                                                                .setCurrentAction(TargetAction.L4))))
+                                                        new WaitCommand(0.4), toPosition(TargetAction.L4)))
                                         .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
                                 score(TargetAction.L4)),
                         // no, don't have coral? --> reload then score
@@ -189,10 +177,7 @@ public class Left3CoralJKL extends AutoBase {
                                                                         FieldElementFace.KL)
                                                                 .deadlineFor(IntakeCommandFactory.outtake()),
                                                         new SequentialCommandGroup(
-                                                                new WaitCommand(0.4),
-                                                                new InstantCommand(
-                                                                        () -> SuperstructureSubsystem.getInstance()
-                                                                                .setCurrentAction(TargetAction.L4))))
+                                                                new WaitCommand(0.4), toPosition(TargetAction.L4)))
                                                 .andThen(new InstantCommand(() -> System.out.println("start scoring"))),
                                         score(TargetAction.L4))),
                         () -> RobotState.getInstance().getHasCoral()),
