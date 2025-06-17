@@ -21,7 +21,6 @@ import frc.robot.util.io.Dashboard;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 import org.littletonrobotics.junction.networktables.LoggedNetworkString;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
 
 public class AutoFactory {
     private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
@@ -31,7 +30,6 @@ public class AutoFactory {
             () -> Dashboard.getInstance().getBumpNeeded();
     private final Supplier<Boolean> lollipopOrder =
             () -> Dashboard.getInstance().getLeftLollipopFirst();
-    
 
     private Auto currentAuto;
     private AutoBase compiledAuto;
@@ -141,7 +139,6 @@ public class AutoFactory {
     public boolean getLeftLollipopFirst() {
         return savedLollipopOrder;
     }
-
 
     public Command getJ4K4L4() {
         return new InstantCommand();

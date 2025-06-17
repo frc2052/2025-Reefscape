@@ -27,8 +27,6 @@ import frc.robot.Robot;
 import frc.robot.RobotState;
 import frc.robot.RobotState.FieldLocation;
 import frc.robot.subsystems.drive.ctre.generated.TunerConstants.TunerSwerveDrivetrain;
-import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-import frc.robot.subsystems.superstructure.SuperstructureSubsystem;
 
 public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.005;
@@ -154,7 +152,6 @@ public class DrivetrainSubsystem extends TunerSwerveDrivetrain implements Subsys
         }
     }
 
-   
     private void startSimThread() {
         lastSimTime = Utils.getCurrentTimeSeconds();
 

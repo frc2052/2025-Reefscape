@@ -245,5 +245,4 @@ public class RobotState {
         AdvantageScopeSubsystem.getInstance().periodic();
         Logger.recordOutput("Flush Alignment", isFlushAlign);
     }
-
 }

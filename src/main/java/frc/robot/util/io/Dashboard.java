@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.common.AutoFactory.Auto;
 import frc.robot.subsystems.superstructure.SuperstructurePosition.TargetAction;
-
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class Dashboard {
@@ -24,7 +22,6 @@ public class Dashboard {
             new LoggedDashboardChooser<Boolean>("Smart drive wanted");
     private final LoggedDashboardChooser<TargetAction> smartDriveActionChooser =
             new LoggedDashboardChooser<TargetAction>("Smart drive action");
-            
 
     private final LoggedDashboardChooser<Boolean> bump = new LoggedDashboardChooser<Boolean>("Bump Needed");
     private final LoggedDashboardChooser<Boolean> lollipop = new LoggedDashboardChooser<Boolean>("Lollipop Order");
@@ -38,7 +35,6 @@ public class Dashboard {
 
     private final DoubleTopic nudgeElevator = debugTable.getDoubleTopic("elevator nudge value");
     private final DoubleSubscriber nudgeElevatorSub = nudgeElevator.subscribe(0.0);
-
 
     private static Dashboard INSTANCE;
 
@@ -82,10 +78,6 @@ public class Dashboard {
         smartDriveActionChooser.addOption("l4", TargetAction.L4);
         smartDriveActionChooser.addOption("l2", TargetAction.L2);
         smartDriveActionChooser.addOption("l1", TargetAction.L1H);
-
-
-
-
 
         // choreo autos
         // choreoAutoChooser.addDefaultOption("NO AUTO", ChoreoAuto.NO_AUTO);
@@ -134,11 +126,11 @@ public class Dashboard {
         return bump.get();
     }
 
-    public boolean getSmartDrivewanted(){
+    public boolean getSmartDrivewanted() {
         return smartDriveChooser.get();
     }
 
-    public TargetAction getSmartDriveAction(){
+    public TargetAction getSmartDriveAction() {
         return smartDriveActionChooser.get();
     }
 
