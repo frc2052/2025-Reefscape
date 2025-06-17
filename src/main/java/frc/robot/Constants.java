@@ -465,11 +465,7 @@ public class Constants {
                 new Translation2d(Inches.of(396.591),Inches.of(8.646900)), 
                 new Translation2d(Inches.of(396.591),Inches.of(156.060000)));
 
-        public static final List<Translation2d> redProcessor = Arrays.asList(
-                new Translation2d(Inches.of(), Inches.of()),
-                new Translation2d(Inches.of(),Inches.of()),
-                new Translation2d(Inches.of(),Inches.of()), 
-                new Translation2d(Inches.of(),Inches.of()));
+         public static final List<Translation2d> redProcessor = Arrays.asList();
 
         public static final List<Translation2d> redTravel = Arrays.asList();
 

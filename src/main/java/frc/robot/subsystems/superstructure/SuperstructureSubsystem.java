@@ -22,6 +22,8 @@ import frc.robot.util.io.Dashboard;
 import java.util.function.Supplier;
 import frc.robot.util.AlignmentCalculator.AlignOffset;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class SuperstructureSubsystem extends SubsystemBase {
 
@@ -295,7 +297,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
         //     }
         // }
 
-        previousAction = target;
+        //previousAction = target;
         setDriverAction(driverAction);
         setTargetAction();
         System.out.println("----------------------------------------------------- shouldSmartDrive " + shouldSmartDrive
@@ -322,7 +324,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
                     setSmartDriveAction(TargetAction.L1H);
                 }
             } else if (RobotState.getFieldLocation() == FieldLocation.PROCESSOR) {
-                setSmartDriveAction(TargetAction.AP);
+                setSmartDriveAction(TargetAction.ALGAE_PROCESS);
 
             } else if (RobotState.getFieldLocation() == FieldLocation.BARGE) {
 

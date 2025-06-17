@@ -18,17 +18,17 @@ public class AlgaeIntakeAndScore {
                 (int) LimelightHelpers.getFiducialID(LeftLimelightConstants.CAMERA_NAME));
         if (face == FieldElementFace.AB || face == FieldElementFace.EF || face == FieldElementFace.IJ) {
             return Commands.runOnce(
-                    () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.UA),
+                    () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.UPPER_ALGAE),
                     SuperstructureSubsystem.getInstance());
         } else {
             return Commands.runOnce(
-                    () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.LA),
+                    () -> SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.LOWER_ALGAE),
                     SuperstructureSubsystem.getInstance());
         }
     }
 
     public static Command algaeScoreCommand() {
-        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.AS);
+        SuperstructureSubsystem.getInstance().setCurrentAction(TargetAction.ALGAE_NET);
         return new DriveToPose(null);
     }
 }

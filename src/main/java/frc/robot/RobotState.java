@@ -246,31 +246,4 @@ public class RobotState {
         Logger.recordOutput("Flush Alignment", isFlushAlign);
     }
 
-    public enum FieldLocation {
-        REEF(new Area2D(Constants.SmartDrive.blueReef), new Area2D(Constants.SmartDrive.blueReef)),
-        BARGE(new Area2D(Constants.SmartDrive.blueBarge), new Area2D(Constants.SmartDrive.redBarge)),
-        PROCESSOR(new Area2D(Constants.SmartDrive.blueProcessor), new Area2D(Constants.SmartDrive.redProcessor)),
-        TRAVEL(new Area2D(Constants.SmartDrive.blueTravel), new Area2D(Constants.SmartDrive.redTravel));
-
-        public final Area2D blueArea;
-        public final Area2D redArea;
-
-        private FieldLocation(Area2D blueArea, Area2D redArea) {
-            this.blueArea = blueArea;
-            this.redArea = redArea;
-        }
-
-        public Area2D getArea() {
-            if (isRedAlliance()) {
-                return redArea;
-            } else {
-                return blueArea;
-            }
-        }
-    }
-
-    public void run() {
-        AdvantageScopeSubsystem.getInstance().periodic();
-        Logger.recordOutput("Flush Alignment", isFlushAlign);
-    }
 }

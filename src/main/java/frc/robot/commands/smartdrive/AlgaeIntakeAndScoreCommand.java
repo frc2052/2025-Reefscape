@@ -54,9 +54,9 @@ public class AlgaeIntakeAndScoreCommand extends Command {
             face = AlignmentCommandFactory.idToReefFace(
                     (int) LimelightHelpers.getFiducialID(LeftLimelightConstants.CAMERA_NAME));
             if (face == FieldElementFace.AB || face == FieldElementFace.EF || face == FieldElementFace.IJ) {
-                superstructure.setCurrentAction(TargetAction.UA);
+                superstructure.setCurrentAction(TargetAction.UPPER_ALGAE);
             } else {
-                superstructure.setCurrentAction(TargetAction.LA);
+                superstructure.setCurrentAction(TargetAction.LOWER_ALGAE);
             }
             done = true;
         } else {
