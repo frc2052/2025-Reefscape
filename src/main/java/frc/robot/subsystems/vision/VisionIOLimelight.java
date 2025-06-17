@@ -22,8 +22,6 @@ import org.littletonrobotics.junction.Logger;
 public class VisionIOLimelight implements VisionIO {
     private static final double xyStdDevCoefficient = 0.02;
     private static final double thetaStdDevCoefficient = Double.MAX_VALUE; // 0.04;
-    private static final double mt1xyStdDevCoefficient = 0.1;
-    private static final double mt1thetaStdDevCoefficient = 0.2;
     private final RobotState robotState = RobotState.getInstance();
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
 
@@ -35,7 +33,6 @@ public class VisionIOLimelight implements VisionIO {
     }
 
     private void configureLimelights() {
-        // TODO: set camera poses up
         LimelightHelpers.setCameraPose_RobotSpace(
                 LeftLimelightConstants.CAMERA_NAME,
                 LeftLimelightConstants.X_OFFSET.in(Meters),
@@ -73,6 +70,11 @@ public class VisionIOLimelight implements VisionIO {
         Optional<PoseEstimate> leftEstimate;
         Optional<PoseEstimate> rightEstimate;
 
+        double leftStdDev = Double.MAX_VALUE;
+        double leftHeadingStdDev = Double.MAX_VALUE;
+        double rightStdDev = Double.MAX_VALUE;
+        double rightHeadingStdDev = Double.MAX_VALUE;
+
         if (RobotState.getInstance().getAlignOffset() == AlignOffset.LEFT_BRANCH) {
             leftEstimate = pollLL(LeftLimelightConstants.CAMERA_NAME, previousLeftEstimate);
             rightEstimate = Optional.empty();
@@ -83,11 +85,6 @@ public class VisionIOLimelight implements VisionIO {
             leftEstimate = pollLL(LeftLimelightConstants.CAMERA_NAME, previousLeftEstimate);
             rightEstimate = pollLL(RightLimelightConstants.CAMERA_NAME, previousRightEstimate);
         }
-
-        double leftStdDev = Double.MAX_VALUE;
-        double leftHeadingStdDev = Double.MAX_VALUE;
-        double rightStdDev = Double.MAX_VALUE;
-        double rightHeadingStdDev = Double.MAX_VALUE;
 
         if (shouldAccept) {
             if (leftEstimate.isPresent() && leftEstimate.get().rawFiducials.length > 0) {

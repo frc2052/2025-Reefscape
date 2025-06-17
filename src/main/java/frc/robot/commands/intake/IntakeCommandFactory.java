@@ -19,6 +19,10 @@ public class IntakeCommandFactory {
         return Commands.runEnd(() -> rollers.outtake(), () -> rollers.stopMotor(), rollers);
     }
 
+    public static Command setHoldCoral(boolean holdCoral) {
+        return new InstantCommand(() -> rollers.setHoldCoral(holdCoral), rollers);
+    }
+
     public static Command setCoast() {
         return new InstantCommand(() -> pivot.setNeutralMode(NeutralModeValue.Coast), pivot);
     }

@@ -23,7 +23,7 @@ public class ArmRollerSubsystem extends SubsystemBase {
     private static ArmRollerSubsystem INSTANCE;
     private boolean isIntaking = false;
 
-    private DelayedBoolean hasCoralDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.5);
+    private DelayedBoolean hasCoralDelay = new DelayedBoolean(Timer.getFPGATimestamp(), 0.1);
     private boolean hasCoral;
 
     public static ArmRollerSubsystem getInstance() {
@@ -53,10 +53,13 @@ public class ArmRollerSubsystem extends SubsystemBase {
     }
 
     public void coralOut() {
-        setMotor(
-                SuperstructureSubsystem.getInstance().getCurrentAction().equals(TargetAction.L1H)
-                        ? ArmRollerConstants.CORAL_L1_OUT_SPEED
-                        : ArmRollerConstants.CORAL_OUT_SPEED);
+        if (SuperstructureSubsystem.getInstance().getCurrentAction().equals(TargetAction.L1H)) {
+            setMotor(ArmRollerConstants.CORAL_L1_OUT_SPEED);
+        } else if (SuperstructureSubsystem.getInstance().getCurrentAction().equals(TargetAction.L4)) {
+            setMotor(ArmRollerConstants.CORAL_L4_OUT_SPEED);
+        } else {
+            setMotor(ArmRollerConstants.CORAL_L2_L3_OUT_SPEED);
+        }
     }
 
     public void coralIn() {

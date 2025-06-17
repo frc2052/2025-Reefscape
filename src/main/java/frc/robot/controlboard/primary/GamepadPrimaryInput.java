@@ -88,16 +88,6 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
     }
 
     @Override
-    public Trigger algaeManualUp() {
-        return new Trigger(() -> false);
-    }
-
-    @Override
-    public Trigger algaeManualDown() {
-        return new Trigger(() -> false);
-    }
-
-    @Override
     public Trigger resetGyro() {
         return controller.back().and(controller.start().negate());
     }
@@ -113,17 +103,22 @@ public class GamepadPrimaryInput implements IPrimaryControlBoard {
     }
 
     @Override
-    public Trigger shootAlgae() {
+    public Trigger groundIntakeHold() {
         return new Trigger(() -> false);
     }
 
     @Override
-    public Trigger rollerTap() {
+    public Trigger armRollerTapIn() {
         return new Trigger(() -> false);
     }
 
     @Override
     public Trigger groundOuttake() {
+        return new Trigger(() -> false);
+    }
+
+    @Override
+    public Trigger confirmSuperstructure() {
         return new Trigger(() -> false);
     }
 

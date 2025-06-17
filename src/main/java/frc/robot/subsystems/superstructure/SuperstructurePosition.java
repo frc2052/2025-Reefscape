@@ -4,76 +4,53 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.Constants.SuperstructureConstants;
-import frc.robot.RobotState;
 
 public class SuperstructurePosition {
     public enum TargetAction {
         // spotless:off
-        HM(1.5, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Homing
-        HP(1.0, Degrees.of(133.0), IntakePivotPositions.MID.position, ActionType.NONE),
-        EXPLODE(5.0, Degrees.of(228.5), IntakePivotPositions.STOW.position, ActionType.NONE),
-        INTAKE(2.0, Degrees.of(307), IntakePivotPositions.INTAKE.position, ActionType.CORAL), //307
-        UN_JAM(25.0, Degrees.of(150.0), IntakePivotPositions.INTAKE.position, ActionType.CORAL),
-        L1H(6.0, Degrees.of(190.0), IntakePivotPositions.L1.position, ActionType.CORAL),
-        L2(17.7, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 3.0, Degrees.of(157.0), IntakePivotPositions.STOW.position),
-        L3(36.0, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 20.0, Degrees.of(157.0), IntakePivotPositions.STOW.position),
-        L4(62.5, Degrees.of(196.0), IntakePivotPositions.STOW.position, ActionType.CORAL, 62.5, Degrees.of(189.0), IntakePivotPositions.STOW.position),
-        LA(6.0, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Lower Algae
-        UA(23.0, Degrees.of(265.0), IntakePivotPositions.STOW.position, ActionType.ALGAE), // Upper Algae
+        HOME(1.1, Degrees.of(130.0), IntakePivotPositions.MID.position, ActionType.NONE),
+        HP(0.75, Degrees.of(133.0), IntakePivotPositions.MID.position, ActionType.NONE),
+        EXPLODE(3.75, Degrees.of(130.5), IntakePivotPositions.STOW.position, ActionType.NONE),
+        INTAKE(1.5, Degrees.of(307), IntakePivotPositions.INTAKE.position, ActionType.CORAL),
+        UN_JAM(12.0, Degrees.of(200.0), IntakePivotPositions.INTAKE.position, ActionType.CORAL),
+        L1H(4.5, Degrees.of(255.0), IntakePivotPositions.L1.position, ActionType.CORAL),
+        L2(4.75, Degrees.of(166.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
+        L3(17.5, Degrees.of(166.0), IntakePivotPositions.STOW.position, ActionType.CORAL),
+        L4(46.0, Degrees.of(188.5), IntakePivotPositions.STOW.position, ActionType.CORAL),
+        LOWER_ALGAE(3.5, Degrees.of(265.0), IntakePivotPositions.L1.position, ActionType.ALGAE),
+        UPPER_ALGAE(17.25, Degrees.of(265.0), IntakePivotPositions.L1.position, ActionType.ALGAE),
         SAFE_ARM_HEIGHT(SuperstructureConstants.MIN_SAFE_ROTATION, Degrees.of(228), IntakePivotPositions.STOW.position, ActionType.NONE),
-        STOW(12.0, Degrees.of(130.0), IntakePivotPositions.STOW.position, ActionType.NONE), // default state
-        POST_ALGAE_STOW(12.0, Degrees.of(305.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Coral Station
-        AS(63.0, Degrees.of(190.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring NET
-        AP(3.0, Degrees.of(325.0), IntakePivotPositions.MID.position, ActionType.ALGAE), // Algae Scoring Processor
-        TR(5.0, Degrees.of(228.0), IntakePivotPositions.STOW.position, ActionType.NONE), // Travel
-        CL(14.0, Degrees.of(265.0), IntakePivotPositions.L1.position, ActionType.NONE); // Climb
+        STOW(9.0, Degrees.of(225.0), IntakePivotPositions.L1.position, ActionType.NONE), // default state
+        SPOOKY_STOW(9.0, Degrees.of(130.0), IntakePivotPositions.STOW.position, ActionType.NONE), // default state
+        POST_ALGAE_STOW(9.0, Degrees.of(240.0), IntakePivotPositions.L1.position, ActionType.NONE),
+        ALGAE_NET(46, Degrees.of(190.0), IntakePivotPositions.MID.position, ActionType.ALGAE),
+        ALGAE_PROCESS(2.25, Degrees.of(325.0), IntakePivotPositions.MID.position, ActionType.ALGAE),
+        TRAVEL(3.75, Degrees.of(255.0), IntakePivotPositions.L1.position, ActionType.ALGAE),
+        CLIMB(10.5, Degrees.of(265.0), IntakePivotPositions.L1.position, ActionType.NONE);
 
         // spotless:on
         private final double elevatorPosition;
         private final Angle armPivotAngle;
         private final double intakePosition;
         private final ActionType type;
-        private final double elevatorPosition1c;
-        private final Angle armPivotAngle1c;
-        private final double intakePosition1c;
 
         private TargetAction(double elevatorPosition, Angle armPivotAngle, double intakePosition, ActionType type) {
             this.elevatorPosition = elevatorPosition;
             this.armPivotAngle = armPivotAngle;
             this.intakePosition = intakePosition;
-            this.elevatorPosition1c = elevatorPosition;
-            this.armPivotAngle1c = armPivotAngle;
-            this.intakePosition1c = intakePosition;
-            this.type = type;
-        }
-
-        private TargetAction(
-                double elevatorPosition,
-                Angle armPivotAngle,
-                double intakePosition,
-                ActionType type,
-                double elevatorPosition1c,
-                Angle armPivotAngle1c,
-                double intakePosition1c) {
-            this.elevatorPosition = elevatorPosition;
-            this.armPivotAngle = armPivotAngle;
-            this.intakePosition = intakePosition;
-            this.elevatorPosition1c = elevatorPosition1c;
-            this.armPivotAngle1c = armPivotAngle1c;
-            this.intakePosition1c = intakePosition1c;
             this.type = type;
         }
 
         public double getElevatorPositionRotations() {
-            return RobotState.getInstance().getIsFlushAlign() ? elevatorPosition : elevatorPosition1c;
+            return elevatorPosition;
         }
 
         public Angle getArmPivotAngle() {
-            return RobotState.getInstance().getIsFlushAlign() ? armPivotAngle : armPivotAngle1c;
+            return armPivotAngle;
         }
 
         public double getIntakePivotPosition() {
-            return RobotState.getInstance().getIsFlushAlign() ? intakePosition : intakePosition1c;
+            return intakePosition;
         }
 
         public ActionType getType() {

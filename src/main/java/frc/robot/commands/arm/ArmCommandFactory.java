@@ -32,6 +32,10 @@ public class ArmCommandFactory {
         return coralIn().withDeadline(new WaitCommand(0.075));
     }
 
+    public static Command algaeInTap() {
+        return algaeIn().withDeadline(new WaitCommand(0.1));
+    }
+
     public static Command coralIn() {
         return Commands.runEnd(() -> rollers.coralIn(), () -> rollers.stopMotor(), rollers);
     }

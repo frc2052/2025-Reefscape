@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.842911352040816,
-        "y": 4.170690369897958
+        "x": 5.849999999999999,
+        "y": 4.0549692622950815
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.393576834995361,
-        "y": 4.923545483534323
+        "x": 7.400665482954544,
+        "y": 4.807824375931446
       },
       "isLocked": false,
       "linkedName": "GH Algae"
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 179.24529480121257
   },
   "reversed": false,
-  "folder": null,
+  "folder": "algae",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.19189309894713
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.800874289772727,
-        "y": 5.077667613636363
+        "x": 6.79702868852459,
+        "y": 4.990010245901639
       },
       "isLocked": false,
       "linkedName": "Left Net Score"
     },
     {
       "anchor": {
-        "x": 5.148830965909091,
-        "y": 5.2590674715909085
+        "x": 5.130737704918032,
+        "y": 5.193801229508197
       },
       "prevControl": {
-        "x": 7.246853693181819,
-        "y": 4.984100852272727
+        "x": 7.228760432190761,
+        "y": 4.918834610190015
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,7 +29,21 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.8722697056030397,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 1.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 540.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -42,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 153.61436232010124
+    "rotation": -116.92500433532254
   },
   "reversed": false,
-  "folder": null,
+  "folder": "algae",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 179.24529480121257
   },
   "useDefaultConstraints": true
 }

@@ -33,7 +33,7 @@ public class Telemetry {
     private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
     /* Robot pose for field positioning */
-    private final NetworkTable table = inst.getTable("Telemetry");
+    //     private final NetworkTable table = inst.getTable("Telemetry");
 
     /* Robot speeds for general checking */
     private final NetworkTable driveStats = inst.getTable("Drive");

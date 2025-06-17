@@ -18,7 +18,6 @@ import org.littletonrobotics.junction.Logger;
 public class RobotState {
     private SwerveDriveState drivetrainState = new SwerveDriveState();
     private AlignOffset selectedAlignOffset = AlignOffset.MIDDLE_REEF;
-    private Pose2d goalPose;
     private Pose2d autoStartPose;
     private FieldElementFace seenReefFace;
     private FieldElementFace desiredReefFace;
@@ -176,10 +175,6 @@ public class RobotState {
         return desiredReefFace.getTagID() == seenReefFace.getTagID();
     }
 
-    public void setGoalAlignment(Pose2d goalPose) {
-        this.goalPose = goalPose;
-    }
-
     public void setAutoStartPose(Pose2d startPose) {
         this.autoStartPose = startPose;
     }
@@ -212,6 +207,42 @@ public class RobotState {
         Logger.recordOutput("Current Pose", drivetrainState.Pose);
         Logger.recordOutput("Auto Start Pose", autoStartPose);
         Logger.recordOutput("Goal Align Pose", getAlignPose());
+        Logger.recordOutput(
+                "Goal Left Alignment",
+                getFieldToRobot()
+                        .nearest(isRedAlliance() ? FieldConstants.redLeftBranches : FieldConstants.blueLeftBranches));
+        Logger.recordOutput(
+                "Goal Right Alignment",
+                getFieldToRobot()
+                        .nearest(isRedAlliance() ? FieldConstants.redRightBranches : FieldConstants.blueRightBranches));
+        Logger.recordOutput("Flush Alignment", isFlushAlign);
+    }
+
+    public enum FieldLocation {
+        REEF(new Area2D(Constants.SmartDrive.blueReef), new Area2D(Constants.SmartDrive.blueReef)),
+        BARGE(new Area2D(Constants.SmartDrive.blueBarge), new Area2D(Constants.SmartDrive.redBarge)),
+        PROCESSOR(new Area2D(Constants.SmartDrive.blueProcessor), new Area2D(Constants.SmartDrive.redProcessor)),
+        TRAVEL(new Area2D(Constants.SmartDrive.blueTravel), new Area2D(Constants.SmartDrive.redTravel));
+
+        public final Area2D blueArea;
+        public final Area2D redArea;
+
+        private FieldLocation(Area2D blueArea, Area2D redArea) {
+            this.blueArea = blueArea;
+            this.redArea = redArea;
+        }
+
+        public Area2D getArea() {
+            if (isRedAlliance()) {
+                return redArea;
+            } else {
+                return blueArea;
+            }
+        }
+    }
+
+    public void run() {
+        AdvantageScopeSubsystem.getInstance().periodic();
         Logger.recordOutput("Flush Alignment", isFlushAlign);
     }
 

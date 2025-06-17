@@ -11,21 +11,17 @@ import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.configs.AudioConfigs;
-import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.ProximityParamsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.ToFParamsConfigs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.UpdateModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -65,26 +61,32 @@ public class Constants {
     public static final double TICKS_DEADZONE = 0.25;
 
     public static final double MANUAL_MOTOR_SPEED = 0.2;
-    public static final double HOMING_SPEED = -0.1;
+    public static final double HOMING_SPEED = -0.2;
 
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
-            .withKP(6.0)
+            .withKP(55.0)
             .withKI(0.0)
-            .withKD(1.0)
-            .withKS(0.5)
-            .withKV(0.0)
-            .withKA(0.0)
+            .withKD(3.6)
+            // .withKS(0.0)
+            // .withKV(0.0)
+            // .withKA(0.0)
             .withGravityType(GravityTypeValue.Elevator_Static)
-            .withKG(5.0);
+            .withKG(8.5); //10.15
 
     public static final CurrentLimitsConfigs CURRENT_LIMIT_CONFIG =
         new CurrentLimitsConfigs()
             .withSupplyCurrentLimitEnable(true)
+            .withStatorCurrentLimit(Amps.of(120))
             .withSupplyCurrentLimit(Amps.of(80))
             .withSupplyCurrentLowerLimit(Amps.of(40))
             .withSupplyCurrentLowerTime(Seconds.of(0.1));
 
+    // // set Motion Magic settings
+    // public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
+    //     new MotionMagicConfigs()
+    //         .withMotionMagicExpo_kA(0.1)
+    //         .withMotionMagicExpo_kV(0.1);
     // set Motion Magic settings
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIG =
         new MotionMagicConfigs()
@@ -105,14 +107,14 @@ public class Constants {
     public static final SoftwareLimitSwitchConfigs SOFTWARE_LIMIT_SWITCH_CONFIG =
         new SoftwareLimitSwitchConfigs()
             .withForwardSoftLimitEnable(true)
-            .withForwardSoftLimitThreshold(66);
+            .withForwardSoftLimitThreshold(46.5);
 
     public static final TalonFXConfiguration MOTOR_CONFIG =
         new TalonFXConfiguration()
             .withCurrentLimits(CURRENT_LIMIT_CONFIG)
             .withSoftwareLimitSwitch(SOFTWARE_LIMIT_SWITCH_CONFIG)
             .withMotorOutput(MOTOR_OUTPUT_CONFIG)
-            .withMotionMagic(MOTION_MAGIC_CONFIG)
+            .withMotionMagic(new MotionMagicConfigs())
             .withSlot0(SLOT0_CONFIGS)
             .withAudio(new AudioConfigs().withBeepOnBoot(false));
   }
@@ -173,8 +175,8 @@ public class Constants {
             
     public static final Slot0Configs SLOT0_CONFIGS = 
         new Slot0Configs()
-            .withKP(75.0)
-            .withKI(0.2)
+            .withKP(85.0)
+            .withKI(0.15)
             .withKD(0.0)
             .withKS(0.0)
             .withKV(11.7) //11.7
@@ -197,7 +199,7 @@ public class Constants {
     
     public static final SoftwareLimitSwitchConfigs LIMIT_SWITCH_CONFIGS = 
         new SoftwareLimitSwitchConfigs()
-            .withForwardSoftLimitThreshold(Degrees.of(30)) // TODO: adjust as needed
+            .withForwardSoftLimitThreshold(Degrees.of(30))
             .withForwardSoftLimitEnable(false)
             .withReverseSoftLimitThreshold(Degrees.of(330))
             .withReverseSoftLimitEnable(false);
@@ -215,13 +217,13 @@ public class Constants {
     public static final boolean MOTOR_INVERTED = true;
     public static final double CORAL_IN_SPEED = -0.33;
     public static final double CORAL_L1_OUT_SPEED = 0.2052;
-    public static final double CORAL_OUT_SPEED = 0.75; // 35 --> 75
+    public static final double CORAL_L4_OUT_SPEED = 0.30; // 35 --> 75
+    public static final double CORAL_L2_L3_OUT_SPEED = 0.30; // 35 --> 75
     public static final double ALGAE_IN_SPEED = 0.5;
     public static final double ALGAE_OUT_SPEED = -1.00;
-
-    public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()
-    .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
-    .withProximityParams(new ProximityParamsConfigs().withMinSignalStrengthForValidMeasurement(0.2).withProximityThreshold(0.38));
+    // public static final CANrangeConfiguration CANRANGE_CONFIG = new CANrangeConfiguration()
+    // .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
+    // .withProximityParams(new ProximityParamsConfigs().withMinSignalStrengthForValidMeasurement(0.2).withProximityThreshold(0.38));
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
@@ -248,7 +250,7 @@ public class Constants {
     public static final double MOTOR_RANGE = 19.568359375; // rotations
     public static final double ENCODER_RANGE = 0.306; // rotations
 
-    public static final Angle ENCODER_OFFSET = Rotations.of(-0.4333496); // 1: -0.45361 2:-0.449462
+    public static final Angle ENCODER_OFFSET = Rotations.of(-0.175); // .187
 
     public static final double MIN_INTAKE_ARM_ANGLE = 0;
     public static final double MAX_INTAKE_ARM_ANGLE = 20;
@@ -308,7 +310,8 @@ public class Constants {
   public static final class IntakeRollerConstants {
     public static final boolean MOTOR_INVERTED = false;
     public static final double INTAKE_SPEED = -1.00;
-    public static final double OUTTAKE_SPEED = 0.35;
+    public static final double OUTTAKE_SPEED = 1.00;
+    public static final double MAX_RPS = 100;
 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIG =
         new MotorOutputConfigs()
@@ -318,13 +321,16 @@ public class Constants {
                     : InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake); 
 
+    public static final Slot0Configs SLOT0_CONFIGS = new Slot0Configs().withKS(2.5).withKP(5).withKI(0).withKD(0);
+
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIG = new CurrentLimitsConfigs()
-    .withSupplyCurrentLimit(20.0)
+    .withSupplyCurrentLimit(30.0)
     .withSupplyCurrentLimitEnable(true);
     
     public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
     .withMotorOutput(MOTOR_OUTPUT_CONFIG)
     .withCurrentLimits(CURRENT_LIMITS_CONFIG)
+    .withSlot0(SLOT0_CONFIGS)
     .withAudio(new AudioConfigs().withBeepOnBoot(false));
   }
   
@@ -341,8 +347,8 @@ public class Constants {
   }
 
   public static final class SuperstructureConstants {
-    public static final double MIN_SAFE_ROTATION = 11.0;
-    public static final double MIN_MOVE_ROTATION = 45.0;
+    public static final double MIN_SAFE_ROTATION = 8.25;
+    public static final double MIN_MOVE_ROTATION = 35.0;
     public static final double RIGHT_LIMIT = 215;
     public static final double LEFT_LIMIT = 295;
   }
@@ -410,6 +416,9 @@ public class Constants {
     public static final String AUTO_DESCRIPTION_KEY = "Auto Description";
     public static final String WAIT_SECONDS_SAVED_KEY = "Wait Seconds Saved";
     public static final String WAIT_SECONDS_DISPLAY_KEY = "Wait Seconds Display";
+
+    public static final String ELVATOR_NUDGE_VALUE_DISPLAY_KEY = "Nudge Value";
+    public static final String ELEVATOR_NUDGE_SAVED_KEY = "Elevator Nudge Value Saved";
   }
 
   public static final class PathPlannerConstants {
