@@ -312,7 +312,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
         // getCurrentAction() == TargetAction.STOW || getCurrentAction() == TargetAction.TR &&
         if (shouldSmartDrive && RobotContainer.getSmartDrivewanted()) {
             if (RobotState.getFieldLocation() == FieldLocation.REEF
-                    && IntakeRollerSubsystem.getInstance().getHasCoral()) {
+                    && IntakeRollerSubsystem.getInstance().getHasCoral()) {// replace IntakeRollerSubsystem with RobotState. 
                 System.out.println("inside the zone");
                 if (robotState.getAlignOffset() == AlignOffset.LEFT_BRANCH
                         || robotState.getAlignOffset() == AlignOffset.RIGHT_BRANCH) {
