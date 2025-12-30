@@ -23,7 +23,7 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 import org.littletonrobotics.junction.networktables.LoggedNetworkString;
 
 public class AutoFactory {
-    private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
+    // private final Supplier<Auto> autoSupplier = () -> Dashboard.getInstance().getAuto();
     private final Supplier<Double> waitSecondsEntrySupplier =
             () -> Dashboard.getInstance().getWaitSeconds();
     private final Supplier<Boolean> bumpNeededSupplier =
@@ -72,8 +72,9 @@ public class AutoFactory {
     ;
 
     public boolean recompileNeeded() {
-        return autoSupplier.get() != currentAuto
-                || waitSecondsEntrySupplier.get() != savedWaitSeconds
+        return 
+        // autoSupplier.get() != currentAuto|| 
+            waitSecondsEntrySupplier.get() != savedWaitSeconds
                 || isRedAlliance == !RobotState.getInstance().isRedAlliance()
                 || savedBumpNeeded != bumpNeededSupplier.get()
                 || savedLollipopOrder != lollipopOrder.get();
@@ -99,7 +100,7 @@ public class AutoFactory {
 
         // update auto
         autoCompiled.set(false);
-        currentAuto = autoSupplier.get();
+        // currentAuto = autoSupplier.get();
         if (currentAuto == null) {
             currentAuto = Auto.NO_AUTO;
         }
@@ -134,6 +135,10 @@ public class AutoFactory {
 
     public boolean getBumpNeeded() {
         return savedBumpNeeded;
+    }
+
+    public Command getJ4K4L4() {
+        return new InstantCommand();
     }
 
     public static enum Auto {

@@ -13,10 +13,9 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class Dashboard {
     private final LoggedDashboardChooser<DriveMode> driveModeChooser = new LoggedDashboardChooser<>("Drive Mode");
 
-    private final LoggedDashboardChooser<Auto> autoChooser = new LoggedDashboardChooser<Auto>("Auto Mode");
+    // private final LoggedDashboardChooser<Auto> autoChooser = new LoggedDashboardChooser<Auto>("Auto Mode");
 
-    private final LoggedDashboardChooser<Double> waitSecondsChooser =
-            new LoggedDashboardChooser<Double>("Wait Seconds");
+    private final LoggedDashboardChooser<Double> waitSecondsChooser = new LoggedDashboardChooser<Double>("Wait Seconds");
 
     private final LoggedDashboardChooser<Boolean> bump = new LoggedDashboardChooser<Boolean>("Bump Needed");
     private final LoggedDashboardChooser<Boolean> lollipop = new LoggedDashboardChooser<Boolean>("Lollipop Order");
@@ -46,13 +45,13 @@ public class Dashboard {
         driveModeChooser.addOption(DriveMode.FIELD_CENTRIC.name(), DriveMode.FIELD_CENTRIC);
         driveModeChooser.addOption(DriveMode.ROBOT_CENTRIC.name(), DriveMode.ROBOT_CENTRIC);
 
-        waitTimeTopic.publish().accept(0.0);
+        // waitTimeTopic.publish().accept(0.0);
         nudgeElevator.publish().accept(0.0);
 
-        autoChooser.addDefaultOption(Auto.NO_AUTO.name(), Auto.NO_AUTO);
+        // autoChooser.addDefaultOption(Auto.NO_AUTO.name(), Auto.NO_AUTO);
 
         for (Auto auto : Auto.values()) {
-            autoChooser.addOption(auto.name(), auto);
+            // autoChooser.addOption(auto.name(), auto);
         }
         waitSecondsChooser.addDefaultOption("None Chosen", 0.0);
         waitSecondsChooser.addOption("1 Second", 1.0);
@@ -93,9 +92,9 @@ public class Dashboard {
         return driveModeChooser.get() == DriveMode.FIELD_CENTRIC;
     }
 
-    public Auto getAuto() {
-        return autoChooser.get();
-    }
+    // public Auto getAuto() {
+    //     return autoChooser.get();
+    // }
 
     public boolean getLeftLollipopFirst() {
         return lollipop.get();

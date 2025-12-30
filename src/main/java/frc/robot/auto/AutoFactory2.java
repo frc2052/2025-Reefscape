@@ -99,16 +99,16 @@ public class AutoFactory2 {
         return AutoBuilder.followPath(path);
     }
 
-    Command getBumpCommand(){
-        return new ConditionalCommand(
-            new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> true).withDeadline(new WaitCommand(0.4)), 
-            new InstantCommand(), 
-            () -> AutoChooser.getBumpNeeded());
-    }
+    // Command getBumpCommand(){
+    //     return new ConditionalCommand(
+    //         new DefaultDriveCommand(() -> 0.7, () -> 0, () -> 0, () -> true).withDeadline(new WaitCommand(0.4)), 
+    //         new InstantCommand(), 
+    //         () -> AutoChooser.getBumpNeeded());
+    // }
 
-    Command delaySelectedTime(){
-        return new WaitCommand(AutoChooser.getWaitSeconds());
-    }
+    // Command delaySelectedTime(){
+    //     return new WaitCommand(AutoChooser.getWaitSeconds());
+    // }
 
     Command elevatorToPos(TargetAction position){
         return new InstantCommand(() -> SuperstructureSubsystem.getInstance().setCurrentAction(position));

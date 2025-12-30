@@ -71,6 +71,7 @@ public class Robot extends LoggedRobot {
         //     m_autonomousCommand.schedule();
         // }
 
+        
         CommandScheduler.getInstance().schedule(autoChooser.getAuto());
     }
 

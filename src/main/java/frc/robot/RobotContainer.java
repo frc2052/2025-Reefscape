@@ -19,7 +19,7 @@ import frc.robot.commands.intake.IntakeCommandFactory;
 import frc.robot.commands.superstructure.SuperstructureCommandFactory;
 import frc.robot.controlboard.ControlBoard;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
-import frc.robot.subsystems.LedSubsystem;
+// import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.arm.ArmPivotSubsystem;
 import frc.robot.subsystems.arm.ArmRollerSubsystem;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
@@ -47,7 +47,7 @@ public class RobotContainer {
     public final ArmRollerSubsystem armRollers = ArmRollerSubsystem.getInstance();
     public final IntakePivotSubsystem intakePivot = IntakePivotSubsystem.getInstance();
     public final IntakeRollerSubsystem intakeRollers = IntakeRollerSubsystem.getInstance();
-    public final LedSubsystem leds = LedSubsystem.getInstance();
+//     public final LedSubsystem leds = LedSubsystem.getInstance();
 
     public static boolean deadReckoning = false;
 

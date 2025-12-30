@@ -1,23 +1,15 @@
 package frc.robot.auto;
 
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-import org.littletonrobotics.junction.networktables.LoggedNetworkString;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.DashboardConstants;
 import frc.robot.RobotContainer;
-import frc.robot.util.io.Dashboard;
 
 // note: simplifying to avoid HashMaps & use simple fields
 // easier to debug & explain
@@ -43,20 +35,12 @@ public class AutoChooser extends SendableChooser<Auto>{
     private Pair<Pose2d, Command> blueAuto = null;
     private Pair<Pose2d, Command> redAuto = null;
 
-    private final Supplier<Double> waitSecondsEntrySupplier =
-            () -> Dashboard.getInstance().getWaitSeconds();
-    private final Supplier<Boolean> bumpNeededSupplier =
-            () -> Dashboard.getInstance().getBumpNeeded();
+    // private final Supplier<Double> waitSecondsEntrySupplier =
+    //         () -> Dashboard.getInstance().getWaitSeconds();
+    // private final Supplier<Boolean> bumpNeededSupplier =
+    //         () -> Dashboard.getInstance().getBumpNeeded();
 
-    private double selectedWaitSeconds;
-    private static double savedWaitSeconds;
-    private static boolean savedBumpNeeded;
-
-    private static LoggedNetworkBoolean waitSecondsSavedKey =
-            new LoggedNetworkBoolean(DashboardConstants.WAIT_SECONDS_SAVED_KEY, false);
-
-    private static LoggedNetworkString waitSecondsDisplay =
-            new LoggedNetworkString(DashboardConstants.WAIT_SECONDS_DISPLAY_KEY, "DEFAULT - 0.0");
+    private final LoggedDashboardChooser<Auto> autoChooser = new LoggedDashboardChooser<Auto>("Auto Chooser");
 
     public AutoChooser(RobotContainer robotcontainer){
         blueFactory = new AutoFactory2(DriverStation.Alliance.Blue, robotcontainer);
@@ -65,64 +49,59 @@ public class AutoChooser extends SendableChooser<Auto>{
         // populate chooser
         for(AutoProgram program: AUTO_PROGRAMS){
             if(program.getAuto() == Auto.NO_AUTO){
-                setDefaultOption(program.getName(), program.getAuto());
+                autoChooser.addDefaultOption(program.getName(), program.getAuto());
             } else {
-                addOption(program.getName(), program.getAuto());
-            }
+                autoChooser.addOption(program.getName(), program.getAuto());
+            } 
         }
-
-        Shuffleboard.getTab("Auto").add("Auto Chooser", this).withSize(3, 2);
     }
 
     public static AutoChooser create(final RobotContainer robotContainer) {
-
         var autoChooser = new AutoChooser(robotContainer);
-
         return autoChooser;
     }
 
     // TODO: call in disabledPeriodic()
     public void update() {
-        Auto selected = getSelected();
+        Auto selected = autoChooser.get();
 
         // update auto if chosen one changed
         if (selected != lastSelected
-            || waitSecondsEntrySupplier.get() != savedWaitSeconds
-            || bumpNeededSupplier.get() != savedBumpNeeded) {
+            // || waitSecondsEntrySupplier.get() != savedWaitSeconds
+            // || bumpNeededSupplier.get() != savedBumpNeeded
+            ) {
             System.out.println("Rebuilding auto: " + selected);
 
             AutoProgram program = findProgram(selected);
 
-            // build auto for both alliances
-            // getCommand&Pose calls factory method & returns the Pair<Pose2d startPose, Command actualAuto>
             blueAuto = program.getCommandAndPose(blueFactory);
             redAuto = program.getCommandAndPose(redFactory);
 
             lastSelected = selected;
         }
 
-        // update wait seconds
-        if(waitSecondsEntrySupplier.get() != savedWaitSeconds){
-            waitSecondsSavedKey.set(false);
-            selectedWaitSeconds = waitSecondsEntrySupplier.get().doubleValue();
-            savedWaitSeconds = selectedWaitSeconds;
-            waitSecondsDisplay.set("Chosen Wait Seconds: " + savedWaitSeconds);
-            waitSecondsSavedKey.set(true);
-        }
+        // // update wait seconds
+        // if(waitSecondsEntrySupplier.get() != savedWaitSeconds){
+        //     waitSecondsSavedKey.set(false);
+        //     selectedWaitSeconds = waitSecondsEntrySupplier.get().doubleValue();
+        //     savedWaitSeconds = selectedWaitSeconds;
+        //     waitSecondsDisplay.set("Chosen Wait Seconds: " + savedWaitSeconds);
+        //     waitSecondsSavedKey.set(true);
+        // }
         
-        if(bumpNeededSupplier.get() != savedBumpNeeded){
-            savedBumpNeeded = bumpNeededSupplier.get();
-            System.out.println("BUMP NEEDE VALUE: " + savedBumpNeeded);
-        }
+        // if(bumpNeededSupplier.get() != savedBumpNeeded){
+        //     savedBumpNeeded = bumpNeededSupplier.get();
+        //     System.out.println("BUMP NEEDE VALUE: " + savedBumpNeeded);
+        // }
     }
 
-    public static boolean getBumpNeeded(){
-        return savedBumpNeeded;
-    }
+    // public static boolean getBumpNeeded(){
+    //     return savedBumpNeeded;
+    // }
 
-    public static double getWaitSeconds(){
-        return savedWaitSeconds;
-    }
+    // public static double getWaitSeconds(){
+    //     return savedWaitSeconds;
+    // }
 
     // HELPERS
 
@@ -135,12 +114,15 @@ public class AutoChooser extends SendableChooser<Auto>{
         if(DriverStation.getAlliance().isPresent()){
             DriverStation.Alliance alliance = DriverStation.getAlliance().get();
             if(alliance == DriverStation.Alliance.Blue){
+                System.out.println("BLUE SIDE AUTO DETECTED, RETURNING COMMAND");
                 return blueAuto.getSecond(); // returns command
             } else {
+                System.out.println("RED SIDE AUTO DETECTED, RETURNING COMMAND");
                 return redAuto.getSecond();
             }
         }
-        return null; // no auto yet
+        System.out.println("DRIVERSTATION ALLIANCE NOT PRESENT FOR AUTOS");
+        return null;
     }
 
     // starting pose for current auto
