@@ -16,22 +16,24 @@ import frc.robot.auto.common.AutoFactory;
 // most important part
     // FUNCTION<AutoFactory, Pair<Pose2d, Command>
     // method reference!! --> stores a reference to a method w/o calling it
-    // when we need the command we call autofactory.apply(autoFactory)
-    // then it applies the 2nd param (arguments) to first param (method)
+        // when we need the command we call autofactory.apply(autoFactory)
+        // this is because there are TWO AutoFactory's for Red vs Blue alliance
+        // needed to grab startPose @ the beginning of an auto. 
 
 public class AutoProgram {
     private final Auto auto; 
     private final String name; // for dashboard
-    private final Function<AutoFactory, Pair<Pose2d, Command>> command; 
+    private final Function<AutoFactory2, Pair<Pose2d, Command>> command;
 
     public AutoProgram(
         Auto auto,
         String name,
-        Function<AutoFactory, Pair<Pose2d, Command>> command
+        Function<AutoFactory2, Pair<Pose2d, Command>> command
     ){
         this.auto = auto;
         this.name = name;
         this.command = command;
+
     }
 
     public Auto getAuto(){
@@ -42,20 +44,15 @@ public class AutoProgram {
         return name;
     }
 
-    // construct the command for this auto using provided AutoFactory
-        // call command.apply(autofactory)
-        // this executes the method reference  
-            // method returns a Pair<Pose2d, Command>
-        // .getSecond() grabs only the Command & returns it!!
-    
-    public Command getCommand(AutoFactory autoFactory){
+    public Command getCommand(AutoFactory2 autoFactory) {
         return command.apply(autoFactory).getSecond();
     }
 
-    // get starting pose to reset odom
-    // extracts Pose2d stored in the AutoFactory method
+    public Pose2d getStartPose(AutoFactory2 autoFactory2){
+        return command.apply(autoFactory2).getFirst();
+    }
 
-    public Pose2d getStartPose(AutoFactory autoFactory){
-        return command.apply(autoFactory).getFirst();
-    } 
+    public Pair<Pose2d, Command> getCommandAndPose(AutoFactory2 autoFactory) {
+        return command.apply(autoFactory);
+    }
 }

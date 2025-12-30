@@ -17,15 +17,17 @@ package frc.robot.auto;
 public enum Auto {
     NO_AUTO,
 
-    BACKUP_MIDDLE_L1, //
-    DEAD_RECKONING,//
+    DRIVE_FORWARD
 
-    H4_ALGAE_GH_EF_IJ, //
-    MIDDLE_H4, //
+    // BACKUP_MIDDLE_L1, //
+    // DEAD_RECKONING,//
 
-    LEFT_3_CORAL_JKL, //
-    RIGHT_3_CORAL_EDC, //
+    // H4_ALGAE_GH_EF_IJ, //
+    // MIDDLE_H4, //
 
-    LOLI_LEFT_LEFT_FIRST, //
-    LOLI_RIGHT_RIGHT_FIRST, //
+    // LEFT_3_CORAL_JKL, //
+    // RIGHT_3_CORAL_EDC, //
+
+    // LOLI_LEFT_LEFT_FIRST, //
+    // LOLI_RIGHT_RIGHT_FIRST, //
 }

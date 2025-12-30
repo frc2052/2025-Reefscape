@@ -40,11 +40,6 @@ public class LOLIRIGHTRightFirst extends AutoBase {
         aScored = b;
     }
 
-    private void setLeftLollipopFirst(boolean b){
-        System.out.println("left lollipop first SET TO: " + b);
-        leftFirst = b;
-    }
-
     @Override
     public void init() {
         // setup
@@ -52,12 +47,6 @@ public class LOLIRIGHTRightFirst extends AutoBase {
         addCommands(delaySelectedTime());
         addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.AB)));
         addCommands(new InstantCommand(() -> setAScored(true)));
-        addCommands(
-            new ConditionalCommand(
-                new InstantCommand(() -> setLeftLollipopFirst(true)),
-                new InstantCommand(() -> setLeftLollipopFirst(false)), 
-                 () -> autoFactory.getLeftLollipopFirst())
-        );
 
         // home, then raise to L3 on your way to B
         addCommands(new ParallelCommandGroup(

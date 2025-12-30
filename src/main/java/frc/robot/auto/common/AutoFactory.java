@@ -136,14 +136,6 @@ public class AutoFactory {
         return savedBumpNeeded;
     }
 
-    public boolean getLeftLollipopFirst() {
-        return savedLollipopOrder;
-    }
-
-    public Command getJ4K4L4() {
-        return new InstantCommand();
-    }
-
     public static enum Auto {
         LEFT_3_CORAL_JKL(Left3CoralJKL.class),
         RIGHT_3_CORAL_EDC(Right3CoralEDC.class),

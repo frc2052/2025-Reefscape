@@ -52,12 +52,6 @@ public class LOLILEFTRightFirst extends AutoBase {
         addCommands(delaySelectedTime());
         addCommands(new InstantCommand(() -> RobotState.getInstance().setDesiredReefFace(FieldElementFace.AB)));
         addCommands(new InstantCommand(() -> setAScored(true)));
-        addCommands(
-            new ConditionalCommand(
-                new InstantCommand(() -> setLeftLollipopFirst(true)),
-                new InstantCommand(() -> setLeftLollipopFirst(false)), 
-                 () -> autoFactory.getLeftLollipopFirst())
-        );
 
         // home, then raise to L3 on your way to B
         addCommands(new ParallelCommandGroup(

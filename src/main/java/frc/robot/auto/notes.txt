@@ -1,0 +1,11 @@
+Auto enum --> lightweight identifier (no classes or inheritance like b4)
+AutoProgram --> bridge
+    enum (Auto)
+    dashboard name (String)
+    method reference (AutoFactory::createAuto)
+AutoFactory --> all the actual logic
+    returns Pair<Pose2d, Command>: starting pose & actual auto method Command
+    handles path flipping
+AutoChooser --> pushes to Shuffleboard & handles swapping
+    when selected auto changes, rebuild it 
+    when auto starts, just run whatever is currently built
