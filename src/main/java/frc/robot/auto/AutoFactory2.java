@@ -30,8 +30,6 @@ public class AutoFactory2 {
     private final DriverStation.Alliance alliance;
     private final RobotContainer robotContainer;
     private final DrivetrainSubsystem drivetrain = DrivetrainSubsystem.getInstance();
-    private final SuperstructureSubsystem superstructure = SuperstructureSubsystem.getInstance();
-    private final RobotState robotState = RobotState.getInstance();
 
     // choreo paths are defined for blue alliance
     // all alliance switching logic is stored here

@@ -4,7 +4,10 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.drive.DrivetrainSubsystem;
+
 import java.util.List;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -66,7 +69,6 @@ public class AutoChooser2052 {
         lastSelected = null;
     }
 
-    // TODO: call in disabledPeriodic()
     public void update() {
         Auto selected = autoChooser.get();
 
@@ -120,28 +122,16 @@ public class AutoChooser2052 {
             DriverStation.Alliance alliance = DriverStation.getAlliance().get();
             if (alliance == DriverStation.Alliance.Blue) {
                 System.out.println("BLUE SIDE AUTO DETECTED, RETURNING COMMAND");
+                new InstantCommand(() -> DrivetrainSubsystem.getInstance().resetPose(blueAuto.getFirst()));
                 return blueAuto.getSecond(); // returns command
             } else {
                 System.out.println("RED SIDE AUTO DETECTED, RETURNING COMMAND");
+                new InstantCommand(() -> DrivetrainSubsystem.getInstance().resetPose(blueAuto.getFirst()));
                 return redAuto.getSecond();
             }
         }
         System.out.println("DRIVERSTATION ALLIANCE NOT PRESENT FOR AUTOS");
         return null;
-    }
-
-    // starting pose for current auto
-    // TODO: use to reset odom @ auto init
-    public Pose2d getAutoStartPose() {
-        if (DriverStation.getAlliance().isPresent()) {
-            DriverStation.Alliance alliance = DriverStation.getAlliance().get();
-            if (alliance == DriverStation.Alliance.Blue) {
-                return blueAuto.getFirst(); // returns Pose2d
-            } else {
-                return redAuto.getFirst();
-            }
-        }
-        return null; // no auto yet
     }
 
     // FIND THE AUTO PROGRAM that matches the enum - loop instead of streams from b4
