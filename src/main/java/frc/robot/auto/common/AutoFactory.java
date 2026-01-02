@@ -72,9 +72,9 @@ public class AutoFactory {
     ;
 
     public boolean recompileNeeded() {
-        return 
-        // autoSupplier.get() != currentAuto|| 
-            waitSecondsEntrySupplier.get() != savedWaitSeconds
+        return
+        // autoSupplier.get() != currentAuto||
+        waitSecondsEntrySupplier.get() != savedWaitSeconds
                 || isRedAlliance == !RobotState.getInstance().isRedAlliance()
                 || savedBumpNeeded != bumpNeededSupplier.get()
                 || savedLollipopOrder != lollipopOrder.get();

@@ -1,31 +1,29 @@
 package frc.robot.auto;
 
-import java.util.List;
-
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
+import java.util.List;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 // note: simplifying to avoid HashMaps & use simple fields
 // easier to debug & explain
-    // we store the currently selected auto
-    // if selection changes, we rebuild it
+// we store the currently selected auto
+// if selection changes, we rebuild it
 
-    // removed null map lookups, nested maps, etc.
-    // also doesn't store auto from previous matches
+// removed null map lookups, nested maps, etc.
+// also doesn't store auto from previous matches
 
-public class AutoChooser extends SendableChooser<Auto>{
+public class AutoChooser2052 {
 
     // auto list
     private static final List<AutoProgram> AUTO_PROGRAMS = List.of(
-        new AutoProgram(Auto.DRIVE_FORWARD, "Drive Forward", AutoFactory2::createDriveForwardAuto)
-    );
-    
+            new AutoProgram(Auto.DRIVE_FORWARD, "Drive Forward", AutoFactory2::createDriveForwardAuto),
+            new AutoProgram(
+                    Auto.LEFT_LOLI_LEFT_FIRST, "Left Loli Left First", AutoFactory2::createLeftLoliLeftFirstAuto));
+
     // factories --> need to swap geometries & starting pose
     private final AutoFactory2 blueFactory;
     private final AutoFactory2 redFactory;
@@ -42,23 +40,30 @@ public class AutoChooser extends SendableChooser<Auto>{
 
     private final LoggedDashboardChooser<Auto> autoChooser = new LoggedDashboardChooser<Auto>("Auto Chooser");
 
-    public AutoChooser(RobotContainer robotcontainer){
+    public AutoChooser2052(RobotContainer robotcontainer) {
         blueFactory = new AutoFactory2(DriverStation.Alliance.Blue, robotcontainer);
-        redFactory = new AutoFactory2(DriverStation.Alliance.Red, robotcontainer); 
-    
+        redFactory = new AutoFactory2(DriverStation.Alliance.Red, robotcontainer);
+
         // populate chooser
-        for(AutoProgram program: AUTO_PROGRAMS){
-            if(program.getAuto() == Auto.NO_AUTO){
+        for (AutoProgram program : AUTO_PROGRAMS) {
+            if (program.getAuto() == Auto.NO_AUTO) {
                 autoChooser.addDefaultOption(program.getName(), program.getAuto());
             } else {
                 autoChooser.addOption(program.getName(), program.getAuto());
-            } 
+            }
         }
     }
 
-    public static AutoChooser create(final RobotContainer robotContainer) {
-        var autoChooser = new AutoChooser(robotContainer);
+    public static AutoChooser2052 create(final RobotContainer robotContainer) {
+        var autoChooser = new AutoChooser2052(robotContainer);
         return autoChooser;
+    }
+
+    // TODO: needed in disabled init?
+    public void reset() {
+        blueAuto = null;
+        redAuto = null;
+        lastSelected = null;
     }
 
     // TODO: call in disabledPeriodic()
@@ -67,9 +72,9 @@ public class AutoChooser extends SendableChooser<Auto>{
 
         // update auto if chosen one changed
         if (selected != lastSelected
-            // || waitSecondsEntrySupplier.get() != savedWaitSeconds
-            // || bumpNeededSupplier.get() != savedBumpNeeded
-            ) {
+        // || waitSecondsEntrySupplier.get() != savedWaitSeconds
+        // || bumpNeededSupplier.get() != savedBumpNeeded
+        ) {
             System.out.println("Rebuilding auto: " + selected);
 
             AutoProgram program = findProgram(selected);
@@ -88,7 +93,7 @@ public class AutoChooser extends SendableChooser<Auto>{
         //     waitSecondsDisplay.set("Chosen Wait Seconds: " + savedWaitSeconds);
         //     waitSecondsSavedKey.set(true);
         // }
-        
+
         // if(bumpNeededSupplier.get() != savedBumpNeeded){
         //     savedBumpNeeded = bumpNeededSupplier.get();
         //     System.out.println("BUMP NEEDE VALUE: " + savedBumpNeeded);
@@ -110,10 +115,10 @@ public class AutoChooser extends SendableChooser<Auto>{
     // when you choose a new auto,
     // it creates a blueAuto and redAuto version,
     // WHEN AUTO BEGINS getAuto() is called and you run either red or blue @ runtime because both are updated
-    public Command getAuto(){
-        if(DriverStation.getAlliance().isPresent()){
+    public Command getAuto() {
+        if (DriverStation.getAlliance().isPresent()) {
             DriverStation.Alliance alliance = DriverStation.getAlliance().get();
-            if(alliance == DriverStation.Alliance.Blue){
+            if (alliance == DriverStation.Alliance.Blue) {
                 System.out.println("BLUE SIDE AUTO DETECTED, RETURNING COMMAND");
                 return blueAuto.getSecond(); // returns command
             } else {
@@ -127,10 +132,10 @@ public class AutoChooser extends SendableChooser<Auto>{
 
     // starting pose for current auto
     // TODO: use to reset odom @ auto init
-    public Pose2d getAutoStartPose(){
-        if(DriverStation.getAlliance().isPresent()){
+    public Pose2d getAutoStartPose() {
+        if (DriverStation.getAlliance().isPresent()) {
             DriverStation.Alliance alliance = DriverStation.getAlliance().get();
-            if(alliance == DriverStation.Alliance.Blue){
+            if (alliance == DriverStation.Alliance.Blue) {
                 return blueAuto.getFirst(); // returns Pose2d
             } else {
                 return redAuto.getFirst();
@@ -140,11 +145,11 @@ public class AutoChooser extends SendableChooser<Auto>{
     }
 
     // FIND THE AUTO PROGRAM that matches the enum - loop instead of streams from b4
-    private AutoProgram findProgram(Auto dAuto){
-        for (AutoProgram program: AUTO_PROGRAMS){
-            if (program.getAuto() == dAuto){
+    private AutoProgram findProgram(Auto dAuto) {
+        for (AutoProgram program : AUTO_PROGRAMS) {
+            if (program.getAuto() == dAuto) {
                 return program;
-            } 
+            }
         }
         System.out.println("Could not find auto program for: " + dAuto.name());
         return null;

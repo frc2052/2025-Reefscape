@@ -15,7 +15,8 @@ public class Dashboard {
 
     // private final LoggedDashboardChooser<Auto> autoChooser = new LoggedDashboardChooser<Auto>("Auto Mode");
 
-    private final LoggedDashboardChooser<Double> waitSecondsChooser = new LoggedDashboardChooser<Double>("Wait Seconds");
+    private final LoggedDashboardChooser<Double> waitSecondsChooser =
+            new LoggedDashboardChooser<Double>("Wait Seconds");
 
     private final LoggedDashboardChooser<Boolean> bump = new LoggedDashboardChooser<Boolean>("Bump Needed");
     private final LoggedDashboardChooser<Boolean> lollipop = new LoggedDashboardChooser<Boolean>("Lollipop Order");

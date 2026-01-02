@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.auto.AutoChooser;
+import frc.robot.auto.AutoChooser2052;
 import frc.robot.auto.common.AutoFactory;
 import frc.robot.util.FieldConstants;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -18,11 +18,11 @@ public class Robot extends LoggedRobot {
     private Command m_autonomousCommand;
 
     private final RobotContainer m_robotContainer;
-    private AutoChooser autoChooser;
+    private AutoChooser2052 autoChooser;
 
     public Robot() {
         m_robotContainer = new RobotContainer();
-        autoChooser = AutoChooser.create(m_robotContainer);
+        autoChooser = AutoChooser2052.create(m_robotContainer);
 
         if (isReal()) {
             // Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
@@ -47,7 +47,9 @@ public class Robot extends LoggedRobot {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        autoChooser.reset();
+    }
 
     public void forceRecompile() {
         AutoFactory.getInstance().recompile();
@@ -71,7 +73,6 @@ public class Robot extends LoggedRobot {
         //     m_autonomousCommand.schedule();
         // }
 
-        
         CommandScheduler.getInstance().schedule(autoChooser.getAuto());
     }
 
